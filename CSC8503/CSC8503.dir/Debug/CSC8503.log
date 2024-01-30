@@ -1,6 +1,7 @@
-﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(531,5): warning MSB8028: The intermediate directory (CSC8503CoreClasses.dir\Debug\) contains files shared from another project (CSC8503CoreClasses.vcxproj, CSC8503CoreClasses.vcxproj, CSC8503CoreClasses.vcxproj).  This can lead to incorrect clean and rebuild behavior.
-  Main.cpp
-C:\c8503\CSC8508\CSC8503\NetworkedGame.h(157,57): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\c8503\CSC8508\CSC8503\NetworkedGame.h(252,45): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\c8503\CSC8508\CSC8503\Main.cpp(500): warning C4715: 'Coursework': not all control paths return a value
-  CSC8503.vcxproj -> C:\c8503\CSC8508\x64\Debug\CSC8503.exe
+﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\amd64\Microsoft.Common.CurrentVersion.targets(2116,5): warning : The referenced project 'C:\c8503\CSC8508\ZERO_CHECK.vcxproj' does not exist.
+C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\amd64\Microsoft.Common.CurrentVersion.targets(2116,5): warning : The referenced project 'C:\c8503\CSC8508\CSC8503CoreClasses\CSC8503CoreClasses.vcxproj' does not exist.
+C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\amd64\Microsoft.Common.CurrentVersion.targets(2116,5): warning : The referenced project 'C:\c8503\CSC8508\OpenGLRendering\OpenGLRendering.vcxproj' does not exist.
+C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\amd64\Microsoft.Common.CurrentVersion.targets(2116,5): warning : The referenced project 'C:\c8503\CSC8508\NCLCoreClasses\NCLCoreClasses.vcxproj' does not exist.
+  Building Custom Rule C:/c8503/CSC8508/CSC8503/CMakeLists.txt
+  The system cannot find the path specified.
+C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppCommon.targets(248,5): error MSB8066: Custom build for 'C:\c8503\CSC8508\CSC8503\CMakeLists.txt' exited with code 3.

@@ -1,1 +1,4 @@
 ﻿  1>Checking Build System
+  The system cannot find the path specified.
+  The system cannot find the batch label specified - VCEnd
+C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppCommon.targets(231,5): error MSB8066: Custom build for 'C:\c8503\CSC8508\CMakeFiles\9a90e93ff06d6b003b959d3a2566c3f0\generate.stamp.rule' exited with code 1.
