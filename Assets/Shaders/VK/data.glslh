@@ -1,0 +1,28 @@
+layout (set = 0, binding  = 0) uniform  GlobalInfo
+{
+	mat4  shadowMatrix;
+	mat4  viewProjMatrix;
+	mat4  viewMatrix;
+	mat4  projMatrix;
+	mat4  orthoMatrix;
+	vec3	lightPos;
+   float	lightRadius;
+   vec4	lightColour;
+	vec3	cameraPos;
+};
+
+struct ObjectState{
+	mat4 	modelMatrix;
+	vec4 	colour;
+	ivec4 	indices;
+};
+
+layout (set = 0, binding  = 1) buffer ModelMatrices 
+{
+	ObjectState objectStates[];
+};
+
+layout (set  = 0, binding = 2) uniform  sampler2D shadowTex;
+layout (set  = 0, binding = 3) uniform  samplerCube skyTex;
+
+layout (set  = 1, binding = 0) uniform  sampler2D textures[128];

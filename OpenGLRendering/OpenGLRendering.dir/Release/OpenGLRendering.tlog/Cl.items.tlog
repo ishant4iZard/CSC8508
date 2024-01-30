@@ -1,0 +1,13 @@
+D:\CppProject\CSC8503 2023\OpenGLRendering\CMakeFiles\OpenGLRendering.dir\cmake_pch.cxx;D:\CppProject\CSC8503 2023\OpenGLRendering\OpenGLRendering.dir\Release\cmake_pch.obj
+D:\CppProject\CSC8503 2023\OpenGLRendering\OGLTexture.h;D:\CppProject\CSC8503 2023\OpenGLRendering\OpenGLRendering.dir\Release\OGLTexture.h.obj
+D:\CppProject\CSC8503 2023\OpenGLRendering\OGLShader.h;D:\CppProject\CSC8503 2023\OpenGLRendering\OpenGLRendering.dir\Release\OGLShader.h.obj
+D:\CppProject\CSC8503 2023\OpenGLRendering\OGLRenderer.h;D:\CppProject\CSC8503 2023\OpenGLRendering\OpenGLRendering.dir\Release\OGLRenderer.h.obj
+D:\CppProject\CSC8503 2023\OpenGLRendering\OGLMesh.h;D:\CppProject\CSC8503 2023\OpenGLRendering\OpenGLRendering.dir\Release\OGLMesh.h.obj
+D:\CppProject\CSC8503 2023\OpenGLRendering\OGLComputeShader.h;D:\CppProject\CSC8503 2023\OpenGLRendering\OpenGLRendering.dir\Release\OGLComputeShader.h.obj
+D:\CppProject\CSC8503 2023\OpenGLRendering\OGLTexture.cpp;D:\CppProject\CSC8503 2023\OpenGLRendering\OpenGLRendering.dir\Release\OGLTexture.cpp.obj
+D:\CppProject\CSC8503 2023\OpenGLRendering\OGLShader.cpp;D:\CppProject\CSC8503 2023\OpenGLRendering\OpenGLRendering.dir\Release\OGLShader.cpp.obj
+D:\CppProject\CSC8503 2023\OpenGLRendering\OGLRenderer.cpp;D:\CppProject\CSC8503 2023\OpenGLRendering\OpenGLRendering.dir\Release\OGLRenderer.cpp.obj
+D:\CppProject\CSC8503 2023\OpenGLRendering\OGLMesh.cpp;D:\CppProject\CSC8503 2023\OpenGLRendering\OpenGLRendering.dir\Release\OGLMesh.cpp.obj
+D:\CppProject\CSC8503 2023\OpenGLRendering\OGLComputeShader.cpp;D:\CppProject\CSC8503 2023\OpenGLRendering\OpenGLRendering.dir\Release\OGLComputeShader.cpp.obj
+D:\CppProject\CSC8503 2023\OpenGLRendering\glad\gl.h;D:\CppProject\CSC8503 2023\OpenGLRendering\OpenGLRendering.dir\Release\glad\gl.h.obj
+D:\CppProject\CSC8503 2023\OpenGLRendering\glad\gl.c;D:\CppProject\CSC8503 2023\OpenGLRendering\OpenGLRendering.dir\Release\glad\gl.c.obj

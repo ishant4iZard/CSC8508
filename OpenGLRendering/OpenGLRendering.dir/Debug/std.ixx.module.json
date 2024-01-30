@@ -1,0 +1,22 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "OpenGLRendering.dir\\Debug\\std.ixx.obj",
+            "outputs": [
+                "C:\\c8503\\CSC8503\\OpenGLRendering\\Debug\\OpenGLRendering.pdb",
+                "OpenGLRendering.dir\\Debug\\",
+                "C:\\c8503\\CSC8503\\OpenGLRendering\\OpenGLRendering.dir\\Debug\\std.ixx.ifc"
+            ],
+            "provides": [
+                {
+                    "logical-name": "std",
+                    "source-path": "c:\\program files\\microsoft visual studio\\2022\\community\\vc\\tools\\msvc\\14.36.32532\\modules\\std.ixx",
+                    "is-interface": true
+                }
+            ],
+            "requires": []
+        }
+    ]
+}

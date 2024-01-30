@@ -1,0 +1,12 @@
+[submodule "NCLCoreClasses"]
+	path = NCLCoreClasses
+	url = https://github.com/RichDavisonNCL/NCLCoreClasses
+[submodule "CSC8503CoreClasses"]
+	path = CSC8503CoreClasses
+	url = https://github.com/RichDavisonNCL/CSC8503CoreClasses
+[submodule "VulkanRendering"]
+	path = VulkanRendering
+	url = https://github.com/RichDavisonNCL/VulkanRendering
+[submodule "OpenGLRendering"]
+	path = OpenGLRendering
+	url = https://github.com/RichDavisonNCL/OpenGLRendering

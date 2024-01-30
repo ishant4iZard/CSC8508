@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Code\My Graphics Repos\CSC8503\CMakeFiles\de5764a0e04246ea0c3d6f060ac23391\Debug.frag.spv.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Code\My Graphics Repos\CSC8503\CMakeFiles\de5764a0e04246ea0c3d6f060ac23391\Debug.vert.spv.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Code\My Graphics Repos\CSC8503\CMakeFiles\de5764a0e04246ea0c3d6f060ac23391\DebugText.frag.spv.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Code\My Graphics Repos\CSC8503\CMakeFiles\de5764a0e04246ea0c3d6f060ac23391\DebugText.vert.spv.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Code\My Graphics Repos\CSC8503\CMakeFiles\de5764a0e04246ea0c3d6f060ac23391\Shadow.vert.spv.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Code\My Graphics Repos\CSC8503\CMakeFiles\de5764a0e04246ea0c3d6f060ac23391\scene.frag.spv.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Code\My Graphics Repos\CSC8503\CMakeFiles\de5764a0e04246ea0c3d6f060ac23391\scene.vert.spv.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Code\My Graphics Repos\CSC8503\CMakeFiles\de5764a0e04246ea0c3d6f060ac23391\shadow.frag.spv.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Code\My Graphics Repos\CSC8503\CMakeFiles\de5764a0e04246ea0c3d6f060ac23391\skybox.frag.spv.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Code\My Graphics Repos\CSC8503\CMakeFiles\de5764a0e04246ea0c3d6f060ac23391\skybox.vert.spv.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Code\My Graphics Repos\CSC8503\CMakeFiles\0badc960abb9c94a3104893d1e47367d\SHADER_FILES.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Code\My Graphics Repos\CSC8503\CSC8503\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="C:\Code\My Graphics Repos\CSC8503\CSC8503\CMakeFiles\SHADER_FILES" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{CFE303D7-EBAC-3E02-9F3A-1E3AF3E89646}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,10 @@
+^C:\USERS\C3002856\SOURCE\REPOS\CSC8503\CSC8503\CSC8503\CMAKELISTS.TXT
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/c3002856/source/repos/CSC8503/CSC8503 -BC:/Users/c3002856/source/repos/CSC8503/CSC8503 --check-stamp-file C:/Users/c3002856/source/repos/CSC8503/CSC8503/CSC8503/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
