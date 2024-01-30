@@ -1,4 +1,5 @@
-﻿  cmake_pch.cxx
+﻿  Building Custom Rule C:/c8503/CSC8508/OpenGLRendering/CMakeLists.txt
+  cmake_pch.cxx
   OGLTexture.h
   OGLShader.h
   OGLRenderer.h
@@ -11,4 +12,4 @@
   OGLComputeShader.cpp
   gl.h
   gl.c
-  OpenGLRendering.vcxproj -> C:\Users\c3002856\source\repos\CSC8503\CSC8503\OpenGLRendering\Debug\OpenGLRendering.lib
+  OpenGLRendering.vcxproj -> C:\c8503\CSC8508\OpenGLRendering\Debug\OpenGLRendering.lib

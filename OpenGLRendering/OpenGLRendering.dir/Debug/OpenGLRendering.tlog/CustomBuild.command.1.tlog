@@ -1,6 +1,6 @@
-^C:\USERS\C3002856\SOURCE\REPOS\CSC8503\CSC8503\OPENGLRENDERING\CMAKELISTS.TXT
+^C:\C8503\CSC8508\OPENGLRENDERING\CMAKELISTS.TXT
 setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/c3002856/source/repos/CSC8503/CSC8503 -BC:/Users/c3002856/source/repos/CSC8503/CSC8503 --check-stamp-file C:/Users/c3002856/source/repos/CSC8503/CSC8503/OpenGLRendering/CMakeFiles/generate.stamp
+C:\c8503\cmake-3.28.0-rc5-windows-x86_64\bin\cmake.exe -SC:/c8503/CSC8508 -BC:/c8503/CSC8508 --check-stamp-file C:/c8503/CSC8508/OpenGLRendering/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone

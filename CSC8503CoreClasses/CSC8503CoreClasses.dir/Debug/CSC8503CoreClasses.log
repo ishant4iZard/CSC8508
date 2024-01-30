@@ -1,4 +1,5 @@
-﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(531,5): warning MSB8028: The intermediate directory (CSC8503CoreClasses.dir\Debug\) contains files shared from another project (CSC8503CoreClasses.vcxproj, CSC8503CoreClasses.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(531,5): warning MSB8028: The intermediate directory (CSC8503CoreClasses.dir\Debug\) contains files shared from another project (CSC8503CoreClasses.vcxproj, CSC8503CoreClasses.vcxproj, CSC8503CoreClasses.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  Building Custom Rule C:/c8503/CSC8508/CSC8503CoreClasses/CMakeLists.txt
   cmake_pch.cxx
   Debug.h
   GameObject.h
@@ -81,4 +82,4 @@
   protocol.c
   win32.h
   win32.c
-  CSC8503CoreClasses.vcxproj -> C:\Users\c3002856\source\repos\CSC8503\CSC8503\x64\Debug\CSC8503CoreClasses.lib
+  CSC8503CoreClasses.vcxproj -> C:\c8503\CSC8508\x64\Debug\CSC8503CoreClasses.lib

@@ -1,69 +1,69 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503\CSC8503\CSC8503\CMakeFiles\CSC8503.dir\cmake_pch.cxx">
+    <ClCompile Include="C:\c8503\CSC8508\CSC8503\CMakeFiles\CSC8503.dir\cmake_pch.cxx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503\CSC8503\CSC8503\Bullet.cpp">
+    <ClCompile Include="C:\c8503\CSC8508\CSC8503\Bullet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503\CSC8503\CSC8503\GameTechRenderer.cpp">
+    <ClCompile Include="C:\c8503\CSC8508\CSC8503\GameTechRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503\CSC8503\CSC8503\Main.cpp">
+    <ClCompile Include="C:\c8503\CSC8508\CSC8503\Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503\CSC8503\CSC8503\NetworkedGame.cpp">
+    <ClCompile Include="C:\c8503\CSC8508\CSC8503\NetworkedGame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503\CSC8503\CSC8503\NetworkPlayer.cpp">
+    <ClCompile Include="C:\c8503\CSC8508\CSC8503\NetworkPlayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503\CSC8503\CSC8503\StateGameObject.cpp">
+    <ClCompile Include="C:\c8503\CSC8508\CSC8503\StateGameObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503\CSC8503\CSC8503\TutorialGame.cpp">
+    <ClCompile Include="C:\c8503\CSC8508\CSC8503\TutorialGame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="C:\Users\c3002856\source\repos\CSC8503\CSC8503\CSC8503\Bullet.h">
+    <ClInclude Include="C:\c8503\CSC8508\CSC8503\Bullet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\c3002856\source\repos\CSC8503\CSC8503\CSC8503\GameTechRenderer.h">
+    <ClInclude Include="C:\c8503\CSC8508\CSC8503\GameTechRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\c3002856\source\repos\CSC8503\CSC8503\CSC8503\NetworkedGame.h">
+    <ClInclude Include="C:\c8503\CSC8508\CSC8503\NetworkedGame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\c3002856\source\repos\CSC8503\CSC8503\CSC8503\NetworkPlayer.h">
+    <ClInclude Include="C:\c8503\CSC8508\CSC8503\NetworkPlayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\c3002856\source\repos\CSC8503\CSC8503\CSC8503\StateGameObject.h">
+    <ClInclude Include="C:\c8503\CSC8508\CSC8503\StateGameObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\c3002856\source\repos\CSC8503\CSC8503\CSC8503\TutorialGame.h">
+    <ClInclude Include="C:\c8503\CSC8508\CSC8503\TutorialGame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\c3002856\source\repos\CSC8503\CSC8503\CSC8503\CMakeFiles\CSC8503.dir\Debug\cmake_pch.hxx">
+    <ClInclude Include="C:\c8503\CSC8508\CSC8503\CMakeFiles\CSC8503.dir\Debug\cmake_pch.hxx">
       <Filter>Precompile Header File</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\c3002856\source\repos\CSC8503\CSC8503\CSC8503\CMakeFiles\CSC8503.dir\Release\cmake_pch.hxx">
+    <ClInclude Include="C:\c8503\CSC8508\CSC8503\CMakeFiles\CSC8503.dir\Release\cmake_pch.hxx">
       <Filter>Precompile Header File</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Users\c3002856\source\repos\CSC8503\CSC8503\CSC8503\CMakeLists.txt" />
+    <CustomBuild Include="C:\c8503\CSC8508\CSC8503\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
-      <UniqueIdentifier>{7BF6F93B-5934-3B48-9FD2-080693D6619F}</UniqueIdentifier>
+      <UniqueIdentifier>{E842F2B7-6428-3B86-9207-B723DA53AB2A}</UniqueIdentifier>
     </Filter>
     <Filter Include="Precompile Header File">
-      <UniqueIdentifier>{67B74DC1-ADC7-3C9D-9CF4-32A13C22C8D2}</UniqueIdentifier>
+      <UniqueIdentifier>{B83ABFC4-A15F-3B49-BF6C-C92D61BB4494}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{DC70FB0D-8EF7-3134-9173-B7F373CA5632}</UniqueIdentifier>
+      <UniqueIdentifier>{D2679638-4459-3EFD-BA12-F92337C2A00E}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
