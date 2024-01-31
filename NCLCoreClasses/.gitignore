@@ -30,3 +30,56 @@
 /NCLCoreClasses.dir/Release/*.txt
 /*.vcxproj
 /*.filters
+
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+*.vsidx
+*.ipch
+*.db
+/.vs/CSC8503/FileContentIndex/read.lock
+/.vs
+/Build
+/out/build/x64-Debug
+cmake-build-debug-visual-studio/*
+CMakeLists.txt.user
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+Testing
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_deps
