@@ -24,7 +24,7 @@ GameObject::~GameObject()	{
 }
 
 bool GameObject::GetBroadphaseAABB(Vector3&outSize) const {
-	if (!boundingVolume) {
+	if (!boundingVolume || isActive == false) {
 		return false;
 	}
 	outSize = broadphaseAABB;
@@ -32,7 +32,7 @@ bool GameObject::GetBroadphaseAABB(Vector3&outSize) const {
 }
 
 void GameObject::UpdateBroadphaseAABB() {
-	if (!boundingVolume) {
+	if (!boundingVolume || isActive ==false) {
 		return;
 	}
 	if (boundingVolume->type == VolumeType::AABB) {

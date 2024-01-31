@@ -19,8 +19,17 @@ namespace NCL {
 			void SetGlobalDamping(float d) {
 				globalDamping = d;
 			}
+			void SetLinearDamping(float d) {
+				linearDamping = d;
+			}
 
 			void SetGravity(const Vector3& g);
+
+			void createStaticTree();
+
+			void SetBroadphase(bool is) {
+				useBroadPhase = is;
+			}
 		protected:
 			void BasicCollisionDetection();
 			void BroadPhase();
@@ -44,12 +53,15 @@ namespace NCL {
 			Vector3 gravity;
 			float	dTOffset;
 			float	globalDamping;
+			float	linearDamping;
+			
 
 			std::set<CollisionDetection::CollisionInfo> allCollisions;
 			std::set<CollisionDetection::CollisionInfo> broadphaseCollisions;
 			std::vector<CollisionDetection::CollisionInfo> broadphaseCollisionsVec;
 			bool useBroadPhase		= true;
 			int numCollisionFrames	= 5;
+
 		};
 	}
 }

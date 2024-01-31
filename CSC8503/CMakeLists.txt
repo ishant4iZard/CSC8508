@@ -4,23 +4,31 @@ set(PROJECT_NAME CSC8503)
 # Source groups
 ################################################################################
 set(Header_Files
-    "Bullet.h"
     "GameTechRenderer.h"
     "NetworkedGame.h"
     "NetworkPlayer.h"
     "StateGameObject.h"
     "TutorialGame.h"
+    "Voxels.h"
+    "PowerUp.h"
+    "Player.h"
+    "Goose.h"
 )
 source_group("Header Files" FILES ${Header_Files})
 
 set(Source_Files
-    "Bullet.cpp"
     "GameTechRenderer.cpp"
     "Main.cpp"
     "NetworkedGame.cpp"
     "NetworkPlayer.cpp"
     "StateGameObject.cpp"
     "TutorialGame.cpp"
+    "Voxels.cpp"
+    "PowerUp.cpp"
+    "Player.cpp"
+    "Goose.cpp"
+
+
 )
 
 if(USE_VULKAN)

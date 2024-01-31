@@ -7,9 +7,11 @@ namespace NCL {
 	class AABBVolume : CollisionVolume
 	{
 	public:
-		AABBVolume(const Vector3& halfDims) {
+		AABBVolume(const Vector3& halfDims, bool isTrigger = false, bool isKinematic = false) {
 			type		= VolumeType::AABB;
 			halfSizes	= halfDims;
+			this->isTrigger = isTrigger;
+			this->isKinematic = isKinematic;
 		}
 		~AABBVolume() {
 

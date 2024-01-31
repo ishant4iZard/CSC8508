@@ -34,9 +34,9 @@ namespace NCL {
 			void UpdateMatrix();
 		protected:
 			Matrix4		matrix;
+
 			Quaternion	orientation;
 			Vector3		position;
-
 			Vector3		scale;
 		};
 	}

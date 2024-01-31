@@ -8,8 +8,7 @@ namespace NCL {
 			enum PushdownResult {
 				Push, Pop, NoChange
 			};
-			PushdownState() {
-				
+			PushdownState()  {
 			}
 			virtual ~PushdownState() {}
 
@@ -17,11 +16,7 @@ namespace NCL {
 			virtual void OnAwake() {}
 			virtual void OnSleep() {}
 			
-			void GetGame(void** game) { *game = this->game; }
-			void SetGame(void* val) { this->game = val; }
-
 		protected:
-			void* game = nullptr;
 		};
 	}
 }

@@ -7,6 +7,7 @@ Comments and queries to: richard-gordon.davison AT ncl.ac.uk
 https://research.ncl.ac.uk/game/
 */
 #pragma once
+#include "Matrix4.h"
 
 namespace NCL::Maths {
 	class Matrix3;
@@ -46,6 +47,8 @@ namespace NCL::Maths {
 
 		static Quaternion EulerAnglesToQuaternion(float pitch, float yaw, float roll);
 		static Quaternion AxisAngleToQuaterion(const Vector3& vector, float degrees);
+
+		Vector3 QuaterniontoDirection(const Quaternion& a);
 
 		inline bool  operator ==(const Quaternion &from)	const {
 			if (x != from.x || y != from.y || z != from.z || w != from.w) {
@@ -113,6 +116,12 @@ namespace NCL::Maths {
 
 		inline friend std::ostream& operator <<(std::ostream& o, const Quaternion& q);
 		inline friend std::istream& operator >>(std::istream& i, Quaternion &v);
+
+		static Quaternion RotateTowards(const Vector3& currentPos, const Vector3& targetPos, const Vector3& axis)
+		{
+			Matrix4 rotMat = Matrix4::BuildViewMatrix(currentPos, targetPos, axis).Inverse();
+			return Quaternion(rotMat);
+		}
 	};
 
 	std::ostream& operator<<(std::ostream& o, const Quaternion& q) {
@@ -129,4 +138,6 @@ namespace NCL::Maths {
 		i >> std::skipws >> v.x >> ignore >> v.y >> ignore >> v.z >> ignore >> v.w >> std::noskipws;
 		return i;
 	}
+
+	
 }

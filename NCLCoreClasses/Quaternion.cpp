@@ -186,6 +186,8 @@ Vector3 Quaternion::ToEuler() const {
 	return euler;
 }
 
+
+
 //http://www.euclideanspace.com/maths/geometry/rotations/conversions/eulerToQuaternion/
 //VERIFIED AS CORRECT - Pitch and roll are changed around as the above uses x as 'forward', whereas we use -z
 Quaternion Quaternion::EulerAnglesToQuaternion(float roll, float yaw, float pitch) {

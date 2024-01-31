@@ -91,7 +91,7 @@ namespace NCL {
 			X = 0x58,  // X key  
 			Y = 0x59,  // Y key  
 			Z = 0x5A,  // Z key  
-			LWIN = 0x5B,  // Left Windows key (Microsoft?Natural?keyboard)  
+			LWIN = 0x5B,  // Left Windows key (Microsoft® Natural® keyboard)  
 			RWIN = 0x5C,  // Right Windows key (Natural keyboard)  
 			APPS = 0x5D,  //Applications key (Natural keyboard)  
 			SLEEP = 0x5F,  // Computer Sleep key 
@@ -147,7 +147,6 @@ namespace NCL {
 			COMMA = 0xBC,  // Comma Key  (,)
 			MINUS = 0xBD,  // Minus Key  (-)
 			PERIOD = 0xBE,  // Period Key (.)
-			BACKTICK = 0xC0, // `
 			ATTN = 0xF6,  // Attn key 
 			CRSEL = 0xF7,  // CrSel key 
 			EXSEL = 0xF8,  // ExSel key 

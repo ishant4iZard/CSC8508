@@ -5,9 +5,11 @@ namespace NCL {
 	class OBBVolume : CollisionVolume
 	{
 	public:
-		OBBVolume(const Maths::Vector3& halfDims) {
+		OBBVolume(const Maths::Vector3& halfDims, bool isTrigger = false,bool isKinematic =false) {
 			type		= VolumeType::OBB;
 			halfSizes	= halfDims;
+			this->isTrigger = isTrigger;
+			this->isKinematic = isKinematic;
 		}
 		~OBBVolume() {}
 

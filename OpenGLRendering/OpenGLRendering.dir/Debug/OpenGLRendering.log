@@ -1,5 +1,18 @@
-﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\amd64\Microsoft.Common.CurrentVersion.targets(2116,5): warning : The referenced project 'C:\c8503\CSC8508\ZERO_CHECK.vcxproj' does not exist.
-C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\amd64\Microsoft.Common.CurrentVersion.targets(2116,5): warning : The referenced project 'C:\c8503\CSC8508\NCLCoreClasses\NCLCoreClasses.vcxproj' does not exist.
-  Building Custom Rule C:/c8503/CSC8508/OpenGLRendering/CMakeLists.txt
-  The system cannot find the path specified.
-C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppCommon.targets(248,5): error MSB8066: Custom build for 'C:\c8503\CSC8508\OpenGLRendering\CMakeLists.txt' exited with code 3.
+﻿  Building Custom Rule C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/OpenGLRendering/CMakeLists.txt
+  cmake_pch.cxx
+C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\NCLCoreClasses\Vector3.h(37,12): warning C4834: discarding return value of function with 'nodiscard' attribute
+C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\NCLCoreClasses\Vector3.h(38,12): warning C4834: discarding return value of function with 'nodiscard' attribute
+C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\NCLCoreClasses\Vector3.h(39,12): warning C4834: discarding return value of function with 'nodiscard' attribute
+  OGLTexture.h
+  OGLShader.h
+  OGLRenderer.h
+  OGLMesh.h
+  OGLComputeShader.h
+  OGLTexture.cpp
+  OGLShader.cpp
+  OGLRenderer.cpp
+  OGLMesh.cpp
+  OGLComputeShader.cpp
+  gl.h
+  gl.c
+  OpenGLRendering.vcxproj -> C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\OpenGLRendering\Debug\OpenGLRendering.lib

@@ -22,7 +22,7 @@ namespace NCL {
 				}
 				waypoint = waypoints.back();
 				waypoints.pop_back();
-				return true;	
+				return true;
 			}
 
 		protected:

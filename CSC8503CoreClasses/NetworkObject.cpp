@@ -7,23 +7,17 @@ NetworkObject::NetworkObject(GameObject& o, int id) : object(o)	{
 	deltaErrors = 0;
 	fullErrors  = 0;
 	networkID   = id;
-	lastFullState.position = object.GetTransform().GetPosition();
-	lastFullState.orientation = object.GetTransform().GetOrientation();
-	lastFullState.stateID = -1;
 }
 
 NetworkObject::~NetworkObject()	{
 }
 
-bool NetworkObject::ReadPacket(GamePacket& p) 
-{
-	if (p.type == Delta_State)
-	{
+bool NetworkObject::ReadPacket(GamePacket& p) {
+	if (p.type == Delta_State) {
 		return ReadDeltaPacket((DeltaPacket&)p);
 	}
-	if (p.type = Full_State)
-	{
-		return ReadFullPacket((FullPacket&)p);
+	if (p.type == Full_State) {
+		 return ReadFullPacket((FullPacket&)p);
 	}
 	return false; //this isn't a packet we care about!
 }
@@ -37,11 +31,10 @@ bool NetworkObject::WritePacket(GamePacket** p, bool deltaFrame, int stateID) {
 	return WriteFullPacket(p);
 }
 //Client objects recieve these packets
-bool NetworkObject::ReadDeltaPacket(DeltaPacket &p) 
-{
-	if (p.fullID != lastFullState.stateID)
-	{
-		return false; //can't delta this frame
+bool NetworkObject::ReadDeltaPacket(DeltaPacket& p) {
+	if (p.fullID != lastFullState.stateID) {
+		return false; // can ’t delta this frame
+
 	}
 	UpdateStateHistory(p.fullID);
 
@@ -62,79 +55,66 @@ bool NetworkObject::ReadDeltaPacket(DeltaPacket &p)
 	return true;
 }
 
-bool NetworkObject::ReadFullPacket(FullPacket &p) 
-{
-	if (p.fullState.stateID < lastFullState.stateID)
-	{
-		return false; //received an "old" packet, ignore!!
+bool NetworkObject::ReadFullPacket(FullPacket &p) {
+	if (p.fullState.stateID < lastFullState.stateID) {
+		return false; // received an ’ old ’ packet , ignore !
 	}
 	lastFullState = p.fullState;
-
 	object.GetTransform().SetPosition(lastFullState.position);
 	object.GetTransform().SetOrientation(lastFullState.orientation);
-
+	
 	stateHistory.emplace_back(lastFullState);
 	
 	return true;
 }
 
-bool NetworkObject::WriteDeltaPacket(GamePacket**p, int stateID) 
-{
+bool NetworkObject::WriteDeltaPacket(GamePacket**p, int stateID) {
 	DeltaPacket* dp = new DeltaPacket();
 	NetworkState state;
-	if (!GetNetworkState(stateID, state))
-	{
-		return false; //can't delta!
+	if (!GetNetworkState(stateID, state)) {
+		return false; // can ’t delta !
 	}
-
-	dp->fullID = stateID;
-	dp->objectID = networkID;
-
+	dp -> fullID = stateID;
+	dp -> objectID = networkID;
+	
 	Vector3 currentPos = object.GetTransform().GetPosition();
-	Quaternion currentOrientation = object.GetTransform().GetOrientation();
-
+	Quaternion currentOrientation =
+	object.GetTransform().GetOrientation();
+	
 	currentPos -= state.position;
 	currentOrientation -= state.orientation;
-
-	dp->pos[0] = (char)currentPos.x;
-	dp->pos[1] = (char)currentPos.y;
-	dp->pos[2] = (char)currentPos.z;
-
-	dp->orientation[0] = (char)(currentOrientation.x * 127.0f);
-	dp->orientation[1] = (char)(currentOrientation.y * 127.0f);
-	dp->orientation[2] = (char)(currentOrientation.z * 127.0f);
-	dp->orientation[3] = (char)(currentOrientation.w * 127.0f);
+	
+	dp -> pos[0] = (char)currentPos.x;
+	dp -> pos[1] = (char)currentPos.y;
+	dp -> pos[2] = (char)currentPos.z;
+	
+	dp -> orientation[0] = (char)(currentOrientation.x * 127.0f);
+	dp -> orientation[1] = (char)(currentOrientation.y * 127.0f);
+	dp -> orientation[2] = (char)(currentOrientation.z * 127.0f);
+	dp -> orientation[3] = (char)(currentOrientation.w * 127.0f);
 	*p = dp;
 	return true;
 }
 
-bool NetworkObject::WriteFullPacket(GamePacket**p)
-{
+bool NetworkObject::WriteFullPacket(GamePacket** p) {
 	FullPacket* fp = new FullPacket();
-	NetworkState state;
-	state.position = object.GetTransform().GetPosition();
-	state.orientation = object.GetTransform().GetOrientation();
-	state.stateID = lastFullState.stateID + 1;
-	fp->objectID = networkID; 
-	fp->fullState = state;
-	lastFullState = state;
-	stateHistory.emplace_back(lastFullState);
+
+	fp->objectID = networkID;
+	fp->fullState.position = object.GetTransform().GetPosition();
+	fp->fullState.orientation =
+		object.GetTransform().GetOrientation();
+	fp->fullState.stateID = lastFullState.stateID++;
 	*p = fp;
 	return true;
 }
 
-// get the latest state received from a server		
 NetworkState& NetworkObject::GetLatestNetworkState() {
 	return lastFullState;
 }
 
-// get a particular saved state on either the client or server side
-bool NetworkObject::GetNetworkState(int stateID, NetworkState& state) 
-{
-	for (auto i = stateHistory.begin(); i < stateHistory.end(); ++i)
-	{
-		if ((*i).stateID == stateID)
-		{
+bool NetworkObject::GetNetworkState(int stateID, NetworkState& state) {
+	for (auto i = stateHistory.begin(); i < stateHistory.end(); ++i) {
+		if ((*i).stateID == stateID) {
 			state = (*i);
 			return true;
 		}
@@ -142,16 +122,12 @@ bool NetworkObject::GetNetworkState(int stateID, NetworkState& state)
 	return false;
 }
 
-void NetworkObject::UpdateStateHistory(int minID)
-{
-	for (auto i = stateHistory.begin(); i < stateHistory.end(); )
-	{
-		if ((*i).stateID < minID)
-		{
-			i = stateHistory.erase(i);
+void NetworkObject::UpdateStateHistory(int minID) {
+	for (auto i = stateHistory.begin(); i < stateHistory.end(); ) {
+		if ((*i).stateID < minID) {
+			 i = stateHistory.erase(i);
 		}
-		else
-		{
+		else {
 			++i;
 		}
 	}

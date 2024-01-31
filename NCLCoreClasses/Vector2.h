@@ -61,7 +61,7 @@ namespace NCL::Maths {
 			return std::max(std::abs(x), std::abs(y));
 		}
 
-		static constexpr Vector2 Clamp(const Vector2& input, const Vector2& mins, const Vector2& maxs);
+		static  Vector2 Clamp(const Vector2& input, const Vector2& mins, const Vector2& maxs);
 
 		static constexpr float	Dot(const Vector2& a, const Vector2& b) {
 			return (a.x * b.x) + (a.y * b.y);

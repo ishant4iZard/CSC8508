@@ -35,6 +35,13 @@ namespace NCL {
 			float GetInverseMass() const {
 				return inverseMass;
 			}
+			void SetElasticity(float inElasticity)
+			{
+				elasticity = inElasticity;
+			}
+			float GetElasticity() const {
+				return elasticity;
+			}
 
 			void ApplyAngularImpulse(const Vector3& force);
 			void ApplyLinearImpulse(const Vector3& force);
@@ -56,14 +63,8 @@ namespace NCL {
 				angularVelocity = v;
 			}
 
-			void setLinearDamp(float val) { LinearDamp = val; }
-			float getLinearDamp() const { return LinearDamp; }
-
-			void setAngularDamp(float val) { AngularDamp = val; }
-			float getAngularDamp() const { return AngularDamp; }
-
 			void InitCubeInertia();
-			void InitSphereInertia();
+			void InitSphereInertia(bool isHollow = false);
 
 			void UpdateInertiaTensor();
 
@@ -78,9 +79,6 @@ namespace NCL {
 			float inverseMass;
 			float elasticity;
 			float friction;
-
-			float LinearDamp = 0.4;
-			float AngularDamp = 0.4;
 
 			//linear stuff
 			Vector3 linearVelocity;

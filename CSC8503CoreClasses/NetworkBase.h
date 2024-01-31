@@ -14,9 +14,6 @@ enum BasicNetworkMessages {
 	Received_State, //received from a client, informs that its received packet n
 	Player_Connected,
 	Player_Disconnected,
-	Round_State,
-	Player_State,
-	bullet_state,
 	Shutdown
 };
 
@@ -38,22 +35,17 @@ struct GamePacket {
 	}
 };
 
-struct StringPacket : public GamePacket
-{
-	int peerID;
+struct StringPacket : public GamePacket {
 	char stringData[256];
 
-	StringPacket(int peerID, const std::string& message)
-	{	
+	StringPacket(const std::string& message) {
 		type = BasicNetworkMessages::String_Message;
-		size = (short)(message.length() + sizeof(int));
+		size = (short)message.length();
 
-		this->peerID = peerID;
 		memcpy(stringData, message.data(), size);
 	};
 
-	std::string GetStringFromData()
-	{
+	std::string GetStringFromData() {
 		std::string realString(stringData);
 		realString.resize(size);
 		return realString;
@@ -65,7 +57,28 @@ public:
 	virtual void ReceivePacket(int type, GamePacket* payload, int source = -1) = 0;
 };
 
-class NetworkBase{
+class TestPacketReceiver : public PacketReceiver {
+public:
+	TestPacketReceiver(std::string name) {
+		this->name = name;
+
+	}
+	void ReceivePacket(int type, GamePacket* payload, int source) {
+		if (type == String_Message) {
+			StringPacket* realPacket = (StringPacket*)payload;
+
+			std::string msg = realPacket->GetStringFromData();
+
+			std::cout << name << "received message :" << msg << std::endl;
+		}
+	}
+protected:
+	std::string name;
+};
+
+
+
+class NetworkBase	{
 public:
 	static void Initialise();
 	static void Destroy();

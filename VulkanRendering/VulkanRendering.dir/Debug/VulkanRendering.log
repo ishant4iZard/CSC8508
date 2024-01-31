@@ -1,0 +1,19 @@
+﻿  Building Custom Rule C:/Users/ishan/source/repos/CSC8503 2023/VulkanRendering/CMakeLists.txt
+  cmake_pch.cxx
+  VulkanUtils.cpp
+  VulkanBuffers.cpp
+  VulkanCompute.cpp
+  VulkanComputePipelineBuilder.cpp
+  VulkanDescriptorSetLayoutBuilder.cpp
+  VulkanDynamicRenderBuilder.cpp
+  VulkanTextureBuilder.cpp
+  VulkanMesh.cpp
+  VulkanPipelineBuilder.cpp
+  VulkanRenderer.cpp
+  VulkanRenderPassBuilder.cpp
+  VulkanShader.cpp
+  VulkanShaderBuilder.cpp
+  VulkanBufferBuilder.cpp
+  VulkanTexture.cpp
+  Generating Code...
+  VulkanRendering.vcxproj -> C:\Users\ishan\source\repos\CSC8503 2023\VulkanRendering\Debug\VulkanRendering.lib

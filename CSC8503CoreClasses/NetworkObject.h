@@ -30,70 +30,10 @@ namespace NCL::CSC8503 {
 
 	struct ClientPacket : public GamePacket {
 		int		lastID;
-		Vector3 PointerPos;
-		char	btnStates[6];
+		char	buttonstates[8];
 
 		ClientPacket() {
-			type = Received_State;
 			size = sizeof(ClientPacket);
-		}
-	};
-
-	struct PLayerListPacket : public GamePacket
-	{
-		char playerList[4];
-		PLayerListPacket(std::vector<int>& serverPlayerList)
-		{
-			type = Message;
-			size = sizeof(PLayerListPacket);
-
-			for (int i = 0; i < 4; ++i)
-			{
-				playerList[i] = serverPlayerList[i] + 48;
-			}
-		}
-
-		void GetPlayerList(std::vector<int>& clientPlayerList)
-		{
-			for (int i = 0; i < 4; ++i)
-			{
-				clientPlayerList[i] = playerList[i] - 48;
-			}
-		}
-	};
-
-	struct RoundStatePacket : public GamePacket
-	{
-		bool isRoundStart;
-		bool isTreasureExist;
-		int scoretable[4];
-		RoundStatePacket()
-		{
-			type = Round_State;
-			size = sizeof(RoundStatePacket);
-		}
-	};
-
-	struct PlayerStatePacket : public GamePacket
-	{
-		char playerNum;
-		char state[4] = { 0,0,0,0 };
-		
-		PlayerStatePacket()
-		{
-			type = Player_State;
-			size = sizeof(PlayerStatePacket);
-		}
-	};
-
-	struct BulletStatePacket : public GamePacket
-	{
-		char bulletInfo[2];
-		int bulletID;
-		BulletStatePacket()
-		{
-			type = bullet_state;
-			size = sizeof(BulletStatePacket);
 		}
 	};
 
@@ -108,11 +48,10 @@ namespace NCL::CSC8503 {
 		virtual bool WritePacket(GamePacket** p, bool deltaFrame, int stateID);
 
 		void UpdateStateHistory(int minID);
-		NetworkState& GetLatestNetworkState();
 
-		int getNetWorkID()const { return networkID; }
-		GameObject* getGameObjectPtr() const { return &object; }
 	protected:
+
+		NetworkState& GetLatestNetworkState();
 
 		bool GetNetworkState(int frameID, NetworkState& state);
 

@@ -13,9 +13,9 @@ OrientationConstraint::OrientationConstraint(GameObject* a, GameObject* b)
 
 OrientationConstraint::~OrientationConstraint()
 {
-
+	//fill
 }
 
 void OrientationConstraint::UpdateConstraint(float dt) {
-
+	//fill
 }

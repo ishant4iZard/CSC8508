@@ -21,7 +21,7 @@ NavigationGrid::NavigationGrid()	{
 	allNodes	= nullptr;
 }
 
-NavigationGrid::NavigationGrid(const std::string&filename, Vector3 startPoint) : NavigationGrid() {
+NavigationGrid::NavigationGrid(const std::string&filename) : NavigationGrid() {
 	std::ifstream infile(Assets::DATADIR + filename);
 
 	infile >> nodeSize;
@@ -29,8 +29,7 @@ NavigationGrid::NavigationGrid(const std::string&filename, Vector3 startPoint) :
 	infile >> gridHeight;
 
 	allNodes = new GridNode[gridWidth * gridHeight];
-
-	float halfNodeSize = 0.5f * nodeSize;
+	Vector3 startpos = Vector3(5, -17, -30);
 
 	for (int y = 0; y < gridHeight; ++y) {
 		for (int x = 0; x < gridWidth; ++x) {
@@ -38,7 +37,7 @@ NavigationGrid::NavigationGrid(const std::string&filename, Vector3 startPoint) :
 			char type = 0;
 			infile >> type;
 			n.type = type;
-			n.position = startPoint + Vector3((float)(x * nodeSize + halfNodeSize), 0, (float)(y * nodeSize + halfNodeSize));
+			n.position = Vector3(startpos.x+(float)(x * nodeSize), startpos.y, startpos.z + (float)(y * nodeSize));
 		}
 	}
 	
@@ -108,10 +107,10 @@ bool NavigationGrid::FindPath(const Vector3& from, const Vector3& to, Navigation
 	startNode->parent = nullptr;
 
 	GridNode* currentBestNode = nullptr;
+	int j = 1;
 
 	while (!openList.empty()) {
 		currentBestNode = RemoveBestNode(openList);
-
 		if (currentBestNode == endNode) {			//we've found the path!
 			GridNode* node = endNode;
 			while (node != nullptr) {
@@ -138,9 +137,11 @@ bool NavigationGrid::FindPath(const Vector3& from, const Vector3& to, Navigation
 				bool inOpen		= NodeInList(neighbour, openList);
 
 				if (!inOpen) { //first time we've seen this neighbour
+
 					openList.emplace_back(neighbour);
 				}
 				if (!inOpen || f < neighbour->f) {//might be a better route to this neighbour
+
 					neighbour->parent = currentBestNode;
 					neighbour->f = f;
 					neighbour->g = g;
@@ -162,7 +163,7 @@ GridNode*  NavigationGrid::RemoveBestNode(std::vector<GridNode*>& list) const {
 
 	GridNode* bestNode = *list.begin();
 
-	for (auto i = list.begin(); i != list.end(); ++i) {	
+	for (auto i = list.begin(); i != list.end(); ++i) {
 		if ((*i)->f < bestNode->f) {
 			bestNode	= (*i);
 			bestI		= i;

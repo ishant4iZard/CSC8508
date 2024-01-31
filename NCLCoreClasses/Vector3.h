@@ -33,6 +33,13 @@ namespace NCL::Maths {
 			return temp;
 		}
 
+		void abs() {
+			std::abs(x);
+			std::abs(y);
+			std::abs(z);
+
+		}
+
 		void			Normalise() {
 			float length = Length();
 
@@ -161,6 +168,24 @@ namespace NCL::Maths {
 		inline friend std::ostream& operator<<(std::ostream& o, const Vector3& vec) {
 			o << "Vector3(" << vec.x << "," << vec.y << "," << vec.z << ")\n";
 			return o;
+		}
+
+		static Vector3 MoveTowards(Vector3 current, Vector3 target, float maxDistanceDelta)
+		{
+			// avoid vector ops because current scripting backends are terrible at inlining
+			float toVector_x = target.x - current.x;
+			float toVector_y = target.y - current.y;
+			float toVector_z = target.z - current.z;
+
+			float sqdist = toVector_x * toVector_x + toVector_y * toVector_y + toVector_z * toVector_z;
+
+			if (sqdist == 0 || (maxDistanceDelta >= 0 && sqdist <= maxDistanceDelta * maxDistanceDelta))
+				return target;
+			float dist = (float)sqrt(sqdist);
+
+			return Vector3(current.x + toVector_x / dist * maxDistanceDelta,
+				current.y + toVector_y / dist * maxDistanceDelta,
+				current.z + toVector_z / dist * maxDistanceDelta);
 		}
 	};
 }

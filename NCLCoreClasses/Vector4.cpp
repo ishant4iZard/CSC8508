@@ -21,7 +21,7 @@ Vector4::Vector4(const Vector2& v2, float newZ, float newW) : x(v2.x), y(v2.y), 
 
 }
 
-constexpr Vector4 Vector4::Clamp(const Vector4& input, const Vector4& mins, const Vector4& maxs) {
+Vector4 Vector4::Clamp(const Vector4& input, const Vector4& mins, const Vector4& maxs) {
 	return Vector4(
 		std::clamp(input.x, mins.x, maxs.x),
 		std::clamp(input.y, mins.y, maxs.y),

@@ -79,7 +79,7 @@ namespace NCL::Maths {
 			return v;
 		}
 
-		static constexpr Vector4 Clamp(const Vector4& input, const Vector4& mins, const Vector4& maxs);
+		static  Vector4 Clamp(const Vector4& input, const Vector4& mins, const Vector4& maxs);
 
 		static constexpr float	Dot(const Vector4 &a, const Vector4 &b) {
 			return (a.x*b.x) + (a.y*b.y) + (a.z*b.z) + (a.w*b.w);

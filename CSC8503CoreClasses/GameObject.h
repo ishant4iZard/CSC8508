@@ -9,6 +9,10 @@ namespace NCL::CSC8503 {
 	class RenderObject;
 	class PhysicsObject;
 
+
+	//add enums for layers and its collision flag
+	//add forward raycast
+
 	class GameObject	{
 	public:
 		GameObject(const std::string& name = "");
@@ -24,6 +28,12 @@ namespace NCL::CSC8503 {
 
 		bool IsActive() const {
 			return isActive;
+		}
+		void deactivate() {
+			isActive = false;
+		}
+		void activate() {
+			isActive = true;
 		}
 
 		Transform& GetTransform() {
@@ -50,21 +60,28 @@ namespace NCL::CSC8503 {
 			physicsObject = newObject;
 		}
 
-		void SetNetworkObject(NetworkObject* newObject) {
-			networkObject = newObject;
-		}
-
 		const std::string& GetName() const {
 			return name;
 		}
 
 		virtual void OnCollisionBegin(GameObject* otherObject) {
 			//std::cout << "OnCollisionBegin event occured!\n";
+			//todo
 		}
 
 		virtual void OnCollisionEnd(GameObject* otherObject) {
 			//std::cout << "OnCollisionEnd event occured!\n";
 		}
+		virtual void OnTriggerBegin(GameObject* otherObject) {
+			//std::cout << "OnCollisionBegin event occured!\n";
+			//todo
+		}
+
+		virtual void OnTriggerEnd(GameObject* otherObject) {
+			//std::cout << "OnCollisionEnd event occured!\n";
+		}
+
+
 
 		bool GetBroadphaseAABB(Vector3&outsize) const;
 
@@ -78,6 +95,16 @@ namespace NCL::CSC8503 {
 			return worldID;
 		}
 
+		std::string gettag() {
+			return tag;
+		}
+
+		void settag(std::string ttag) {
+			tag = ttag;
+		}
+
+		
+
 	protected:
 		Transform			transform;
 
@@ -89,6 +116,7 @@ namespace NCL::CSC8503 {
 		bool		isActive;
 		int			worldID;
 		std::string	name;
+		std::string	tag;
 
 		Vector3 broadphaseAABB;
 	};

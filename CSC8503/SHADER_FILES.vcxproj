@@ -14,7 +14,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{DD1D8B02-98A2-31F9-91E8-5B9BE98B8064}</ProjectGuid>
+    <ProjectGuid>{012421BB-9BEC-3740-9481-06590B491380}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <WindowsTargetPlatformVersion>10.0.22621.0</WindowsTargetPlatformVersion>
     <Platform>x64</Platform>
@@ -46,7 +46,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Midl>
-      <AdditionalIncludeDirectories>C:\Code\My Graphics Repos\CSC8503\CSC8503\..\OpenGLRendering;C:\Code\My Graphics Repos\CSC8503\CSC8503\..\NCLCoreClasses;C:\Code\My Graphics Repos\CSC8503\CSC8503\..\CSC8503CoreClasses;C:\Code\My Graphics Repos\CSC8503\CSC8503\..\VulkanRendering;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\ishan\source\repos\CSC8503 2023\CSC8503\..\OpenGLRendering;C:\Users\ishan\source\repos\CSC8503 2023\CSC8503\..\NCLCoreClasses;C:\Users\ishan\source\repos\CSC8503 2023\CSC8503\..\CSC8503CoreClasses;C:\Users\ishan\source\repos\CSC8503 2023\CSC8503\..\VulkanRendering;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -56,7 +56,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Midl>
-      <AdditionalIncludeDirectories>C:\Code\My Graphics Repos\CSC8503\CSC8503\..\OpenGLRendering;C:\Code\My Graphics Repos\CSC8503\CSC8503\..\NCLCoreClasses;C:\Code\My Graphics Repos\CSC8503\CSC8503\..\CSC8503CoreClasses;C:\Code\My Graphics Repos\CSC8503\CSC8503\..\VulkanRendering;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\ishan\source\repos\CSC8503 2023\CSC8503\..\OpenGLRendering;C:\Users\ishan\source\repos\CSC8503 2023\CSC8503\..\NCLCoreClasses;C:\Users\ishan\source\repos\CSC8503 2023\CSC8503\..\CSC8503CoreClasses;C:\Users\ishan\source\repos\CSC8503 2023\CSC8503\..\VulkanRendering;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -65,10 +65,10 @@
     </Midl>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Code\My Graphics Repos\CSC8503\CMakeFiles\de5764a0e04246ea0c3d6f060ac23391\Debug.frag.spv.rule">
+    <CustomBuild Include="C:\Users\ishan\source\repos\CSC8503 2023\CMakeFiles\9e4c1c6a54b42fcc0585aa632da75457\Debug.frag.spv.rule">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling GLSL shader:</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
-C:\VulkanSDK\1.3.268.0\Bin\glslangValidator.exe -V "C:/Code/My Graphics Repos/CSC8503/Assets/Shaders/VK/Debug.frag" -o "C:/Code/My Graphics Repos/CSC8503/Assets/Shaders/VK/Debug.frag.spv"
+C:\VulkanSDK\1.3.268.0\Bin\glslangValidator.exe -V "C:/Users/ishan/source/repos/CSC8503 2023/Assets/Shaders/VK/Debug.frag" -o "C:/Users/ishan/source/repos/CSC8503 2023/Assets/Shaders/VK/Debug.frag.spv"
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -76,12 +76,12 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Code\My Graphics Repos\CSC8503\Assets\Shaders\VK\Debug.frag;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Code\My Graphics Repos\CSC8503\Assets\Shaders\VK\Debug.frag.spv</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\ishan\source\repos\CSC8503 2023\Assets\Shaders\VK\Debug.frag;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\ishan\source\repos\CSC8503 2023\Assets\Shaders\VK\Debug.frag.spv</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compiling GLSL shader:</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
-C:\VulkanSDK\1.3.268.0\Bin\glslangValidator.exe -V "C:/Code/My Graphics Repos/CSC8503/Assets/Shaders/VK/Debug.frag" -o "C:/Code/My Graphics Repos/CSC8503/Assets/Shaders/VK/Debug.frag.spv"
+C:\VulkanSDK\1.3.268.0\Bin\glslangValidator.exe -V "C:/Users/ishan/source/repos/CSC8503 2023/Assets/Shaders/VK/Debug.frag" -o "C:/Users/ishan/source/repos/CSC8503 2023/Assets/Shaders/VK/Debug.frag.spv"
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -89,16 +89,16 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Code\My Graphics Repos\CSC8503\Assets\Shaders\VK\Debug.frag;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Code\My Graphics Repos\CSC8503\Assets\Shaders\VK\Debug.frag.spv</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\ishan\source\repos\CSC8503 2023\Assets\Shaders\VK\Debug.frag;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\ishan\source\repos\CSC8503 2023\Assets\Shaders\VK\Debug.frag.spv</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Code\My Graphics Repos\CSC8503\CMakeFiles\de5764a0e04246ea0c3d6f060ac23391\Debug.vert.spv.rule">
+    <CustomBuild Include="C:\Users\ishan\source\repos\CSC8503 2023\CMakeFiles\9e4c1c6a54b42fcc0585aa632da75457\Debug.vert.spv.rule">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling GLSL shader:</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
-C:\VulkanSDK\1.3.268.0\Bin\glslangValidator.exe -V "C:/Code/My Graphics Repos/CSC8503/Assets/Shaders/VK/Debug.vert" -o "C:/Code/My Graphics Repos/CSC8503/Assets/Shaders/VK/Debug.vert.spv"
+C:\VulkanSDK\1.3.268.0\Bin\glslangValidator.exe -V "C:/Users/ishan/source/repos/CSC8503 2023/Assets/Shaders/VK/Debug.vert" -o "C:/Users/ishan/source/repos/CSC8503 2023/Assets/Shaders/VK/Debug.vert.spv"
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -106,12 +106,12 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Code\My Graphics Repos\CSC8503\Assets\Shaders\VK\Debug.vert;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Code\My Graphics Repos\CSC8503\Assets\Shaders\VK\Debug.vert.spv</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\ishan\source\repos\CSC8503 2023\Assets\Shaders\VK\Debug.vert;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\ishan\source\repos\CSC8503 2023\Assets\Shaders\VK\Debug.vert.spv</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compiling GLSL shader:</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
-C:\VulkanSDK\1.3.268.0\Bin\glslangValidator.exe -V "C:/Code/My Graphics Repos/CSC8503/Assets/Shaders/VK/Debug.vert" -o "C:/Code/My Graphics Repos/CSC8503/Assets/Shaders/VK/Debug.vert.spv"
+C:\VulkanSDK\1.3.268.0\Bin\glslangValidator.exe -V "C:/Users/ishan/source/repos/CSC8503 2023/Assets/Shaders/VK/Debug.vert" -o "C:/Users/ishan/source/repos/CSC8503 2023/Assets/Shaders/VK/Debug.vert.spv"
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -119,16 +119,16 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Code\My Graphics Repos\CSC8503\Assets\Shaders\VK\Debug.vert;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Code\My Graphics Repos\CSC8503\Assets\Shaders\VK\Debug.vert.spv</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\ishan\source\repos\CSC8503 2023\Assets\Shaders\VK\Debug.vert;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\ishan\source\repos\CSC8503 2023\Assets\Shaders\VK\Debug.vert.spv</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Code\My Graphics Repos\CSC8503\CMakeFiles\de5764a0e04246ea0c3d6f060ac23391\DebugText.frag.spv.rule">
+    <CustomBuild Include="C:\Users\ishan\source\repos\CSC8503 2023\CMakeFiles\9e4c1c6a54b42fcc0585aa632da75457\DebugText.frag.spv.rule">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling GLSL shader:</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
-C:\VulkanSDK\1.3.268.0\Bin\glslangValidator.exe -V "C:/Code/My Graphics Repos/CSC8503/Assets/Shaders/VK/DebugText.frag" -o "C:/Code/My Graphics Repos/CSC8503/Assets/Shaders/VK/DebugText.frag.spv"
+C:\VulkanSDK\1.3.268.0\Bin\glslangValidator.exe -V "C:/Users/ishan/source/repos/CSC8503 2023/Assets/Shaders/VK/DebugText.frag" -o "C:/Users/ishan/source/repos/CSC8503 2023/Assets/Shaders/VK/DebugText.frag.spv"
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -136,12 +136,12 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Code\My Graphics Repos\CSC8503\Assets\Shaders\VK\DebugText.frag;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Code\My Graphics Repos\CSC8503\Assets\Shaders\VK\DebugText.frag.spv</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\ishan\source\repos\CSC8503 2023\Assets\Shaders\VK\DebugText.frag;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\ishan\source\repos\CSC8503 2023\Assets\Shaders\VK\DebugText.frag.spv</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compiling GLSL shader:</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
-C:\VulkanSDK\1.3.268.0\Bin\glslangValidator.exe -V "C:/Code/My Graphics Repos/CSC8503/Assets/Shaders/VK/DebugText.frag" -o "C:/Code/My Graphics Repos/CSC8503/Assets/Shaders/VK/DebugText.frag.spv"
+C:\VulkanSDK\1.3.268.0\Bin\glslangValidator.exe -V "C:/Users/ishan/source/repos/CSC8503 2023/Assets/Shaders/VK/DebugText.frag" -o "C:/Users/ishan/source/repos/CSC8503 2023/Assets/Shaders/VK/DebugText.frag.spv"
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -149,16 +149,16 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Code\My Graphics Repos\CSC8503\Assets\Shaders\VK\DebugText.frag;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Code\My Graphics Repos\CSC8503\Assets\Shaders\VK\DebugText.frag.spv</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\ishan\source\repos\CSC8503 2023\Assets\Shaders\VK\DebugText.frag;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\ishan\source\repos\CSC8503 2023\Assets\Shaders\VK\DebugText.frag.spv</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Code\My Graphics Repos\CSC8503\CMakeFiles\de5764a0e04246ea0c3d6f060ac23391\DebugText.vert.spv.rule">
+    <CustomBuild Include="C:\Users\ishan\source\repos\CSC8503 2023\CMakeFiles\9e4c1c6a54b42fcc0585aa632da75457\DebugText.vert.spv.rule">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling GLSL shader:</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
-C:\VulkanSDK\1.3.268.0\Bin\glslangValidator.exe -V "C:/Code/My Graphics Repos/CSC8503/Assets/Shaders/VK/DebugText.vert" -o "C:/Code/My Graphics Repos/CSC8503/Assets/Shaders/VK/DebugText.vert.spv"
+C:\VulkanSDK\1.3.268.0\Bin\glslangValidator.exe -V "C:/Users/ishan/source/repos/CSC8503 2023/Assets/Shaders/VK/DebugText.vert" -o "C:/Users/ishan/source/repos/CSC8503 2023/Assets/Shaders/VK/DebugText.vert.spv"
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -166,12 +166,12 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Code\My Graphics Repos\CSC8503\Assets\Shaders\VK\DebugText.vert;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Code\My Graphics Repos\CSC8503\Assets\Shaders\VK\DebugText.vert.spv</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\ishan\source\repos\CSC8503 2023\Assets\Shaders\VK\DebugText.vert;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\ishan\source\repos\CSC8503 2023\Assets\Shaders\VK\DebugText.vert.spv</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compiling GLSL shader:</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
-C:\VulkanSDK\1.3.268.0\Bin\glslangValidator.exe -V "C:/Code/My Graphics Repos/CSC8503/Assets/Shaders/VK/DebugText.vert" -o "C:/Code/My Graphics Repos/CSC8503/Assets/Shaders/VK/DebugText.vert.spv"
+C:\VulkanSDK\1.3.268.0\Bin\glslangValidator.exe -V "C:/Users/ishan/source/repos/CSC8503 2023/Assets/Shaders/VK/DebugText.vert" -o "C:/Users/ishan/source/repos/CSC8503 2023/Assets/Shaders/VK/DebugText.vert.spv"
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -179,16 +179,16 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Code\My Graphics Repos\CSC8503\Assets\Shaders\VK\DebugText.vert;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Code\My Graphics Repos\CSC8503\Assets\Shaders\VK\DebugText.vert.spv</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\ishan\source\repos\CSC8503 2023\Assets\Shaders\VK\DebugText.vert;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\ishan\source\repos\CSC8503 2023\Assets\Shaders\VK\DebugText.vert.spv</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Code\My Graphics Repos\CSC8503\CMakeFiles\de5764a0e04246ea0c3d6f060ac23391\Shadow.vert.spv.rule">
+    <CustomBuild Include="C:\Users\ishan\source\repos\CSC8503 2023\CMakeFiles\9e4c1c6a54b42fcc0585aa632da75457\Shadow.vert.spv.rule">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling GLSL shader:</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
-C:\VulkanSDK\1.3.268.0\Bin\glslangValidator.exe -V "C:/Code/My Graphics Repos/CSC8503/Assets/Shaders/VK/Shadow.vert" -o "C:/Code/My Graphics Repos/CSC8503/Assets/Shaders/VK/Shadow.vert.spv"
+C:\VulkanSDK\1.3.268.0\Bin\glslangValidator.exe -V "C:/Users/ishan/source/repos/CSC8503 2023/Assets/Shaders/VK/Shadow.vert" -o "C:/Users/ishan/source/repos/CSC8503 2023/Assets/Shaders/VK/Shadow.vert.spv"
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -196,12 +196,12 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Code\My Graphics Repos\CSC8503\Assets\Shaders\VK\Shadow.vert;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Code\My Graphics Repos\CSC8503\Assets\Shaders\VK\Shadow.vert.spv</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\ishan\source\repos\CSC8503 2023\Assets\Shaders\VK\Shadow.vert;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\ishan\source\repos\CSC8503 2023\Assets\Shaders\VK\Shadow.vert.spv</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compiling GLSL shader:</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
-C:\VulkanSDK\1.3.268.0\Bin\glslangValidator.exe -V "C:/Code/My Graphics Repos/CSC8503/Assets/Shaders/VK/Shadow.vert" -o "C:/Code/My Graphics Repos/CSC8503/Assets/Shaders/VK/Shadow.vert.spv"
+C:\VulkanSDK\1.3.268.0\Bin\glslangValidator.exe -V "C:/Users/ishan/source/repos/CSC8503 2023/Assets/Shaders/VK/Shadow.vert" -o "C:/Users/ishan/source/repos/CSC8503 2023/Assets/Shaders/VK/Shadow.vert.spv"
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -209,16 +209,16 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Code\My Graphics Repos\CSC8503\Assets\Shaders\VK\Shadow.vert;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Code\My Graphics Repos\CSC8503\Assets\Shaders\VK\Shadow.vert.spv</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\ishan\source\repos\CSC8503 2023\Assets\Shaders\VK\Shadow.vert;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\ishan\source\repos\CSC8503 2023\Assets\Shaders\VK\Shadow.vert.spv</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Code\My Graphics Repos\CSC8503\CMakeFiles\de5764a0e04246ea0c3d6f060ac23391\scene.frag.spv.rule">
+    <CustomBuild Include="C:\Users\ishan\source\repos\CSC8503 2023\CMakeFiles\9e4c1c6a54b42fcc0585aa632da75457\scene.frag.spv.rule">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling GLSL shader:</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
-C:\VulkanSDK\1.3.268.0\Bin\glslangValidator.exe -V "C:/Code/My Graphics Repos/CSC8503/Assets/Shaders/VK/scene.frag" -o "C:/Code/My Graphics Repos/CSC8503/Assets/Shaders/VK/scene.frag.spv"
+C:\VulkanSDK\1.3.268.0\Bin\glslangValidator.exe -V "C:/Users/ishan/source/repos/CSC8503 2023/Assets/Shaders/VK/scene.frag" -o "C:/Users/ishan/source/repos/CSC8503 2023/Assets/Shaders/VK/scene.frag.spv"
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -226,12 +226,12 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Code\My Graphics Repos\CSC8503\Assets\Shaders\VK\scene.frag;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Code\My Graphics Repos\CSC8503\Assets\Shaders\VK\scene.frag.spv</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\ishan\source\repos\CSC8503 2023\Assets\Shaders\VK\scene.frag;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\ishan\source\repos\CSC8503 2023\Assets\Shaders\VK\scene.frag.spv</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compiling GLSL shader:</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
-C:\VulkanSDK\1.3.268.0\Bin\glslangValidator.exe -V "C:/Code/My Graphics Repos/CSC8503/Assets/Shaders/VK/scene.frag" -o "C:/Code/My Graphics Repos/CSC8503/Assets/Shaders/VK/scene.frag.spv"
+C:\VulkanSDK\1.3.268.0\Bin\glslangValidator.exe -V "C:/Users/ishan/source/repos/CSC8503 2023/Assets/Shaders/VK/scene.frag" -o "C:/Users/ishan/source/repos/CSC8503 2023/Assets/Shaders/VK/scene.frag.spv"
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -239,16 +239,16 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Code\My Graphics Repos\CSC8503\Assets\Shaders\VK\scene.frag;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Code\My Graphics Repos\CSC8503\Assets\Shaders\VK\scene.frag.spv</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\ishan\source\repos\CSC8503 2023\Assets\Shaders\VK\scene.frag;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\ishan\source\repos\CSC8503 2023\Assets\Shaders\VK\scene.frag.spv</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Code\My Graphics Repos\CSC8503\CMakeFiles\de5764a0e04246ea0c3d6f060ac23391\scene.vert.spv.rule">
+    <CustomBuild Include="C:\Users\ishan\source\repos\CSC8503 2023\CMakeFiles\9e4c1c6a54b42fcc0585aa632da75457\scene.vert.spv.rule">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling GLSL shader:</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
-C:\VulkanSDK\1.3.268.0\Bin\glslangValidator.exe -V "C:/Code/My Graphics Repos/CSC8503/Assets/Shaders/VK/scene.vert" -o "C:/Code/My Graphics Repos/CSC8503/Assets/Shaders/VK/scene.vert.spv"
+C:\VulkanSDK\1.3.268.0\Bin\glslangValidator.exe -V "C:/Users/ishan/source/repos/CSC8503 2023/Assets/Shaders/VK/scene.vert" -o "C:/Users/ishan/source/repos/CSC8503 2023/Assets/Shaders/VK/scene.vert.spv"
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -256,12 +256,12 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Code\My Graphics Repos\CSC8503\Assets\Shaders\VK\scene.vert;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Code\My Graphics Repos\CSC8503\Assets\Shaders\VK\scene.vert.spv</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\ishan\source\repos\CSC8503 2023\Assets\Shaders\VK\scene.vert;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\ishan\source\repos\CSC8503 2023\Assets\Shaders\VK\scene.vert.spv</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compiling GLSL shader:</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
-C:\VulkanSDK\1.3.268.0\Bin\glslangValidator.exe -V "C:/Code/My Graphics Repos/CSC8503/Assets/Shaders/VK/scene.vert" -o "C:/Code/My Graphics Repos/CSC8503/Assets/Shaders/VK/scene.vert.spv"
+C:\VulkanSDK\1.3.268.0\Bin\glslangValidator.exe -V "C:/Users/ishan/source/repos/CSC8503 2023/Assets/Shaders/VK/scene.vert" -o "C:/Users/ishan/source/repos/CSC8503 2023/Assets/Shaders/VK/scene.vert.spv"
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -269,16 +269,16 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Code\My Graphics Repos\CSC8503\Assets\Shaders\VK\scene.vert;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Code\My Graphics Repos\CSC8503\Assets\Shaders\VK\scene.vert.spv</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\ishan\source\repos\CSC8503 2023\Assets\Shaders\VK\scene.vert;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\ishan\source\repos\CSC8503 2023\Assets\Shaders\VK\scene.vert.spv</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Code\My Graphics Repos\CSC8503\CMakeFiles\de5764a0e04246ea0c3d6f060ac23391\shadow.frag.spv.rule">
+    <CustomBuild Include="C:\Users\ishan\source\repos\CSC8503 2023\CMakeFiles\9e4c1c6a54b42fcc0585aa632da75457\shadow.frag.spv.rule">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling GLSL shader:</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
-C:\VulkanSDK\1.3.268.0\Bin\glslangValidator.exe -V "C:/Code/My Graphics Repos/CSC8503/Assets/Shaders/VK/shadow.frag" -o "C:/Code/My Graphics Repos/CSC8503/Assets/Shaders/VK/shadow.frag.spv"
+C:\VulkanSDK\1.3.268.0\Bin\glslangValidator.exe -V "C:/Users/ishan/source/repos/CSC8503 2023/Assets/Shaders/VK/shadow.frag" -o "C:/Users/ishan/source/repos/CSC8503 2023/Assets/Shaders/VK/shadow.frag.spv"
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -286,12 +286,12 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Code\My Graphics Repos\CSC8503\Assets\Shaders\VK\shadow.frag;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Code\My Graphics Repos\CSC8503\Assets\Shaders\VK\shadow.frag.spv</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\ishan\source\repos\CSC8503 2023\Assets\Shaders\VK\shadow.frag;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\ishan\source\repos\CSC8503 2023\Assets\Shaders\VK\shadow.frag.spv</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compiling GLSL shader:</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
-C:\VulkanSDK\1.3.268.0\Bin\glslangValidator.exe -V "C:/Code/My Graphics Repos/CSC8503/Assets/Shaders/VK/shadow.frag" -o "C:/Code/My Graphics Repos/CSC8503/Assets/Shaders/VK/shadow.frag.spv"
+C:\VulkanSDK\1.3.268.0\Bin\glslangValidator.exe -V "C:/Users/ishan/source/repos/CSC8503 2023/Assets/Shaders/VK/shadow.frag" -o "C:/Users/ishan/source/repos/CSC8503 2023/Assets/Shaders/VK/shadow.frag.spv"
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -299,16 +299,16 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Code\My Graphics Repos\CSC8503\Assets\Shaders\VK\shadow.frag;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Code\My Graphics Repos\CSC8503\Assets\Shaders\VK\shadow.frag.spv</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\ishan\source\repos\CSC8503 2023\Assets\Shaders\VK\shadow.frag;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\ishan\source\repos\CSC8503 2023\Assets\Shaders\VK\shadow.frag.spv</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Code\My Graphics Repos\CSC8503\CMakeFiles\de5764a0e04246ea0c3d6f060ac23391\skybox.frag.spv.rule">
+    <CustomBuild Include="C:\Users\ishan\source\repos\CSC8503 2023\CMakeFiles\9e4c1c6a54b42fcc0585aa632da75457\skybox.frag.spv.rule">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling GLSL shader:</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
-C:\VulkanSDK\1.3.268.0\Bin\glslangValidator.exe -V "C:/Code/My Graphics Repos/CSC8503/Assets/Shaders/VK/skybox.frag" -o "C:/Code/My Graphics Repos/CSC8503/Assets/Shaders/VK/skybox.frag.spv"
+C:\VulkanSDK\1.3.268.0\Bin\glslangValidator.exe -V "C:/Users/ishan/source/repos/CSC8503 2023/Assets/Shaders/VK/skybox.frag" -o "C:/Users/ishan/source/repos/CSC8503 2023/Assets/Shaders/VK/skybox.frag.spv"
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -316,12 +316,12 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Code\My Graphics Repos\CSC8503\Assets\Shaders\VK\skybox.frag;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Code\My Graphics Repos\CSC8503\Assets\Shaders\VK\skybox.frag.spv</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\ishan\source\repos\CSC8503 2023\Assets\Shaders\VK\skybox.frag;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\ishan\source\repos\CSC8503 2023\Assets\Shaders\VK\skybox.frag.spv</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compiling GLSL shader:</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
-C:\VulkanSDK\1.3.268.0\Bin\glslangValidator.exe -V "C:/Code/My Graphics Repos/CSC8503/Assets/Shaders/VK/skybox.frag" -o "C:/Code/My Graphics Repos/CSC8503/Assets/Shaders/VK/skybox.frag.spv"
+C:\VulkanSDK\1.3.268.0\Bin\glslangValidator.exe -V "C:/Users/ishan/source/repos/CSC8503 2023/Assets/Shaders/VK/skybox.frag" -o "C:/Users/ishan/source/repos/CSC8503 2023/Assets/Shaders/VK/skybox.frag.spv"
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -329,16 +329,16 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Code\My Graphics Repos\CSC8503\Assets\Shaders\VK\skybox.frag;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Code\My Graphics Repos\CSC8503\Assets\Shaders\VK\skybox.frag.spv</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\ishan\source\repos\CSC8503 2023\Assets\Shaders\VK\skybox.frag;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\ishan\source\repos\CSC8503 2023\Assets\Shaders\VK\skybox.frag.spv</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Code\My Graphics Repos\CSC8503\CMakeFiles\de5764a0e04246ea0c3d6f060ac23391\skybox.vert.spv.rule">
+    <CustomBuild Include="C:\Users\ishan\source\repos\CSC8503 2023\CMakeFiles\9e4c1c6a54b42fcc0585aa632da75457\skybox.vert.spv.rule">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling GLSL shader:</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
-C:\VulkanSDK\1.3.268.0\Bin\glslangValidator.exe -V "C:/Code/My Graphics Repos/CSC8503/Assets/Shaders/VK/skybox.vert" -o "C:/Code/My Graphics Repos/CSC8503/Assets/Shaders/VK/skybox.vert.spv"
+C:\VulkanSDK\1.3.268.0\Bin\glslangValidator.exe -V "C:/Users/ishan/source/repos/CSC8503 2023/Assets/Shaders/VK/skybox.vert" -o "C:/Users/ishan/source/repos/CSC8503 2023/Assets/Shaders/VK/skybox.vert.spv"
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -346,12 +346,12 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Code\My Graphics Repos\CSC8503\Assets\Shaders\VK\skybox.vert;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Code\My Graphics Repos\CSC8503\Assets\Shaders\VK\skybox.vert.spv</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\ishan\source\repos\CSC8503 2023\Assets\Shaders\VK\skybox.vert;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\ishan\source\repos\CSC8503 2023\Assets\Shaders\VK\skybox.vert.spv</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compiling GLSL shader:</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
-C:\VulkanSDK\1.3.268.0\Bin\glslangValidator.exe -V "C:/Code/My Graphics Repos/CSC8503/Assets/Shaders/VK/skybox.vert" -o "C:/Code/My Graphics Repos/CSC8503/Assets/Shaders/VK/skybox.vert.spv"
+C:\VulkanSDK\1.3.268.0\Bin\glslangValidator.exe -V "C:/Users/ishan/source/repos/CSC8503 2023/Assets/Shaders/VK/skybox.vert" -o "C:/Users/ishan/source/repos/CSC8503 2023/Assets/Shaders/VK/skybox.vert.spv"
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -359,13 +359,13 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Code\My Graphics Repos\CSC8503\Assets\Shaders\VK\skybox.vert;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Code\My Graphics Repos\CSC8503\Assets\Shaders\VK\skybox.vert.spv</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\ishan\source\repos\CSC8503 2023\Assets\Shaders\VK\skybox.vert;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\ishan\source\repos\CSC8503 2023\Assets\Shaders\VK\skybox.vert.spv</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Code\My Graphics Repos\CSC8503\CMakeFiles\0badc960abb9c94a3104893d1e47367d\SHADER_FILES.rule">
+    <CustomBuild Include="C:\Users\ishan\source\repos\CSC8503 2023\CMakeFiles\33600c992e8c9e96ad202b9213c103ac\SHADER_FILES.rule">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"></Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
 :cmEnd
@@ -374,8 +374,8 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Code\My Graphics Repos\CSC8503\CSC8503\ON;C:\Code\My Graphics Repos\CSC8503\CSC8503\Debug.frag.spv;C:\Code\My Graphics Repos\CSC8503\CSC8503\Debug.vert.spv;C:\Code\My Graphics Repos\CSC8503\CSC8503\DebugText.frag.spv;C:\Code\My Graphics Repos\CSC8503\CSC8503\DebugText.vert.spv;C:\Code\My Graphics Repos\CSC8503\CSC8503\Shadow.vert.spv;C:\Code\My Graphics Repos\CSC8503\CSC8503\scene.frag.spv;C:\Code\My Graphics Repos\CSC8503\CSC8503\scene.vert.spv;C:\Code\My Graphics Repos\CSC8503\CSC8503\shadow.frag.spv;C:\Code\My Graphics Repos\CSC8503\CSC8503\skybox.frag.spv;C:\Code\My Graphics Repos\CSC8503\CSC8503\skybox.vert.spv;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Code\My Graphics Repos\CSC8503\CSC8503\CMakeFiles\SHADER_FILES</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\ishan\source\repos\CSC8503 2023\CSC8503\ON;C:\Users\ishan\source\repos\CSC8503 2023\CSC8503\Debug.frag.spv;C:\Users\ishan\source\repos\CSC8503 2023\CSC8503\Debug.vert.spv;C:\Users\ishan\source\repos\CSC8503 2023\CSC8503\DebugText.frag.spv;C:\Users\ishan\source\repos\CSC8503 2023\CSC8503\DebugText.vert.spv;C:\Users\ishan\source\repos\CSC8503 2023\CSC8503\Shadow.vert.spv;C:\Users\ishan\source\repos\CSC8503 2023\CSC8503\scene.frag.spv;C:\Users\ishan\source\repos\CSC8503 2023\CSC8503\scene.vert.spv;C:\Users\ishan\source\repos\CSC8503 2023\CSC8503\shadow.frag.spv;C:\Users\ishan\source\repos\CSC8503 2023\CSC8503\skybox.frag.spv;C:\Users\ishan\source\repos\CSC8503 2023\CSC8503\skybox.vert.spv;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\ishan\source\repos\CSC8503 2023\CSC8503\CMakeFiles\SHADER_FILES</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
       <VerifyInputsAndOutputsExist Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</VerifyInputsAndOutputsExist>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'"></Message>
@@ -386,18 +386,18 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Code\My Graphics Repos\CSC8503\CSC8503\ON;C:\Code\My Graphics Repos\CSC8503\CSC8503\Debug.frag.spv;C:\Code\My Graphics Repos\CSC8503\CSC8503\Debug.vert.spv;C:\Code\My Graphics Repos\CSC8503\CSC8503\DebugText.frag.spv;C:\Code\My Graphics Repos\CSC8503\CSC8503\DebugText.vert.spv;C:\Code\My Graphics Repos\CSC8503\CSC8503\Shadow.vert.spv;C:\Code\My Graphics Repos\CSC8503\CSC8503\scene.frag.spv;C:\Code\My Graphics Repos\CSC8503\CSC8503\scene.vert.spv;C:\Code\My Graphics Repos\CSC8503\CSC8503\shadow.frag.spv;C:\Code\My Graphics Repos\CSC8503\CSC8503\skybox.frag.spv;C:\Code\My Graphics Repos\CSC8503\CSC8503\skybox.vert.spv;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Code\My Graphics Repos\CSC8503\CSC8503\CMakeFiles\SHADER_FILES</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\ishan\source\repos\CSC8503 2023\CSC8503\ON;C:\Users\ishan\source\repos\CSC8503 2023\CSC8503\Debug.frag.spv;C:\Users\ishan\source\repos\CSC8503 2023\CSC8503\Debug.vert.spv;C:\Users\ishan\source\repos\CSC8503 2023\CSC8503\DebugText.frag.spv;C:\Users\ishan\source\repos\CSC8503 2023\CSC8503\DebugText.vert.spv;C:\Users\ishan\source\repos\CSC8503 2023\CSC8503\Shadow.vert.spv;C:\Users\ishan\source\repos\CSC8503 2023\CSC8503\scene.frag.spv;C:\Users\ishan\source\repos\CSC8503 2023\CSC8503\scene.vert.spv;C:\Users\ishan\source\repos\CSC8503 2023\CSC8503\shadow.frag.spv;C:\Users\ishan\source\repos\CSC8503 2023\CSC8503\skybox.frag.spv;C:\Users\ishan\source\repos\CSC8503 2023\CSC8503\skybox.vert.spv;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\ishan\source\repos\CSC8503 2023\CSC8503\CMakeFiles\SHADER_FILES</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
       <VerifyInputsAndOutputsExist Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</VerifyInputsAndOutputsExist>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Code\My Graphics Repos\CSC8503\CSC8503\CMakeLists.txt">
+    <CustomBuild Include="C:\Users\ishan\source\repos\CSC8503 2023\CSC8503\CMakeLists.txt">
       <UseUtf8Encoding>Always</UseUtf8Encoding>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule C:/Code/My Graphics Repos/CSC8503/CSC8503/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule C:/Users/ishan/source/repos/CSC8503 2023/CSC8503/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
-"C:\Program Files\CMake\bin\cmake.exe" "-SC:/Code/My Graphics Repos/CSC8503" "-BC:/Code/My Graphics Repos/CSC8503" --check-stamp-file "C:/Code/My Graphics Repos/CSC8503/CSC8503/CMakeFiles/generate.stamp"
+"C:\Program Files\CMake\bin\cmake.exe" "-SC:/Users/ishan/source/repos/CSC8503 2023" "-BC:/Users/ishan/source/repos/CSC8503 2023" --check-stamp-file "C:/Users/ishan/source/repos/CSC8503 2023/CSC8503/CMakeFiles/generate.stamp"
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -405,12 +405,12 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Code\My Graphics Repos\CSC8503\CMake\Default.cmake;C:\Code\My Graphics Repos\CSC8503\CMake\DefaultCXX.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Code\My Graphics Repos\CSC8503\CSC8503\CMakeFiles\generate.stamp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\ishan\source\repos\CSC8503 2023\CMake\Default.cmake;C:\Users\ishan\source\repos\CSC8503 2023\CMake\DefaultCXX.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\ishan\source\repos\CSC8503 2023\CSC8503\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule C:/Code/My Graphics Repos/CSC8503/CSC8503/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule C:/Users/ishan/source/repos/CSC8503 2023/CSC8503/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
-"C:\Program Files\CMake\bin\cmake.exe" "-SC:/Code/My Graphics Repos/CSC8503" "-BC:/Code/My Graphics Repos/CSC8503" --check-stamp-file "C:/Code/My Graphics Repos/CSC8503/CSC8503/CMakeFiles/generate.stamp"
+"C:\Program Files\CMake\bin\cmake.exe" "-SC:/Users/ishan/source/repos/CSC8503 2023" "-BC:/Users/ishan/source/repos/CSC8503 2023" --check-stamp-file "C:/Users/ishan/source/repos/CSC8503 2023/CSC8503/CMakeFiles/generate.stamp"
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -418,18 +418,18 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Code\My Graphics Repos\CSC8503\CMake\Default.cmake;C:\Code\My Graphics Repos\CSC8503\CMake\DefaultCXX.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Code\My Graphics Repos\CSC8503\CSC8503\CMakeFiles\generate.stamp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\ishan\source\repos\CSC8503 2023\CMake\Default.cmake;C:\Users\ishan\source\repos\CSC8503 2023\CMake\DefaultCXX.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\ishan\source\repos\CSC8503 2023\CSC8503\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <None Include="C:\Code\My Graphics Repos\CSC8503\CSC8503\CMakeFiles\SHADER_FILES">
+    <None Include="C:\Users\ishan\source\repos\CSC8503 2023\CSC8503\CMakeFiles\SHADER_FILES">
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="C:\Code\My Graphics Repos\CSC8503\ZERO_CHECK.vcxproj">
-      <Project>{C3A0469B-757A-373F-BD69-0DF8A4CF43AB}</Project>
+    <ProjectReference Include="C:\Users\ishan\source\repos\CSC8503 2023\ZERO_CHECK.vcxproj">
+      <Project>{09376E15-48A4-35F4-9EF8-C81A49C074AD}</Project>
       <Name>ZERO_CHECK</Name>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>

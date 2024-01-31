@@ -178,7 +178,7 @@ void GameTechRenderer::RenderShadowMap() {
 		}
 	}
 
-	glViewport(0, 0, windowSize.x, windowSize.y);
+	glViewport(0, 0, (float)windowSize.x, (float)windowSize.y);
 	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 

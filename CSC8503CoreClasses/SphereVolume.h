@@ -5,9 +5,11 @@ namespace NCL {
 	class SphereVolume : CollisionVolume
 	{
 	public:
-		SphereVolume(float sphereRadius = 1.0f) {
+		SphereVolume(float sphereRadius = 1.0f, bool isTrigger = false,bool isKinematic = false) {
 			type	= VolumeType::Sphere;
 			radius	= sphereRadius;
+			this->isTrigger = isTrigger;
+			this->isKinematic = isKinematic;
 		}
 		~SphereVolume() {}
 

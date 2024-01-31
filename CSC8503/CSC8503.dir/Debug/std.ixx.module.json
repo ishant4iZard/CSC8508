@@ -1,0 +1,22 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "CSC8503.dir\\Debug\\std.ixx.obj",
+            "outputs": [
+                "C:\\Users\\c3002856\\source\\repos\\CSC8503 2023 2\\CSC8503 2023\\CSC8503\\CSC8503.dir\\Debug\\vc143.pdb",
+                "CSC8503.dir\\Debug\\",
+                "C:\\Users\\c3002856\\source\\repos\\CSC8503 2023 2\\CSC8503 2023\\CSC8503\\CSC8503.dir\\Debug\\std.ixx.ifc"
+            ],
+            "provides": [
+                {
+                    "logical-name": "std",
+                    "source-path": "c:\\program files\\microsoft visual studio\\2022\\community\\vc\\tools\\msvc\\14.36.32532\\modules\\std.ixx",
+                    "is-interface": true
+                }
+            ],
+            "requires": []
+        }
+    ]
+}

@@ -6,7 +6,6 @@
 #include "Window.h"
 #include "Maths.h"
 #include "Debug.h"
-#include <algorithm>
 
 using namespace NCL;
 
@@ -34,7 +33,7 @@ bool CollisionDetection::RayIntersection(const Ray& r,GameObject& object, RayCol
 	const Transform& worldTransform = object.GetTransform();
 	const CollisionVolume* volume	= object.GetBoundingVolume();
 
-	if (!volume) {
+	if (!volume || volume->isTrigger ||!object.IsActive()) {
 		return false;
 	}
 
@@ -49,8 +48,8 @@ bool CollisionDetection::RayIntersection(const Ray& r,GameObject& object, RayCol
 	return hasCollided;
 }
 
-bool CollisionDetection::RayBoxIntersection(const Ray&r, const Vector3& boxPos, const Vector3& boxSize, RayCollision& collision) 
-{
+bool CollisionDetection::RayBoxIntersection(const Ray&r, const Vector3& boxPos, const Vector3& boxSize, RayCollision& collision) {
+	
 	Vector3 boxMin = boxPos - boxSize;
 	Vector3 boxMax = boxPos + boxSize;
 
@@ -59,46 +58,43 @@ bool CollisionDetection::RayBoxIntersection(const Ray&r, const Vector3& boxPos, 
 
 	Vector3 tVals(-1, -1, -1);
 
-	for (int i = 0; i < 3; ++i) //get best 3 intersections
-	{
-		if (rayDir[i] > 0)
-		{
-			tVals[i] = (boxMin[i] - rayPos[i]) / rayDir[i];
+	for (int i = 0; i < 3; ++i) {
+		if (rayDir[i] > 0) {
+			tVals[i] = (boxMin[i] - rayPos[i]) / rayDir[i];	
 		}
-		else if (rayDir[i] < 0)
-		{
+		else if (rayDir[i] < 0) {
 			tVals[i] = (boxMax[i] - rayPos[i]) / rayDir[i];
 		}
 	}
+
 	float bestT = tVals.GetMaxElement();
-	if (bestT < 0.0f)
-	{
-		return false; // no backwards rays !
+	if (bestT < 0.0f) {
+		return false;
 	}
 
 	Vector3 intersection = rayPos + (rayDir * bestT);
-	const float epsilon = 0.0001f; // an amount of leeway in our calcs
-	for (int i = 0; i < 3; ++i)
-	{
-		if (intersection[i] + epsilon < boxMin[i] || intersection[i] - epsilon > boxMax[i])
-		{
-			return false; // best intersection does not touch the box !
+	const float epsilon = 0.0001f;
+
+	for (int i = 0; i < 3; ++i) {
+		if (intersection[i] + epsilon < boxMin[i] || intersection[i] - epsilon > boxMax[i]) {
+			return false;
 		}
 	}
+
 	collision.collidedAt = intersection;
 	collision.rayDistance = bestT;
+
+
 	return true;
 }
 
-bool CollisionDetection::RayAABBIntersection(const Ray&r, const Transform& worldTransform, const AABBVolume& volume, RayCollision& collision) 
-{
+bool CollisionDetection::RayAABBIntersection(const Ray&r, const Transform& worldTransform, const AABBVolume& volume, RayCollision& collision) {
 	Vector3 boxPos = worldTransform.GetPosition();
 	Vector3 boxSize = volume.GetHalfDimensions();
 	return RayBoxIntersection(r, boxPos, boxSize, collision);
 }
 
-bool CollisionDetection::RayOBBIntersection(const Ray&r, const Transform& worldTransform, const OBBVolume& volume, RayCollision& collision)
-{
+bool CollisionDetection::RayOBBIntersection(const Ray&r, const Transform& worldTransform, const OBBVolume& volume, RayCollision& collision) {
 	Quaternion orientation = worldTransform.GetOrientation();
 	Vector3 position = worldTransform.GetPosition();
 
@@ -106,55 +102,101 @@ bool CollisionDetection::RayOBBIntersection(const Ray&r, const Transform& worldT
 	Matrix3 invTransform = Matrix3(orientation.Conjugate());
 
 	Vector3 localRayPos = r.GetPosition() - position;
+
 	Ray tempRay(invTransform * localRayPos, invTransform * r.GetDirection());
 
-	bool collieded = RayBoxIntersection(tempRay, Vector3(), volume.GetHalfDimensions(), collision);
+	bool collided = RayBoxIntersection(tempRay, Vector3(),
+		volume.GetHalfDimensions(), collision);
 
-	if (collieded)
-	{
+	if (collided) {
 		collision.collidedAt = transform * collision.collidedAt + position;
 	}
-	return collieded;
+	return collided;
 }
 
-bool CollisionDetection::RaySphereIntersection(const Ray& r, const Transform& worldTransform, const SphereVolume& volume, RayCollision& collision) 
-{
-	Vector3 spherePos = worldTransform.GetPosition();
+bool CollisionDetection::RaySphereIntersection(const Ray&r, const Transform& worldTransform, const SphereVolume& volume, RayCollision& collision) {
+	Vector3	spherePos = worldTransform.GetPosition();
 	float sphereRadius = volume.GetRadius();
 
-	//Get the direction between the ray origin and the sphere origin
 	Vector3 dir = (spherePos - r.GetPosition());
 
-	//Then project the sphere's origin onto our ray direction vector
 	float sphereProj = Vector3::Dot(dir, r.GetDirection());
 
-	if (sphereProj < 0.0f)
-	{
-		return false; //point is behind the ray!
-	}
-
-	//Get closest point on ray line to sphere
-	Vector3 point = r.GetPosition() + (r.GetDirection() * sphereProj);
-
-	float sphereDist = (point - spherePos).Length();
-
-	if (sphereDist > sphereRadius)
-	{
+	if (sphereProj < 0.0f) {
 		return false;
 	}
 
-	float offset = sqrt((sphereRadius * sphereRadius) - (sphereDist * sphereDist));
+	Vector3 point = r.GetPosition() + (r.GetDirection() * sphereProj);
+	float sphereDist = (point - spherePos).Length();
+	
+	if (sphereDist > sphereRadius) {
+			return false;
+	}
 
-	collision.rayDistance = sphereProj - offset;
-	collision.collidedAt = r.GetPosition() + (r.GetDirection() * collision.rayDistance);
+	float offset =
+		sqrt((sphereRadius * sphereRadius) - (sphereDist * sphereDist));
+
+	collision.rayDistance = sphereProj - (offset);
+	collision.collidedAt = r.GetPosition() +
+		(r.GetDirection() * collision.rayDistance);
 	return true;
 }
 
-bool CollisionDetection::RayCapsuleIntersection(const Ray& r, const Transform& worldTransform, const CapsuleVolume& volume, RayCollision& collision) {
-	return false;
+float findTCapsule(Vector3 pa, Vector3 pb, float capsuleRadius, const Ray& r) {
+	Vector3 lineSegment = pb - pa;
+	Vector3 relativeOrigin = r.GetPosition() - pa;
+	float baba = Vector3::Dot(lineSegment, lineSegment);
+	float bard = Vector3::Dot(lineSegment, r.GetDirection());
+	float baoa = Vector3::Dot(lineSegment, relativeOrigin);
+	float rdoa = Vector3::Dot(r.GetDirection(), relativeOrigin);
+	float oaoa = Vector3::Dot(relativeOrigin, relativeOrigin);
+	float a = baba - bard * bard;
+	float b = baba * rdoa - baoa * bard;
+	float c = baba * oaoa - baoa * baoa - capsuleRadius * capsuleRadius * baba;
+	float h = b * b - a * c;
+
+	if (h >= 0.0)
+	{
+		float t = (-b - sqrt(h)) / a;
+		float y = baoa + t * bard;
+		if (y > 0.0 && y < baba) 
+			return t;
+		
+		Vector3 oc = (y <= 0.0) ? relativeOrigin : r.GetPosition() - pb;
+		b = Vector3::Dot(r.GetDirection(), oc);
+		c = Vector3::Dot(oc, oc) - capsuleRadius * capsuleRadius;
+		h = b * b - c;
+		if (h > 0.0)
+			return -b - sqrt(h);
+		
+	}
+	return -1;
 }
 
-bool CollisionDetection::ObjectIntersection(GameObject* a, GameObject* b, CollisionInfo	& collisionInfo) {
+bool CollisionDetection::RayCapsuleIntersection(const Ray& r, const Transform& worldTransform, const CapsuleVolume& volume, RayCollision& collision) {
+	Vector3	capsulePos = worldTransform.GetPosition();
+	Quaternion orientation = worldTransform.GetOrientation(); 
+	float capsuleRadius = volume.GetRadius();
+	float halfHeight = volume.GetHalfHeight();
+
+	Vector3 Updirection = orientation * Vector3(0, 1, 0);
+
+	Vector3 pa = capsulePos + Updirection * halfHeight;
+	Vector3 pb = capsulePos - Updirection * halfHeight;
+
+	float t = findTCapsule(pa, pb, capsuleRadius, r);
+
+	if (t == -1)
+		return false;
+
+	collision.rayDistance = t;
+	collision.collidedAt = r.GetPosition() +
+		(r.GetDirection() * collision.rayDistance);
+
+	return true;
+}
+
+bool CollisionDetection::ObjectIntersection(GameObject* a, GameObject* b, CollisionInfo& collisionInfo) {
 	const CollisionVolume* volA = a->GetBoundingVolume();
 	const CollisionVolume* volB = b->GetBoundingVolume();
 
@@ -178,7 +220,7 @@ bool CollisionDetection::ObjectIntersection(GameObject* a, GameObject* b, Collis
 	if (pairType == VolumeType::Sphere) {
 		return SphereIntersection((SphereVolume&)*volA, transformA, (SphereVolume&)*volB, transformB, collisionInfo);
 	}
-	//Two OBBs	
+	//Two OBBs
 	if (pairType == VolumeType::OBB) {
 		return OBBIntersection((OBBVolume&)*volA, transformA, (OBBVolume&)*volB, transformB, collisionInfo);
 	}
@@ -194,17 +236,6 @@ bool CollisionDetection::ObjectIntersection(GameObject* a, GameObject* b, Collis
 		return AABBSphereIntersection((AABBVolume&)*volB, transformB, (SphereVolume&)*volA, transformA, collisionInfo);
 	}
 
-	//AABB vs OBB pairs
-	if (volA->type == VolumeType::AABB && volB->type == VolumeType::OBB) {
-		return AABBOBBIntersection((AABBVolume&)*volA, transformA, (OBBVolume&)*volB, transformB, collisionInfo);
-	}
-	if (volA->type == VolumeType::OBB && volB->type == VolumeType::AABB) {
-		collisionInfo.a = b;
-		collisionInfo.b = a;
-		return AABBOBBIntersection((AABBVolume&)*volB, transformB, (OBBVolume&)*volA, transformA, collisionInfo);
-	}
-	
-
 	//OBB vs sphere pairs
 	if (volA->type == VolumeType::OBB && volB->type == VolumeType::Sphere) {
 		return OBBSphereIntersection((OBBVolume&)*volA, transformA, (SphereVolume&)*volB, transformB, collisionInfo);
@@ -214,7 +245,6 @@ bool CollisionDetection::ObjectIntersection(GameObject* a, GameObject* b, Collis
 		collisionInfo.b = a;
 		return OBBSphereIntersection((OBBVolume&)*volB, transformB, (SphereVolume&)*volA, transformA, collisionInfo);
 	}
-
 
 	//Capsule vs other interactions
 	if (volA->type == VolumeType::Capsule && volB->type == VolumeType::Sphere) {
@@ -250,41 +280,9 @@ bool CollisionDetection::AABBTest(const Vector3& posA, const Vector3& posB, cons
 	return false;
 }
 
-bool CollisionDetection::OBBTest(const Vector3& Axis, const Vector3& halfSizeA, const Vector3& halfSizeB, const Matrix3& absRotMatrixA,const Matrix3& absRotMatrixB, const Vector3& relativePos, float& penetration, Vector3& collisionNor)
-{
-	if (Axis.Length() < 1e-8f)
-	{
-		return true;
-	}
-	float aabbProjection = halfSizeA.x * std::abs(Vector3::Dot(Axis, absRotMatrixA.GetColumn(0)))
-		+ halfSizeA.y * std::abs(Vector3::Dot(Axis, absRotMatrixA.GetColumn(1)))
-		+ halfSizeA.z * std::abs(Vector3::Dot(Axis, absRotMatrixA.GetColumn(2)));
-
-	float obbProjection = halfSizeB.x * std::abs(Vector3::Dot(Axis, absRotMatrixB.GetColumn(0)))
-		+ halfSizeB.y * std::abs(Vector3::Dot(Axis, absRotMatrixB.GetColumn(1)))
-		+ halfSizeB.z * std::abs(Vector3::Dot(Axis, absRotMatrixB.GetColumn(2)));
-
-	float distance = std::abs(Vector3::Dot(Axis, relativePos));
-
-	if (distance > aabbProjection + obbProjection)
-	{
-		return false; //No intersect
-	}
-
-	float axisPenetration = aabbProjection + obbProjection - distance;
-	if (axisPenetration < penetration)
-	{
-		penetration = axisPenetration;
-		collisionNor = Axis;
-	}
-
-	return true;
-}
-
 //AABB/AABB Collisions
 bool CollisionDetection::AABBIntersection(const AABBVolume& volumeA, const Transform& worldTransformA,
-	const AABBVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo)
-{
+	const AABBVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo) {
 	Vector3 boxAPos = worldTransformA.GetPosition();
 	Vector3 boxBPos = worldTransformB.GetPosition();
 
@@ -292,14 +290,12 @@ bool CollisionDetection::AABBIntersection(const AABBVolume& volumeA, const Trans
 	Vector3 boxBSize = volumeB.GetHalfDimensions();
 
 	bool overlap = AABBTest(boxAPos, boxBPos, boxASize, boxBSize);
-
-	if (overlap)
-	{
+	if (overlap) {
 		static const Vector3 faces[6] =
 		{
-			Vector3(-1,  0,  0), Vector3(1 , 0 , 0),
-			Vector3( 0, -1,  0), Vector3(0 , 1 , 0),
-			Vector3( 0,  0, -1), Vector3(0 , 0 , 1)
+			Vector3(-1, 0, 0), Vector3(1, 0, 0),
+			Vector3(0, -1, 0), Vector3(0, 1, 0),
+			Vector3(0, 0, -1), Vector3(0, 0, 1),
 		};
 
 		Vector3 maxA = boxAPos + boxASize;
@@ -310,167 +306,107 @@ bool CollisionDetection::AABBIntersection(const AABBVolume& volumeA, const Trans
 
 		float distances[6] =
 		{
-			(maxB.x - minA.x), // distance of box ¡¯b¡¯ to ¡¯left¡¯ of ¡¯a¡¯.
-			(maxA.x - minB.x), // distance of box ¡¯b¡¯ to ¡¯right¡¯ of ¡¯a¡¯.
-			(maxB.y - minA.y), // distance of box ¡¯b¡¯ to ¡¯bottom¡¯ of ¡¯a¡¯.
-			(maxA.y - minB.y), // distance of box ¡¯b¡¯ to ¡¯top¡¯ of ¡¯a¡¯.	
-			(maxB.z - minA.z), // distance of box ¡¯b¡¯ to ¡¯far¡¯ of ¡¯a¡¯.
-			(maxA.z - minB.z)  // distance of box ¡¯b¡¯ to ¡¯near¡¯ of ¡¯a¡¯.
+			(maxB.x - minA.x),// distance of box ’b’ to ’left ’ of ’a ’.
+			(maxA.x - minB.x),// distance of box ’b’ to ’right ’ of ’a ’.
+			(maxB.y - minA.y),// distance of box ’b’ to ’bottom ’ of ’a ’.
+			(maxA.y - minB.y),// distance of box ’b’ to ’top ’ of ’a ’.
+			(maxB.z - minA.z),// distance of box ’b’ to ’far ’ of ’a ’.
+			(maxA.z - minB.z) // distance of box ’b’ to ’near ’ of ’a ’.
 		};
 		float penetration = FLT_MAX;
 		Vector3 bestAxis;
 
-		for (int i = 0; i < 6; ++i)
+		for (int i = 0; i < 6; i++)
 		{
-			if (distances[i] < penetration)
-			{
+			if (distances[i] < penetration) {
 				penetration = distances[i];
 				bestAxis = faces[i];
+
 			}
 		}
-		collisionInfo.AddContactPoint(Vector3(), Vector3(), bestAxis, penetration);
+		collisionInfo.AddContactPoint(Vector3(), Vector3(),
+			bestAxis, penetration);
 		return true;
+
 	}
+
 	return false;
 }
 
 //Sphere / Sphere Collision
 bool CollisionDetection::SphereIntersection(const SphereVolume& volumeA, const Transform& worldTransformA,
-	const SphereVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo)
-{
+	const SphereVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo) {
 	float radii = volumeA.GetRadius() + volumeB.GetRadius();
-	Vector3 delta = worldTransformB.GetPosition() - worldTransformA.GetPosition();
+	Vector3 delta = worldTransformB.GetPosition() -
+		worldTransformA.GetPosition();
 
 	float deltaLength = delta.Length();
 
-	if (deltaLength < radii)
-	{
+	if (deltaLength < radii) {
 		float penetration = (radii - deltaLength);
 		Vector3 normal = delta.Normalised();
 		Vector3 localA = normal * volumeA.GetRadius();
 		Vector3 localB = -normal * volumeB.GetRadius();
-
 		collisionInfo.AddContactPoint(localA, localB, normal, penetration);
-		return true;
+		return true;// we ’re colliding !
 	}
 	return false;
 }
 
 //AABB - Sphere Collision
 bool CollisionDetection::AABBSphereIntersection(const AABBVolume& volumeA, const Transform& worldTransformA,
-	const SphereVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo) 
-{
+	const SphereVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo) {
 	Vector3 boxSize = volumeA.GetHalfDimensions();
 
-	Vector3 delta = worldTransformB.GetPosition() - worldTransformA.GetPosition();
+	Vector3 delta = worldTransformB.GetPosition() -
+		worldTransformA.GetPosition();
 
-	Vector3 closestPointOnBox = Maths::Vector3::Clamp(delta, -boxSize, boxSize);
-
+	Vector3 closestPointOnBox = Vector3::Clamp(delta, -boxSize, boxSize);
 	Vector3 localPoint = delta - closestPointOnBox;
 	float distance = localPoint.Length();
 
-	if (distance < volumeB.GetRadius())
-	{
+	if (distance < volumeB.GetRadius()) {// yes , we ’re colliding !
 		Vector3 collisionNormal = localPoint.Normalised();
 		float penetration = (volumeB.GetRadius() - distance);
 
 		Vector3 localA = Vector3();
 		Vector3 localB = -collisionNormal * volumeB.GetRadius();
 
-		collisionInfo.AddContactPoint(localA, localB, collisionNormal, penetration);
+		collisionInfo.AddContactPoint(localA, localB,
+			collisionNormal, penetration);
 		return true;
+
 	}
 	return false;
 }
 
-bool CollisionDetection::AABBOBBIntersection(const AABBVolume& volumeA, const Transform& worldTransformA, 
-	const OBBVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo)
-{
-	Quaternion rotationB = worldTransformB.GetOrientation();
-	Matrix3 rotMatrixB = Matrix3(rotationB); 
-	Matrix3 absRotMatrixB = rotMatrixB.Absolute();
 
-	Matrix3 rotMatrixA = Matrix3(worldTransformA.GetOrientation());
-	//Debug::DrawLine(worldTransformA.GetPosition(), worldTransformA.GetPosition() + Vector3(0, 50, 0), Debug::RED);
 
-	Vector3 sizeA = volumeA.GetHalfDimensions();
-	Vector3 sizeB = volumeB.GetHalfDimensions();
-
-	Vector3 reelativePos = worldTransformB.GetPosition() - worldTransformA.GetPosition();
-
-	float penetration = FLT_MAX;
-	Vector3 collisionNor;
-
-	for (int i = 0; i < 3; ++i)
-	{
-		Vector3 axis = getAxis(worldTransformA, i);
-		if (!OBBTest(axis, sizeA, sizeB, rotMatrixA, rotMatrixB,reelativePos, penetration, collisionNor))
-		{
-			return false;
-		}
-	}
-
-	for (int i = 0; i < 3; ++i)
-	{
-		Vector3 axis = getAxis(worldTransformB, i);
-		if (!OBBTest(axis, sizeA, sizeB, rotMatrixA, rotMatrixB, reelativePos, penetration, collisionNor))
-		{
-			return false;
-		}
-	}
-
-	for (int i = 0; i < 3; ++i)
-	{
-		for (int j = 0; j < 3; ++j)
-		{
-			Vector3 axis = Vector3::Cross(getAxis(worldTransformA, i), getAxis(worldTransformB, j));
-			axis.Normalise();
-			if (!OBBTest(axis, sizeA, sizeB, rotMatrixA, rotMatrixB, reelativePos, penetration, collisionNor))
-			{
-				return false;
-			}
-		}
-	}
-
-	if (Vector3::Dot(collisionNor, reelativePos) < 0)
-	{
-		collisionNor = -collisionNor;
-	}
-	Vector3 localA = Vector3();
-	Vector3 localB = -collisionNor * (std::abs(Vector3::Dot(collisionNor, sizeB)) - penetration);
-
-	//Debug::DrawLine(worldTransformB.GetPosition() + localB, worldTransformB.GetPosition() + localB + collisionNor * 20, Debug::RED);
-
-	collisionInfo.AddContactPoint(localA, localB, collisionNor, penetration);
-	return true;
-}
 
 bool  CollisionDetection::OBBSphereIntersection(const OBBVolume& volumeA, const Transform& worldTransformA,
-	const SphereVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo) 
-{
-	Quaternion boxOri = worldTransformA.GetOrientation();
-	Matrix3 boxRot = Matrix3(boxOri);
-	Matrix3 invBoxRot = Matrix3(boxOri.Conjugate());
+	const SphereVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo) {
+	Quaternion orientation = worldTransformA.GetOrientation();
+
+	Matrix3 transform = Matrix3(orientation);
+	Matrix3 invTransform = Matrix3(orientation.Conjugate());
 
 	Vector3 boxSize = volumeA.GetHalfDimensions();
-
-	Vector3 delta = worldTransformB.GetPosition() - worldTransformA.GetPosition();
-	delta = invBoxRot * delta;
-
-	Vector3 closestPointOnBox = Maths::Vector3::Clamp(delta, -boxSize, boxSize);
+	Vector3 delta = invTransform * (worldTransformB.GetPosition()- worldTransformA.GetPosition());
+	Vector3 closestPointOnBox = Vector3::Clamp(delta, -boxSize, boxSize);
 
 	Vector3 localPoint = delta - closestPointOnBox;
 	float distance = localPoint.Length();
 
-	if (distance < volumeB.GetRadius())
-	{
-		Vector3 collisionNormal = (boxRot * localPoint).Normalised();
+	if (distance < volumeB.GetRadius()) {// yes , we ’re colliding !
+		Vector3 collisionNormal =  transform * localPoint.Normalised();
 		float penetration = (volumeB.GetRadius() - distance);
 
-		Vector3 localA = localPoint;
+		Vector3 localA = collisionNormal * closestPointOnBox;
 		Vector3 localB = -collisionNormal * volumeB.GetRadius();
 
-		collisionInfo.AddContactPoint(localA, localB, collisionNormal, penetration);
+	
+		collisionInfo.AddContactPoint(localA, localB,
+			collisionNormal, penetration);
 		return true;
 	}
 	return false;
@@ -479,150 +415,411 @@ bool  CollisionDetection::OBBSphereIntersection(const OBBVolume& volumeA, const 
 bool CollisionDetection::AABBCapsuleIntersection(
 	const CapsuleVolume& volumeA, const Transform& worldTransformA,
 	const AABBVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo) {
+	//fill 
 	return false;
 }
 
 bool CollisionDetection::SphereCapsuleIntersection(
 	const CapsuleVolume& volumeA, const Transform& worldTransformA,
 	const SphereVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo) {
+	//fill
 	return false;
 }
 
-bool CollisionDetection::OBBIntersection(const OBBVolume& volumeA, const Transform& worldTransformA,
-	const OBBVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo) 
-{
-	Vector3 sizeA = volumeA.GetHalfDimensions();
-	Vector3 sizeB = volumeB.GetHalfDimensions();
 
-	Vector3 relativePos = worldTransformB.GetPosition() - worldTransformA.GetPosition();
+vector<Vector3> getVertices(const Transform& worldTransform, const OBBVolume& volume) {
+	Vector3 center = worldTransform.GetPosition();
+	Vector3 boxSize = volume.GetHalfDimensions();
+	Quaternion orientation = worldTransform.GetOrientation();
 
-	Matrix3 rotMatrixA = Matrix3(worldTransformA.GetOrientation());
-	Matrix3 rotMatrixB = Matrix3(worldTransformB.GetOrientation());
 
-	float penetration = FLT_MAX;
-	Vector3 collisionNor;
+	Matrix3 transform = Matrix3(orientation);
+	Matrix3 invTransform = Matrix3(orientation.Conjugate());
 
-	for (int i = 0; i < 3; ++i)
-	{
-		Vector3 axis = getAxis(worldTransformA, i);
-		if (!OBBTest(axis, sizeA, sizeB, rotMatrixA, rotMatrixB, relativePos, penetration, collisionNor))
-		{
-			return false;
-		}
+	vector<Vector3> vertices;
+	for (int i = 0; i < 8; i++) {
+		Vector3 vertex;
+		if (i < 4)
+			vertex.x = boxSize.x;
+		else
+			vertex.x = -boxSize.x;
+		if (i < 2 || i == 4 || i == 5)
+			vertex.y = boxSize.y;
+		else
+			vertex.y = -boxSize.y;
+		if (i % 2 == 0)
+			vertex.z = boxSize.z;
+		else
+			vertex.z = -boxSize.z;
+
+		vertex = invTransform * vertex;
+		vertex += center;
+		vertices.push_back(vertex);
 	}
-
-	for (int i = 0; i < 3; ++i)
-	{
-		Vector3 axis = getAxis(worldTransformB, i);
-		if (!OBBTest(axis, sizeA, sizeB, rotMatrixA,rotMatrixB, relativePos, penetration, collisionNor))
-		{
-			return false;
-		}
-	}
-
-	for (int i = 0; i < 3; ++i)
-	{
-		for (int j = 0; j < 3; ++j)
-		{
-			Vector3 axis = Vector3::Cross(getAxis(worldTransformA, i), getAxis(worldTransformB, j));
-			axis.Normalise();
-			if (!OBBTest(axis, sizeA, sizeB, rotMatrixA, rotMatrixB, relativePos, penetration, collisionNor))
-			{
-				return false;
-			}
-		}
-	}
-
-	if (Vector3::Dot(collisionNor, relativePos) < 0)
-	{
-		collisionNor = -collisionNor;
-	}
-	Vector3 localA = collisionNor * (std::abs(Vector3::Dot(collisionNor, sizeA)) - penetration);;
-	Vector3 localB = -collisionNor * (std::abs(Vector3::Dot(collisionNor, sizeB)) - penetration);
-
-	//Debug::DrawLine(worldTransformB.GetPosition() + localB, worldTransformB.GetPosition() + localB + collisionNor * 20, Debug::RED);
-
-	collisionInfo.AddContactPoint(localA, localB, collisionNor, penetration);
-	return true;
-
-	//Matrix3 transformA = Matrix3(orientationA);
-	//Matrix3 invTransformA = Matrix3(orientationA.Conjugate());
-	//Matrix3 transformB = Matrix3(orientationB);
-
-	//Matrix3 boxBLocalRot = invTransformA * transformB;
-	//Matrix3 AbsboxBLclRot;
-
-	//Vector3 boxAPos = worldTransformA.GetPosition();
-	//Vector3 boxBPos = worldTransformB.GetPosition();
-
-	//for (int i = 0; i < 3; ++i)
-	//{
-	//	for (int j = 0; j < 3; ++j)
-	//	{
-	//		AbsboxBLclRot.array[i][j] = std::abs(boxBLocalRot.array[i][j]) + std::numeric_limits<float>::epsilon();
-	//	}
-	//}
-
-	//Vector3 boxBLocalPos = worldTransformB.GetPosition() - worldTransformA.GetPosition();
-	//boxBLocalPos = invTransformA * boxBLocalPos;
-
-	//Vector3 boxASize = volumeA.GetHalfDimensions();
-	//Vector3 boxBSize = volumeB.GetHalfDimensions();
-
-	//float ra, rb;
-	//float penetration = FLT_MAX;
-	//Vector3 bestAxis;
-
-	//// Use the Axis of A as SAT
-	//for (int i = 0; i < 3; ++i)
-	//{
-	//	ra = boxASize[i];
-	//	rb = Vector3::Dot(boxBSize, AbsboxBLclRot.GetRow(i));
-	//	float t = ra + rb - std::abs(boxBLocalPos[i]);
-	//	if (t < 0) return false;
-	//	if (t < penetration)
-	//	{
-	//		penetration = t;
-	//		bestAxis = transformA.GetRow(i);
-	//	}
-
-
-	//	ra = Vector3::Dot(boxASize, AbsboxBLclRot.GetColumn(i));
-	//	rb = boxBSize[i];
-	//	t = ra + rb - std::abs(Vector3::Dot(boxBLocalPos, boxBLocalRot.GetColumn(i)));
-	//	if (t < 0) return false;
-	//	if (t < penetration)
-	//	{
-	//		penetration = t;
-	//		bestAxis = transformB.GetRow(i);
-	//	}
-	//}
-
-	//for (int i = 0; i < 3; ++i)
-	//{
-	//	for (int j = 0; j < 3; ++j)
-	//	{
-	//		Vector3 Axis = Vector3::Cross(transformA.GetRow(i), transformB.GetRow(j));
-	//		ra = boxASize[(i + 1) % 3] * AbsboxBLclRot.array[(i + 2) % 3][j] + boxASize[(i + 2) % 3] * AbsboxBLclRot.array[(i + 1) % 3][j];
-	//		rb = boxBSize[(j + 1) % 3] * AbsboxBLclRot.array[i][(j + 2) % 3] + boxBSize[(j + 2) % 3] * AbsboxBLclRot.array[i][(j + 2) % 3];
-	//		float t = ra + rb - std::abs(Vector3::Dot(boxBLocalPos, Axis));
-	//		if (t < 0) return false;
-	//		if (t < penetration)
-	//		{
-	//			penetration = t;
-	//			bestAxis = Axis;		
-	//		}
-	//	}
-	//}
-
-	//Vector3 Normal = bestAxis.Normalised();
-	//Vector3 localA = boxAPos - Normal * (Vector3::Dot(Normal, boxAPos) - penetration);
-	//localA = transformA * localA;
-	//Vector3 localB = boxBPos - Normal * (Vector3::Dot(Normal, boxBPos) - penetration);
-	//localB = transformB * localB;
-
-	//collisionInfo.AddContactPoint(localA, localB, Normal, penetration);
+	return vertices;
 }
+
+vector<Vector3> getAxis(const Transform& worldTransform) {
+	Quaternion orientation = worldTransform.GetOrientation();
+	Vector3 position = worldTransform.GetPosition();
+
+	Matrix3 transform = Matrix3(orientation);
+	Matrix3 invTransform = Matrix3(orientation.Conjugate());
+	vector<Vector3> axis;
+
+	axis.push_back(invTransform * Vector3(1, 0, 0));
+	axis.push_back(invTransform * Vector3(0, 1, 0));
+	axis.push_back(invTransform * Vector3(0, 0, 1));
+
+	return axis;
+}
+
+bool CollisionDetection::OBBIntersection(const OBBVolume& volumeA, const Transform& worldTransformA,
+	const OBBVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo) {
+	float ra, rb;
+	Matrix3 R, AbsR;
+	vector<Vector3> axisA = getAxis(worldTransformA);
+	vector<Vector3> axisB = getAxis(worldTransformB);
+	Vector3 boxsizeA = volumeA.GetHalfDimensions();
+	Vector3 boxsizeB = volumeB.GetHalfDimensions();
+
+	float minRa,minRb,penetration;
+	float minPenetration = std::numeric_limits<float>::max();
+	Vector3 collisionNormal;
+
+	for (int i = 0; i < 3; i++) {
+		for (int j = 0; j < 3; j++) {
+			R.array[i][j] = Vector3::Dot(axisA[i], axisB[j]);
+			AbsR.array[i][j] = std::abs(R.array[i][j]);
+		}
+	}
+	Vector3 t = worldTransformB.GetPosition() - worldTransformA.GetPosition();
+	t = Vector3(Vector3::Dot(t, axisA[0]), Vector3::Dot(t, axisA[1]), Vector3::Dot(t, axisA[2]));
+
+	for (int i = 0; i < 3; i++) {
+		ra = boxsizeA[i];
+		rb = boxsizeB[0] * AbsR.array[i][0] + boxsizeB[1] * AbsR.array[i][1] + boxsizeB[2] * AbsR.array[i][2];
+		if (std::abs(t[i]) > ra + rb) 
+			return 0; 
+		penetration = ra + rb - std::abs(t[i]);
+		if (penetration < minPenetration) {
+			minRa = ra;
+			minRb = rb;
+			minPenetration = penetration;
+			collisionNormal = axisA[i].Normalised();
+		}
+	}
+	for (int i = 0; i < 3; i++) {
+		ra = boxsizeA[0] * AbsR.array[0][i] + boxsizeA[1] * AbsR.array[1][i] + boxsizeA[2] * AbsR.array[2][1];
+		rb = boxsizeB[i] ;
+		float tempd = std::abs(t[0] * R.array[0][i] + t[1] * R.array[1][i] + t[2] * R.array[2][i]);
+		if (tempd > ra + rb)
+			return 0;
+		penetration = ra + rb - tempd;
+		if (penetration < minPenetration) {
+			minRa = ra;
+			minRb = rb;
+			minPenetration = penetration;
+			collisionNormal = axisB[i].Normalised();
+		}
+	}
+	float tempd;
+	ra = boxsizeA[1] * AbsR.array[2][0] + boxsizeA[2] * AbsR.array[1][0];
+	rb = boxsizeA[1] * AbsR.array[0][2] + boxsizeA[2] * AbsR.array[0][1];
+	tempd = std::abs(t[2] * R.array[1][0] - t[1] * R.array[2][0]);
+	if (tempd > ra + rb)
+		return 0;
+	penetration = ra + rb - tempd;
+	if (penetration + 0.1f < minPenetration) {
+		Vector3 tempcollisionNormal = Vector3::Cross(axisA[0], axisB[0]);
+		if (tempcollisionNormal != Vector3()){
+			minRa = ra;
+			minRb = rb;
+			minPenetration = penetration;
+			collisionNormal = tempcollisionNormal.Normalised();
+		}
+	}
+
+	ra = boxsizeA[1] * AbsR.array[2][1] + boxsizeA[2] * AbsR.array[1][1];
+	rb = boxsizeA[0] * AbsR.array[0][2] + boxsizeA[2] * AbsR.array[0][0];
+	tempd = std::abs(t[2] * R.array[1][1] - t[1] * R.array[2][1]);
+	if (tempd > ra + rb)
+		return 0;
+	penetration = ra + rb - tempd;
+	if (penetration + 0.1f < minPenetration) {
+		Vector3 tempcollisionNormal = Vector3::Cross(axisA[0], axisB[1]);
+		if (tempcollisionNormal != Vector3()) {
+			minRa = ra;
+			minRb = rb;
+			minPenetration = penetration;
+			collisionNormal = tempcollisionNormal.Normalised();
+		}
+	}
+
+	ra = boxsizeA[1] * AbsR.array[2][2] + boxsizeA[2] * AbsR.array[1][2]; 
+	rb = boxsizeA[0] * AbsR.array[0][1] + boxsizeA[1] * AbsR.array[0][0]; 
+	tempd = std::abs(t[2] * R.array[1][2] - t[1] * R.array[2][2]);
+	if (tempd > ra + rb)
+		return 0;
+	penetration = ra + rb - tempd;
+	if (penetration + 0.1f < minPenetration) {
+		Vector3 tempcollisionNormal = Vector3::Cross(axisA[0], axisB[2]);
+		if (tempcollisionNormal != Vector3()) {
+			minRa = ra;
+			minRb = rb;
+			minPenetration = penetration;
+			collisionNormal = tempcollisionNormal.Normalised();
+		}
+	}
+
+	ra = boxsizeA[0] * AbsR.array[2][0] + boxsizeA[2] * AbsR.array[0][0]; 
+	rb = boxsizeA[1] * AbsR.array[1][2] + boxsizeA[2] * AbsR.array[1][1];
+	tempd = std::abs(t[0] * R.array[2][0] - t[2] * R.array[0][0]);
+	if (tempd > ra + rb)
+		return 0;
+	penetration = ra + rb - tempd;
+	if (penetration + 0.1f < minPenetration) {
+		Vector3 tempcollisionNormal = Vector3::Cross(axisA[1], axisB[0]);
+		if (tempcollisionNormal != Vector3()) {
+			minRa = ra;
+			minRb = rb;
+			minPenetration = penetration;
+			collisionNormal = tempcollisionNormal.Normalised();
+		}
+	}
+
+	ra = boxsizeA[0] * AbsR.array[2][1] + boxsizeA[2] * AbsR.array[0][1]; 
+	rb = boxsizeA[0] * AbsR.array[1][2] + boxsizeA[2] * AbsR.array[1][0]; 
+	tempd = std::abs(t[0] * R.array[2][1] - t[2] * R.array[0][1]);
+	if (tempd > ra + rb)
+		return 0; 
+	penetration = ra + rb - tempd;
+	if (penetration + 0.1f < minPenetration) {
+		Vector3 tempcollisionNormal = Vector3::Cross(axisA[1], axisB[1]);
+		if (tempcollisionNormal != Vector3()) {
+			minRa = ra;
+			minRb = rb;
+			minPenetration = penetration;
+			collisionNormal = tempcollisionNormal.Normalised();
+		}
+	}
+
+	ra = boxsizeA[0] * AbsR.array[2][2] + boxsizeA[2] * AbsR.array[0][2]; 
+	rb = boxsizeA[0] * AbsR.array[1][1] + boxsizeA[1] * AbsR.array[1][0]; 
+	tempd = std::abs(t[0] * R.array[2][2] - t[2] * R.array[0][2]);
+	if (tempd > ra + rb)
+		return 0; 
+	penetration = ra + rb - tempd;
+	if (penetration + 0.1f < minPenetration) {
+		Vector3 tempcollisionNormal = Vector3::Cross(axisA[1], axisB[2]);
+		if (tempcollisionNormal != Vector3()) {
+			minRa = ra;
+			minRb = rb;
+			minPenetration = penetration;
+			collisionNormal = tempcollisionNormal.Normalised();
+		}
+	}
+
+	ra = boxsizeA[0] * AbsR.array[1][0] + boxsizeA[1] * AbsR.array[0][0]; 
+	rb = boxsizeA[1] * AbsR.array[2][2] + boxsizeA[2] * AbsR.array[2][1]; 
+	tempd = std::abs(t[1] * R.array[0][0] - t[0] * R.array[1][0]);
+	if (tempd > ra + rb)
+		return 0; 
+	penetration = ra + rb - tempd;
+	if (penetration + 0.1f < minPenetration) {
+		Vector3 tempcollisionNormal = Vector3::Cross(axisA[2], axisB[0]);
+		if (tempcollisionNormal != Vector3()) {
+			minRa = ra;
+			minRb = rb;
+			minPenetration = penetration;
+			collisionNormal = tempcollisionNormal.Normalised();
+		}
+	}
+	
+	ra = boxsizeA[0] * AbsR.array[1][1] + boxsizeA[1] * AbsR.array[0][1]; 
+	rb = boxsizeA[0] * AbsR.array[2][2] + boxsizeA[2] * AbsR.array[2][0]; 
+	tempd = std::abs(t[1] * R.array[0][1] - t[0] * R.array[1][1]);
+	if (tempd > ra + rb)
+		return 0; 
+	penetration = ra + rb - tempd;
+	if (penetration + 0.1f < minPenetration) {
+		Vector3 tempcollisionNormal = Vector3::Cross(axisA[2], axisB[1]);
+		if (tempcollisionNormal != Vector3()) {
+			minRa = ra;
+			minRb = rb;
+			minPenetration = penetration;
+			collisionNormal = tempcollisionNormal.Normalised();
+		}
+	}
+
+	ra = boxsizeA[0] * AbsR.array[1][2] + boxsizeA[1] * AbsR.array[0][2]; 
+	rb = boxsizeA[0] * AbsR.array[2][1] + boxsizeA[1] * AbsR.array[2][0]; 
+	tempd = std::abs(t[1] * R.array[0][2] - t[0] * R.array[1][2]);
+	if (tempd > ra + rb)
+		return 0;
+	penetration = ra + rb - tempd;
+	if (penetration+0.1f < minPenetration) {
+		Vector3 tempcollisionNormal = Vector3::Cross(axisA[2], axisB[2]);
+		if (tempcollisionNormal != Vector3()) {
+			minRa = ra;
+			minRb = rb;
+			minPenetration = penetration;
+			collisionNormal = tempcollisionNormal.Normalised();
+		}
+	}
+
+	Vector3 localA = collisionNormal * minRa;
+	Vector3 localB = -collisionNormal * minRb;
+	
+	collisionInfo.AddContactPoint(localA, localB,
+		collisionNormal, minPenetration);
+
+	return true;
+}
+
+//bool CollisionDetection::OBBIntersection(const OBBVolume& volumeA, const Transform& worldTransformA,
+//	const OBBVolume& volumeB, const Transform& worldTransformB,
+//	CollisionInfo& collisionInfo)
+//{
+//	float ra, rb;
+//	Matrix3 R, AbsR;
+//
+//	//------------------------------------------------------------------------------
+//	//Get Local Axis of OBB A
+//	Matrix4 boxAMat = worldTransformA.GetMatrix();
+//	boxAMat.SetPositionVector(Vector3(0, 0, 0));
+//
+//	Vector3 boxARight = boxAMat * Vector3(1, 0, 0);
+//	Vector3 boxAUp = boxAMat * Vector3(0, 1, 0);
+//	Vector3 boxAForward = boxAMat * Vector3(0, 0, -1);
+//
+//	Vector3 uA[3] = { boxARight.Normalised(), boxAUp.Normalised(), boxAForward.Normalised() };
+//
+//	Vector3 boxAExtents = volumeA.GetHalfDimensions();
+//	//------------------------------------------------------------------------------
+//
+//	//------------------------------------------------------------------------------
+//	//Get Local Axis of OBB B
+//	Matrix4 boxBMat = worldTransformB.GetMatrix();
+//	boxBMat.SetPositionVector(Vector3(0, 0, 0));
+//
+//	Vector3 boxBRight = boxBMat * Vector3(1, 0, 0);
+//	Vector3 boxBUp = boxBMat * Vector3(0, 1, 0);
+//	Vector3 boxBForward = boxBMat * Vector3(0, 0, -1);
+//
+//	Vector3 uB[3] = { boxBRight.Normalised(), boxBUp.Normalised(), boxBForward.Normalised() };
+//
+//	Vector3 boxBExtents = volumeB.GetHalfDimensions();
+//	//------------------------------------------------------------------------------
+//
+//	for (int i = 0; i < 3; i++)
+//		for (int j = 0; j < 3; j++)
+//			R.array[i][j] = Vector3::Dot(uA[i], uB[j]);
+//
+//	Vector3 t = worldTransformB.GetPosition() - worldTransformA.GetPosition();
+//	t = Vector3(Vector3::Dot(t, uA[0]), Vector3::Dot(t, uA[1]), Vector3::Dot(t, uA[2]));
+//
+//	for (int i = 0; i < 3; i++)
+//		for (int j = 0; j < 3; j++)
+//			AbsR.array[i][j] = abs(R.array[i][j]) + 0.01f;
+//
+//	//Test Axes L = A0, L = A1, L = A2
+//	for (int i = 0; i < 3; i++)
+//	{
+//		ra = boxAExtents[i];
+//		rb = boxBExtents[0] * AbsR.array[i][0] +
+//			boxBExtents[1] * AbsR.array[i][1] +
+//			boxBExtents[2] * AbsR.array[i][2];
+//
+//		if (abs(t[i]) > ra + rb)
+//			return false;
+//	}
+//
+//	//Test Axes L = B0, L = B1, L = B2
+//	for (int i = 0; i < 3; i++)
+//	{
+//		ra = boxAExtents[0] * AbsR.array[0][i] +
+//			boxAExtents[1] * AbsR.array[1][i] +
+//			boxAExtents[2] * AbsR.array[2][i];
+//		rb = boxBExtents[i];
+//
+//		if (abs(t[0] * R.array[0][i] + t[1] * R.array[1][i] + t[2] * R.array[2][i]) > ra + rb)
+//			return false;
+//	}
+//
+//
+//
+//	//Test Axis L = A0 x B0
+//	ra = boxAExtents[1] * AbsR.array[2][0] + boxAExtents[2] * AbsR.array[1][0];
+//	rb = boxBExtents[1] * AbsR.array[0][2] + boxBExtents[2] * AbsR.array[0][1];
+//	if (abs(t[2] * R.array[1][0] - t[1] * R.array[2][0]) > ra + rb)
+//		return false;
+//
+//	//Test Axis L = A0 x B1
+//	ra = boxAExtents[1] * AbsR.array[2][1] + boxAExtents[2] * AbsR.array[1][1];
+//	rb = boxBExtents[0] * AbsR.array[0][2] + boxBExtents[2] * AbsR.array[0][0];
+//	if (abs(t[2] * R.array[1][1] - t[1] * R.array[2][1]) > ra + rb)
+//		return false;
+//
+//	//Test Axis L = A0 x B2
+//	ra = boxAExtents[1] * AbsR.array[2][2] + boxAExtents[2] * AbsR.array[1][2];
+//	rb = boxBExtents[0] * AbsR.array[0][1] + boxBExtents[1] * AbsR.array[0][0];
+//	if (abs(t[2] * R.array[1][2] - t[1] * R.array[2][2]) > ra + rb)
+//		return false;
+//
+//
+//
+//	//Test Axis L = A1 x B0
+//	ra = boxAExtents[0] * AbsR.array[2][0] + boxAExtents[2] * AbsR.array[0][0];
+//	rb = boxBExtents[1] * AbsR.array[1][2] + boxBExtents[2] * AbsR.array[1][1];
+//	if (abs(t[0] * R.array[2][0] - t[2] * R.array[0][0]) > ra + rb)
+//		return false;
+//
+//	//Test Axis L = A1 x B1
+//	ra = boxAExtents[0] * AbsR.array[2][1] + boxAExtents[2] * AbsR.array[0][1];
+//	rb = boxBExtents[0] * AbsR.array[1][2] + boxBExtents[2] * AbsR.array[1][0];
+//	if (abs(t[0] * R.array[2][1] - t[2] * R.array[0][1]) > ra + rb)
+//		return false;
+//
+//	//Test Axis L = A1 x B2
+//	ra = boxAExtents[0] * AbsR.array[2][2] + boxAExtents[2] * AbsR.array[0][2];
+//	rb = boxBExtents[0] * AbsR.array[1][1] + boxBExtents[1] * AbsR.array[1][0];
+//	if (abs(t[0] * R.array[2][2] - t[2] * R.array[0][2]) > ra + rb)
+//		return false;
+//
+//
+//
+//
+//	//Test Axis L = A2 x B0
+//	ra = boxAExtents[0] * AbsR.array[1][0] + boxAExtents[1] * AbsR.array[0][0];
+//	rb = boxBExtents[1] * AbsR.array[2][2] + boxBExtents[2] * AbsR.array[2][1];
+//	if (abs(t[1] * R.array[0][0] - t[0] * R.array[1][0]) > ra + rb)
+//		return false;
+//
+//	//Test Axis L = A2 x B1
+//	ra = boxAExtents[0] * AbsR.array[1][1] + boxAExtents[1] * AbsR.array[0][1];
+//	rb = boxBExtents[0] * AbsR.array[2][2] + boxBExtents[2] * AbsR.array[2][0];
+//	if (abs(t[1] * R.array[0][1] - t[0] * R.array[1][1]) > ra + rb)
+//		return false;
+//
+//	//Test Axis L = A2 x B2
+//	ra = boxAExtents[0] * AbsR.array[1][2] + boxAExtents[1] * AbsR.array[0][2];
+//	rb = boxBExtents[0] * AbsR.array[2][1] + boxBExtents[1] * AbsR.array[2][0];
+//	if (abs(t[1] * R.array[0][2] - t[0] * R.array[1][2]) > ra + rb)
+//		return false;
+//
+//	//Debug::DrawLine(t, t + Vector3(0, 1, 0), Debug::MAGENTA, 1000.0f);
+//	RayCollision rayCollision;
+//	Ray ray = Ray(worldTransformA.GetPosition(), worldTransformB.GetPosition() - worldTransformA.GetPosition());
+//	if (RayOBBIntersection(ray, worldTransformB, volumeB, rayCollision))
+//	{
+//		//Debug::DrawLine(rayCollision.collidedAt, rayCollision.collidedAt + rayCollision.collidedNormal, Debug::MAGENTA, 1000.0f);
+//		collisionInfo.AddContactPoint(Vector3(), rayCollision.collidedAt, -rayCollision.collidedNormal, rayCollision.rayDistance);
+//	}
+//
+//	//std::cout << "There is an OBB-OBB collision\n";
+//	return true;
+//}
 
 Matrix4 GenerateInverseView(const Camera &c) {
 	float pitch = c.GetPitch();
@@ -660,7 +857,7 @@ Matrix4 GenerateInverseProjection(float aspect, float nearPlane, float farPlane,
 Vector3 CollisionDetection::Unproject(const Vector3& screenPos, const PerspectiveCamera& cam) {
 	Vector2i screenSize = Window::GetWindow()->GetScreenSize();
 
-	float aspect    = (float)screenSize.x / (float)screenSize.y;
+	float aspect	= (float)screenSize.x / (float)screenSize.y;
 	float fov		= cam.GetFieldOfVision();
 	float nearPlane = cam.GetNearPlane();
 	float farPlane  = cam.GetFarPlane();
@@ -759,27 +956,6 @@ Matrix4 CollisionDetection::GenerateInverseView(const Camera &c) {
 		Matrix4::Rotation(pitch, Vector3(1, 0, 0));
 
 	return iview;
-}
-
-Vector3 CollisionDetection::getAxis(const Transform& worldTransformA, int i)
-{
-	Quaternion rot = worldTransformA.GetOrientation();
-	Vector3 axis;
-	switch (i)
-	{
-	case 0:
-		axis = Vector3(1, 0, 0);
-		break;
-	case 1:
-		axis = Vector3(0, 1, 0);
-		break;
-	case 2:
-		axis = Vector3(0, 0, 1);
-		break;
-	}
-	axis = rot * axis;
-	axis.Normalise();
-	return axis;
 }
 
 

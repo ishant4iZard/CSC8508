@@ -8,7 +8,7 @@ PushdownMachine::PushdownMachine(PushdownState* initialState)
 	this->initialState = initialState;
 }
 
-PushdownMachine::~PushdownMachine() 
+PushdownMachine::~PushdownMachine()
 {
 }
 
@@ -32,9 +32,9 @@ bool PushdownMachine::Update(float dt) {
 			}break;
 			case PushdownState::Push: {
 				activeState->OnSleep();		
+
 				stateStack.push(newState);
 				activeState = newState;
-				activeState->SetGame(game);
 				activeState->OnAwake();
 			}break;
 		}
@@ -42,7 +42,6 @@ bool PushdownMachine::Update(float dt) {
 	else {
 		stateStack.push(initialState);
 		activeState = initialState;
-		activeState->SetGame(game);
 		activeState->OnAwake();
 	}
 	return true;

@@ -19,7 +19,7 @@ namespace NCL {
 			virtual void Update(float dt); //made it virtual!
 
 		protected:
-			State * activeState;
+			State* activeState;
 
 			std::vector<State*> allStates;
 			TransitionContainer allTransitions;

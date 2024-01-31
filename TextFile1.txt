@@ -1,0 +1,70 @@
+#include <iostream>
+#include <cmath>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+struct OBB {
+    glm::vec3 center;
+    glm::vec3 halfExtents;
+    glm::mat3 orientation;
+};
+
+struct Sphere {
+    glm::vec3 center;
+    float radius;
+};
+
+// Function to perform OBB-sphere collision detection
+bool obbSphereCollision(const OBB& obb, const Sphere& sphere, glm::vec3& contactPoint, glm::vec3& collisionNormal) {
+    // Transform the sphere center to the OBB's local space
+    glm::vec3 sphereCenterLocal = glm::inverse(obb.orientation) * (sphere.center - obb.center);
+
+    // Closest point on the OBB to the sphere center (clamped to the OBB's extents)
+    glm::vec3 closestPoint = glm::clamp(sphereCenterLocal, -obb.halfExtents, obb.halfExtents);
+
+    // Calculate the vector from the sphere center to the closest point on the OBB
+    glm::vec3 sphereToClosest = closestPoint - sphereCenterLocal;
+
+    // Calculate the distance between the sphere center and the closest point
+    float distance = glm::length(sphereToClosest);
+
+    // Check if the distance is less than the sphere radius, indicating a collision
+    if (distance < sphere.radius) {
+        // Calculate the contact point in the OBB's local space
+        contactPoint = closestPoint;
+
+        // Calculate the collision normal in the OBB's local space
+        collisionNormal = glm::normalize(sphereToClosest);
+
+        // Transform the contact point and collision normal back to the world space
+        contactPoint = obb.orientation * contactPoint + obb.center;
+        collisionNormal = obb.orientation * collisionNormal;
+
+        return true; // Collision detected
+    }
+
+    return false; // No collision
+}
+
+int main() {
+    // Example usage
+    OBB obb;
+    obb.center = glm::vec3(0.0f, 0.0f, 0.0f);
+    obb.halfExtents = glm::vec3(1.0f, 1.0f, 1.0f);
+    obb.orientation = glm::mat3(1.0f); // Identity matrix for simplicity
+
+    Sphere sphere;
+    sphere.center = glm::vec3(2.0f, 0.0f, 0.0f);
+    sphere.radius = 1.0f;
+
+    glm::vec3 contactPoint, collisionNormal;
+    if (obbSphereCollision(obb, sphere, contactPoint, collisionNormal)) {
+        std::cout << "Collision detected at point " << glm::to_string(contactPoint) << std::endl;
+        std::cout << "Collision normal: " << glm::to_string(collisionNormal) << std::endl;
+    } else {
+        std::cout << "No collision detected." << std::endl;
+    }
+
+    return 0;
+}

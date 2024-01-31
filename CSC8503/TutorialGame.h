@@ -7,30 +7,20 @@
 #endif
 #include "PhysicsSystem.h"
 
-#include "NavigationGrid.h"
-#include "NavigationMesh.h"
-
 #include "StateGameObject.h"
+
+
+enum class level {
+	level1 = 1,
+	level2 = 2,
+};
 
 namespace NCL {
 	namespace CSC8503 {
-		struct Wall {
-			Vector3 pos;
-			Vector3 halfsize;
-		};
-
-		class Map {
-		public:
-			Map(const std::string& filename, Vector2 halfMapSize, int wallHeight);
-
-			vector<Wall> wallList;
-		protected:
-			int nodeSize = 0;
-			int gridWidth = 0;
-			int gridHeight = 0;
-			vector<char> nodes;
-		};
-
+		class Powerup;
+		class Player;
+		class Goose;
+		class Voxels;
 		class TutorialGame		{
 		public:
 			TutorialGame();
@@ -38,8 +28,10 @@ namespace NCL {
 
 			virtual void UpdateGame(float dt);
 
-			bool findPathToDestination(Vector3 startrPos, Vector3 Destination, vector<Vector3>& pathNodes);
-			GameWorld* getGameWorld() const { return world; }
+			Player* GetPlayer() {
+				return player;
+			}
+
 
 		protected:
 			void InitialiseAssets();
@@ -47,7 +39,12 @@ namespace NCL {
 			void InitCamera();
 			void UpdateKeys();
 
-			virtual void InitWorld();
+			void InitWorld();
+
+			void InitWorld2();
+
+			void InitMaze();
+
 
 			/*
 			These are some of the world/object creation functions I created when testing the functionality
@@ -56,31 +53,44 @@ namespace NCL {
 			*/
 			void InitGameExamples();
 
+			void InitCoin(int Amount, float radius);
+
 			void InitSphereGridWorld(int numRows, int numCols, float rowSpacing, float colSpacing, float radius);
 			void InitMixedGridWorld(int numRows, int numCols, float rowSpacing, float colSpacing);
-			void InitCubeGridWorld(int numRows, int numCols, float rowSpacing, float colSpacing, const Vector3& cubeDims);
+			void InitCubeGridWorld(int length, int breadth, int height,  float rowSpacing, float colSpacing, const Vector3& cubeDims);
+			void BridgeConstraintTest();
+
+			void InitOBBwall();
 
 			void InitDefaultFloor();
-			void InitMapWall();
+			void InitAI();
 
 			bool SelectObject();
 			void MoveSelectedObject();
 			void DebugObjectMovement();
 			void LockedObjectMovement();
 
-			void BridgeConstraintTest();
+			void InitInvisibleWall(Vector3 position, Vector3 size);
+			void InitBoundary();
 
-			GameObject* AddFloorToWorld(const Vector3& position);
-			GameObject* AddWallToWorld(const Vector3& position, const Vector3& halfsize);
-			GameObject* AddSphereToWorld(const Vector3& position, float radius, float inverseMass = 10.0f);
-			GameObject* AddCubeToWorld(const Vector3& position, Vector3 dimensions, float inverseMass = 10.0f);
-			GameObject* AddOBBCubeToWorld(const Vector3& position, Vector3 dimensions, float inverseMass = 10.0f);
+			void UpdateVoxels();
+
+
+			GameObject* AddFloorToWorld(const Vector3& position, const Vector3& size = Vector3(128,2,128));
+			GameObject* AddSphereToWorld(const Vector3& position, float radius, float inverseMass = 10.0f , bool isHollow = false, float elasticity = 0.81f);
+			GameObject* AddKinematicSphereToWorld(const Vector3& position, float radius,  bool isHollow = false, float elasticity = 0.81f);
+			GameObject* AddCubeToWorld(const Vector3& position, Vector3 dimensions, float inverseMass = 10.0f, float elasticity = 0.81f);
+			GameObject* AddObbCubeToWorld(const Vector3& position, Vector3 dimensions, float inverseMass = 10.0f, float elasticity =0.81f);
+			GameObject* AddVoxelsToWorld(const Vector3& position, Vector3 dimensions,  float elasticity = 0.81f);
+			GameObject* AddCapsuleToWorld(const Vector3& position, float radius, float halfHeight, float inverseMass = 10.0f, float elasticity = 0.81f);
 
 			GameObject* AddPlayerToWorld(const Vector3& position);
 			GameObject* AddEnemyToWorld(const Vector3& position);
 			GameObject* AddBonusToWorld(const Vector3& position);
-
+			Powerup* AddScoreToWorld(const Vector3& position, float radius, float inverseMass , int bonusScore = 1);
 			StateGameObject* AddStateObjectToWorld(const Vector3& position);
+			StateGameObject* testStateObject;
+
 
 #ifdef USEVULKAN
 			GameTechVulkanRenderer*	renderer;
@@ -104,28 +114,37 @@ namespace NCL {
 			Mesh*	sphereMesh	= nullptr;
 
 			Texture*	basicTex	= nullptr;
+			Texture*	sandTex		= nullptr;
 			Shader*		basicShader = nullptr;
 
 			//Coursework Meshes
 			Mesh*	charMesh	= nullptr;
 			Mesh*	enemyMesh	= nullptr;
 			Mesh*	bonusMesh	= nullptr;
-			Mesh*   gooseMesh   = nullptr;
-			Mesh*   coinMesh    = nullptr;
+			Mesh*	gooseMesh	= nullptr;
 
 			//Coursework Additional functionality	
 			GameObject* lockedObject	= nullptr;
-			Vector3 lockedOffset		= Vector3(0, 100, 20);
+			Vector3 lockedOffset		= Vector3(0, 14, 20);
 			void LockCameraToObject(GameObject* o) {
 				lockedObject = o;
 			}
 
+			std::vector<Powerup*> powerupList;
+			std::vector<Goose*> EnemyList;
+			std::vector<StateGameObject*> Enemy2List;
+			std::vector<Voxels*> VoxelList;
+
+			Player* player;
+			bool gameover;
+			bool gameWon;
+			float timer;
+			float finaltimer;
+
 			GameObject* objClosest = nullptr;
-
-			Vector3 gridBias;
-			NavigationGrid* grid;
-
-			StateGameObject* testStateObject;
+			level currentlevel;
+			int score = 0;
+			float v = 0, h = 0;
 		};
 	}
 }

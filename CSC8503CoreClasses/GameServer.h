@@ -17,23 +17,12 @@ namespace NCL {
 			bool SendGlobalPacket(int msgID);
 			bool SendGlobalPacket(GamePacket& packet);
 
-			bool SendSinglePacket(GamePacket& packet, int clientNum);
-
-			bool GetNetPeer(int peerNum, int& peerID);
-
 			virtual void UpdateServer();
 
 		protected:
-			void clearPeerArray();
-			void AddPeer(int val);
-			void DeletPeer(int val);
-
-			void DebugNetPeer();
-
 			int			port;
 			int			clientMax;
 			int			clientCount;
-			int*        netPeers;
 			GameWorld*	gameWorld;
 
 			int incomingDataRate;
