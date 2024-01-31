@@ -12,11 +12,16 @@ namespace NCL {
 
 			bool Update(float dt);
 
+			void GetGame(void** game) { *game = this->game; }
+			void SetGame(void* val) { this->game = val; }
+
 		protected:
 			PushdownState* activeState;
 			PushdownState* initialState;
 
 			std::stack<PushdownState*> stateStack;
+
+			void* game;
 		};
 	}
 }

@@ -3,6 +3,7 @@
 #include "NetworkObject.h"
 #include "GameServer.h"
 #include "GameClient.h"
+#include "PushdownMachine.h"
 
 #define COLLISION_MSG 30
 
@@ -23,6 +24,9 @@ NetworkedGame::NetworkedGame()	{
 	NetworkBase::Initialise();
 	timeToNextPacket  = 0.0f;
 	packetsToSnapshot = 0;
+
+	TestMenu = new PushdownMachine(new MainMenu());
+	TestMenu->SetGame(this);
 }
 
 NetworkedGame::~NetworkedGame()	{
@@ -31,7 +35,12 @@ NetworkedGame::~NetworkedGame()	{
 }
 
 void NetworkedGame::StartAsServer() {
-	thisServer = new GameServer(NetworkBase::GetDefaultPort(), 4);
+	if (thisServer != nullptr)
+	{
+		return;
+	}
+
+	thisServer = new GameServer(NetworkBase::GetDefaultPort(), 3);
 
 	thisServer->RegisterPacketHandler(Received_State, this);
 
@@ -39,6 +48,11 @@ void NetworkedGame::StartAsServer() {
 }
 
 void NetworkedGame::StartAsClient(char a, char b, char c, char d) {
+	if (thisClient != nullptr)
+	{
+		return;
+	}
+
 	thisClient = new GameClient();
 	thisClient->Connect(a, b, c, d, NetworkBase::GetDefaultPort());
 
@@ -51,6 +65,8 @@ void NetworkedGame::StartAsClient(char a, char b, char c, char d) {
 }
 
 void NetworkedGame::UpdateGame(float dt) {
+	TestMenu->Update(dt);
+
 	timeToNextPacket -= dt;
 	if (timeToNextPacket < 0) {
 		if (thisServer) {

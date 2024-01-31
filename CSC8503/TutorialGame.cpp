@@ -516,15 +516,15 @@ void TutorialGame::InitWorld() {
 			break;
 		}
 	}*/
-	InitCubeGridWorld(20, 20, 3, 2, 2, Vector3(1, 1, 1));
-	InitCoin(20, 1);
-	AddEnemyToWorld(Vector3(-25, -10, 0));
+	//InitCubeGridWorld(20, 20, 3, 2, 2, Vector3(1, 1, 1));
+	//InitCoin(20, 1);
+	//AddEnemyToWorld(Vector3(-25, -10, 0));
 	InitDefaultFloor();
-	InitBoundary();
-	BridgeConstraintTest();
-	InitMaze();
-	AddPlayerToWorld(Vector3(61, -16, 28));
-	InitAI();
+	//InitBoundary();
+	//BridgeConstraintTest();
+	//InitMaze();
+	//AddPlayerToWorld(Vector3(61, -16, 28));
+	//InitAI();
 	selectionObject = NULL;
 
 	//InitOBBwall();
