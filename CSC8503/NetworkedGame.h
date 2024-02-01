@@ -39,6 +39,8 @@ namespace NCL {
 
 			void ServerUpdatePlayersList();
 
+			NetworkPlayer* AddNetworkPlayerToWorld(const Vector3& position, int playerNum);
+
 			std::map<int, int> stateIDs;
 
 			GameServer* thisServer;
@@ -46,7 +48,7 @@ namespace NCL {
 			float timeToNextPacket;
 			int packetsToSnapshot;
 
-			std::vector<NetworkObject*> networkObjects;
+			std::map<int, NetworkObject*> networkObjects;
 
 			std::map<int, GameObject*> serverPlayers;
 			GameObject* localPlayer;

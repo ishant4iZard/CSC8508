@@ -5,6 +5,11 @@
 #include "GameClient.h"
 #include "PushdownMachine.h"
 
+#include "GameWorld.h"
+#include "PhysicsObject.h"
+#include "RenderObject.h"
+#include "TextureLoader.h"
+
 #define COLLISION_MSG 30
 
 struct MessagePacket : public GamePacket {
@@ -177,6 +182,52 @@ void NetworkedGame::ServerUpdatePlayersList()
 	}
 	PLayersListPacket plPacket(PlayersList);
 	thisServer->SendGlobalPacket(plPacket);
+}
+
+NetworkPlayer* NetworkedGame::AddNetworkPlayerToWorld(const Vector3& position, int playerNum)
+{
+	float meshSize = 2.0f;
+	Vector3 volumeSize = Vector3(1.0, 1.6, 1.0);
+	float inverseMass = 1.0f / 60.0f;
+
+	NetworkPlayer* character = new NetworkPlayer(this, playerNum);
+
+	AABBVolume* volume = new AABBVolume(volumeSize);
+
+	character->SetBoundingVolume((CollisionVolume*)volume);
+	character->GetTransform()
+		.SetScale(Vector3(meshSize, meshSize, meshSize))
+		.SetPosition(position);
+
+	character->SetRenderObject(new RenderObject(&character->GetTransform(), charMesh, nullptr, basicShader));
+	character->SetPhysicsObject(new PhysicsObject(&character->GetTransform(), character->GetBoundingVolume()));
+	character->SetNetworkObject(new NetworkObject(*character, playerNum));
+
+	character->GetPhysicsObject()->SetInverseMass(inverseMass);
+	character->GetPhysicsObject()->InitCubeInertia();
+
+	world->AddGameObject(character);
+	networkObjects.insert(std::pair<int, NetworkObject*>(playerNum, character->GetNetworkObject()));
+
+	Vector4 colour;
+	switch (playerNum)
+	{
+	case 0:
+		colour = Debug::RED;
+		break;
+	case 1:
+		colour = Debug::BLUE;
+		break;
+	case 2:
+		colour = Debug::YELLOW;
+		break;
+	case 3:
+		colour = Debug::CYAN;
+		break;
+	}
+	character->GetRenderObject()->SetColour(colour);
+
+	return character;
 }
 
 void NetworkedGame::SpawnPlayer() {
