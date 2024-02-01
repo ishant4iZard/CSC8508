@@ -34,6 +34,9 @@
     <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503\Goose.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Projectile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503\GameTechRenderer.h">
@@ -68,6 +71,9 @@
     </ClInclude>
     <ClInclude Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503\CMakeFiles\CSC8503.dir\Release\cmake_pch.hxx">
       <Filter>Precompile Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="Projectile.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

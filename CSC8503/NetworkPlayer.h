@@ -13,13 +13,19 @@ namespace NCL {
 
 			void OnCollisionBegin(GameObject* otherObject) override;
 
-			int GetPlayerNum() const {
-				return playerNum;
-			}
+			void SetPlayerYaw(const Vector3& pointPos);
+
+			bool isFire = false;
+			void Fire();
 
 		protected:
 			NetworkedGame* game;
 			int playerNum;
+
+		public:
+			int GetPlayerNum() const { return playerNum; }
+
+			Vector3 GetPlayerForwardVector();
 		};
 	}
 }

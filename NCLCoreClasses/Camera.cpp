@@ -13,29 +13,29 @@ void Camera::UpdateCamera(float dt) {
 		return;
 	}
 
-	//Update the mouse by how much
-	pitch	-= activeController->GetNamedAxis("YLook");
-	yaw		-= activeController->GetNamedAxis("XLook");
+	////Update the mouse by how much
+	//pitch	-= activeController->GetNamedAxis("YLook");
+	//yaw		-= activeController->GetNamedAxis("XLook");
 
-	//Bounds check the pitch, to be between straight up and straight down ;)
-	pitch = std::min(pitch, 90.0f);
-	pitch = std::max(pitch, -90.0f);
+	////Bounds check the pitch, to be between straight up and straight down ;)
+	//pitch = std::min(pitch, 90.0f);
+	//pitch = std::max(pitch, -90.0f);
 
-	if (yaw <0) {
-		yaw += 360.0f;
-	}
-	if (yaw > 360.0f) {
-		yaw -= 360.0f;
-	}
+	//if (yaw <0) {
+	//	yaw += 360.0f;
+	//}
+	//if (yaw > 360.0f) {
+	//	yaw -= 360.0f;
+	//}
 
-	float frameSpeed = 100 * dt;
+	//float frameSpeed = 100 * dt;
 
-	Matrix4 yawRotation = Matrix4::Rotation(yaw, Vector3(0, 1, 0));
+	//Matrix4 yawRotation = Matrix4::Rotation(yaw, Vector3(0, 1, 0));
 
-	position += yawRotation * Vector3(0, 0, -activeController->GetNamedAxis("Forward")) * frameSpeed;
-	position += yawRotation * Vector3(activeController->GetNamedAxis("Sidestep"), 0, 0) * frameSpeed;
+	//position += yawRotation * Vector3(0, 0, -activeController->GetNamedAxis("Forward")) * frameSpeed;
+	//position += yawRotation * Vector3(activeController->GetNamedAxis("Sidestep"), 0, 0) * frameSpeed;
 
-	position.y += activeController->GetNamedAxis("UpDown") * frameSpeed;
+	//position.y += activeController->GetNamedAxis("UpDown") * frameSpeed;
 
 }
 

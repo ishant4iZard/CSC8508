@@ -30,6 +30,8 @@ namespace NCL {
 			int			clientCount;
 			GameWorld*	gameWorld;
 
+			bool isValid;
+
 			int incomingDataRate;
 			int outgoingDataRate;
 
@@ -37,7 +39,7 @@ namespace NCL {
 
 		public:
 			inline int GetConnectedClientsNum() const { return clientCount; }
-
+			inline bool IsValid() const { return isValid; }
 			/** -1 for no this Client */
 			int GetClientNetID(int Index) const;
 		};

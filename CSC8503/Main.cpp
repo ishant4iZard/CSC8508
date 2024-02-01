@@ -359,9 +359,8 @@ int main() {
 
 	//TestPushdownAutomata(w);
 	
-
-	w->ShowOSPointer(false);
-	w->LockMouseToWindow(true);
+	w->ShowOSPointer(true);
+	w->LockMouseToWindow(false);
 
 	//TestStateMachine();
 	//TestPathfinding();
