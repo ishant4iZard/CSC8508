@@ -357,17 +357,12 @@ int main() {
 		return -1;
 	}	
 
-<<<<<<< Updated upstream
 	//TestPushdownAutomata(w);
 	
 
 	w->ShowOSPointer(false);
 	w->LockMouseToWindow(true);
-=======
-	w->ShowOSPointer(true);
-	w->LockMouseToWindow(false);
 	w->ShowConsole(true);
->>>>>>> Stashed changes
 
 	//TestStateMachine();
 	//TestPathfinding();
