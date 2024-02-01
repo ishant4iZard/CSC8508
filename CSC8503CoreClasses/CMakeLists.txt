@@ -103,6 +103,17 @@ set(Source_Files
 )
 source_group("Source Files" FILES ${Source_Files})
 
+set(Lighting_Files
+    "Light.h"
+    "Light.cpp"
+    "SpotLight.h"
+    "SpotLight.cpp"
+    "PointLight.h"
+    "PointLight.cpp"
+    "DirectionalLight.h"
+    "DirectionalLight.cpp"
+)
+source_group("Lighting" FILES ${Lighting_Files})
 set(enet_Files
     #"./enet/callbacks.h"
     "./enet/callbacks.c"
@@ -135,7 +146,8 @@ set(ALL_FILES
     ${Collision_Detection}
     ${Networking}
     ${Physics}
-    ${enet_Files}   
+    ${enet_Files}
+    ${Lighting_Files}   
 )
 
 set_source_files_properties(${ALL_FILES} PROPERTIES LANGUAGE CXX)
