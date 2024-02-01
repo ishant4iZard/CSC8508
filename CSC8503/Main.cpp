@@ -393,4 +393,5 @@ int main() {
 		g->UpdateGame(dt);
 	}
 	Window::DestroyGameWindow();
+
 }
