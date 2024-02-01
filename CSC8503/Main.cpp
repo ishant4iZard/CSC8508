@@ -113,7 +113,7 @@ using namespace CSC8503;
 //					return Success;
 //				}
 //			}
-//			return state; // will be ’ongoing ’ until success
+//			return state; // will be ’ongoing ?until success
 //		}
 //	);
 //	BehaviourAction* goToRoom = new BehaviourAction("Go To Room",
@@ -131,7 +131,7 @@ using namespace CSC8503;
 //				}
 //
 //			}
-//			return state; // will be ’ongoing ’ until success
+//			return state; // will be ’ongoing ?until success
 //		}
 //	);
 //	BehaviourAction* openDoor = new BehaviourAction("Open Door",

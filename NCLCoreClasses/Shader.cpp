@@ -11,6 +11,7 @@ Shader::Shader(const string& vertex, const string& fragment, const string& geome
 	shaderFiles[ShaderStages::Geometry]	= geometry;
 	shaderFiles[ShaderStages::Domain]	= domain;
 	shaderFiles[ShaderStages::Hull]		= hull;
+	//Lighting
 }
 
 Shader::~Shader()
