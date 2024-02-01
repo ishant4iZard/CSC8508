@@ -27,6 +27,12 @@ NetworkedGame::NetworkedGame()	{
 
 	TestMenu = new PushdownMachine(new MainMenu());
 	TestMenu->SetGame(this);
+
+	PlayersList.clear();
+	for (int i = 0; i < 4; ++i)
+	{
+		PlayersList.push_back(-1);
+	}
 }
 
 NetworkedGame::~NetworkedGame()	{
@@ -47,15 +53,19 @@ void NetworkedGame::StartAsServer() {
 	StartLevel();
 }
 
-void NetworkedGame::StartAsClient(char a, char b, char c, char d) {
+bool NetworkedGame::StartAsClient(char a, char b, char c, char d) {
 	if (thisClient != nullptr)
 	{
-		return;
+		return true;
 	}
 
 	thisClient = new GameClient();
-	thisClient->Connect(a, b, c, d, NetworkBase::GetDefaultPort());
+	if (!thisClient->Connect(a, b, c, d, NetworkBase::GetDefaultPort()))
+	{
+		return false;
+	}
 
+	thisClient->RegisterPacketHandler(Message, this);
 	thisClient->RegisterPacketHandler(Delta_State, this);
 	thisClient->RegisterPacketHandler(Full_State, this);
 	thisClient->RegisterPacketHandler(Player_Connected, this);
@@ -75,15 +85,12 @@ void NetworkedGame::UpdateGame(float dt) {
 		else if (thisClient) {
 			UpdateAsClient(dt);
 		}
-		timeToNextPacket += 1.0f / 20.0f; //20hz server/client update
+		timeToNextPacket += 1.0f / 30.0f; //30hz server/client update
 	}
 
-	if (!thisServer && Window::GetKeyboard()->KeyPressed(KeyCodes::F9)) {
-		StartAsServer();
-	}
-	if (!thisClient && Window::GetKeyboard()->KeyPressed(KeyCodes::F10)) {
-		StartAsClient(127,0,0,1);
-	}
+	// Server and Client Receive and process there packet
+	if (thisServer) { thisServer->UpdateServer(); }
+	if (thisClient) { thisClient->UpdateClient(); }
 
 	TutorialGame::UpdateGame(dt);
 }
@@ -97,6 +104,8 @@ void NetworkedGame::UpdateAsServer(float dt) {
 	else {
 		BroadcastSnapshot(true);
 	}
+
+	ServerUpdatePlayersList();
 }
 
 void NetworkedGame::UpdateAsClient(float dt) {
@@ -159,6 +168,17 @@ void NetworkedGame::UpdateMinimumState() {
 	}
 }
 
+void NetworkedGame::ServerUpdatePlayersList()
+{
+	PlayersList[0] = 0;
+	for (int i = 0; i < 3; ++i)
+	{
+		PlayersList[i + 1] = thisServer->GetClientNetID(i);
+	}
+	PLayersListPacket plPacket(PlayersList);
+	thisServer->SendGlobalPacket(plPacket);
+}
+
 void NetworkedGame::SpawnPlayer() {
 
 }
@@ -168,7 +188,14 @@ void NetworkedGame::StartLevel() {
 }
 
 void NetworkedGame::ReceivePacket(int type, GamePacket* payload, int source) {
-	
+	switch (type)
+	{
+	case BasicNetworkMessages::Message: {
+		PLayersListPacket* realPacket = (PLayersListPacket*)payload;
+		realPacket->GetPlayerList(PlayersList);
+		break;
+	}
+	}
 }
 
 void NetworkedGame::OnPlayerCollision(NetworkPlayer* a, NetworkPlayer* b) {
@@ -182,4 +209,13 @@ void NetworkedGame::OnPlayerCollision(NetworkPlayer* a, NetworkPlayer* b) {
 		newPacket.playerID = b->GetPlayerNum();
 		thisClient->SendPacket(newPacket);
 	}
+}
+
+int NetworkedGame::GetConnectedClientsNum()
+{
+	if (thisServer)
+	{
+		return thisServer->GetConnectedClientsNum();
+	}
+	return 0;
 }

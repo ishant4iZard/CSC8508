@@ -32,7 +32,7 @@ void GameClient::UpdateClient() {
 			std::cout << "Connected to server !" << std::endl;
 		}
 		else if (event.type == ENET_EVENT_TYPE_RECEIVE) {
-			std::cout << "Client: Packet recieved ..." << std::endl;
+			//std::cout << "Client: Packet recieved ..." << std::endl;
 			GamePacket* packet = (GamePacket*)event.packet -> data;
 			ProcessPacket(packet);
 		}
@@ -44,5 +44,4 @@ void GameClient::SendPacket(GamePacket&  payload) {
 	ENetPacket* dataPacket = enet_packet_create(&payload,
 		payload.GetTotalSize(), 0);
 	enet_peer_send(netPeer, 0, dataPacket);
-
 }

@@ -43,6 +43,7 @@ bool PushdownMachine::Update(float dt) {
 	else {
 		stateStack.push(initialState);
 		activeState = initialState;
+		activeState->SetGame(game);
 		activeState->OnAwake();
 	}
 	return true;

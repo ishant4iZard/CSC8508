@@ -9,6 +9,8 @@ GameServer::GameServer(int onPort, int maxClients)	{
 	clientMax	= maxClients;
 	clientCount = 0;
 	netHandle	= nullptr;
+	Clients = new int[maxClients];
+	ClearClientsArray();
 	Initialise();
 }
 
@@ -51,21 +53,23 @@ bool GameServer::SendGlobalPacket(GamePacket& packet) {
 }
 
 
-void GameServer::UpdateServer() {
+void GameServer::UpdateServer() 
+{
 	if (!netHandle) { return; }
 	ENetEvent event;
-	while (enet_host_service(netHandle, &event, 0) > 0) {
+	while (enet_host_service(netHandle, &event, 0) > 0) 
+	{
 		int type = event.type;
 		ENetPeer* p = event.peer;
 		int peer = p -> incomingPeerID;
 
 		if (type == ENetEventType::ENET_EVENT_TYPE_CONNECT) {
 			std::cout << "Server : New client connected" << std::endl;
-
+			AddConnectClient(peer);
 		}
 		else if (type == ENetEventType::ENET_EVENT_TYPE_DISCONNECT) {
 			std::cout << "Server : A client has disconnected" << std::endl;
-
+			DeleteClient(peer);
 		}
 		else if (type == ENetEventType::ENET_EVENT_TYPE_RECEIVE) {
 			GamePacket* packet = (GamePacket*)event.packet -> data;
@@ -73,8 +77,56 @@ void GameServer::UpdateServer() {
 
 		}
 		enet_packet_destroy(event.packet);
-
 	}
+}
+
+void GameServer::AddConnectClient(int peerID)
+{
+	++clientCount;
+	std::cout << "client count :" << clientCount << std::endl;
+	int minVacantPos = clientMax;
+	for (int i = 0; i < clientMax; ++i)
+	{
+		if (Clients[i] == peerID)
+		{
+			return;
+		}
+		if (Clients[i] == -1)
+		{
+			minVacantPos = std::min(minVacantPos, i);
+		}
+	}
+	if (minVacantPos < clientMax)
+	{
+		Clients[minVacantPos] = peerID;
+	}
+}
+
+void GameServer::DeleteClient(int peerID)
+{	
+	for (int i = 0; i < clientMax; ++i)
+	{
+		if (Clients[i] == peerID)
+		{
+			Clients[i] = -1;
+			--clientCount;
+			return;
+		}
+	}
+}
+
+void GameServer::ClearClientsArray()
+{
+	for (int i = 0; i < clientMax; ++i)
+	{
+		Clients[i] = -1;
+	}
+}
+
+int GameServer::GetClientNetID(int Index) const
+{
+	if (Index >= clientMax) { return -1; }
+	return Clients[Index];
 }
 
 void GameServer::SetGameWorld(GameWorld &g) {

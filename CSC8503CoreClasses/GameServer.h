@@ -20,6 +20,11 @@ namespace NCL {
 			virtual void UpdateServer();
 
 		protected:
+			void AddConnectClient(int peerID);
+			void DeleteClient(int peerID);
+			void ClearClientsArray();
+
+		protected:
 			int			port;
 			int			clientMax;
 			int			clientCount;
@@ -27,6 +32,14 @@ namespace NCL {
 
 			int incomingDataRate;
 			int outgoingDataRate;
+
+			int* Clients;
+
+		public:
+			inline int GetConnectedClientsNum() const { return clientCount; }
+
+			/** -1 for no this Client */
+			int GetClientNetID(int Index) const;
 		};
 	}
 }

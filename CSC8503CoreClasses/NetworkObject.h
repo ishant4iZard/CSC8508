@@ -6,6 +6,29 @@
 namespace NCL::CSC8503 {
 	class GameObject;
 
+	struct PLayersListPacket : public GamePacket
+	{
+		char playerList[4];
+		PLayersListPacket(std::vector<int>& serverPlayerList)
+		{
+			type = Message;
+			size = sizeof(PLayersListPacket);
+
+			for (int i = 0; i < 4; ++i)
+			{
+				playerList[i] = serverPlayerList[i] + 48;
+			}
+		}
+
+		void GetPlayerList(std::vector<int>& clientPlayerList)
+		{
+			for (int i = 0; i < 4; ++i)
+			{
+				clientPlayerList[i] = playerList[i] - 48;
+			}
+		}
+	};
+
 	struct FullPacket : public GamePacket {
 		int		objectID = -1;
 		NetworkState fullState;
