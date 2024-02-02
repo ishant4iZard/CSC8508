@@ -8,7 +8,7 @@
 #include "PhysicsSystem.h"
 
 #include "StateGameObject.h"
-
+#include "BouncePad.h"
 
 enum class level {
 	level1 = 1,
@@ -21,6 +21,8 @@ namespace NCL {
 		class Player;
 		class Goose;
 		class Voxels;
+		class BouncePad;
+
 		class TutorialGame		{
 		public:
 			TutorialGame();
@@ -59,7 +61,7 @@ namespace NCL {
 			void InitMixedGridWorld(int numRows, int numCols, float rowSpacing, float colSpacing);
 			void InitCubeGridWorld(int length, int breadth, int height,  float rowSpacing, float colSpacing, const Vector3& cubeDims);
 			void BridgeConstraintTest();
-
+			void InitBouncePad();
 			void InitOBBwall();
 
 			void InitDefaultFloor();
@@ -145,6 +147,10 @@ namespace NCL {
 			level currentlevel;
 			int score = 0;
 			float v = 0, h = 0;
+#pragma region BouncePad
+			BouncePad* bouncePadList[5];
+#pragma endregion
+
 		};
 	}
 }

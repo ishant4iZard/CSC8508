@@ -7,6 +7,7 @@
 #include "Player.h"
 #include "PowerUp.h"
 #include "Goose.h"
+#include "BouncePad.h"
 
 #include "PositionConstraint.h"
 #include "OrientationConstraint.h"
@@ -520,6 +521,7 @@ void TutorialGame::InitWorld() {
 	//InitCoin(20, 1);
 	//AddEnemyToWorld(Vector3(-25, -10, 0));
 	InitDefaultFloor();
+	InitBouncePad();
 	//InitBoundary();
 	//BridgeConstraintTest();
 	//InitMaze();
@@ -988,6 +990,15 @@ void TutorialGame::BridgeConstraintTest() {
 		end, maxDistance);
 	world->AddConstraint(constraint);
 
+}
+void TutorialGame::InitBouncePad()
+{
+	for (size_t i = 0; i < 1; i++)
+	{
+		BouncePad* tempBouncePad = new BouncePad(cubeMesh, basicTex, basicShader);
+		bouncePadList[i] = tempBouncePad;
+		world->AddGameObject(bouncePadList[i]);
+	}
 }
 
 void TutorialGame::InitOBBwall() {
