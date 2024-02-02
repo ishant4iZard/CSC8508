@@ -15,12 +15,21 @@ namespace NCL {
 
 			void SetPlayerYaw(const Vector3& pointPos);
 
+			void OscillatePlayer(float dt);
+
 			bool isFire = false;
 			void Fire();
+
+			void SetMovementDir(Vector3 dir) {
+				movementDirection = dir;
+			}
 
 		protected:
 			NetworkedGame* game;
 			int playerNum;
+			float timeElapsed;
+			float Oscillationspeed;
+			Vector3 movementDirection;
 
 		public:
 			int GetPlayerNum() const { return playerNum; }

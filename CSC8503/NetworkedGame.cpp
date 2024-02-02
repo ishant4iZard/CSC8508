@@ -114,9 +114,20 @@ void NetworkedGame::UpdateGame(float dt) {
 	// Server and Client Receive and process there packet
 	if (thisServer) { thisServer->UpdateServer(); }
 	if (thisClient) { thisClient->UpdateClient(); }
+	if (thisServer) { UpdatePlayerPositions(dt); }
 
 	TutorialGame::UpdateGame(dt);
 	if (thisServer) { physics->Update(dt); }
+}
+
+void NetworkedGame::UpdatePlayerPositions(float dt) {
+	for (auto i : ControledPlayersList)
+	{
+		if (i != nullptr)
+		{
+			i->OscillatePlayer(dt);
+		}
+	}
 }
 
 void NetworkedGame::UpdateAsServer(float dt) {
@@ -238,22 +249,28 @@ void NetworkedGame::CheckPlayerListAndSpawnPlayers()
 			if (ControledPlayersList[i] == nullptr)
 			{
 				Vector3 pos;
+				Vector3 movementDirection;
 				switch (i)
 				{
 				case 0:
 					pos = Vector3(0, 3, -75);
+					movementDirection = Vector3(1, 0, 0);
 					break;
 				case 1:
 					pos = Vector3(75, 3, 0);
+					movementDirection = Vector3(0, 0, 1);
 					break;
 				case 2:
 					pos = Vector3(0, 3, 75);
+					movementDirection = Vector3(-1, 0, 0);
 					break;
 				case 3:
 					pos = Vector3(-75, 3, 0);
+					movementDirection = Vector3(0, 0, -1);
 					break;
 				}
 				ControledPlayersList[i] = AddNetworkPlayerToWorld(pos, i);
+				ControledPlayersList[i]->SetMovementDir(movementDirection);
 			}
 		}
 		if (GetLocalPlayerNumber() != -1)

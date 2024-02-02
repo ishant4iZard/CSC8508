@@ -1,5 +1,6 @@
 #include "NetworkPlayer.h"
 #include "NetworkedGame.h"
+#include "PhysicsObject.h"
 
 using namespace NCL;
 using namespace CSC8503;
@@ -7,6 +8,8 @@ using namespace CSC8503;
 NetworkPlayer::NetworkPlayer(NetworkedGame* game, int num)	{
 	this->game = game;
 	playerNum  = num;
+	timeElapsed = 0.0f;
+	Oscillationspeed = 10;
 }
 
 NetworkPlayer::~NetworkPlayer()	{
@@ -65,6 +68,18 @@ void NetworkPlayer::SetPlayerYaw(const Vector3& pointPos)
 	orientation = GenerateOrientation(rotationAxis, angle);
 
 	transform.SetOrientation(orientation);
+}
+
+void NetworkPlayer::OscillatePlayer(float dt) {
+	timeElapsed += dt;
+	
+	if (timeElapsed >= 2.0f) {
+		timeElapsed = 0.0f;
+		Oscillationspeed *= -1;
+	}
+
+	Vector3 velocity = movementDirection * Oscillationspeed;
+	this->GetPhysicsObject()->SetLinearVelocity(velocity);
 }
 
 void NetworkPlayer::Fire()
