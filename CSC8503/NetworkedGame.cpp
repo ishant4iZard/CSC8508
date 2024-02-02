@@ -94,6 +94,7 @@ bool NetworkedGame::StartAsClient(char a, char b, char c, char d) {
 	thisClient->RegisterPacketHandler(Player_Connected, this);
 	thisClient->RegisterPacketHandler(Player_Disconnected, this);
 	thisClient->RegisterPacketHandler(Player_Fire, this);
+	thisClient->RegisterPacketHandler(Projectile_Deactivate, this);
 
 	//StartLevel();
 }
@@ -178,6 +179,10 @@ void NetworkedGame::BroadcastSnapshot(bool deltaFrame) {
 	world->GetObjectIterators(first, last);
 
 	for (auto i = first; i != last; ++i) {
+		if (!(*i)->IsActive())
+		{
+			continue;
+		}
 		NetworkObject* o = (*i)->GetNetworkObject();
 		if (!o) {
 			continue;
@@ -417,6 +422,11 @@ void NetworkedGame::OnRep_SpawnProjectile(int PlayerNum, int NetObjectID)
 	networkObjects.insert(std::pair<int, NetworkObject*>(NetObjectID, newBullet->GetNetworkObject()));
 }
 
+void NetworkedGame::OnRep_DeactiveProjectile(int objectID)
+{
+	networkObjects[objectID]->GetGameObject()->deactivate();
+}
+
 void NetworkedGame::StartLevel() {
 	CheckPlayerListAndSpawnPlayers();
 }
@@ -447,6 +457,11 @@ void NetworkedGame::ReceivePacket(int type, GamePacket* payload, int source) {
 	case BasicNetworkMessages::Player_Fire: {
 		PlayerFirePacket* realPacket = (PlayerFirePacket*)payload;
 		OnRep_SpawnProjectile(realPacket->PlayerNum, realPacket->NetObjectID);
+		break;
+	}
+	case BasicNetworkMessages::Projectile_Deactivate: {
+		DeactivateProjectilePacket* realPacket = (DeactivateProjectilePacket*)payload;
+		OnRep_DeactiveProjectile(realPacket->NetObjectID);
 		break;
 	}
 	}

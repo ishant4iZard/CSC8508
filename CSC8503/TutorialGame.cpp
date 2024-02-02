@@ -202,7 +202,7 @@ void TutorialGame::UpdateGame(float dt) {
 		//physics->Update(dt);
 	}
 
-	UpdateKeys();
+	//UpdateKeys();
 
 	renderer->Render();
 
@@ -287,65 +287,65 @@ void TutorialGame::UpdateVoxels() {
 	}
 }
 
-void TutorialGame::UpdateKeys() {
-	if (Window::GetKeyboard()->KeyPressed(KeyCodes::F1)) {
-		InitWorld(); //We can reset the simulation at any time with F1
-		selectionObject = nullptr;
-	}
-
-	//if (Window::GetKeyboard()->KeyPressed(KeyCodes::F2)) {
-	//	InitCamera(); //F2 will reset the camera to a specific default place
-	//}
-
-	if (Window::GetKeyboard()->KeyPressed(KeyCodes::F8)) {
-		InitWorld2(); 
-	}
-
-	//if (Window::GetKeyboard()->KeyPressed(KeyCodes::G)) {
-	//	useGravity = !useGravity; //Toggle gravity!
-	//	physics->UseGravity(useGravity);
-	//}
-	/*if (Window::GetKeyboard()->KeyPressed(KeyCodes::U)) {
-		switch (currentlevel)
-		{
-		case level::level1: {
-			currentlevel = level::level2;
-			break;
-		}
-		case level::level2: {
-			currentlevel = level::level1;
-			break;
-		}
-		default:
-			break;
-		}
-		InitWorld();
-	}*/
-	//Running certain physics updates in a consistent order might cause some
-	//bias in the calculations - the same objects might keep 'winning' the constraint
-	//allowing the other one to stretch too much etc. Shuffling the order so that it
-	//is random every frame can help reduce such bias.
-	/*if (Window::GetKeyboard()->KeyPressed(KeyCodes::F9)) {
-		world->ShuffleConstraints(true);
-	}
-	if (Window::GetKeyboard()->KeyPressed(KeyCodes::F10)) {
-		world->ShuffleConstraints(false);
-	}
-
-	if (Window::GetKeyboard()->KeyPressed(KeyCodes::F7)) {
-		world->ShuffleObjects(true);
-	}
-	if (Window::GetKeyboard()->KeyPressed(KeyCodes::F8)) {
-		world->ShuffleObjects(false);
-	}*/
-
-	if (lockedObject) {
-		LockedObjectMovement();
-	}
-	else {
-		DebugObjectMovement();
-	}
-}
+//void TutorialGame::UpdateKeys() {
+//	if (Window::GetKeyboard()->KeyPressed(KeyCodes::F1)) {
+//		InitWorld(); //We can reset the simulation at any time with F1
+//		selectionObject = nullptr;
+//	}
+//
+//	//if (Window::GetKeyboard()->KeyPressed(KeyCodes::F2)) {
+//	//	InitCamera(); //F2 will reset the camera to a specific default place
+//	//}
+//
+//	if (Window::GetKeyboard()->KeyPressed(KeyCodes::F8)) {
+//		InitWorld2(); 
+//	}
+//
+//	//if (Window::GetKeyboard()->KeyPressed(KeyCodes::G)) {
+//	//	useGravity = !useGravity; //Toggle gravity!
+//	//	physics->UseGravity(useGravity);
+//	//}
+//	/*if (Window::GetKeyboard()->KeyPressed(KeyCodes::U)) {
+//		switch (currentlevel)
+//		{
+//		case level::level1: {
+//			currentlevel = level::level2;
+//			break;
+//		}
+//		case level::level2: {
+//			currentlevel = level::level1;
+//			break;
+//		}
+//		default:
+//			break;
+//		}
+//		InitWorld();
+//	}*/
+//	//Running certain physics updates in a consistent order might cause some
+//	//bias in the calculations - the same objects might keep 'winning' the constraint
+//	//allowing the other one to stretch too much etc. Shuffling the order so that it
+//	//is random every frame can help reduce such bias.
+//	/*if (Window::GetKeyboard()->KeyPressed(KeyCodes::F9)) {
+//		world->ShuffleConstraints(true);
+//	}
+//	if (Window::GetKeyboard()->KeyPressed(KeyCodes::F10)) {
+//		world->ShuffleConstraints(false);
+//	}
+//
+//	if (Window::GetKeyboard()->KeyPressed(KeyCodes::F7)) {
+//		world->ShuffleObjects(true);
+//	}
+//	if (Window::GetKeyboard()->KeyPressed(KeyCodes::F8)) {
+//		world->ShuffleObjects(false);
+//	}*/
+//
+//	if (lockedObject) {
+//		LockedObjectMovement();
+//	}
+//	else {
+//		DebugObjectMovement();
+//	}
+//}
 
 void TutorialGame::LockedObjectMovement() {
 	Matrix4 view		= world->GetMainCamera().BuildViewMatrix();
@@ -536,25 +536,25 @@ void TutorialGame::InitWorld() {
 	//physics->createStaticTree();
 }
 
-void TutorialGame::InitWorld2() {
-	gameover = false;
-	world->ClearAndErase();
-	physics->Clear();
-	powerupList.clear();
-	VoxelList.clear();
-	EnemyList.clear();
-	Enemy2List.clear();
-	player = NULL;
-	physics->SetBroadphase(false);
-	selectionObject = NULL;
-	timer = 0;
-
-	InitCamera();
-
-	physics->UseGravity(false);
-
-	InitOBBwall();
-}
+//void TutorialGame::InitWorld2() {
+//	gameover = false;
+//	world->ClearAndErase();
+//	physics->Clear();
+//	powerupList.clear();
+//	VoxelList.clear();
+//	EnemyList.clear();
+//	Enemy2List.clear();
+//	player = NULL;
+//	physics->SetBroadphase(false);
+//	selectionObject = NULL;
+//	timer = 0;
+//
+//	InitCamera();
+//
+//	physics->UseGravity(false);
+//
+//	InitOBBwall();
+//}
 
 /*
 
@@ -874,11 +874,11 @@ void TutorialGame::InitHole() {
 	world->AddGameObject(hole);
 }
 
-void TutorialGame::InitGameExamples() {
-	//AddPlayerToWorld(Vector3(-30, 5, 0));
-	AddEnemyToWorld(Vector3(-20, 5, 0));
-	//AddBonusToWorld(Vector3(10, 5, 0));
-}
+//void TutorialGame::InitGameExamples() {
+//	//AddPlayerToWorld(Vector3(-30, 5, 0));
+//	AddEnemyToWorld(Vector3(-20, 5, 0));
+//	//AddBonusToWorld(Vector3(10, 5, 0));
+//}
 
 void TutorialGame::InitCoin(int Amount, float radius) {
 	for (int x = 0; x < 6; ++x) {
@@ -1112,37 +1112,37 @@ void TutorialGame::MoveSelectedObject() {
 }
 
 //level initialtion
-void TutorialGame::InitMaze() {
-	int y = 0;
-	int scale = 3;
-	float wallThickness = 1.0f;
-	Vector3 posShift = { 0,0,35 };
-
-	AddFloorToWorld	(Vector3	 (35, -20+y,0), Vector3(35, 2, 35));
-	InitInvisibleWall(Vector3	(34, -9.0f+y, 5.5f	-35), Vector3(31.25f, 18.0f, wallThickness));
-	InitInvisibleWall(Vector3	(34, -9.0f+y, 65.5f	-35), Vector3(31.25f, 18.0f, wallThickness));
-	InitInvisibleWall(Vector3	(63.25f, -9.0f+y, 0), Vector3(wallThickness, 18.0f, 31.25f));
-	InitInvisibleWall(Vector3	(5.0, -9.0f + y, 38.5f	-35), Vector3(wallThickness, 18.0f, 27.0f));
-	InitInvisibleWall(Vector3	(20.75, -9.0f + y, 49.5	-35), Vector3(wallThickness, 18.0f, 15.0f)) ;
-	InitInvisibleWall(Vector3	(49.5, -9.0f + y, 20.75	-35), Vector3(wallThickness, 18.0f, 15.0f)) ;
-	InitInvisibleWall(Vector3	(35.5, -9.0f + y, 50.76	-35), Vector3(wallThickness, 18.0f, 10.0f) ) ;
-	InitInvisibleWall(Vector3	(35.5, -9.0f + y, 14.5f	-35), Vector3(wallThickness, 18.0f, 5.0f) ) ;
-	InitInvisibleWall(Vector3	(12.0, -9.0f + y, 13.5f	-35), Vector3(5.5f, 18.0f, wallThickness)) ;
-	InitInvisibleWall(Vector3	(59.75, -9.0f + y, 57.5f-35), Vector3(5.5f, 18.0f, wallThickness)) ;
-	InitInvisibleWall(Vector3	(19.5, -9.0f + y, 35.5f	-35), Vector3(7.25f, 18.0f, wallThickness)) ;
-	InitInvisibleWall(Vector3	(53.25, -9.0f + y, 35.5f-35), Vector3(5.5f, 18.0f, wallThickness)  ) ;
-	InitInvisibleWall(Vector3	(35.5, -9.0f + y, 52.0f	-35), Vector3(5.5f, 18.0f, wallThickness) ) ;
-	InitInvisibleWall(Vector3	(35.5, -9.0f + y, 19.5f	-35), Vector3(5.5f, 18.0f, wallThickness) ) ;
-	InitInvisibleWall(Vector3	(46.5, -9.0f + y, 57.0f	-35), Vector3(wallThickness, 18.0f, 9.0f) ) ;
-	InitInvisibleWall(Vector3	(23.5, -9.0f + y, 15.75f-35), Vector3(wallThickness, 18.0f, 9.0f) ) ;
-	InitInvisibleWall(Vector3	(40.75, -9.0f + y, 27.5f-35), Vector3(9.0f, 18.0f, wallThickness) ) ;
-	InitInvisibleWall(Vector3	(57.0, -9.0f + y, 41.5f	-35), Vector3(wallThickness, 18.0f, 4.5f) ) ;
-	InitInvisibleWall(Vector3	(20.0, -9.0f + y, 23.75f-35), Vector3(4.5f, 18.0f, wallThickness) ) ;
-
-
-	//InitInvisibleWall(Vector3	(5, -1, -28), Vector3(1, 1, 1) ) ;
-	//InitInvisibleWall(Vector3	(61, -1, 28), Vector3(1, 1, 1) ) ;
-
-
-}
+//void TutorialGame::InitMaze() {
+//	int y = 0;
+//	int scale = 3;
+//	float wallThickness = 1.0f;
+//	Vector3 posShift = { 0,0,35 };
+//
+//	AddFloorToWorld	(Vector3	 (35, -20+y,0), Vector3(35, 2, 35));
+//	InitInvisibleWall(Vector3	(34, -9.0f+y, 5.5f	-35), Vector3(31.25f, 18.0f, wallThickness));
+//	InitInvisibleWall(Vector3	(34, -9.0f+y, 65.5f	-35), Vector3(31.25f, 18.0f, wallThickness));
+//	InitInvisibleWall(Vector3	(63.25f, -9.0f+y, 0), Vector3(wallThickness, 18.0f, 31.25f));
+//	InitInvisibleWall(Vector3	(5.0, -9.0f + y, 38.5f	-35), Vector3(wallThickness, 18.0f, 27.0f));
+//	InitInvisibleWall(Vector3	(20.75, -9.0f + y, 49.5	-35), Vector3(wallThickness, 18.0f, 15.0f)) ;
+//	InitInvisibleWall(Vector3	(49.5, -9.0f + y, 20.75	-35), Vector3(wallThickness, 18.0f, 15.0f)) ;
+//	InitInvisibleWall(Vector3	(35.5, -9.0f + y, 50.76	-35), Vector3(wallThickness, 18.0f, 10.0f) ) ;
+//	InitInvisibleWall(Vector3	(35.5, -9.0f + y, 14.5f	-35), Vector3(wallThickness, 18.0f, 5.0f) ) ;
+//	InitInvisibleWall(Vector3	(12.0, -9.0f + y, 13.5f	-35), Vector3(5.5f, 18.0f, wallThickness)) ;
+//	InitInvisibleWall(Vector3	(59.75, -9.0f + y, 57.5f-35), Vector3(5.5f, 18.0f, wallThickness)) ;
+//	InitInvisibleWall(Vector3	(19.5, -9.0f + y, 35.5f	-35), Vector3(7.25f, 18.0f, wallThickness)) ;
+//	InitInvisibleWall(Vector3	(53.25, -9.0f + y, 35.5f-35), Vector3(5.5f, 18.0f, wallThickness)  ) ;
+//	InitInvisibleWall(Vector3	(35.5, -9.0f + y, 52.0f	-35), Vector3(5.5f, 18.0f, wallThickness) ) ;
+//	InitInvisibleWall(Vector3	(35.5, -9.0f + y, 19.5f	-35), Vector3(5.5f, 18.0f, wallThickness) ) ;
+//	InitInvisibleWall(Vector3	(46.5, -9.0f + y, 57.0f	-35), Vector3(wallThickness, 18.0f, 9.0f) ) ;
+//	InitInvisibleWall(Vector3	(23.5, -9.0f + y, 15.75f-35), Vector3(wallThickness, 18.0f, 9.0f) ) ;
+//	InitInvisibleWall(Vector3	(40.75, -9.0f + y, 27.5f-35), Vector3(9.0f, 18.0f, wallThickness) ) ;
+//	InitInvisibleWall(Vector3	(57.0, -9.0f + y, 41.5f	-35), Vector3(wallThickness, 18.0f, 4.5f) ) ;
+//	InitInvisibleWall(Vector3	(20.0, -9.0f + y, 23.75f-35), Vector3(4.5f, 18.0f, wallThickness) ) ;
+//
+//
+//	//InitInvisibleWall(Vector3	(5, -1, -28), Vector3(1, 1, 1) ) ;
+//	//InitInvisibleWall(Vector3	(61, -1, 28), Vector3(1, 1, 1) ) ;
+//
+//
+//}
 

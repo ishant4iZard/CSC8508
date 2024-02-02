@@ -20,9 +20,9 @@ namespace NCL {
 
 			void OnCollisionBegin(GameObject* otherObject) override;
 
-			NetworkPlayer* GetOwner() {
-				return Owner;
-			}
+			NetworkPlayer* GetOwner() const { return Owner; }
+
+			NetworkedGame* GetGame() const { return Game; }
 
 		protected:
 			NetworkedGame* Game;

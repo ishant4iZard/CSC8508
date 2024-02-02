@@ -6,6 +6,15 @@
 namespace NCL::CSC8503 {
 	class GameObject;
 
+	struct DeactivateProjectilePacket : public GamePacket {
+		int   NetObjectID;
+
+		DeactivateProjectilePacket() {
+			type = Projectile_Deactivate;
+			size = sizeof(DeactivateProjectilePacket);
+		}
+	};
+
 	struct PlayerFirePacket : public GamePacket {
 		char	PlayerNum;
 		int   NetObjectID;
@@ -84,6 +93,9 @@ namespace NCL::CSC8503 {
 
 		void UpdateStateHistory(int minID);
 		NetworkState& GetLatestNetworkState();
+
+		GameObject* GetGameObject() const { return &object; }
+		inline int GetNetworkID() const { return networkID; }
 
 	protected:
 		bool GetNetworkState(int frameID, NetworkState& state);

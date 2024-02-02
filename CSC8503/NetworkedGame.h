@@ -29,6 +29,7 @@ namespace NCL {
 			void SpawnPlayer();
 			void SpawnProjectile(NetworkPlayer* owner, Vector3 firePos, Vector3 fireDir);
 			void OnRep_SpawnProjectile(int PlayerNum, int objectID);
+			void OnRep_DeactiveProjectile(int objectID);
 
 			void StartLevel();
 

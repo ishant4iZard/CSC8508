@@ -37,13 +37,13 @@ namespace NCL {
 			void InitialiseAssets();
 
 			void InitCamera();
-			void UpdateKeys();
+			//void UpdateKeys();
 
 			void InitWorld();
 
-			void InitWorld2();
+			//void InitWorld2();
 
-			void InitMaze();
+			/*void InitMaze();*/
 
 
 			/*
@@ -51,7 +51,7 @@ namespace NCL {
 			in the module. Feel free to mess around with them to see different objects being created in different
 			test scenarios (constraints, collision types, and so on). 
 			*/
-			void InitGameExamples();
+			//void InitGameExamples();
 
 			void InitCoin(int Amount, float radius);
 
