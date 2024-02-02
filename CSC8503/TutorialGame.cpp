@@ -994,12 +994,20 @@ void TutorialGame::BridgeConstraintTest() {
 }
 void TutorialGame::InitBouncePad()
 {
-	for (size_t i = 0; i < 1; i++)
+	for (size_t i = 0; i < 5; i++)
 	{
 		BouncePad* tempBouncePad = new BouncePad(cubeMesh, basicTex, basicShader);
+		tempBouncePad->GetRenderObject()->SetColour(Debug::CYAN);
 		bouncePadList[i] = tempBouncePad;
 		world->AddGameObject(bouncePadList[i]);
 	}
+
+	bouncePadList[0]->GetTransform().SetPosition(Vector3(48, 0, 0));
+	bouncePadList[1]->GetTransform().SetPosition(Vector3(-48, 0, 0));
+	bouncePadList[2]->GetTransform().SetPosition(Vector3(48, 0, 48));
+	bouncePadList[3]->GetTransform().SetPosition(Vector3(48, 0, -48));
+	bouncePadList[4]->GetTransform().SetPosition(Vector3(-30, 0, 48));
+
 }
 
 void TutorialGame::InitLevelWall()
