@@ -53,3 +53,5 @@ _deps
 
 # OPENGL RENDERER
 /OpenGLRendering/OpenGLRendering.dir/Debug
+/x64/Debug/CSC8503.pdb
+/x64/Debug/CSC8503CoreClasses.pdb

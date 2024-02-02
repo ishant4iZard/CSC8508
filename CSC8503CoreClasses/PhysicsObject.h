@@ -77,7 +77,7 @@ namespace NCL {
 			Transform*		transform;
 
 			float inverseMass;
-			float elasticity;
+			float elasticity;//basically bounciness of object
 			float friction;
 
 			//linear stuff
@@ -89,6 +89,7 @@ namespace NCL {
 			Vector3 torque;
 			Vector3 inverseInertia;
 			Matrix3 inverseInteriaTensor;
+
 		};
 	}
 }
