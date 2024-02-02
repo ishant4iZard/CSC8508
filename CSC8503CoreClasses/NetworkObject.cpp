@@ -98,20 +98,24 @@ bool NetworkObject::WriteDeltaPacket(GamePacket**p, int stateID) {
 
 bool NetworkObject::WriteFullPacket(GamePacket** p) {
 	FullPacket* fp = new FullPacket();
-
+	NetworkState state;
+	state.position = object.GetTransform().GetPosition();
+	state.orientation = object.GetTransform().GetOrientation();
+	state.stateID = lastFullState.stateID + 1;
 	fp->objectID = networkID;
-	fp->fullState.position = object.GetTransform().GetPosition();
-	fp->fullState.orientation =
-		object.GetTransform().GetOrientation();
-	fp->fullState.stateID = lastFullState.stateID++;
+	fp->fullState = state;
+	lastFullState = state;
+	stateHistory.emplace_back(lastFullState);
 	*p = fp;
 	return true;
 }
 
+// get the latest state received from a server	
 NetworkState& NetworkObject::GetLatestNetworkState() {
 	return lastFullState;
 }
 
+// get a particular saved state on either the client or server side
 bool NetworkObject::GetNetworkState(int stateID, NetworkState& state) {
 	for (auto i = stateHistory.begin(); i < stateHistory.end(); ++i) {
 		if ((*i).stateID == stateID) {

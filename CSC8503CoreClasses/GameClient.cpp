@@ -5,6 +5,8 @@ using namespace CSC8503;
 
 GameClient::GameClient()	{
 	netHandle = enet_host_create(nullptr, 1, 1, 0, 0);
+	CurrentConnetNetID = -1;
+	clientState = EClientState::CLIENT_STATE_NONE;
 }
 
 GameClient::~GameClient()	{
@@ -18,6 +20,10 @@ bool GameClient::Connect(uint8_t a, uint8_t b, uint8_t c, uint8_t d, int portNum
 	
 	netPeer = enet_host_connect(netHandle, &address, 2, 0);
 	
+	if (netPeer != nullptr)
+	{
+		clientState = EClientState::CLIENT_STATE_CONNECTING;
+	}
 	return netPeer != nullptr;
 }
 
@@ -29,7 +35,14 @@ void GameClient::UpdateClient() {
 	ENetEvent event;
 	while (enet_host_service(netHandle, &event, 0) > 0) {
 		if (event.type == ENET_EVENT_TYPE_CONNECT) {
+			CurrentConnetNetID = netPeer->outgoingPeerID;
+			clientState = EClientState::CLIENT_STATE_CONNECTED;
 			std::cout << "Connected to server !" << std::endl;
+		}
+		else if (event.type == ENET_EVENT_TYPE_DISCONNECT)
+		{	
+			clientState = EClientState::CLIENT_STATE_DISCONNECTED;
+			std::cout << "Failed to connected to server !" << std::endl;
 		}
 		else if (event.type == ENET_EVENT_TYPE_RECEIVE) {
 			//std::cout << "Client: Packet recieved ..." << std::endl;

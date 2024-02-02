@@ -9,6 +9,7 @@
 #include "PhysicsObject.h"
 #include "RenderObject.h"
 #include "TextureLoader.h"
+#include "Projectile.h"
 
 #define COLLISION_MSG 30
 
@@ -34,9 +35,11 @@ NetworkedGame::NetworkedGame()	{
 	TestMenu->SetGame(this);
 
 	PlayersList.clear();
+	ControledPlayersList.clear();
 	for (int i = 0; i < 4; ++i)
 	{
 		PlayersList.push_back(-1);
+		ControledPlayersList.push_back(nullptr);
 	}
 }
 
@@ -45,17 +48,31 @@ NetworkedGame::~NetworkedGame()	{
 	delete thisClient;
 }
 
-void NetworkedGame::StartAsServer() {
+bool NetworkedGame::StartAsServer() {
+	if (thisClient != nullptr)
+	{
+		delete thisClient;
+		thisClient = nullptr;
+	}
+
 	if (thisServer != nullptr)
 	{
-		return;
+		return true;
 	}
 
 	thisServer = new GameServer(NetworkBase::GetDefaultPort(), 3);
+	if (!thisServer->IsValid())
+	{
+		delete thisServer;
+		thisServer = nullptr;
+		return false;
+	}
 
 	thisServer->RegisterPacketHandler(Received_State, this);
 
 	StartLevel();
+
+	return true;
 }
 
 bool NetworkedGame::StartAsClient(char a, char b, char c, char d) {
@@ -75,8 +92,9 @@ bool NetworkedGame::StartAsClient(char a, char b, char c, char d) {
 	thisClient->RegisterPacketHandler(Full_State, this);
 	thisClient->RegisterPacketHandler(Player_Connected, this);
 	thisClient->RegisterPacketHandler(Player_Disconnected, this);
+	thisClient->RegisterPacketHandler(Player_Fire, this);
 
-	StartLevel();
+	//StartLevel();
 }
 
 void NetworkedGame::UpdateGame(float dt) {
@@ -98,6 +116,7 @@ void NetworkedGame::UpdateGame(float dt) {
 	if (thisClient) { thisClient->UpdateClient(); }
 
 	TutorialGame::UpdateGame(dt);
+	if (thisServer) { physics->Update(dt); }
 }
 
 void NetworkedGame::UpdateAsServer(float dt) {
@@ -109,19 +128,45 @@ void NetworkedGame::UpdateAsServer(float dt) {
 	else {
 		BroadcastSnapshot(true);
 	}
+	UpdateMinimumState();
 
 	ServerUpdatePlayersList();
+	CheckPlayerListAndSpawnPlayers();
+
+	if (LocalPlayer)
+	{
+		Vector3 PointerPos;
+		findOSpointerWorldPosition(PointerPos);
+		LocalPlayer->SetPlayerYaw(PointerPos);
+		if (Window::GetMouse()->ButtonPressed(MouseButtons::Type::Left))
+		{
+			LocalPlayer->isFire = !LocalPlayer->isFire;
+		}
+	}
+	for (auto i : ControledPlayersList)
+	{
+		if (i != nullptr)
+		{
+			if (i->isFire)
+			{
+				i->Fire();
+			}
+		}
+	}
 }
 
 void NetworkedGame::UpdateAsClient(float dt) {
 	ClientPacket newPacket;
 
-	if (Window::GetKeyboard()->KeyPressed(KeyCodes::SPACE)) {
-		//fire button pressed!
-		newPacket.buttonstates[0] = 1;
-		newPacket.lastID = 0; //You'll need to work this out somehow...
-	}
+	Vector3 PointerWorldPos;
+	findOSpointerWorldPosition(PointerWorldPos);
+	newPacket.PointerPos = PointerWorldPos;
+	newPacket.lastID = GlobalStateID;
+	if (Window::GetMouse()->ButtonPressed(MouseButtons::Type::Left)) { newPacket.bIsFireBtnClicked = true; }
+
 	thisClient->SendPacket(newPacket);
+
+	CheckPlayerListAndSpawnPlayers();
 }
 
 void NetworkedGame::BroadcastSnapshot(bool deltaFrame) {
@@ -140,7 +185,7 @@ void NetworkedGame::BroadcastSnapshot(bool deltaFrame) {
 		//and store the lastID somewhere. A map between player
 		//and an int could work, or it could be part of a 
 		//NetworkPlayer struct. 
-		int playerState = 0;
+		int playerState = o->GetLatestNetworkState().stateID;
 		GamePacket* newPacket = nullptr;
 		if (o->WritePacket(&newPacket, deltaFrame, playerState)) {
 			thisServer->SendGlobalPacket(*newPacket);
@@ -182,6 +227,43 @@ void NetworkedGame::ServerUpdatePlayersList()
 	}
 	PLayersListPacket plPacket(PlayersList);
 	thisServer->SendGlobalPacket(plPacket);
+}
+
+void NetworkedGame::CheckPlayerListAndSpawnPlayers()
+{
+	for (int i = 0; i < 4; ++i)
+	{
+		if (PlayersList[i] != -1)
+		{
+			if (ControledPlayersList[i] == nullptr)
+			{
+				Vector3 pos;
+				switch (i)
+				{
+				case 0:
+					pos = Vector3(0, 3, -75);
+					break;
+				case 1:
+					pos = Vector3(75, 3, 0);
+					break;
+				case 2:
+					pos = Vector3(0, 3, 75);
+					break;
+				case 3:
+					pos = Vector3(-75, 3, 0);
+					break;
+				}
+				ControledPlayersList[i] = AddNetworkPlayerToWorld(pos, i);
+			}
+		}
+		if (GetLocalPlayerNumber() != -1)
+		{
+			if (ControledPlayersList[GetLocalPlayerNumber()] != nullptr)
+			{
+				LocalPlayer = ControledPlayersList[GetLocalPlayerNumber()];
+			}
+		}
+	}
 }
 
 NetworkPlayer* NetworkedGame::AddNetworkPlayerToWorld(const Vector3& position, int playerNum)
@@ -230,20 +312,137 @@ NetworkPlayer* NetworkedGame::AddNetworkPlayerToWorld(const Vector3& position, i
 	return character;
 }
 
+void NetworkedGame::findOSpointerWorldPosition(Vector3& position)
+{
+	Ray ray = CollisionDetection::BuildRayFromMouse(world->GetMainCamera());
+	RayCollision closestCollision;
+	if (world->Raycast(ray, closestCollision, true))
+	{
+		position = closestCollision.collidedAt;
+	}
+}
+
 void NetworkedGame::SpawnPlayer() {
 
 }
 
-void NetworkedGame::StartLevel() {
+void NetworkedGame::SpawnProjectile(NetworkPlayer* owner, Vector3 firePos, Vector3 fireDir)
+{
+	Projectile* newBullet = new Projectile(owner, this);
 
+	float radius = 1.0f;
+	Vector3 sphereSize = Vector3(radius, radius, radius);
+	SphereVolume* volume = new SphereVolume(radius);
+	newBullet->SetBoundingVolume((CollisionVolume*)volume);
+	newBullet->GetTransform().SetScale(sphereSize).SetPosition(firePos);
+	newBullet->SetRenderObject(new RenderObject(&newBullet->GetTransform(), sphereMesh, basicTex, basicShader));
+	newBullet->SetPhysicsObject(new PhysicsObject(&newBullet->GetTransform(), newBullet->GetBoundingVolume()));
+	newBullet->GetPhysicsObject()->SetInverseMass(Projectile::inverseMass);
+	newBullet->GetPhysicsObject()->InitSphereInertia();
+
+	int playerNum = owner->GetPlayerNum();
+	Vector4 colour;
+	switch (playerNum)
+	{
+	case 0:
+		colour = Debug::RED;
+		break;
+	case 1:
+		colour = Debug::BLUE;
+		break;
+	case 2:
+		colour = Debug::YELLOW;
+		break;
+	case 3:
+		colour = Debug::CYAN;
+		break;
+	}
+	newBullet->GetRenderObject()->SetColour(colour);
+
+	int bulletID = Projectile::CurrentAvailableProjectileID++;
+	newBullet->SetNetworkObject(new NetworkObject(*newBullet, bulletID));
+
+	world->AddGameObject(newBullet);
+	networkObjects.insert(std::pair<int, NetworkObject*>(bulletID, newBullet->GetNetworkObject()));
+
+	Vector3 force = fireDir * Projectile::FireForce;
+	//newBullet->GetPhysicsObject()->SetLinearVelocity(fireDir);
+	newBullet->GetPhysicsObject()->AddForce(force);
+
+	if (thisServer)
+	{
+		PlayerFirePacket firePacket;
+		firePacket.PlayerNum = playerNum;
+		firePacket.NetObjectID = bulletID;
+		thisServer->SendGlobalPacket(firePacket);
+	}
+}
+
+void NetworkedGame::OnRep_SpawnProjectile(int PlayerNum, int NetObjectID)
+{
+	Projectile* newBullet = new Projectile(nullptr, this);
+
+	float radius = 1.0f;
+	Vector3 sphereSize = Vector3(radius, radius, radius);
+	SphereVolume* volume = new SphereVolume(radius);
+	newBullet->SetBoundingVolume((CollisionVolume*)volume);
+	newBullet->GetTransform().SetScale(sphereSize);
+	newBullet->SetRenderObject(new RenderObject(&newBullet->GetTransform(), sphereMesh, basicTex, basicShader));
+
+	Vector4 colour;
+	switch (PlayerNum)
+	{
+	case 0:
+		colour = Debug::RED;
+		break;
+	case 1:
+		colour = Debug::BLUE;
+		break;
+	case 2:
+		colour = Debug::YELLOW;
+		break;
+	case 3:
+		colour = Debug::CYAN;
+		break;
+	}
+	newBullet->GetRenderObject()->SetColour(colour);
+
+	newBullet->SetNetworkObject(new NetworkObject(*newBullet, NetObjectID));
+
+	world->AddGameObject(newBullet);
+	networkObjects.insert(std::pair<int, NetworkObject*>(NetObjectID, newBullet->GetNetworkObject()));
+}
+
+void NetworkedGame::StartLevel() {
+	CheckPlayerListAndSpawnPlayers();
 }
 
 void NetworkedGame::ReceivePacket(int type, GamePacket* payload, int source) {
 	switch (type)
 	{
+	case BasicNetworkMessages::Received_State: {
+		ClientPacket* realPacket = (ClientPacket*)payload;
+		serverProcessClientPacket(realPacket, source);
+		break;
+	}
 	case BasicNetworkMessages::Message: {
 		PLayersListPacket* realPacket = (PLayersListPacket*)payload;
 		realPacket->GetPlayerList(PlayersList);
+		break;
+	}
+	case BasicNetworkMessages::Full_State: {
+		FullPacket* realPacket = (FullPacket*)payload;
+		clientProcessFullPacket(realPacket);
+		break;
+	}
+	case BasicNetworkMessages::Delta_State: {
+		DeltaPacket* realPacket = (DeltaPacket*)payload;
+		clientProcessDeltaPacket(realPacket);
+		break;
+	}
+	case BasicNetworkMessages::Player_Fire: {
+		PlayerFirePacket* realPacket = (PlayerFirePacket*)payload;
+		OnRep_SpawnProjectile(realPacket->PlayerNum, realPacket->NetObjectID);
 		break;
 	}
 	}
@@ -269,4 +468,86 @@ int NetworkedGame::GetConnectedClientsNum()
 		return thisServer->GetConnectedClientsNum();
 	}
 	return 0;
+}
+
+/** -1 means no connet */
+int NetworkedGame::GetLocalPlayerNumber() const
+{
+	if (thisServer)
+	{
+		return 0;
+	}
+	if (thisClient)
+	{
+		for (int i = 1; i < 4; ++i)
+		{
+			if (PlayersList[i] == thisClient->GetClientNetID())
+			{
+				return i;
+			}
+		}
+	}
+	return -1;
+}
+
+int NetworkedGame::GetPlayerNumberFromNetID(const int NetID) const
+{
+	for (int i = 1; i < 4; ++i)
+	{
+		if (PlayersList[i] == NetID)
+		{
+			return i;
+		}
+	}
+	return -1;
+}
+
+int NetworkedGame::GetClientState()
+{
+	if (thisClient)
+	{
+		return thisClient->GetClientState();
+	}
+	return -1;
+}
+
+bool NetworkedGame::serverProcessClientPacket(ClientPacket* cp, int source)
+{
+	int playerID = GetPlayerNumberFromNetID(source);
+	if (playerID != -1)
+	{
+		NetworkPlayer* thePlayer = ControledPlayersList[playerID];
+		thePlayer->SetPlayerYaw(cp->PointerPos);
+		if (cp->bIsFireBtnClicked) { thePlayer->isFire = !thePlayer->isFire; }
+
+		auto i = stateIDs.find(playerID);
+		if (i == stateIDs.end()) { stateIDs.insert(std::pair<int, int>(playerID, cp->lastID)); }
+		else { i->second = cp->lastID; }
+
+		return true;
+	}
+	return false;
+}
+
+bool NetworkedGame::clientProcessFullPacket(FullPacket* fp)
+{
+	auto itr = networkObjects.find(fp->objectID);
+	if (itr == networkObjects.end()) {
+		std::cout << "Client Num: " << GetLocalPlayerNumber() << " can't find netObject" << std::endl;
+		return false;
+	}
+	itr->second->ReadPacket(*fp);
+	if (fp->fullState.stateID > GlobalStateID) { GlobalStateID = fp->fullState.stateID; }
+	return true;
+}
+
+bool NetworkedGame::clientProcessDeltaPacket(DeltaPacket* dp)
+{
+	auto itr = networkObjects.find(dp->objectID);
+	if (itr == networkObjects.end()) {
+		std::cout << "Client Num" << GetLocalPlayerNumber() << "can't find netObject" << std::endl;
+		return false;
+	}
+	itr->second->ReadPacket(*dp);
+	return true;
 }

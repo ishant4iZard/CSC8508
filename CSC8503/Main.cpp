@@ -64,14 +64,14 @@ using namespace CSC8503;
 //	int data = 0;
 //	State* A = new State([&](float dt) -> void
 //		{
-//			std::cout << "I’m in state A! \n";
+//			std::cout << "Iï¿½m in state A! \n";
 //			data++;
 //		}
 //	);
 //	
 //	State * B = new State([&](float dt) -> void
 //		{
-//			std::cout << "I’m in state B! \n";
+//			std::cout << "Iï¿½m in state B! \n";
 //			data --;
 //		}
 //	);
@@ -113,7 +113,7 @@ using namespace CSC8503;
 //					return Success;
 //				}
 //			}
-//			return state; // will be ’ongoing ’ until success
+//			return state; // will be ï¿½ongoing ï¿½ until success
 //		}
 //	);
 //	BehaviourAction* goToRoom = new BehaviourAction("Go To Room",
@@ -131,7 +131,7 @@ using namespace CSC8503;
 //				}
 //
 //			}
-//			return state; // will be ’ongoing ’ until success
+//			return state; // will be ï¿½ongoing ï¿½ until success
 //		}
 //	);
 //	BehaviourAction* openDoor = new BehaviourAction("Open Door",
@@ -209,7 +209,7 @@ using namespace CSC8503;
 //		behaviourTimer = 0.0f;
 //		distanceToTarget = rand() % 250;
 //		BehaviourState state = Ongoing;
-//		std::cout << "We’re going on an adventure !\n";
+//		std::cout << "Weï¿½re going on an adventure !\n";
 //		while (state == Ongoing) {
 //			state = rootSequence->Execute(1.0f); // fake dt
 //
@@ -359,10 +359,8 @@ int main() {
 
 	//TestPushdownAutomata(w);
 	
-
-	w->ShowOSPointer(false);
-	w->LockMouseToWindow(true);
-	w->ShowConsole(true);
+	w->ShowOSPointer(true);
+	w->LockMouseToWindow(false);
 
 	//TestStateMachine();
 	//TestPathfinding();

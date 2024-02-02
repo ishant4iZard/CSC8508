@@ -197,7 +197,7 @@ void TutorialGame::UpdateGame(float dt) {
 
 		world->UpdateWorld(dt);
 		renderer->Update(dt);
-		physics->Update(dt);
+		//physics->Update(dt);
 	}
 
 	UpdateKeys();
@@ -429,12 +429,12 @@ void TutorialGame::LockedObjectMovement() {
 		.SetPitch(pitch)
 		.SetYaw(yaw);
 
-	if (player->Jump()) {
+	/*if (player->Jump()) {
 		Debug::Print("Press Space to jump", Vector2(60, 85));
-	}
+	}*//*
 	else {
 		Debug::Print("collect 6 points to enable jump", Vector2(40, 85));
-	}
+	}*/
 
 	/*if (Window::GetKeyboard()->KeyDown(KeyCodes::NEXT)) {
 		lockedObject->GetPhysicsObject()->AddForce(Vector3(0,-10,0));
@@ -486,9 +486,9 @@ void TutorialGame::DebugObjectMovement() {
 void TutorialGame::InitCamera() {
 	world->GetMainCamera().SetNearPlane(0.1f);
 	world->GetMainCamera().SetFarPlane(500.0f);
-	world->GetMainCamera().SetPitch(-15.0f);
-	world->GetMainCamera().SetYaw(315.0f);
-	world->GetMainCamera().SetPosition(Vector3(-60, 40, 60));
+	world->GetMainCamera().SetPitch(-90.0f);
+	world->GetMainCamera().SetYaw(0.0f);
+	world->GetMainCamera().SetPosition(Vector3(0, 245, 0));
 	lockedObject = nullptr;
 }
 
@@ -760,7 +760,7 @@ GameObject* TutorialGame::AddEnemyToWorld(const Vector3& position) {
 	player = character;
 
 	world->AddGameObject(character);
-	lockedObject = character;
+	//lockedObject = character;
 
 	return character;
 }
@@ -844,14 +844,14 @@ void TutorialGame::InitAI() {
 }
 
 void TutorialGame::InitDefaultFloor() {
-	AddFloorToWorld(Vector3(-64, -20, 0), Vector3(64, 2, 128));
-	//AddFloorToWorld(Vector3(0, -20, 0));
+	AddFloorToWorld(Vector3(0, -2, 0), Vector3(100, 2, 100));
+	/*AddFloorToWorld(Vector3(0, -20, 0));
 	AddFloorToWorld(Vector3(32, -20, -96), Vector3(28, 2, 28));
 	AddFloorToWorld(Vector3(96, -20, -86), Vector3(28, 2, 38));
-	//AddFloorToWorld(Vector3(96, -18, -28), Vector3(28, 2, 28));
+	AddFloorToWorld(Vector3(96, -18, -28), Vector3(28, 2, 28));
 	AddFloorToWorld(Vector3(32, -20, 96), Vector3(28, 2, 28));
 	AddFloorToWorld(Vector3(96, -20, 86), Vector3(28, 2, 38));
-	//AddFloorToWorld(Vector3(96, -18, 28), Vector3(28, 2, 28));
+	AddFloorToWorld(Vector3(96, -18, 28), Vector3(28, 2, 28));*/
 }
 
 void TutorialGame::InitGameExamples() {

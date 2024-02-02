@@ -11,7 +11,8 @@ GameServer::GameServer(int onPort, int maxClients)	{
 	netHandle	= nullptr;
 	Clients = new int[maxClients];
 	ClearClientsArray();
-	Initialise();
+	isValid = Initialise();
+	std::cout << isValid << std::endl;
 }
 
 GameServer::~GameServer()	{
@@ -40,12 +41,24 @@ bool GameServer::Initialise() {
 }
 
 bool GameServer::SendGlobalPacket(int msgID) {
+	if (!isValid)
+	{
+		return false;
+		std::cout << "server not valid!" << std::endl;
+	}
+
 	GamePacket packet;
 	packet.type = msgID;
 	return SendGlobalPacket(packet);
 }
 
 bool GameServer::SendGlobalPacket(GamePacket& packet) {
+	if (!isValid)
+	{
+		return false;
+		std::cout << "server not valid!" << std::endl;
+	}
+
 	ENetPacket* dataPacket = enet_packet_create(&packet,
 		packet.GetTotalSize(), 0);
 	enet_host_broadcast(netHandle, 0, dataPacket);
