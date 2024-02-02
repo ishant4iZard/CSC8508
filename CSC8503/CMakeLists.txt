@@ -14,6 +14,7 @@ set(Header_Files
     "Player.h"
     "Goose.h"
     "Projectile.h"
+    "Hole.h"
 )
 source_group("Header Files" FILES ${Header_Files})
 
@@ -29,6 +30,7 @@ set(Source_Files
     "Player.cpp"
     "Goose.cpp"
     "Projectile.cpp"
+    "Hole.cpp"
 
 )
 

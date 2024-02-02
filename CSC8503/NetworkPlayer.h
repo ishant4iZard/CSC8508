@@ -1,7 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "GameClient.h"
-
+#include <iostream>
 namespace NCL {
 	namespace CSC8503 {
 		class NetworkedGame;
@@ -18,9 +18,15 @@ namespace NCL {
 			bool isFire = false;
 			void Fire();
 
+			void AddScore(int score) {
+				Score += score;
+				std::cout << "Score: = " << Score;
+			}
+
 		protected:
 			NetworkedGame* game;
 			int playerNum;
+			int Score = 0;
 
 		public:
 			int GetPlayerNum() const { return playerNum; }

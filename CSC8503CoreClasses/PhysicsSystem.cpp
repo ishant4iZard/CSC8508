@@ -15,7 +15,7 @@ using namespace CSC8503;
 QuadTree <GameObject*> staticTree(Vector2(256, 256), 10, 15);
 
 PhysicsSystem::PhysicsSystem(GameWorld& g) : gameWorld(g)	{
-	applyGravity	= true;
+	applyGravity	= false;
 	useBroadPhase	= true;	
 	dTOffset		= 0.0f;
 	globalDamping	= 0.995f;
@@ -466,7 +466,19 @@ void PhysicsSystem::IntegrateAccel(float dt) {
 		}
 		float inverseMass = object -> GetInverseMass();	
 		Vector3 linearVel = object -> GetLinearVelocity();
+		float friction = object->GetFriction();
 		Vector3 force = object -> GetForce();
+
+		Vector3 HorVelocity = Vector3(linearVel.x, 0, linearVel.z);
+
+		float NormalForce = (force.y + (9.8) / inverseMass);
+		float frictonForce = (NormalForce > 0) ? (NormalForce * friction) : 0;
+
+		if (HorVelocity.Length()) {
+			force -= HorVelocity.Normalised() * frictonForce;
+		}
+
+
 		Vector3 accel = force * inverseMass;
 
 		if (applyGravity && inverseMass > 0) {
@@ -500,7 +512,7 @@ void PhysicsSystem::IntegrateVelocity(float dt) {
 	std::vector <GameObject*>::const_iterator first;
 	std::vector <GameObject*>::const_iterator last;
 	gameWorld.GetObjectIterators(first, last);
-	float frameLinearDamping = 1.0f - (linearDamping * dt);
+	//float frameLinearDamping = 1.0f - (linearDamping * dt);
 	float frameAngularDamping = 1.0f - (0.4f * dt);
 
 	for (auto i = first; i != last; ++i) {
@@ -515,7 +527,7 @@ void PhysicsSystem::IntegrateVelocity(float dt) {
 		position += linearVel * dt;
 		transform.SetPosition(position);
 		// Linear Damping
-		linearVel = linearVel * frameLinearDamping;
+		//linearVel = linearVel * frameLinearDamping;
 		object->SetLinearVelocity(linearVel);
 
 		// Orientation Stuff

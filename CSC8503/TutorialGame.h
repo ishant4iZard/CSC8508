@@ -61,6 +61,7 @@ namespace NCL {
 			void BridgeConstraintTest();
 
 			void InitOBBwall();
+			void InitHole();
 
 			void InitDefaultFloor();
 			void InitAI();

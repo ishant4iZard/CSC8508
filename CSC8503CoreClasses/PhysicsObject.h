@@ -63,6 +63,13 @@ namespace NCL {
 				angularVelocity = v;
 			}
 
+			void SetFriction(const float& f) {
+				friction = f;
+			}
+			float GetFriction() {
+				return friction;
+			}
+
 			void InitCubeInertia();
 			void InitSphereInertia(bool isHollow = false);
 

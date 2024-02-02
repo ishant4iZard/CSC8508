@@ -2,6 +2,7 @@
 #include "TutorialGame.h"
 #include "NetworkBase.h"
 #include "PushdownState.h"
+#include "Projectile.h"
 
 #include "GameClient.h"
 
@@ -78,6 +79,7 @@ namespace NCL {
 			/** List for Networking Players*/
 			std::vector<int> PlayersList;
 			std::vector<NetworkPlayer*> ControledPlayersList;
+			std::vector<Projectile*> ProjectileList;
 
 			NetworkPlayer* LocalPlayer;
 
@@ -88,6 +90,7 @@ namespace NCL {
 			inline GameClient* GetClient() const { return thisClient; }
 		};
 
+#pragma region Menu
 		class PlayerMenu : public PushdownState
 		{
 			PushdownResult OnUpdate(float dt, PushdownState** newState) override
@@ -170,6 +173,8 @@ namespace NCL {
 		protected:
 			float StartAsServerDisplayTime = 0.0f;
 		};
+#pragma endregion
+
 	}
 }
 

@@ -10,7 +10,7 @@ namespace NCL {
 		class Projectile : public GameObject
 		{
 		public:
-			static constexpr float FireForce = 40000;
+			static constexpr float FireForce = 20000;
 			static constexpr float inverseMass = 1.0 / 10.0;
 
 			static int CurrentAvailableProjectileID;
@@ -19,6 +19,10 @@ namespace NCL {
 			~Projectile();
 
 			void OnCollisionBegin(GameObject* otherObject) override;
+
+			NetworkPlayer* GetOwner() {
+				return Owner;
+			}
 
 		protected:
 			NetworkedGame* Game;

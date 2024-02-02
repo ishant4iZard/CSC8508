@@ -10,6 +10,7 @@
 #include "RenderObject.h"
 #include "TextureLoader.h"
 #include "Projectile.h"
+#include "Hole.h"
 
 #define COLLISION_MSG 30
 
@@ -150,6 +151,7 @@ void NetworkedGame::UpdateAsServer(float dt) {
 			if (i->isFire)
 			{
 				i->Fire();
+				i->isFire = false;
 			}
 		}
 	}
@@ -368,6 +370,8 @@ void NetworkedGame::SpawnProjectile(NetworkPlayer* owner, Vector3 firePos, Vecto
 	Vector3 force = fireDir * Projectile::FireForce;
 	//newBullet->GetPhysicsObject()->SetLinearVelocity(fireDir);
 	newBullet->GetPhysicsObject()->AddForce(force);
+
+	ProjectileList.push_back(newBullet);
 
 	if (thisServer)
 	{

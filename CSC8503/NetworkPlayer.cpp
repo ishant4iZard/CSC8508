@@ -7,6 +7,7 @@ using namespace CSC8503;
 NetworkPlayer::NetworkPlayer(NetworkedGame* game, int num)	{
 	this->game = game;
 	playerNum  = num;
+	this->settag("Player");
 }
 
 NetworkPlayer::~NetworkPlayer()	{
@@ -70,7 +71,10 @@ void NetworkPlayer::SetPlayerYaw(const Vector3& pointPos)
 void NetworkPlayer::Fire()
 {
 	Vector3 fireDir = GetPlayerForwardVector();
-	Vector3 firePos = transform.GetPosition() + fireDir * 10 + Vector3(0, 2, 0);
+	Vector3 firePos = transform.GetPosition() + fireDir * 10;
+
+	std::cout << firePos.y;
+
 	game->SpawnProjectile(this, firePos, fireDir);
 	//std::cout << "player " << playerNum << " fired!" << std::endl;
 }

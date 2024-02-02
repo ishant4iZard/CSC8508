@@ -7,6 +7,7 @@
 #include "Player.h"
 #include "PowerUp.h"
 #include "Goose.h"
+#include "Hole.h"
 
 #include "PositionConstraint.h"
 #include "OrientationConstraint.h"
@@ -74,6 +75,7 @@ void TutorialGame::InitialiseAssets() {
 
 	InitCamera();
 	InitWorld();
+	InitHole();
 }
 
 TutorialGame::~TutorialGame()	{
@@ -501,7 +503,7 @@ void TutorialGame::InitWorld() {
 	EnemyList.clear();
 	Enemy2List.clear();
 	InitCamera();
-	physics->UseGravity(true);
+	physics->UseGravity(false);
 	physics->SetBroadphase(true);
 	timer = 0;
 
@@ -852,6 +854,24 @@ void TutorialGame::InitDefaultFloor() {
 	AddFloorToWorld(Vector3(32, -20, 96), Vector3(28, 2, 28));
 	AddFloorToWorld(Vector3(96, -20, 86), Vector3(28, 2, 38));
 	AddFloorToWorld(Vector3(96, -18, 28), Vector3(28, 2, 28));*/
+}
+
+void TutorialGame::InitHole() {
+	Hole* hole = new Hole();
+
+	float radius = 1.5f;
+	Vector3 sphereSize = Vector3(radius, radius, radius);
+	SphereVolume* volume = new SphereVolume(radius);
+	hole->SetBoundingVolume((CollisionVolume*)volume);
+	hole->GetTransform().SetScale(sphereSize).SetPosition(Vector3(0, 3, 0));
+	hole->SetRenderObject(new RenderObject(&hole->GetTransform(), sphereMesh, basicTex, basicShader));
+	hole->SetPhysicsObject(new PhysicsObject(&hole->GetTransform(), hole->GetBoundingVolume()));
+	hole->GetPhysicsObject()->SetInverseMass(0);
+	hole->GetPhysicsObject()->InitSphereInertia();
+
+	hole->GetRenderObject()->SetColour(Vector4(0, 0, 0, 1));
+
+	world->AddGameObject(hole);
 }
 
 void TutorialGame::InitGameExamples() {
