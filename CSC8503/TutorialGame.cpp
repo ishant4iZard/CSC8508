@@ -1001,6 +1001,11 @@ void TutorialGame::InitBouncePad()
 	}
 }
 
+void TutorialGame::InitLevelWall()
+{
+
+}
+
 void TutorialGame::InitOBBwall() {
 	AddObbCubeToWorld(Vector3(-111, -19, 111), Vector3(10, 2, 10), 0);
 	AddObbCubeToWorld(Vector3(-111, -14, 111), Vector3(1, 1, 1));
