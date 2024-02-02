@@ -30,7 +30,7 @@ BouncePad::BouncePad(Mesh* inMesh, Texture* inTex, Shader* inShader)
     SetRenderObject(new RenderObject(&GetTransform(), inMesh, inTex, inShader));
     SetPhysicsObject(new PhysicsObject(&GetTransform(), GetBoundingVolume()));
 
-    GetPhysicsObject()->SetInverseMass(0.5f);
+    GetPhysicsObject()->SetInverseMass(0.0f);
 }
 
 BouncePad::~BouncePad()

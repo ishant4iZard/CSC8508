@@ -522,6 +522,7 @@ void TutorialGame::InitWorld() {
 	//AddEnemyToWorld(Vector3(-25, -10, 0));
 	InitDefaultFloor();
 	InitBouncePad();
+	InitLevelWall();
 	//InitBoundary();
 	//BridgeConstraintTest();
 	//InitMaze();
@@ -1003,7 +1004,10 @@ void TutorialGame::InitBouncePad()
 
 void TutorialGame::InitLevelWall()
 {
-
+	AddObbCubeToWorld(Vector3(96,0,0), Vector3(10, 20, 100), 0, 0.5f);
+	AddObbCubeToWorld(Vector3(-96, 0, 0), Vector3(10, 20, 100), 0, 0.5f);
+	AddObbCubeToWorld(Vector3(0,0, 96), Vector3(100, 20, 10), 0, 0.5f);
+	AddObbCubeToWorld(Vector3(0, 0, -96), Vector3(100, 20, 10), 0, 0.5f);
 }
 
 void TutorialGame::InitOBBwall() {
