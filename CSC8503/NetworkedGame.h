@@ -47,7 +47,8 @@ namespace NCL {
 			void UpdateAsServer(float dt);
 			void UpdateAsClient(float dt);
 
-			void UpdatePlayerPositions(float dt);
+			void UpdatePlayerState(float dt);
+			//void UpdateProjectiles(float dt);
 
 			void BroadcastSnapshot(bool deltaFrame);
 			void UpdateMinimumState();

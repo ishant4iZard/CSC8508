@@ -119,23 +119,36 @@ void NetworkedGame::UpdateGame(float dt) {
 		// Server and Client Receive and process there packet
 		if (thisServer) { thisServer->UpdateServer(); }
 		if (thisClient) { thisClient->UpdateClient(); }
-		if (thisServer) { UpdatePlayerPositions(dt); }
-
+		if (thisServer) { 
+			UpdatePlayerState(dt); 
+			//UpdateProjectiles(dt); 
+		}
 		if (thisServer) { physics->Update(dt); }
 	}
 	TutorialGame::UpdateGame(dt);
 }
 
-void NetworkedGame::UpdatePlayerPositions(float dt) {
+void NetworkedGame::UpdatePlayerState(float dt) {
 	for (auto i : ControledPlayersList)
 	{
 		if (i != nullptr)
 		{
 			//i->OscillatePlayer(dt);
 			i->RotatePlayer(dt);
+			i->ReplenishProjectiles(dt);
 		}
 	}
 }
+
+//void NetworkedGame::UpdateProjectiles(float dt) {
+//	for (auto i : )
+//	{
+//		if (i != nullptr)
+//		{
+//			
+//		}
+//	}
+//}
 
 void NetworkedGame::UpdateAsServer(float dt) {
 	packetsToSnapshot--;

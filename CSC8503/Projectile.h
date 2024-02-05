@@ -21,12 +21,15 @@ namespace NCL {
 			void OnCollisionBegin(GameObject* otherObject) override;
 
 			NetworkPlayer* GetOwner() const { return Owner; }
-
 			NetworkedGame* GetGame() const { return Game; }
+
+			void ReduceTimeLeft(float dt) { timeLeft -= dt; }
 
 		protected:
 			NetworkedGame* Game;
 			NetworkPlayer* Owner;
+			float timeLeft;
+			const int LIFE_TIME_AMOUNT = 10;
 		};
 
 	}
