@@ -11,6 +11,7 @@ Projectile::Projectile(NetworkPlayer* Owner, NetworkedGame* Game)
 {
 	this->Owner = Owner;
 	this->Game = Game;
+	timeLeft = LIFE_TIME_AMOUNT;
 }
 
 Projectile::~Projectile()
