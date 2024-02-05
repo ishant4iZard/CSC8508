@@ -4,10 +4,6 @@
 #include "RenderObject.h"
 #include "TextureLoader.h"
 #include "Hole.h"
-#include "Voxels.h"
-#include "Player.h"
-#include "PowerUp.h"
-#include "Goose.h"
 #include "BouncePad.h"
 
 #include <Maths.h>

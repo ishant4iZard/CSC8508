@@ -3,7 +3,6 @@
 #include "StateMachine.h"
 #include "State.h"
 #include "PhysicsObject.h"
-#include "Player.h"
 
 using namespace NCL;
 using namespace CSC8503;
@@ -199,9 +198,5 @@ void StateGameObject::lookaround(float dt) {
 
 void StateGameObject::OnCollisionBegin(GameObject* otherObject)
 {
-	if (otherObject->gettag() == "Player")
-	{
-		Player* player = dynamic_cast<Player*>(otherObject);
-		player->TakeDamage(2);
-	}
+	
 }
