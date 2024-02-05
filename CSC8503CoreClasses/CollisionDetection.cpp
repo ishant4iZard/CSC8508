@@ -410,6 +410,25 @@ bool  CollisionDetection::OBBSphereIntersection(const OBBVolume& volumeA, const 
 		return true;
 	}
 	return false;
+
+	//AABBVolume aabbVolume(volumeA.GetHalfDimensions());
+
+	//Transform transformA;
+	//Transform transformB;
+
+	//const Vector3 delta = worldTransformB.GetPosition() - worldTransformA.GetPosition();
+
+	//// Place the sphere in the local coordinate system of the first object
+	//transformB.SetPosition(worldTransformA.GetOrientation().Conjugate() * delta);
+
+	//if (AABBSphereIntersection(aabbVolume, transformA, volumeB, transformB, collisionInfo))
+	//{
+	//	collisionInfo.point.normal = worldTransformA.GetOrientation() * collisionInfo.point.normal;
+	//	collisionInfo.point.localA = worldTransformA.GetOrientation() * collisionInfo.point.localA;
+	//	collisionInfo.point.localB = worldTransformA.GetOrientation() * collisionInfo.point.localB;
+	//	return true;
+	//}
+	//return false;
 }
 
 bool CollisionDetection::AABBCapsuleIntersection(

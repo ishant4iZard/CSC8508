@@ -4,6 +4,11 @@
 #include "RenderObject.h"
 #include "TextureLoader.h"
 #include "Hole.h"
+#include "Voxels.h"
+#include "Player.h"
+#include "PowerUp.h"
+#include "Goose.h"
+#include "BouncePad.h"
 
 #include <Maths.h>
 
@@ -126,8 +131,12 @@ void TutorialGame::UpdateGame(float dt) {
 
 		Debug::UpdateRenderables(dt);
 
+		Debug::Print("Time left:" + std::to_string((int)(TIME_LIMIT-timer)), Vector2(5, 10));
 
+		if (timer > TIME_LIMIT)
+			gameover = true;
 
+			
 	}
 
 }
@@ -149,8 +158,10 @@ void TutorialGame::InitWorld() {
 	physics->SetBroadphase(true);
 	timer = 0;
 
-	
 	InitDefaultFloor();
+	InitBouncePad();
+	InitLevelWall();
+	
 }
 
 /*
@@ -207,6 +218,33 @@ void TutorialGame::InitHole() {
 	hole->GetPhysicsObject()->InitSphereInertia();
 
 	hole->GetRenderObject()->SetColour(Vector4(0, 0, 0, 1));
-
+	
 	world->AddGameObject(hole);
+}
+
+
+void TutorialGame::InitBouncePad()
+{
+	for (size_t i = 0; i < 5; i++)
+	{
+		BouncePad* tempBouncePad = new BouncePad(cubeMesh, basicTex, basicShader);
+		tempBouncePad->GetRenderObject()->SetColour(Debug::CYAN);
+		bouncePadList[i] = tempBouncePad;
+		world->AddGameObject(bouncePadList[i]);
+	}
+
+	bouncePadList[0]->GetTransform().SetPosition(Vector3(48, 0, 0));
+	bouncePadList[1]->GetTransform().SetPosition(Vector3(-48, 0, 0));
+	bouncePadList[2]->GetTransform().SetPosition(Vector3(48, 0, 48));
+	bouncePadList[3]->GetTransform().SetPosition(Vector3(48, 0, -48));
+	bouncePadList[4]->GetTransform().SetPosition(Vector3(-30, 0, 48));
+
+}
+
+void TutorialGame::InitLevelWall()
+{
+	AddObbCubeToWorld(Vector3(96,0,0), Vector3(10, 20, 100), 0, 0.5f);
+	AddObbCubeToWorld(Vector3(-96, 0, 0), Vector3(10, 20, 100), 0, 0.5f);
+	AddObbCubeToWorld(Vector3(0,0, 96), Vector3(100, 20, 10), 0, 0.5f);
+	AddObbCubeToWorld(Vector3(0, 0, -96), Vector3(100, 20, 10), 0, 0.5f);
 }

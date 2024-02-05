@@ -16,7 +16,6 @@ using namespace CSC8503;
 int main() {
 	Window*w = Window::CreateGameWindow("CSC8503 Game technology!", 1280, 720 , false);
 
-
 	if (!w->HasInitialised()) {
 		return -1;
 	}	
