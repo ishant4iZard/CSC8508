@@ -90,6 +90,7 @@ namespace NCL {
 			bool gameWon;
 			float timer;
 			float finaltimer;
+			bool serverStarted = false;
 
 			level currentlevel;
 			int score = 0;
@@ -97,7 +98,7 @@ namespace NCL {
 #pragma region BouncePad
 			BouncePad* bouncePadList[5];
 #pragma endregion
-			const int TIME_LIMIT = 50;
+			const int TIME_LIMIT = 5;
 
 		};
 	}

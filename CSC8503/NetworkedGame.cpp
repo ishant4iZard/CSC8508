@@ -71,6 +71,8 @@ bool NetworkedGame::StartAsServer() {
 
 	thisServer->RegisterPacketHandler(Received_State, this);
 
+	serverStarted = true;
+
 	StartLevel();
 
 	return true;

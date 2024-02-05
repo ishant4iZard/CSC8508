@@ -94,9 +94,7 @@ void TutorialGame::UpdateGame(float dt) {
 		InitCamera();
 		Debug::Print("GameOver", Vector2(40, 10), Debug::RED);
 		Debug::Print("Final Score:" + std::to_string((int)(score)), Vector2(40, 30));
-		Debug::Print("Press 'F1' to restart", Vector2(40, 50));
-		Debug::Print("or", Vector2(40, 60));
-		Debug::Print("Press 'ESC' to exit", Vector2(40, 70));
+		Debug::Print("Press 'ESC' to exit", Vector2(40, 50));
 	}
 	else if (gameWon)
 	{
@@ -107,12 +105,11 @@ void TutorialGame::UpdateGame(float dt) {
 		Debug::Print("You saved the world from goats!!!", Vector2(40, 20), Debug::GREEN);
 		Debug::Print("Final Score:" + std::to_string((int)(score + (300 - finaltimer) / 10)), Vector2(40, 30));
 		Debug::Print("Finish Time:" + std::to_string((int)(finaltimer)), Vector2(40, 40));
-		Debug::Print("Press 'F1' to restart", Vector2(40, 50));
-		Debug::Print("or", Vector2(40, 60));
-		Debug::Print("Press 'ESC' to exit", Vector2(40, 70));
+		
+		Debug::Print("Press 'ESC' to exit", Vector2(40, 50));
 	}
 
-	else {
+	else if(serverStarted) {
 		timer += dt;
 
 		world->GetMainCamera().UpdateCamera(dt);
@@ -121,15 +118,14 @@ void TutorialGame::UpdateGame(float dt) {
 			gameover = true;
 
 		}
-		renderer->Render();
 
 		Debug::UpdateRenderables(dt);
 
-
-		world->UpdateWorld(dt);
-		renderer->Update(dt);
 		Debug::Print("Time left:" + std::to_string((int)(TIME_LIMIT-timer)), Vector2(5, 10));
 	}
+	world->UpdateWorld(dt);
+	renderer->Render();
+	renderer->Update(dt);
 
 }
 
