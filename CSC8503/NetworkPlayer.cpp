@@ -9,7 +9,8 @@ using namespace CSC8503;
 NetworkPlayer::NetworkPlayer(NetworkedGame* game, int num)	{
 	this->game = game;
 	playerNum  = num;
-	timeElapsed = 0.0f;
+	timeElapsed = projectileReplenishTimer = 0.0f;
+	numProjectilesAccumulated = MAX_PROJECTILE_CAPACITY;
 	Oscillationspeed = 10;
 }
 
@@ -96,8 +97,21 @@ void NetworkPlayer::RotatePlayer(float dt) {
 	this->GetPhysicsObject()->SetLinearVelocity(velocityDir * ORBIT_SPEED);
 }
 
+void NetworkPlayer::ReplenishProjectiles(float dt) {
+	projectileReplenishTimer += dt;
+
+	if (projectileReplenishTimer > PROJECTILE_RELOAD_RATE)
+	{
+		numProjectilesAccumulated = (numProjectilesAccumulated + 1) % MAX_PROJECTILE_CAPACITY;
+		projectileReplenishTimer = 0.0f;
+	}
+}
+
 void NetworkPlayer::Fire()
 {
+	if (numProjectilesAccumulated <= 0) return;
+	numProjectilesAccumulated--;
+
 	Vector3 fireDir = GetPlayerForwardVector();
 	Vector3 firePos = transform.GetPosition() + fireDir * 10 + Vector3(0, 2, 0);
 	game->SpawnProjectile(this, firePos, fireDir);
