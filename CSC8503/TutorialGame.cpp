@@ -117,26 +117,18 @@ void TutorialGame::UpdateGame(float dt) {
 
 		world->GetMainCamera().UpdateCamera(dt);
 
-
-		Debug::Print("Time left:" + std::to_string((int)(300 - timer)), Vector2(5, 10));
-
-		if (timer > 300.0f) {
+		if (timer > TIME_LIMIT) {
 			gameover = true;
 
-
-			world->UpdateWorld(dt);
-			renderer->Update(dt);
 		}
 		renderer->Render();
 
 		Debug::UpdateRenderables(dt);
 
+
+		world->UpdateWorld(dt);
+		renderer->Update(dt);
 		Debug::Print("Time left:" + std::to_string((int)(TIME_LIMIT-timer)), Vector2(5, 10));
-
-		if (timer > TIME_LIMIT)
-			gameover = true;
-
-			
 	}
 
 }
@@ -222,6 +214,27 @@ void TutorialGame::InitHole() {
 	world->AddGameObject(hole);
 }
 
+GameObject* TutorialGame::AddObbCubeToWorld(const Vector3& position, Vector3 dimensions, float inverseMass, float elasticity) {
+	GameObject* cube = new GameObject("cube");
+
+	OBBVolume* volume = new OBBVolume(dimensions);
+	cube->SetBoundingVolume((CollisionVolume*)volume);
+
+	cube->GetTransform()
+		.SetPosition(position)
+		.SetScale(dimensions * 2);
+
+	cube->SetRenderObject(new RenderObject(&cube->GetTransform(), cubeMesh, basicTex, basicShader));
+	cube->SetPhysicsObject(new PhysicsObject(&cube->GetTransform(), cube->GetBoundingVolume()));
+
+	cube->GetPhysicsObject()->SetInverseMass(inverseMass);
+	cube->GetPhysicsObject()->InitCubeInertia();
+	cube->GetPhysicsObject()->SetElasticity(elasticity);
+
+	world->AddGameObject(cube);
+
+	return cube;
+}
 
 void TutorialGame::InitBouncePad()
 {

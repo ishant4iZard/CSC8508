@@ -46,9 +46,11 @@ namespace NCL {
 			test scenarios (constraints, collision types, and so on). 
 			*/
 
-
+			GameObject* AddObbCubeToWorld(const Vector3& position, Vector3 dimensions, float inverseMass = 10.0f, float elasticity = 0.81f);
 
 			void InitHole();
+			void InitBouncePad();
+			void InitLevelWall();
 
 			void InitDefaultFloor();
 

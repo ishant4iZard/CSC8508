@@ -24,6 +24,7 @@ namespace NCL {
 			void AddScore(int score) {
 				Score += score;
 				std::cout << "Score: = " << Score;
+			}
 			void SetMovementDir(Vector3 dir) {
 				movementDirection = dir;
 			}

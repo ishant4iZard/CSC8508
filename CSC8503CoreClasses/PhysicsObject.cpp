@@ -10,7 +10,7 @@ PhysicsObject::PhysicsObject(Transform* parentTransform, const CollisionVolume* 
 
 	inverseMass = 1.0f;
 	elasticity	= 1.0f;
-	friction	= 0.4f;
+	friction	= 0.2f;
 }
 
 PhysicsObject::~PhysicsObject()	{
