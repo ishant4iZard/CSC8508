@@ -141,11 +141,15 @@ void TutorialGame::UpdateGame(float dt) {
 		for (size_t i = 0; i < Enemy2List.size(); i++)
 			Enemy2List[i]->Update(dt);
 
-		Debug::Print("Time left:" + std::to_string((int)(300-timer)), Vector2(5, 10));
+		Debug::Print("Time left:" + std::to_string((int)(TIME_LIMIT-timer)), Vector2(5, 10));
+
+		// TO DO : Check score and display appropriate screen
+		if (timer > TIME_LIMIT)
+			gameover = true;
 
 		if (player) {
 			player->Update(dt);
-			if (player->GetHealth() <= 0 || timer > 300.0f) {
+			if (player->GetHealth() <= 0 || timer > TIME_LIMIT) {
 				gameover = true;
 				score = player->GetScore();
 			}

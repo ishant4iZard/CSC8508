@@ -151,6 +151,7 @@ namespace NCL {
 #pragma region BouncePad
 			BouncePad* bouncePadList[5];
 #pragma endregion
+			const int TIME_LIMIT = 50;
 
 		};
 	}

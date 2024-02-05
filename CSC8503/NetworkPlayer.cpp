@@ -1,6 +1,7 @@
 #include "NetworkPlayer.h"
 #include "NetworkedGame.h"
 #include "PhysicsObject.h"
+# define  SQUARE(x) (x * x) 
 
 using namespace NCL;
 using namespace CSC8503;
@@ -80,6 +81,19 @@ void NetworkPlayer::OscillatePlayer(float dt) {
 
 	Vector3 velocity = movementDirection * Oscillationspeed;
 	this->GetPhysicsObject()->SetLinearVelocity(velocity);
+}
+
+void NetworkPlayer::RotatePlayer(float dt) {
+	// Tried force based circular motion but had to discard due to friction causing problems
+	/*float mass = this->GetPhysicsObject()->GetInverseMass();
+	float force = SQUARE(ORBIT_SPEED) / (mass * ORBIT_RADIUS);
+
+	Vector3 forceDir = Vector3::Cross(Vector3(0, 1, 0), (this->GetPhysicsObject()->GetLinearVelocity()).Normalised());
+
+	this->GetPhysicsObject()->AddForce(forceDir * (-1 *force));*/
+
+	Vector3 velocityDir = Vector3::Cross(Vector3(0, 1, 0), ORBIT_CENTER - this->GetTransform().GetPosition()).Normalised();
+	this->GetPhysicsObject()->SetLinearVelocity(velocityDir * ORBIT_SPEED);
 }
 
 void NetworkPlayer::Fire()

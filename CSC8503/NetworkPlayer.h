@@ -16,6 +16,7 @@ namespace NCL {
 			void SetPlayerYaw(const Vector3& pointPos);
 
 			void OscillatePlayer(float dt);
+			void RotatePlayer(float dt);
 
 			bool isFire = false;
 			void Fire();
@@ -30,6 +31,10 @@ namespace NCL {
 			float timeElapsed;
 			float Oscillationspeed;
 			Vector3 movementDirection;
+
+			const float ORBIT_RADIUS = 75.0; // Ensure that this value matches the distance of the player from the center
+			const float ORBIT_SPEED = 10.0f;
+			const Vector3 ORBIT_CENTER = Vector3(0, 0, 0);
 
 		public:
 			int GetPlayerNum() const { return playerNum; }

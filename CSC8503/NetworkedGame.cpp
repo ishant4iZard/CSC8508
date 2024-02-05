@@ -100,24 +100,26 @@ bool NetworkedGame::StartAsClient(char a, char b, char c, char d) {
 void NetworkedGame::UpdateGame(float dt) {
 	TestMenu->Update(dt);
 
-	timeToNextPacket -= dt;
-	if (timeToNextPacket < 0) {
-		if (thisServer) {
-			UpdateAsServer(dt);
+	if (!gameover) {
+		timeToNextPacket -= dt;
+		if (timeToNextPacket < 0) {
+			if (thisServer) {
+				UpdateAsServer(dt);
+			}
+			else if (thisClient) {
+				UpdateAsClient(dt);
+			}
+			timeToNextPacket += 1.0f / 30.0f; //30hz server/client update
 		}
-		else if (thisClient) {
-			UpdateAsClient(dt);
-		}
-		timeToNextPacket += 1.0f / 30.0f; //30hz server/client update
+
+		// Server and Client Receive and process there packet
+		if (thisServer) { thisServer->UpdateServer(); }
+		if (thisClient) { thisClient->UpdateClient(); }
+		if (thisServer) { UpdatePlayerPositions(dt); }
+
+		if (thisServer) { physics->Update(dt); }
 	}
-
-	// Server and Client Receive and process there packet
-	if (thisServer) { thisServer->UpdateServer(); }
-	if (thisClient) { thisClient->UpdateClient(); }
-	if (thisServer) { UpdatePlayerPositions(dt); }
-
 	TutorialGame::UpdateGame(dt);
-	if (thisServer) { physics->Update(dt); }
 }
 
 void NetworkedGame::UpdatePlayerPositions(float dt) {
@@ -125,7 +127,8 @@ void NetworkedGame::UpdatePlayerPositions(float dt) {
 	{
 		if (i != nullptr)
 		{
-			i->OscillatePlayer(dt);
+			//i->OscillatePlayer(dt);
+			i->RotatePlayer(dt);
 		}
 	}
 }
@@ -381,6 +384,8 @@ void NetworkedGame::SpawnProjectile(NetworkPlayer* owner, Vector3 firePos, Vecto
 
 	world->AddGameObject(newBullet);
 	networkObjects.insert(std::pair<int, NetworkObject*>(bulletID, newBullet->GetNetworkObject()));
+
+	newBullet->GetPhysicsObject()->SetElasticity(1.0f);
 
 	Vector3 force = fireDir * Projectile::FireForce;
 	//newBullet->GetPhysicsObject()->SetLinearVelocity(fireDir);
