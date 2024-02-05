@@ -231,3 +231,7 @@ if(USE_VULKAN)
 
     add_dependencies(${PROJECT_NAME} SHADER_FILES)
 endif()
+
+include_directories("../Steamworksdk/pulic/steam/")
+link_directories("../Steamworksdk/redistributable_bin/win64")
+target_link_libraries(${PROJECT_NAME} LINK_PUBLIC steam_api64.lib)

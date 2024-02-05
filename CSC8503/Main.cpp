@@ -10,10 +10,22 @@ using namespace CSC8503;
 #include <chrono>
 #include <thread>
 #include <sstream>
-
+#include <steam_api.h>
 
 
 int main() {
+	if (SteamAPI_Init())
+	{
+		std::cout << "Steam API initialized successfully.\n";
+
+		SteamAPI_Shutdown();
+	}
+	else
+	{
+		std::cout << "Steam API failed to initialize.\n";
+		std::cout << "You may need run the steam app.\n";
+	}
+
 	Window*w = Window::CreateGameWindow("CSC8503 Game technology!", 1280, 720 , false);
 
 	if (!w->HasInitialised()) {

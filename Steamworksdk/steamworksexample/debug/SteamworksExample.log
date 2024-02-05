@@ -1,0 +1,1 @@
+﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(1189,5): error MSB3191: Unable to create directory "D:\dev\Steam\main\src\SteamWorksExample\". Could not find a part of the path 'D:\dev\Steam\main\src\SteamWorksExample\'.
