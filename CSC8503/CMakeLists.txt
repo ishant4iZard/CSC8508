@@ -3,6 +3,12 @@ set(PROJECT_NAME CSC8503)
 ################################################################################
 # Source groups
 ################################################################################
+set(NetPlugins
+    "steam.h"
+    "steam.cpp"
+)
+source_group("NetPlugins" FILES ${NetPlugins})
+
 set(Header_Files
     "GameTechRenderer.h"
     "NetworkedGame.h"
@@ -13,6 +19,7 @@ set(Header_Files
     "Projectile.h"
     "Hole.h"
     "BouncePad.h"
+    "MenuSystem.h"
 )
 source_group("Header Files" FILES ${Header_Files})
 
@@ -27,6 +34,7 @@ set(Source_Files
     "Projectile.cpp"
     "Hole.cpp"
     "BouncePad.cpp"
+    "MenuSystem.cpp"
 )
 
 if(USE_VULKAN)
@@ -44,12 +52,14 @@ source_group("Source Files" FILES ${Source_Files})
 set(ALL_FILES
     ${Header_Files}
     ${Source_Files}
+    ${NetPlugins}
 )
 
 if(USE_VULKAN)
     set(ALL_FILES 
         ${Header_Files}
         ${Source_Files}
+        ${NetPlugins}
         ${SHADER_FILES}
     )
 
@@ -212,10 +222,15 @@ endif()
 include_directories("../OpenGLRendering/")
 include_directories("../NCLCoreClasses/")
 include_directories("../CSC8503CoreClasses/")
+include_directories("../Steamworksdk/public/steam/")
+
+#link_directories("../Steamworksdk/redistributable_bin/win64/")
 
 target_link_libraries(${PROJECT_NAME} LINK_PUBLIC NCLCoreClasses)
 target_link_libraries(${PROJECT_NAME} LINK_PUBLIC CSC8503CoreClasses)
 target_link_libraries(${PROJECT_NAME} LINK_PUBLIC OpenGLRendering)
+target_link_libraries(${PROJECT_NAME} LINK_PUBLIC "../../Steamworksdk/redistributable_bin/win64/steam_api64")
+
 
 if(USE_VULKAN)
     include_directories("../VulkanRendering/")
@@ -232,6 +247,4 @@ if(USE_VULKAN)
     add_dependencies(${PROJECT_NAME} SHADER_FILES)
 endif()
 
-include_directories("../Steamworksdk/pulic/steam/")
-link_directories("../Steamworksdk/redistributable_bin/win64")
-target_link_libraries(${PROJECT_NAME} LINK_PUBLIC steam_api64.lib)
+

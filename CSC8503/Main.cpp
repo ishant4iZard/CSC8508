@@ -17,8 +17,6 @@ int main() {
 	if (SteamAPI_Init())
 	{
 		std::cout << "Steam API initialized successfully.\n";
-
-		SteamAPI_Shutdown();
 	}
 	else
 	{
@@ -39,10 +37,10 @@ int main() {
 	w->GetTimer().GetTimeDeltaSeconds(); //Clear the timer so we don't get a larget first dt!
 	while (w->UpdateWindow() && !Window::GetKeyboard()->KeyDown(KeyCodes::ESCAPE)) {
 		float dt = w->GetTimer().GetTimeDeltaSeconds();
-		if (dt > 0.2f) {
-			std::cout << "Skipping large time delta" << std::endl;
-			continue; //must have hit a breakpoint or something to have a 1 second frame time!
-		}
+		//if (dt > 0.2f) {
+		//	std::cout << "Skipping large time delta" << std::endl;
+		//	continue; //must have hit a breakpoint or something to have a 1 second frame time!
+		//}
 		if (Window::GetKeyboard()->KeyPressed(KeyCodes::PRIOR)) {
 			w->ShowConsole(true);
 		}
@@ -56,9 +54,13 @@ int main() {
 
 		w->SetTitle("Gametech frame time:" + std::to_string(1000.0f * dt));
 
+		SteamAPI_RunCallbacks();
 
 		g->UpdateGame(dt);
 	}
+
+	SteamAPI_Shutdown();
+
 	Window::DestroyGameWindow();
 
 }
