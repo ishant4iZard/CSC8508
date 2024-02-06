@@ -9,6 +9,7 @@
 
 #include "StateGameObject.h"
 #include "BouncePad.h"
+#include <vector>
 
 enum class level {
 	level1 = 1,
@@ -100,10 +101,11 @@ namespace NCL {
 #pragma endregion
 
 #pragma region PlaceholderAI
-			GameObject* placeHolderAIs[15];
-			const Vector3 AI_SCALE = Vector3(10, 10, 10);
-			const int GAME_ARENA_LENGTH = 75;
-			const int FRIENDLY_AI_ELASTICITY = 1.3;
+			std::vector<GameObject*> placeHolderAIs;
+			const int NUMBER_OF_AIS = 15;
+			const Vector3 AI_SCALE = Vector3(3, 3, 3);
+			const int GAME_ARENA_LENGTH = 65;
+			const int ENEMY_AI_WEIGHT = 0;
 			const int ENEMY_AI_ELASTICITY = 0.1;
 			void InitPlaceholderAIs();
 #pragma endregion

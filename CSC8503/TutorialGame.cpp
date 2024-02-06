@@ -7,7 +7,7 @@
 #include "BouncePad.h"
 
 #include <Maths.h>
-
+#include <cstdlib> 
 
 using namespace NCL;
 using namespace CSC8503;
@@ -145,7 +145,7 @@ void TutorialGame::InitWorld() {
 	InitDefaultFloor();
 	InitBouncePad();
 	InitLevelWall();
-	
+	InitPlaceholderAIs();
 }
 
 /*
@@ -252,4 +252,16 @@ void TutorialGame::InitLevelWall()
 	AddObbCubeToWorld(Vector3(-96, 0, 0), Vector3(10, 20, 100), 0, 0.5f);
 	AddObbCubeToWorld(Vector3(0,0, 96), Vector3(100, 20, 10), 0, 0.5f);
 	AddObbCubeToWorld(Vector3(0, 0, -96), Vector3(100, 20, 10), 0, 0.5f);
+}
+
+void TutorialGame::InitPlaceholderAIs() {
+	for (size_t i = 0; i < NUMBER_OF_AIS; i++)
+	{
+		Vector3 randomPosition = Vector3(
+			(std::rand() % (2 * GAME_ARENA_LENGTH)) - GAME_ARENA_LENGTH, // Random value between -length to length
+			0, 
+			(std::rand() % (2 * GAME_ARENA_LENGTH)) - GAME_ARENA_LENGTH);
+		placeHolderAIs.push_back(AddObbCubeToWorld(randomPosition, AI_SCALE, ENEMY_AI_WEIGHT, ENEMY_AI_ELASTICITY));
+		placeHolderAIs[i]->GetRenderObject()->SetColour(Debug::RED);
+	}
 }
