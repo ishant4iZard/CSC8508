@@ -4,7 +4,7 @@
 #include "GameServer.h"
 #include "GameClient.h"
 #include "PushdownMachine.h"
-
+#include "MenuSystem.h"
 #include "GameWorld.h"
 #include "PhysicsObject.h"
 #include "RenderObject.h"
@@ -32,8 +32,7 @@ NetworkedGame::NetworkedGame()	{
 	timeToNextPacket  = 0.0f;
 	packetsToSnapshot = 0;
 
-	TestMenu = new PushdownMachine(new MainMenu());
-	TestMenu->SetGame(this);
+	Menu = new MenuSystem(this);
 
 	PlayersList.clear();
 	ControledPlayersList.clear();
@@ -102,7 +101,7 @@ bool NetworkedGame::StartAsClient(char a, char b, char c, char d) {
 }
 
 void NetworkedGame::UpdateGame(float dt) {
-	TestMenu->Update(dt);
+	Menu->Update(dt);
 
 	if (!gameover) {
 		timeToNextPacket -= dt;
