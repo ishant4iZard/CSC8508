@@ -102,6 +102,7 @@ bool NetworkedGame::StartAsClient(char a, char b, char c, char d) {
 }
 
 void NetworkedGame::UpdateGame(float dt) {
+	Debug::UpdateRenderables(dt);
 	TestMenu->Update(dt);
 
 	if (!gameover) {

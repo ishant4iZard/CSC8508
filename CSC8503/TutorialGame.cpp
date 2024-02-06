@@ -84,6 +84,7 @@ TutorialGame::~TutorialGame()	{
 }
 
 void TutorialGame::UpdateGame(float dt) {
+	
 	if (gameover) {
 		world->ClearAndErase();
 		physics->Clear();
@@ -115,13 +116,13 @@ void TutorialGame::UpdateGame(float dt) {
 
 		}
 
-		Debug::UpdateRenderables(dt);
 
 		Debug::Print("Time left:" + std::to_string((int)(TIME_LIMIT-timer)), Vector2(5, 10));
+
 	}
 	world->UpdateWorld(dt);
-	renderer->Render();
 	renderer->Update(dt);
+	renderer->Render();
 
 }
 
