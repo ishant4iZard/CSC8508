@@ -24,12 +24,13 @@ namespace NCL {
 			NetworkedGame* GetGame() const { return Game; }
 
 			void ReduceTimeLeft(float dt) { timeLeft -= dt; }
+			const float GetTimeLeft() { return timeLeft; }
 
 		protected:
 			NetworkedGame* Game;
 			NetworkPlayer* Owner;
 			float timeLeft;
-			const int LIFE_TIME_AMOUNT = 10;
+			const int LIFE_TIME_AMOUNT = 5;
 		};
 
 	}

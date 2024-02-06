@@ -121,6 +121,7 @@ void NetworkedGame::UpdateGame(float dt) {
 		if (thisClient) { thisClient->UpdateClient(); }
 		if (thisServer) { 
 			UpdatePlayerState(dt); 
+			UpdateProjectiles(dt);
 		}
 		if (thisServer) { physics->Update(dt); }
 	}
@@ -135,6 +136,24 @@ void NetworkedGame::UpdatePlayerState(float dt) {
 			//i->OscillatePlayer(dt);
 			i->RotatePlayer(dt);
 			i->ReplenishProjectiles(dt);
+		}
+	}
+}
+
+void NetworkedGame::UpdateProjectiles(float dt) {
+	for (auto i : ProjectileList) {
+		if (i == nullptr) continue;
+
+		i->ReduceTimeLeft(dt);
+
+		if (i->GetTimeLeft() <= 0) {
+			i->deactivate();
+			DeactivateProjectilePacket newPacket;
+			newPacket.NetObjectID = i->GetNetworkObject()->GetNetworkID();
+			if (i->GetGame()->GetServer())
+			{
+				i->GetGame()->GetServer()->SendGlobalPacket(newPacket);
+			}
 		}
 	}
 }
