@@ -98,6 +98,16 @@ namespace NCL {
 #pragma region BouncePad
 			BouncePad* bouncePadList[5];
 #pragma endregion
+
+#pragma region PlaceholderAI
+			GameObject* placeHolderAIs[15];
+			const Vector3 AI_SCALE = Vector3(10, 10, 10);
+			const int GAME_ARENA_LENGTH = 75;
+			const int FRIENDLY_AI_ELASTICITY = 1.3;
+			const int ENEMY_AI_ELASTICITY = 0.1;
+			void InitPlaceholderAIs();
+#pragma endregion
+
 			const int TIME_LIMIT = 50;
 
 		};
