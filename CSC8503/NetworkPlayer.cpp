@@ -99,6 +99,35 @@ void NetworkPlayer::RotatePlayer(float dt) {
 	this->GetPhysicsObject()->SetLinearVelocity(velocityDir * ORBIT_SPEED);
 }
 
+void NetworkPlayer::MovePlayerInSquarePattern(float dt) {
+	const float CORNER_LOCATION = 75;
+	const static vector<Vector3> CORNERS = {
+		Vector3{CORNER_LOCATION, 0, -1 * CORNER_LOCATION},
+		Vector3{CORNER_LOCATION, 0, CORNER_LOCATION},
+		Vector3{-1 * CORNER_LOCATION, 0, -1 * CORNER_LOCATION},
+		Vector3{-1 * CORNER_LOCATION, 0, CORNER_LOCATION}
+	};
+	const static vector<Vector3> MOVEMENT_DIRECTIONS = {
+		Vector3{0, 0, 1},
+		Vector3{-1, 0, 0},
+		Vector3{1, 0, 0},
+		Vector3{0, 0, -1}
+	};
+	const static float BUFFER_DISTANCE = 5;
+
+	for (int i = 0; i < 4; i++) {
+		float distanceFromCorner = (CORNERS[i] - GetTransform().GetPosition()).Length();
+
+		if (distanceFromCorner < BUFFER_DISTANCE) {
+			movementDirection = MOVEMENT_DIRECTIONS[i];
+			break;
+		}
+	}
+
+	Vector3 velocity = movementDirection * Oscillationspeed * 2;
+	this->GetPhysicsObject()->SetLinearVelocity(velocity);
+}
+
 void NetworkPlayer::ReplenishProjectiles(float dt) {
 	projectileReplenishTimer += dt;
 

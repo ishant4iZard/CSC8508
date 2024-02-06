@@ -137,6 +137,7 @@ void NetworkedGame::UpdatePlayerState(float dt) {
 			//i->OscillatePlayer(dt);
 			i->RotatePlayer(dt);
 			i->ReplenishProjectiles(dt);
+			i->MovePlayerInSquarePattern(dt);
 		}
 	}
 }
