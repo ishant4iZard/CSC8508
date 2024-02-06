@@ -121,7 +121,6 @@ void NetworkedGame::UpdateGame(float dt) {
 		if (thisClient) { thisClient->UpdateClient(); }
 		if (thisServer) { 
 			UpdatePlayerState(dt); 
-			//UpdateProjectiles(dt); 
 		}
 		if (thisServer) { physics->Update(dt); }
 	}
@@ -139,16 +138,6 @@ void NetworkedGame::UpdatePlayerState(float dt) {
 		}
 	}
 }
-
-//void NetworkedGame::UpdateProjectiles(float dt) {
-//	for (auto i : )
-//	{
-//		if (i != nullptr)
-//		{
-//			
-//		}
-//	}
-//}
 
 void NetworkedGame::UpdateAsServer(float dt) {
 	packetsToSnapshot--;
