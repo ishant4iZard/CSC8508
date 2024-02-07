@@ -13,7 +13,7 @@ NetworkPlayer::NetworkPlayer(NetworkedGame* game, int num)	{
 	timeElapsed = 0.0f;
 	timeElapsed = projectileReplenishTimer = 0.0f;
 	numProjectilesAccumulated = MAX_PROJECTILE_CAPACITY;
-	Oscillationspeed = 10;
+	movementSpeed = 10;
 }
 
 NetworkPlayer::~NetworkPlayer()	{
@@ -79,10 +79,10 @@ void NetworkPlayer::OscillatePlayer(float dt) {
 	
 	if (timeElapsed >= 2.0f) {
 		timeElapsed = 0.0f;
-		Oscillationspeed *= -1;
+		movementSpeed *= -1;
 	}
 
-	Vector3 velocity = movementDirection * Oscillationspeed;
+	Vector3 velocity = movementDirection * movementSpeed;
 	this->GetPhysicsObject()->SetLinearVelocity(velocity);
 }
 
@@ -94,6 +94,10 @@ void NetworkPlayer::RotatePlayer(float dt) {
 	Vector3 forceDir = Vector3::Cross(Vector3(0, 1, 0), (this->GetPhysicsObject()->GetLinearVelocity()).Normalised());
 
 	this->GetPhysicsObject()->AddForce(forceDir * (-1 *force));*/
+
+	const static float ORBIT_RADIUS = 75.0; // Ensure that this value matches the distance of the player from the center
+	const static float ORBIT_SPEED = 10.0f;
+	const static Vector3 ORBIT_CENTER = Vector3(0, 0, 0);
 
 	Vector3 velocityDir = Vector3::Cross(Vector3(0, 1, 0), ORBIT_CENTER - this->GetTransform().GetPosition()).Normalised();
 	this->GetPhysicsObject()->SetLinearVelocity(velocityDir * ORBIT_SPEED);
@@ -124,11 +128,13 @@ void NetworkPlayer::MovePlayerInSquarePattern(float dt) {
 		}
 	}
 
-	Vector3 velocity = movementDirection * Oscillationspeed * 2;
+	Vector3 velocity = movementDirection * movementSpeed;
 	this->GetPhysicsObject()->SetLinearVelocity(velocity);
 }
 
 void NetworkPlayer::ReplenishProjectiles(float dt) {
+	const static int PROJECTILE_RELOAD_RATE = 1; // 1 projectile per second is replenished
+
 	projectileReplenishTimer += dt;
 
 	if (projectileReplenishTimer > PROJECTILE_RELOAD_RATE)

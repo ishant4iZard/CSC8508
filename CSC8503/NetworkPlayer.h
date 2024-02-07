@@ -36,17 +36,12 @@ namespace NCL {
 			int playerNum;
 			int Score = 0;
 			float timeElapsed;
-			float Oscillationspeed;
+			float movementSpeed;
 			Vector3 movementDirection;
 
-			const float ORBIT_RADIUS = 75.0; // Ensure that this value matches the distance of the player from the center
-			const float ORBIT_SPEED = 10.0f;
-			const Vector3 ORBIT_CENTER = Vector3(0, 0, 0);
-
+			const int MAX_PROJECTILE_CAPACITY = 10;
 			int numProjectilesAccumulated;
 			float projectileReplenishTimer;
-			const int MAX_PROJECTILE_CAPACITY = 10;
-			const int PROJECTILE_RELOAD_RATE = 1; // 1 projectile per second is replenished
 
 		public:
 			int GetPlayerNum() const { return playerNum; }
