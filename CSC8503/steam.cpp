@@ -99,6 +99,7 @@ void NetSystem_Steam::JoinLobby()
 	if (steamIDLobby == 0) return;
 
 	SteamAPICall_t hJoinLobby = SteamMatchmaking()->JoinLobby(steamIDLobby);
+	m_JoinLobbyCallResult.Set(hJoinLobby, this, &NetSystem_Steam::On_LobbyJoined);
 }
 
 void NetSystem_Steam::On_LobbyJoined(LobbyEnter_t* pResult, bool bIOFailure)
