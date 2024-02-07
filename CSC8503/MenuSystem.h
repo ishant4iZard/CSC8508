@@ -24,6 +24,24 @@ namespace NCL {
 			NetSystem_Steam* steam;
 		};
 
+		class MultiplayerSearchMenu : public PushdownState
+		{
+		public:
+			PushdownResult OnUpdate(float dt, PushdownState** newState) override;
+
+		protected:
+			void DisplaySearchResult(NetSystem_Steam* Steam);
+			std::string DisplayLobbyLine(NetSystem_Steam* Steam, int Index);
+
+			int CurrentSelectLobby = 0;
+		};
+
+		class MultiPlayerLobby : public PushdownState
+		{
+		public:
+			PushdownResult OnUpdate(float dt, PushdownState** newState) override;
+		};
+
 		class MainMenu : public PushdownState
 		{
 		public:

@@ -119,7 +119,7 @@ void TutorialGame::UpdateGame(float dt) {
 
 		}
 
-		Debug::UpdateRenderables(dt);
+		//Debug::UpdateRenderables(dt);
 
 		Debug::Print("Time left:" + std::to_string((int)(TIME_LIMIT-timer)), Vector2(5, 10));
 	}
