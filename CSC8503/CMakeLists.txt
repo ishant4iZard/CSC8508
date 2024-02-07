@@ -12,6 +12,7 @@ set(Header_Files
     "Projectile.h"
     "Hole.h"
     "BouncePad.h"
+    "GravityWell.h"
 )
 source_group("Header Files" FILES ${Header_Files})
 
@@ -25,6 +26,8 @@ set(Source_Files
     "Projectile.cpp"
     "Hole.cpp"
     "BouncePad.cpp"
+    "GravityWell.cpp"
+
 )
 
 if(USE_VULKAN)

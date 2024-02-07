@@ -9,6 +9,7 @@
 #include "Debug.h"
 #include "Window.h"
 #include <functional>
+#include <iostream>
 using namespace NCL;
 using namespace CSC8503;
 
@@ -289,7 +290,7 @@ void PhysicsSystem::ImpulseResolveCollision(GameObject& a, GameObject& b, Collis
 	float angularEffect = Vector3::Dot(inertiaA + inertiaB, p.normal);
 	float elasticityA = physA->GetElasticity();
 	float elasticityB = physB->GetElasticity();
-	float cRestitution = (elasticityA * elasticityB)/2; //0.66f; // disperse some kinectic energy
+	float cRestitution = (elasticityA + elasticityB)/2; 
 
 	float j = (-(1.0f + cRestitution) * impulseForce) /
 		(totalMass + angularEffect);

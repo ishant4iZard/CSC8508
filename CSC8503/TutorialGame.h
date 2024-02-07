@@ -23,6 +23,7 @@ namespace NCL {
 		class Goose;
 		class Voxels;
 		class BouncePad;
+		class GravityWell;
 
 		class TutorialGame		{
 		public:
@@ -31,6 +32,7 @@ namespace NCL {
 
 			virtual void UpdateGame(float dt);
 
+			GravityWell* gravitywell;
 
 
 		protected:
@@ -48,8 +50,10 @@ namespace NCL {
 			*/
 
 			GameObject* AddObbCubeToWorld(const Vector3& position, Vector3 dimensions, float inverseMass = 10.0f, float elasticity = 0.81f);
+			GameObject* AddAABBCubeToWorld(const Vector3& position, Vector3 dimensions, float inverseMass = 10.0f, float elasticity = 0.81f);
 
 			void InitHole();
+			void InitGravityWell();
 			void InitBouncePad();
 			void InitLevelWall();
 
@@ -96,6 +100,8 @@ namespace NCL {
 			level currentlevel;
 			int score = 0;
 			float v = 0, h = 0;
+
+
 #pragma region BouncePad
 			BouncePad* bouncePadList[5];
 #pragma endregion

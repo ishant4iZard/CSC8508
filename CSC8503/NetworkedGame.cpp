@@ -11,6 +11,7 @@
 #include "TextureLoader.h"
 #include "Projectile.h"
 #include "Hole.h"
+#include "GravityWell.h"
 
 #define COLLISION_MSG 30
 
@@ -118,13 +119,21 @@ void NetworkedGame::UpdateGame(float dt) {
 		}
 
 		// Server and Client Receive and process there packet
-		if (thisServer) { thisServer->UpdateServer(); }
-		if (thisClient) { thisClient->UpdateClient(); }
 		if (thisServer) { 
-			UpdatePlayerState(dt); 
+			thisServer->UpdateServer();
+			HandleInputAsServer();
+			UpdatePlayerState(dt);
 			UpdateProjectiles(dt);
+			gravitywell->PullProjectilesWithinField(ProjectileList);
+			physics->Update(dt);
 		}
-		if (thisServer) { physics->Update(dt); }
+		if (thisClient) { 
+			thisClient->UpdateClient(); 
+			HandleInputAsClient();
+		}
+		
+		
+
 	}
 	TutorialGame::UpdateGame(dt);
 }
@@ -179,9 +188,10 @@ void NetworkedGame::UpdateAsServer(float dt) {
 		Vector3 PointerPos;
 		findOSpointerWorldPosition(PointerPos);
 		LocalPlayer->SetPlayerYaw(PointerPos);
-		if (Window::GetMouse()->ButtonPressed(MouseButtons::Type::Left))
+		if (ServerFired)
 		{
 			LocalPlayer->isFire = !LocalPlayer->isFire;
+			ServerFired = false;
 		}
 	}
 	for (auto i : ControledPlayersList)
@@ -204,11 +214,24 @@ void NetworkedGame::UpdateAsClient(float dt) {
 	findOSpointerWorldPosition(PointerWorldPos);
 	newPacket.PointerPos = PointerWorldPos;
 	newPacket.lastID = GlobalStateID;
-	if (Window::GetMouse()->ButtonPressed(MouseButtons::Type::Left)) { newPacket.bIsFireBtnClicked = true; }
+	if (ClientFired) { newPacket.bIsFireBtnClicked = true; ClientFired = false; }
 
 	thisClient->SendPacket(newPacket);
 
 	CheckPlayerListAndSpawnPlayers();
+}
+
+void NCL::CSC8503::NetworkedGame::HandleInputAsServer()
+{
+	if (LocalPlayer)
+	{
+		if (Window::GetMouse()->ButtonPressed(MouseButtons::Type::Left)) { ServerFired = true; }
+	}
+}
+
+void NCL::CSC8503::NetworkedGame::HandleInputAsClient()
+{
+	if (Window::GetMouse()->ButtonPressed(MouseButtons::Type::Left)) { ClientFired = true; }
 }
 
 void NetworkedGame::BroadcastSnapshot(bool deltaFrame) {
@@ -418,6 +441,7 @@ void NetworkedGame::SpawnProjectile(NetworkPlayer* owner, Vector3 firePos, Vecto
 	networkObjects.insert(std::pair<int, NetworkObject*>(bulletID, newBullet->GetNetworkObject()));
 
 	newBullet->GetPhysicsObject()->SetElasticity(1.0f);
+	newBullet->GetPhysicsObject()->SetFriction(0.4f);
 
 	Vector3 force = fireDir * Projectile::FireForce;
 	//newBullet->GetPhysicsObject()->SetLinearVelocity(fireDir);

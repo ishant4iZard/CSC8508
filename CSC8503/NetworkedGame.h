@@ -47,6 +47,9 @@ namespace NCL {
 			void UpdateAsServer(float dt);
 			void UpdateAsClient(float dt);
 
+			void HandleInputAsServer();
+			void HandleInputAsClient();
+
 			void UpdatePlayerState(float dt);
 			void UpdateProjectiles(float dt);
 
@@ -84,6 +87,9 @@ namespace NCL {
 			std::vector<int> PlayersList;
 			std::vector<NetworkPlayer*> ControledPlayersList;
 			std::vector<Projectile*> ProjectileList;
+
+			bool ServerFired;
+			bool ClientFired;
 
 			NetworkPlayer* LocalPlayer;
 

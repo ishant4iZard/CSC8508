@@ -5,6 +5,7 @@
 #include "TextureLoader.h"
 #include "Hole.h"
 #include "BouncePad.h"
+#include "GravityWell.h"
 
 #include <Maths.h>
 #include <cstdlib> 
@@ -65,7 +66,7 @@ void TutorialGame::InitialiseAssets() {
 
 	InitCamera();
 	InitWorld();
-	InitHole();
+	
 }
 
 TutorialGame::~TutorialGame()	{
@@ -113,7 +114,6 @@ void TutorialGame::UpdateGame(float dt) {
 
 		if (timer > TIME_LIMIT) {
 			gameover = true;
-
 		}
 
 
@@ -147,6 +147,8 @@ void TutorialGame::InitWorld() {
 	InitBouncePad();
 	InitLevelWall();
 	InitPlaceholderAIs();
+	InitHole();
+	InitGravityWell();
 }
 
 /*
@@ -207,6 +209,26 @@ void TutorialGame::InitHole() {
 	world->AddGameObject(hole);
 }
 
+void NCL::CSC8503::TutorialGame::InitGravityWell()
+{
+	GravityWell* gravityWell = new GravityWell();
+
+	float radius = 1.5f;
+	Vector3 sphereSize = Vector3(radius, radius, radius);
+	SphereVolume* volume = new SphereVolume(radius);
+	gravityWell->SetBoundingVolume((CollisionVolume*)volume);
+	gravityWell->GetTransform().SetScale(sphereSize).SetPosition(Vector3(15, 3, 15));
+	gravityWell->SetRenderObject(new RenderObject(&gravityWell->GetTransform(), sphereMesh, basicTex, basicShader));
+	gravityWell->SetPhysicsObject(new PhysicsObject(&gravityWell->GetTransform(), gravityWell->GetBoundingVolume()));
+	gravityWell->GetPhysicsObject()->SetInverseMass(0);
+	gravityWell->GetPhysicsObject()->InitSphereInertia();
+
+	gravityWell->GetRenderObject()->SetColour(Vector4(0, 0.4, 0.4, 1));
+
+	gravitywell = gravityWell;
+	world->AddGameObject(gravityWell);
+}
+
 GameObject* TutorialGame::AddObbCubeToWorld(const Vector3& position, Vector3 dimensions, float inverseMass, float elasticity) {
 	GameObject* cube = new GameObject("cube");
 
@@ -228,6 +250,29 @@ GameObject* TutorialGame::AddObbCubeToWorld(const Vector3& position, Vector3 dim
 
 	return cube;
 }
+GameObject* TutorialGame::AddAABBCubeToWorld(const Vector3& position, Vector3 dimensions, float inverseMass, float elasticity) {
+	GameObject* cube = new GameObject("cube");
+
+	AABBVolume* volume = new AABBVolume(dimensions);
+	cube->SetBoundingVolume((CollisionVolume*)volume);
+
+	cube->GetTransform()
+		.SetPosition(position)
+		.SetScale(dimensions * 2);
+
+	cube->SetRenderObject(new RenderObject(&cube->GetTransform(), cubeMesh, basicTex, basicShader));
+	cube->SetPhysicsObject(new PhysicsObject(&cube->GetTransform(), cube->GetBoundingVolume()));
+
+	cube->GetPhysicsObject()->SetInverseMass(inverseMass);
+	cube->GetPhysicsObject()->InitCubeInertia();
+	cube->GetPhysicsObject()->SetElasticity(elasticity);
+
+	world->AddGameObject(cube);
+
+	return cube;
+}
+
+
 
 void TutorialGame::InitBouncePad()
 {
@@ -249,10 +294,10 @@ void TutorialGame::InitBouncePad()
 
 void TutorialGame::InitLevelWall()
 {
-	AddObbCubeToWorld(Vector3(96,0,0), Vector3(10, 20, 100), 0, 0.5f);
-	AddObbCubeToWorld(Vector3(-96, 0, 0), Vector3(10, 20, 100), 0, 0.5f);
-	AddObbCubeToWorld(Vector3(0,0, 96), Vector3(100, 20, 10), 0, 0.5f);
-	AddObbCubeToWorld(Vector3(0, 0, -96), Vector3(100, 20, 10), 0, 0.5f);
+	AddAABBCubeToWorld(Vector3(96,0,0), Vector3(10, 20, 100), 0, 0.5f);
+	AddAABBCubeToWorld(Vector3(-96, 0, 0), Vector3(10, 20, 100), 0, 0.5f);
+	AddAABBCubeToWorld(Vector3(0,0, 96), Vector3(100, 20, 10), 0, 0.5f);
+	AddAABBCubeToWorld(Vector3(0, 0, -96), Vector3(100, 20, 10), 0, 0.5f);
 }
 
 void TutorialGame::InitPlaceholderAIs() {
