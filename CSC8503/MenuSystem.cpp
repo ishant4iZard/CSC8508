@@ -134,7 +134,10 @@ void MultiplayerSearchMenu::DisplaySearchResult(NetSystem_Steam* Steam)
 	for (int i = 0; i < 4; ++i)
 	{
 		int CurrentDisplayLobbyIndex = CurrentSelectLobby + i;
-		Debug::Print(DisplayLobbyLine(Steam, CurrentDisplayLobbyIndex), Vector2(12, 42 + i * 7), Debug::YELLOW);
+		if (CurrentDisplayLobbyIndex < num)
+		{
+			Debug::Print(DisplayLobbyLine(Steam, CurrentDisplayLobbyIndex), Vector2(12, 42 + i * 7), Debug::YELLOW);
+		}
 	}
 }
 
