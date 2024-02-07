@@ -228,6 +228,28 @@ GameObject* TutorialGame::AddObbCubeToWorld(const Vector3& position, Vector3 dim
 	return cube;
 }
 
+//AiTreeObject* TutorialGame::AddAiToWorld(const Vector3& position, Vector3 dimensions, float inverseMass, float elasticity) {
+//	AiTreeObject* cube = new AiTreeObject("cube");
+//
+//	OBBVolume* volume = new OBBVolume(dimensions);
+//	cube->SetBoundingVolume((CollisionVolume*)volume);
+//
+//	cube->GetTransform()
+//		.SetPosition(position)
+//		.SetScale(dimensions * 2);
+//
+//	cube->SetRenderObject(new RenderObject(&cube->GetTransform(), cubeMesh, basicTex, basicShader));
+//	cube->SetPhysicsObject(new PhysicsObject(&cube->GetTransform(), cube->GetBoundingVolume()));
+//
+//	cube->GetPhysicsObject()->SetInverseMass(inverseMass);
+//	cube->GetPhysicsObject()->InitCubeInertia();
+//	cube->GetPhysicsObject()->SetElasticity(elasticity);
+//
+//	world->AddGameObject(cube);
+//
+//	return cube;
+//}
+
 void TutorialGame::InitBouncePad()
 {
 	for (size_t i = 0; i < 5; i++)

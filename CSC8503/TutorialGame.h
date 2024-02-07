@@ -7,7 +7,7 @@
 #endif
 #include "PhysicsSystem.h"
 
-#include "StateGameObject.h"
+#include "AiTreeObject.h"
 #include "BouncePad.h"
 
 enum class level {
@@ -56,7 +56,7 @@ namespace NCL {
 
 			GameObject* AddFloorToWorld(const Vector3& position, const Vector3& size = Vector3(128,2,128));
 
-
+			AiTreeObject* AddAiToWorld(const Vector3& position, Vector3 dimensions, float inverseMass, float elasticity);
 #ifdef USEVULKAN
 			GameTechVulkanRenderer*	renderer;
 #else
@@ -98,7 +98,7 @@ namespace NCL {
 #pragma region BouncePad
 			BouncePad* bouncePadList[5];
 #pragma endregion
-			const int TIME_LIMIT = 5;
+			const int TIME_LIMIT = 50;
 
 		};
 	}
