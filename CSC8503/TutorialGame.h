@@ -116,7 +116,7 @@ namespace NCL {
 			void InitPlaceholderAIs();
 #pragma endregion
 
-			const int TIME_LIMIT = 50;
+			const int TIME_LIMIT = 200;
 
 		};
 	}

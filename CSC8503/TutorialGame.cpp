@@ -121,9 +121,9 @@ void TutorialGame::UpdateGame(float dt) {
 
 	}
 	world->UpdateWorld(dt);
-	renderer->Update(dt);
 	renderer->Render();
-
+	renderer->Update(dt);
+	
 }
 
 void TutorialGame::InitCamera() {

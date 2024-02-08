@@ -467,13 +467,13 @@ void PhysicsSystem::IntegrateAccel(float dt) {
 		}
 		float inverseMass = object -> GetInverseMass();	
 		Vector3 linearVel = object -> GetLinearVelocity();
-		float friction = object->GetFriction();
+		float CoeefFriction = object->GetFriction();
 		Vector3 force = object -> GetForce();
 
 		Vector3 HorVelocity = Vector3(linearVel.x, 0, linearVel.z);
 
 		float NormalForce = (force.y + (9.8) / inverseMass);
-		float frictonForce = (NormalForce > 0) ? (NormalForce * friction) : 0;
+		float frictonForce = (NormalForce > 0) ? (NormalForce * CoeefFriction) : 0;
 
 		if (HorVelocity.Length()) {
 			force -= HorVelocity.Normalised() * frictonForce;
