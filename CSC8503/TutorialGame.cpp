@@ -301,6 +301,12 @@ void TutorialGame::InitLevelWall()
 }
 
 void TutorialGame::InitPlaceholderAIs() {
+	const static int NUMBER_OF_AIS = 5;
+	const static Vector3 AI_SCALE = Vector3(3, 3, 3);
+	const static int GAME_ARENA_LENGTH = 65;
+	const static int ENEMY_AI_WEIGHT = 0;
+	const static int ENEMY_AI_ELASTICITY = 0.1;
+
 	for (size_t i = 0; i < NUMBER_OF_AIS; i++)
 	{
 		Vector3 randomPosition = Vector3(
