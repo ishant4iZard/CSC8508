@@ -134,7 +134,7 @@ namespace NCL {
 					Debug::Print("Press Esc : Game Over", Vector2(5, 43), Debug::YELLOW);
 					if (StartAsServerDisplayTime > 0.0f)
 					{
-						Debug::Print("Server Existed! Start as Client please!", Vector2(15, 53), Debug::RED);
+						Debug::Print("[MainMenu::OnUpdate] Server Existed! Start as Client please!", Vector2(15, 53), Debug::RED);
 						StartAsServerDisplayTime -= dt;
 					}
 

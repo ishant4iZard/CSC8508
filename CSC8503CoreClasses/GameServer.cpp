@@ -34,7 +34,7 @@ bool GameServer::Initialise() {
 
 	if (!netHandle) {
 		std::cout << __FUNCTION__ <<
-			"failed to create network handle !" << std::endl;
+			" failed to create network handle !" << std::endl;
 		return false;
 	}
 	return true;
