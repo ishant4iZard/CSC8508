@@ -108,11 +108,6 @@ namespace NCL {
 
 #pragma region PlaceholderAI
 			std::vector<GameObject*> placeHolderAIs;
-			const int NUMBER_OF_AIS = 15;
-			const Vector3 AI_SCALE = Vector3(3, 3, 3);
-			const int GAME_ARENA_LENGTH = 65;
-			const int ENEMY_AI_WEIGHT = 0;
-			const int ENEMY_AI_ELASTICITY = 0.1;
 			void InitPlaceholderAIs();
 #pragma endregion
 

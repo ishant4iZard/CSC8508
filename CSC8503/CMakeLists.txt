@@ -13,6 +13,7 @@ set(Header_Files
     "Hole.h"
     "BouncePad.h"
     "GravityWell.h"
+    "UIBase.h"
 )
 source_group("Header Files" FILES ${Header_Files})
 
@@ -213,6 +214,8 @@ endif()
 include_directories("../OpenGLRendering/")
 include_directories("../NCLCoreClasses/")
 include_directories("../CSC8503CoreClasses/")
+include_directories("../CSC8503CoreClasses/")
+include_directories("../../Dependencies/imgui")
 
 target_link_libraries(${PROJECT_NAME} LINK_PUBLIC NCLCoreClasses)
 target_link_libraries(${PROJECT_NAME} LINK_PUBLIC CSC8503CoreClasses)
