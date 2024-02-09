@@ -14,6 +14,7 @@ set(Header_Files
     "BouncePad.h"
     "GravityWell.h"
     "UIBase.h"
+    "UIWindows.h"
 )
 source_group("Header Files" FILES ${Header_Files})
 
@@ -28,7 +29,7 @@ set(Source_Files
     "Hole.cpp"
     "BouncePad.cpp"
     "GravityWell.cpp"
-
+    "UIWindows.cpp"
 )
 
 if(USE_VULKAN)
@@ -43,9 +44,30 @@ endif()
 
 source_group("Source Files" FILES ${Source_Files})
 
+set(ImGUI_Files
+    "imconfig.h"
+    "imgui.h"
+    "imgui.cpp"
+    "imgui_demo.cpp"
+    "imgui_draw.cpp"
+    "imgui_impl_opengl3.cpp"
+    "imgui_impl_opengl3.h"
+    "imgui_impl_opengl3_loader.h"
+    "imgui_impl_win32.h"
+    "imgui_impl_win32.cpp"
+    "imgui_internal.h"
+    "imgui_tables.cpp"
+    "imgui_widgets.cpp"
+    "imstb_rectpack.h"
+    "imstb_textedit.h"
+    "imstb_truetype.h"
+)
+source_group("ImGUI_Files" FILES ${ImGUI_Files})
+
 set(ALL_FILES
     ${Header_Files}
     ${Source_Files}
+    ${ImGUI_Files}
 )
 
 if(USE_VULKAN)
@@ -53,6 +75,7 @@ if(USE_VULKAN)
         ${Header_Files}
         ${Source_Files}
         ${SHADER_FILES}
+        ${ImGUI_Files}
     )
 
 foreach (file ${SHADER_FILES})
@@ -215,7 +238,6 @@ include_directories("../OpenGLRendering/")
 include_directories("../NCLCoreClasses/")
 include_directories("../CSC8503CoreClasses/")
 include_directories("../CSC8503CoreClasses/")
-include_directories("../../Dependencies/imgui")
 
 target_link_libraries(${PROJECT_NAME} LINK_PUBLIC NCLCoreClasses)
 target_link_libraries(${PROJECT_NAME} LINK_PUBLIC CSC8503CoreClasses)

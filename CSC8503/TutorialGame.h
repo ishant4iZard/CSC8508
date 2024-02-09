@@ -11,6 +11,11 @@
 #include "BouncePad.h"
 #include <vector>
 
+#include "../CSC8503/UIBase.h"
+#ifdef  _WIN32
+#include "../CSC8503/UIWindows.h"
+#endif //  _WIN32
+
 enum class level {
 	level1 = 1,
 	level2 = 2,
@@ -113,6 +118,9 @@ namespace NCL {
 
 			const int TIME_LIMIT = 50;
 
+#pragma region UI
+			UIBase* ui;
+#pragma endregion
 		};
 	}
 }

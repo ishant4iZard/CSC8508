@@ -6,6 +6,11 @@
 
 #include "GameClient.h"
 
+#include "../CSC8503/UIBase.h"
+#ifdef  _WIN32
+#include "../CSC8503/UIWindows.h"
+#endif //  _WIN32
+
 namespace NCL {
 	namespace CSC8503 {
 		class GameServer;
@@ -103,6 +108,15 @@ namespace NCL {
 #pragma region Menu
 		class PlayerMenu : public PushdownState
 		{
+		public :
+			PlayerMenu() {
+#ifdef  _WIN32
+				ui = UIWindows::GetInstance();
+#endif //  _WIN32
+			}
+
+
+		protected :
 			PushdownResult OnUpdate(float dt, PushdownState** newState) override
 			{
 				if (game)
@@ -112,7 +126,8 @@ namespace NCL {
 					{
 						int ClientsConnectedNum = thisGame->GetConnectedClientsNum();
 						std::string num = std::to_string(ClientsConnectedNum);
-						Debug::Print("Connected Clients : " + num, Vector2(5, 3), Debug::YELLOW);
+						//Debug::Print("Connected Clients : " + num, Vector2(5, 3), Debug::YELLOW);
+						ui->DrawStringText("Connected Clients : " + num, Vector2(5, 3), UIBase::YELLOW);
 					}
 					if (thisGame->IsClient())
 					{
@@ -121,20 +136,36 @@ namespace NCL {
 				}
 				return PushdownResult::NoChange;
 			}
+#pragma region UI
+			UIBase* ui;
+#pragma endregion
 		};
 
 		class MainMenu : public PushdownState
 		{
+		public :
+			MainMenu() {
+#ifdef  _WIN32
+				ui = UIWindows::GetInstance();
+#endif //  _WIN32
+			}
+
+		protected :
 			PushdownResult OnUpdate(float dt, PushdownState** newState) override
 			{
 				if (game)
 				{
-					Debug::Print("Press 1 : Start As Server", Vector2(5, 23), Debug::YELLOW);
+					/*Debug::Print("Press 1 : Start As Server", Vector2(5, 23), Debug::YELLOW);
 					Debug::Print("Press 2 : Start As Client", Vector2(5, 33), Debug::YELLOW);
-					Debug::Print("Press Esc : Game Over", Vector2(5, 43), Debug::YELLOW);
+					Debug::Print("Press Esc : Game Over", Vector2(5, 43), Debug::YELLOW);*/
+					ui->DrawStringText("Press 1 : Start As Server", Vector2(5, 23), UIBase::YELLOW);
+					ui->DrawStringText("Press 2 : Start As Client", Vector2(5, 33), UIBase::YELLOW);
+					ui->DrawStringText("Press Esc : Game Over", Vector2(5, 43), UIBase::YELLOW);
+
 					if (StartAsServerDisplayTime > 0.0f)
 					{
-						Debug::Print("Server Existed! Start as Client please!", Vector2(15, 53), Debug::RED);
+						//Debug::Print("Server Existed! Start as Client please!", Vector2(15, 53), Debug::RED);
+						ui->DrawStringText("Server Existed! Start as Client please!", Vector2(15, 53), UIBase::RED);
 						StartAsServerDisplayTime -= dt;
 					}
 
@@ -144,10 +175,12 @@ namespace NCL {
 						switch (thisGame->GetClient()->GetClientState())
 						{
 						case EClientState::CLIENT_STATE_CONNECTING:
-							Debug::Print("Client Is Serching!....", Vector2(15, 53), Debug::RED);
+							//Debug::Print("Client Is Serching!....", Vector2(15, 53), Debug::RED);
+							ui->DrawStringText("Client Is Searching!....", Vector2(15, 53), UIBase::RED);
 							break;
 						case EClientState::CLIENT_STATE_DISCONNECTED:
-							Debug::Print("Failed to connect server, please Press 1!", Vector2(10, 53), Debug::RED);
+							//Debug::Print("Failed to connect server, please Press 1!", Vector2(10, 53), Debug::RED);
+							ui->DrawStringText("Failed to connect server, please Press 1!", Vector2(10, 53), UIBase::RED);
 							break;
 						case EClientState::CLIENT_STATE_CONNECTED:
 							*newState = new PlayerMenu();
@@ -182,6 +215,9 @@ namespace NCL {
 
 		protected:
 			float StartAsServerDisplayTime = 0.0f;
+#pragma region UI
+			UIBase* ui;
+#pragma endregion
 		};
 #pragma endregion
 

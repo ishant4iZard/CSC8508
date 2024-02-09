@@ -6,6 +6,11 @@
 
 #include "GameWorld.h"
 
+#include "../CSC8503/UIBase.h"
+#ifdef  _WIN32
+#include "../CSC8503/UIWindows.h"
+#endif //  _WIN32
+
 namespace NCL {
 	class Maths::Vector3;
 	class Maths::Vector4;
@@ -75,6 +80,9 @@ namespace NCL {
 			GLuint textColourVBO;
 			GLuint textTexVBO;
 			size_t textCount;
+#pragma region UI
+			UIBase* ui;
+#pragma endregion
 		};
 	}
 }

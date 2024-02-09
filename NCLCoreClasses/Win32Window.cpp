@@ -9,7 +9,11 @@ using namespace Win32Code;
 
 #define WINDOWCLASS "WindowClass"
 
+HWND Win32Code::Win32Window::windowHandle = nullptr;
+
 Win32Window::Win32Window(const std::string& title, int sizeX, int sizeY, bool fullScreen, int offsetX, int offsetY)	{
+	if (windowHandle) return;
+
 	forceQuit		= false;
 	init			= false;
 	mouseLeftWindow	= false;
