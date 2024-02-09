@@ -366,7 +366,7 @@ void PhysicsSystem::createStaticTree() {
 
 void PhysicsSystem::BroadPhase() {
 	broadphaseCollisions.clear();
-	QuadTree <GameObject*> tree(Vector2(512,512), 10, 7);
+	QuadTree <GameObject*> tree(Vector2(128,128), 7, 4);
 	
 	//tree = staticTree;
 
@@ -375,12 +375,14 @@ void PhysicsSystem::BroadPhase() {
 	gameWorld.GetObjectIterators(first, last);
 	for (auto i = first; i != last; ++i) {
 		//if (!(*i)->GetBoundingVolume()->isKinematic) {
+		if ((*i)->IsActive()) {
 			Vector3 halfSizes;
 			if (!(*i)->GetBroadphaseAABB(halfSizes)) {
 				continue;
 			}
 			Vector3 pos = (*i)->GetTransform().GetPosition();
 			tree.Insert(*i, pos, halfSizes);
+		}
 		//}
 		/*else
 		{

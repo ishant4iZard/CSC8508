@@ -439,7 +439,8 @@ void NetworkedGame::SpawnProjectile(NetworkPlayer* owner, Vector3 firePos, Vecto
 	networkObjects.insert(std::pair<int, NetworkObject*>(bulletID, newBullet->GetNetworkObject()));
 
 	newBullet->GetPhysicsObject()->SetElasticity(1.0f);
-	newBullet->GetPhysicsObject()->SetFriction(0.4f);
+	newBullet->GetPhysicsObject()->SetFriction(1.0f);
+	newBullet->GetPhysicsObject()->SetFriction(1.0f);
 
 	Vector3 force = fireDir * Projectile::FireForce;
 	//newBullet->GetPhysicsObject()->SetLinearVelocity(fireDir);

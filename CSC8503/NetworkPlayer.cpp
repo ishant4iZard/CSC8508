@@ -150,7 +150,7 @@ void NetworkPlayer::Fire()
 	numProjectilesAccumulated--;
 
 	Vector3 fireDir = GetPlayerForwardVector();
-	Vector3 firePos = transform.GetPosition() + fireDir * 10;
+	Vector3 firePos = transform.GetPosition() + fireDir * 3;
 	game->SpawnProjectile(this, firePos, fireDir);
 	//std::cout << "player " << playerNum << " fired!" << std::endl;
 }

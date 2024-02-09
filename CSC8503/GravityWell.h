@@ -22,6 +22,7 @@ namespace NCL {
 
 
 			void PullProjectilesWithinField(std::vector<Projectile*> projectileList);
+			void OnCollisionBegin(GameObject* otherObject) override;
 
 		protected:
 

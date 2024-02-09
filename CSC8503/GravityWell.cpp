@@ -3,6 +3,10 @@
 #include "GameObject.h"
 #include "Vector3.h"
 #include "PhysicsObject.h"
+#include "Projectile.h"
+#include "NetworkedGame.h"
+#include "NetworkObject.h"
+#include "GameServer.h"
 #include <iostream>
 
 using namespace NCL;
@@ -11,7 +15,7 @@ using namespace CSC8503;
 GravityWell::GravityWell()
 {
 	GravityRange = 10.0f;
-	GravityForce = 1000.0f;        
+	GravityForce = 10000.0f;        
 }
 
 bool GravityWell::IsWithinRange(Projectile* projectile)	
@@ -44,4 +48,18 @@ void GravityWell::AddGravityForce(Projectile* projectile)
 
 	projectile->GetPhysicsObject()->AddForce(-dir * GravityForce);
 
+}
+
+void GravityWell::OnCollisionBegin(GameObject* otherObject) {
+	if (otherObject->gettag() == "Projectile") {
+		Projectile* Bullet = dynamic_cast<Projectile*>(otherObject);
+		//Bullet->GetOwner()->AddScore(1);
+		Bullet->deactivate();
+		DeactivateProjectilePacket newPacket;
+		newPacket.NetObjectID = Bullet->GetNetworkObject()->GetNetworkID();
+		if (Bullet->GetGame()->GetServer())
+		{
+			Bullet->GetGame()->GetServer()->SendGlobalPacket(newPacket);
+		}
+	}
 }
