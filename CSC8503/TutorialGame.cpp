@@ -10,10 +10,12 @@
 #include <Maths.h>
 #include <cstdlib> 
 
+#include <fstream>
+#include <sstream>
+
+
 using namespace NCL;
 using namespace CSC8503;
-
-
 
 TutorialGame::TutorialGame() : controller(*Window::GetWindow()->GetKeyboard(), *Window::GetWindow()->GetMouse()) {
 	world		= new GameWorld();
@@ -26,6 +28,10 @@ TutorialGame::TutorialGame() : controller(*Window::GetWindow()->GetKeyboard(), *
 #endif
 
 	physics		= new PhysicsSystem(*world);
+
+#ifdef _WIN32
+	levelFileLoader = new WindowsLevelLoader();
+#endif // _WIN32
 
 	useGravity		= true;
 
@@ -40,7 +46,6 @@ TutorialGame::TutorialGame() : controller(*Window::GetWindow()->GetKeyboard(), *
 	currentlevel = level::level1;
 
 	gameover = false;
-
 	InitialiseAssets();
 }
 
@@ -82,6 +87,8 @@ TutorialGame::~TutorialGame()	{
 	delete physics;
 	delete renderer;
 	delete world;
+
+	delete levelFileLoader;
 }
 
 void TutorialGame::UpdateGame(float dt) {
@@ -143,13 +150,7 @@ void TutorialGame::InitWorld() {
 	physics->SetBroadphase(true);
 	timer = 0;
 
-	InitDefaultFloor();
-	InitBouncePad();
-	InitLevelWall();
-	InitPlaceholderAIs();
-	InitHole();
-	InitGravityWell();
-
+	SpawnDataDrivenLevel(GameLevelNumber::LEVEL_1);
 	physics->createStaticTree();
 }
 
@@ -180,6 +181,99 @@ GameObject* TutorialGame::AddFloorToWorld(const Vector3& position, const Vector3
 	return floor;
 }
 
+
+void TutorialGame::SpawnDataDrivenLevel(GameLevelNumber inGameLevelNumber)
+{
+	std::ifstream input{ levelFileLoader->GetLevelFilePath(inGameLevelNumber)};
+
+	if (!input.is_open()) {
+		std::cerr <<"[TutorialGame::SpawnDataDrivenLevel] Couldn't read file: " << levelFileLoader->GetLevelFilePath(inGameLevelNumber) << "\n";
+		return;
+	}
+
+	float tempLevelNodeData[10];
+	int tempIndex = 0;
+	for (std::string line; std::getline(input, line);) 
+	{
+		tempIndex = 0;
+		std::istringstream ss(std::move(line));
+		for (std::string value; std::getline(ss, value, ',');) 
+		{
+			tempLevelNodeData[tempIndex++] = std::stof(value);
+		}
+
+		Vector3 tempPosition = Vector3(tempLevelNodeData[1], tempLevelNodeData[2], tempLevelNodeData[3]);
+		Vector3 tempRotation = Vector3(tempLevelNodeData[4], tempLevelNodeData[5], tempLevelNodeData[6]);
+		Vector3 tempScale = Vector3(tempLevelNodeData[7], tempLevelNodeData[8], tempLevelNodeData[9]) / 2.0f;
+		
+		(this->*levelObjectSpawnFunctionList[(int)tempLevelNodeData[0]])(tempPosition, tempRotation, tempScale);
+	}
+}
+
+void NCL::CSC8503::TutorialGame::SpawnWall(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale)
+{
+	GameObject* tempWall = AddAABBCubeToWorld(
+		inPosition,
+		inScale,
+		0, 0.5f);
+	tempWall->GetTransform().SetOrientation(Quaternion::EulerAnglesToQuaternion(inRotation.x, inRotation.y, inRotation.z));
+}
+
+void NCL::CSC8503::TutorialGame::SpawnFloor(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale)
+{
+	AddFloorToWorld(
+		inPosition,
+		inScale);
+}
+
+void NCL::CSC8503::TutorialGame::SpawnBouncingPad(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale)
+{
+	BouncePad* tempBouncePad = new BouncePad(cubeMesh, basicTex, basicShader);
+	tempBouncePad->GetRenderObject()->SetColour(Debug::CYAN);
+	world->AddGameObject(tempBouncePad);
+
+	tempBouncePad->GetTransform().SetPosition(inPosition);
+}
+
+void NCL::CSC8503::TutorialGame::SpawnTarget(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale)
+{
+	Hole* hole = new Hole();
+
+	float radius = 1.5f;
+	Vector3 sphereSize = Vector3(radius, radius, radius);
+	SphereVolume* volume = new SphereVolume(radius);
+	hole->SetBoundingVolume((CollisionVolume*)volume);
+	hole->GetTransform().SetScale(sphereSize).SetPosition(inPosition);
+	hole->SetRenderObject(new RenderObject(&hole->GetTransform(), sphereMesh, basicTex, basicShader));
+	hole->SetPhysicsObject(new PhysicsObject(&hole->GetTransform(), hole->GetBoundingVolume()));
+	hole->GetPhysicsObject()->SetInverseMass(0);
+	hole->GetPhysicsObject()->InitSphereInertia();
+
+	hole->GetRenderObject()->SetColour(Vector4(0, 0, 0, 1));
+
+	world->AddGameObject(hole);
+}
+
+void NCL::CSC8503::TutorialGame::SpawnBlackHole(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale)
+{
+	//GravityWell
+	GravityWell* gravityWell = new GravityWell();
+
+	float radius = 1.5f;
+	Vector3 sphereSize = Vector3(radius, radius, radius);
+	SphereVolume* volume = new SphereVolume(radius);
+	gravityWell->SetBoundingVolume((CollisionVolume*)volume);
+	gravityWell->GetTransform().SetScale(sphereSize).SetPosition(inPosition);
+	gravityWell->SetRenderObject(new RenderObject(&gravityWell->GetTransform(), sphereMesh, basicTex, basicShader));
+	gravityWell->SetPhysicsObject(new PhysicsObject(&gravityWell->GetTransform(), gravityWell->GetBoundingVolume()));
+	gravityWell->GetPhysicsObject()->SetInverseMass(0);
+	gravityWell->GetPhysicsObject()->InitSphereInertia();
+
+	gravityWell->GetRenderObject()->SetColour(Vector4(0, 0.4, 0.4, 1));
+
+	gravitywell = gravityWell;
+	world->AddGameObject(gravityWell);
+}
 /*
 
 Builds a game object that uses a sphere mesh for its graphics, and a bounding sphere for its

@@ -14,6 +14,10 @@ set(Header_Files
     "BouncePad.h"
     "GravityWell.h"
     "UIBase.h"
+    "LevelFileLoaderBase.h"
+    "WindowsLevelLoader.h"
+    "LevelEnum.h"
+    "LevelObjectEnum.h"
 )
 source_group("Header Files" FILES ${Header_Files})
 
@@ -28,7 +32,7 @@ set(Source_Files
     "Hole.cpp"
     "BouncePad.cpp"
     "GravityWell.cpp"
-
+    "WindowsLevelLoader.cpp"
 )
 
 if(USE_VULKAN)

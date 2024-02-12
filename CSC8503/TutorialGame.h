@@ -10,6 +10,12 @@
 #include "StateGameObject.h"
 #include "BouncePad.h"
 #include <vector>
+#include "LevelEnum.h"
+#include "LevelObjectEnum.h"
+
+#ifdef _WIN32
+#include "WindowsLevelLoader.h"
+#endif // _WIN32
 
 enum class level {
 	level1 = 1,
@@ -58,8 +64,15 @@ namespace NCL {
 			void InitLevelWall();
 
 			void InitDefaultFloor();
-
 			GameObject* AddFloorToWorld(const Vector3& position, const Vector3& size = Vector3(128,2,128));
+
+			void SpawnDataDrivenLevel(GameLevelNumber inGameLevelNumber);
+
+			void SpawnWall(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale);
+			void SpawnFloor(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale);
+			void SpawnBouncingPad(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale);
+			void SpawnTarget(const Vector3 & inPosition, const Vector3 & inRotation, const Vector3 & inScale);
+			void SpawnBlackHole(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale);
 
 
 #ifdef USEVULKAN
@@ -111,8 +124,17 @@ namespace NCL {
 			void InitPlaceholderAIs();
 #pragma endregion
 
+#ifdef _WIN32
+			WindowsLevelLoader* levelFileLoader;
+#endif // _WIN32
+
+
 			const int TIME_LIMIT = 200;
 
+#pragma region Function Pointers
+			typedef void (TutorialGame::*dataSpawnFunction) (const Vector3&, const Vector3&, const Vector3&);
+			dataSpawnFunction levelObjectSpawnFunctionList[static_cast<int>(LevelObjectEnum::MAX_OBJECT_TYPE)] = { &TutorialGame::SpawnWall , &TutorialGame::SpawnFloor , &TutorialGame::SpawnBouncingPad, &TutorialGame::SpawnTarget , &TutorialGame::SpawnBlackHole };
+#pragma endregion
 		};
 	}
 }
