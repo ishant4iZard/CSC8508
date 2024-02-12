@@ -68,20 +68,21 @@ void UIWindows::DrawStringText(
     uiElements.push_back(newElement);
 }
 
-bool UIWindows::DrawButton(
+void UIWindows::DrawButton(
     std::string text,
     NCL::Maths::Vector2 position,
-    NCL::Maths::Vector4 color
+    std::function<void(void)> callback,
+    NCL::Maths::Vector4 color,
+    NCL::KeyCodes::Type keyCode
 ) {
     UIElementProps* newElement = new UIElementProps();
     newElement->elementType = Button;
     newElement->text = text;
     newElement->color = color;
+    newElement->callback = callback;
     newElement->position = position;
 
     uiElements.push_back(newElement);
-
-    return false;
 }
 
 void UIWindows::RenderUI() {
@@ -90,6 +91,7 @@ void UIWindows::RenderUI() {
     ImGui::NewFrame();
     ImGui::PushFont(font);
 
+    // Next window to be created will cover the entire screen
     NCL::Maths::Vector2i windowSize = NCL::Window::GetWindow()->GetScreenSize();
     int w = windowSize.x;
     int h = windowSize.y;
@@ -98,11 +100,8 @@ void UIWindows::RenderUI() {
     ImGui::SetNextWindowSize(size);
     
     ImGui::Begin("Background", NULL,
-        ImGuiWindowFlags_NoMove |
         ImGuiWindowFlags_NoTitleBar |
-        ImGuiWindowFlags_NoBringToFrontOnFocus |
-        ImGuiWindowFlags_NoCollapse |
-        ImGuiWindowFlags_NoScrollbar |
+        ImGuiWindowFlags_NoMove |
         ImGuiWindowFlags_NoBackground |
         ImGuiWindowFlags_NoResize
     );
@@ -110,14 +109,18 @@ void UIWindows::RenderUI() {
     for (auto uiElement : uiElements) {
         switch (uiElement->elementType) {
         case Button :
-            ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 15.0f);
+            ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(uiElement->color.x, uiElement->color.y, uiElement->color.z, 255));
+            ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 10.0f);
             ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1.0f);
             ImGui::SetCursorScreenPos(ImVec2(uiElement->position.x, uiElement->position.y));
             if (ImGui::Button(uiElement->text.c_str(), ImVec2(360, 50))) {
                 // DO STUFF
+                if (uiElement->callback != nullptr)
+                    uiElement->callback();
             }
             ImGui::PopStyleVar();
             ImGui::PopStyleVar();
+            ImGui::PopStyleColor();
             break;
         case Text:
             ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(uiElement->color.x, uiElement->color.y, uiElement->color.z, 255));
@@ -131,6 +134,8 @@ void UIWindows::RenderUI() {
     }
 
     ImGui::End();
+    
+    //ImGui::ShowDemoWindow(); // Only for testing
 
     ImGui::PopFont();
     ImGui::Render();

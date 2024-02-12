@@ -86,8 +86,6 @@ TutorialGame::~TutorialGame()	{
 	delete physics;
 	delete renderer;
 	delete world;
-
-	delete ui;
 }
 
 void TutorialGame::UpdateGame(float dt) {

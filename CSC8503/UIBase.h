@@ -1,6 +1,8 @@
 #pragma once
 #include "Vector4.h"
 #include "Vector2.h"
+#include "Keyboard.h"
+#include <functional>
 
 enum ElementTypes {
 	Button,
@@ -11,7 +13,9 @@ struct UIElementProps {
 	ElementTypes elementType;
 	std::string text;
 	NCL::Maths::Vector2 position;
+	std::function<void(void)> callback; // Only for buttons
 	NCL::Maths::Vector4 color;
+	NCL::KeyCodes::Type keyCode; // Only for buttons
 };
 
 class UIBase {
@@ -20,12 +24,14 @@ public:
 	virtual void DrawStringText(
 		std::string text,
 		NCL::Maths::Vector2 position,
-		NCL::Maths::Vector4 color = YELLOW
+		NCL::Maths::Vector4 color = WHITE
 	) = 0;
-	virtual bool DrawButton(
+	virtual void DrawButton(
 		std::string text, 
 		NCL::Maths::Vector2 position,
-		NCL::Maths::Vector4 color = YELLOW
+		std::function<void(void)> callback,
+		NCL::Maths::Vector4 color = WHITE,
+		NCL::KeyCodes::Type keyCode = NCL::KeyCodes::RETURN
 	) = 0;
 	virtual void RenderUI() = 0;
 

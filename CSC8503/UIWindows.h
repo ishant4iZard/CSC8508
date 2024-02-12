@@ -17,13 +17,15 @@ public :
 	void DrawStringText(
 		std::string text,
 		NCL::Maths::Vector2 position,
-		NCL::Maths::Vector4 color = UIBase::YELLOW
+		NCL::Maths::Vector4 color = UIBase::WHITE
 	)  override;
 	void RenderUI()  override;
-	bool DrawButton(
+	void DrawButton(
 		std::string text,
 		NCL::Maths::Vector2 position,
-		NCL::Maths::Vector4 color = UIBase::YELLOW
+		std::function<void(void)> callback,
+		NCL::Maths::Vector4 color = UIBase::WHITE,
+		NCL::KeyCodes::Type keyCode = NCL::KeyCodes::RETURN // Keycode is NOT required for buttons created with imgui
 	) override;
 
 protected :

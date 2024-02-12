@@ -208,6 +208,18 @@ namespace NCL {
 
 						}
 					}
+
+					// Testing
+					ui->DrawButton(
+						"Start As Server",
+						Vector2(40, 10),
+						[]() {});
+
+					ui->DrawButton(
+						"Start As Client",
+						Vector2(40, 80),
+						[]() {});
+					
 				}
 
 				return PushdownResult::NoChange;
