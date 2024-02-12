@@ -4,7 +4,6 @@
 #include "CollisionDetection.h"
 #include "Camera.h"
 
-
 using namespace NCL;
 using namespace NCL::CSC8503;
 

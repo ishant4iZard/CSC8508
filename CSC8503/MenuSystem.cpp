@@ -27,6 +27,11 @@ void MenuSystem::Update(float dt)
 	MenuMachine->Update(dt);
 }
 
+void MenuSystem::SetLocalIPv4Address(const std::string& IP)
+{
+	steam->SetLocalIPv4Address(IP);
+}
+
 /** Main Menu Update */
 PushdownState::PushdownResult MainMenu::OnUpdate(float dt, PushdownState** newState)
 {
@@ -65,19 +70,52 @@ PushdownState::PushdownResult MultiPlayerLobby::OnUpdate(float dt, PushdownState
 	if (game && steam)
 	{
 		NetSystem_Steam* Steam = (NetSystem_Steam*)steam;
+		NetworkedGame* Game = (NetworkedGame*)game;
 
 		Debug::Print("Your Name: " + Steam->GetCurrentUserName(), Vector2(5, 13), Debug::YELLOW);
 		Debug::Print("===============================================", Vector2(5, 30), Debug::YELLOW);
 		Debug::Print("===============================================", Vector2(5, 65), Debug::YELLOW);
+		Debug::Print("Press S: Start Game", Vector2(5, 75), Debug::YELLOW);
 
 		switch (Steam->GetUserCurrentState())
 		{
 		case NetSystem_Steam::EUserState::ELobbyHolder:
 			Debug::Print("You are the holder!", Vector2(5, 23), Debug::YELLOW);
+			if (Window::GetKeyboard()->KeyPressed(KeyCodes::S))
+			{
+				Game->StartAsServer();
+				*newState = new PlayingHUD();
+				return PushdownResult::Push;
+			}
+			break;
+		case NetSystem_Steam::EUserState::ELobbyJoiner:
+			Debug::Print("You are the joiner!", Vector2(5, 23), Debug::YELLOW);
+			if (Window::GetKeyboard()->KeyPressed(KeyCodes::S))
+			{
+				//Game->StartAsClient(GetIPnumByIndex(0), GetIPnumByIndex(1), GetIPnumByIndex(2), GetIPnumByIndex(3));
+				*newState = new PlayingHUD();
+				return PushdownResult::Push;
+			}
+			break;
+		}
+	}
+	return PushdownResult::NoChange;
+}
+
+char MultiPlayerLobby::GetIPnumByIndex(int index)
+{
+	NetSystem_Steam* Steam = (NetSystem_Steam*)steam;
+	string IP = Steam->GetLobbyHolderIPv4Address();
+	int PointAccml = 0;
+	for (auto i : IP)
+	{
+		if (PointAccml == index)
+		{
+
 		}
 
 	}
-	return PushdownResult::NoChange;
+	return 1;
 }
 
 /** Multiplayer Search Menu Update */
@@ -88,9 +126,10 @@ PushdownState::PushdownResult MultiplayerSearchMenu::OnUpdate(float dt, Pushdown
 		NetSystem_Steam* Steam = (NetSystem_Steam*)steam;
 
 		Debug::Print("Your Name: " + Steam->GetCurrentUserName(), Vector2(5, 13), Debug::YELLOW);
-		Debug::Print("lobbies list", Vector2(38, 30), Debug::YELLOW);
+		Debug::Print("Lobbies list", Vector2(38, 30), Debug::YELLOW);
 		Debug::Print("===============================================", Vector2(5, 35), Debug::YELLOW);
 		Debug::Print("===============================================", Vector2(5, 70), Debug::YELLOW);
+		Debug::Print("Press S: Join the selected lobby", Vector2(5, 70), Debug::YELLOW);
 		
 		switch (Steam->GetUserCurrentState())
 		{
@@ -147,4 +186,10 @@ string MultiplayerSearchMenu::DisplayLobbyLine(NetSystem_Steam* Steam, int Index
 	Message += "       ";
 	Message += Steam->GetLobbyOwnerNameByLobbyID(Steam->GetLobbyIDByIndex(Index));
 	return Message;
+}
+
+/** PlaingHUD update */
+PushdownState::PushdownResult PlayingHUD::OnUpdate(float dt, PushdownState** newState)
+{
+	return PushdownResult::NoChange;
 }

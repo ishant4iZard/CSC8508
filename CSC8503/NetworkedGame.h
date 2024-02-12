@@ -92,7 +92,8 @@ namespace NCL {
 			inline bool IsServer() { return thisServer != nullptr ? true : false; }
 			inline bool IsClient() { return thisClient != nullptr ? true : false; }
 			inline GameServer* GetServer() const { return thisServer; }
-			inline GameClient* GetClient() const { return thisClient; }
+			inline GameClient* GetClient() const { return thisClient; } 
+			inline MenuSystem* GetMenuSystem() const { return Menu; }
 		};
 
 //#pragma region Menu

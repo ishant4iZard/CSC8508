@@ -15,6 +15,8 @@ namespace NCL {
 
 			void Update(float dt);
 
+			void SetLocalIPv4Address(const std::string& IP);
+
 		protected:
 
 
@@ -40,6 +42,9 @@ namespace NCL {
 		{
 		public:
 			PushdownResult OnUpdate(float dt, PushdownState** newState) override;
+
+		protected:
+			char GetIPnumByIndex(int index);
 		};
 
 		class MainMenu : public PushdownState
@@ -48,6 +53,12 @@ namespace NCL {
 			PushdownResult OnUpdate(float dt, PushdownState** newState) override;
 		protected:
 
+		};
+
+		class PlayingHUD : public PushdownState
+		{
+		public:
+			PushdownResult OnUpdate(float dt, PushdownState** newState) override;
 		};
 	}
 }

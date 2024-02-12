@@ -16,12 +16,14 @@ namespace NCL {
 			enum ELobbyDataType {
 				EGameName = 0,
 				EOwnerName,
+				ELocalIPv4Address,
 				ETypeMax
 			};
 
 			vector<string> LobbyDataKey = {
 				"GameName",
-				"OwnerName"
+				"OwnerName",
+				"LocalIPv4Address"
 			};
 
 			enum EUserState {
@@ -63,9 +65,14 @@ namespace NCL {
 			inline EUserState GetUserCurrentState() const { return CurrentUserState; }
 			inline string GetCurrentUserName() const { return CurrentUserName; }
 			inline int32 GetNumOfLobbyMatchList() const { return numLobbyMatchList; }
+			inline string GetLobbyHolderIPv4Address() const { return LobbyHolderIPv4Address; }
+
+			void SetLocalIPv4Address(const string& IPAddress) { LocalIPv4Address = IPAddress; }
 
 		protected:
 			string GameName = "ProjetT";
+			string LocalIPv4Address;
+			string LobbyHolderIPv4Address;
 
 		private:
 			CCallResult<NetSystem_Steam, LobbyCreated_t> m_LobbyCreateCallResult;

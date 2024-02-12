@@ -55,6 +55,10 @@ void NetSystem_Steam::On_LobbyCreated(LobbyCreated_t* pResult, bool bIOFailure)
 	{
 		std::cout << "Set Owner Name Success!\n";
 	}
+	if (SetLobbyData(ELobbyDataType::ELocalIPv4Address, LocalIPv4Address))
+	{
+		std::cout << "Set Loacl IPv4 Address Success!\n";
+	}
 	std::cout << "Lobby Owner: " << OwnerName << std::endl;
 }
 
@@ -109,6 +113,8 @@ void NetSystem_Steam::On_LobbyJoined(LobbyEnter_t* pResult, bool bIOFailure)
 {
 	CurrentUserState = NetSystem_Steam::ELobbyJoiner;
 	std::cout << "Join lobby of : " << SteamFriends()->GetFriendPersonaName(SteamMatchmaking()->GetLobbyOwner(pResult->m_ulSteamIDLobby)) << std::endl;
+	LobbyHolderIPv4Address = SteamMatchmaking()->GetLobbyData(steamIDLobby, LobbyDataKey[ELobbyDataType::ELocalIPv4Address].c_str());
+	std::cout << "OnwerIPAddress: " << LobbyHolderIPv4Address << std::endl;
 }
 
 void NetSystem_Steam::On_LobbyChatUpdate(LobbyChatUpdate_t* pCallback)

@@ -61,6 +61,9 @@ namespace NCL {
 		static const GameTimer&	 GetTimer() { return timer; }
 
 		static Window*	const GetWindow() { return window; }
+
+		void GetLocalIPV4Address(std::string& IPAddress);
+
 	protected:
 		Window();
 		virtual ~Window();

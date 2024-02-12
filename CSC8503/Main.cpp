@@ -3,6 +3,7 @@
 #include "Debug.h"
 
 #include "NetworkedGame.h"
+#include "MenuSystem.h"
 
 using namespace NCL;
 using namespace CSC8503;
@@ -34,6 +35,11 @@ int main() {
 	w->LockMouseToWindow(false);
 
 	NetworkedGame* g = new NetworkedGame();
+
+	std::string IPAdd;
+	w->GetLocalIPV4Address(IPAdd);
+	g->GetMenuSystem()->SetLocalIPv4Address(IPAdd);
+
 	w->GetTimer().GetTimeDeltaSeconds(); //Clear the timer so we don't get a larget first dt!
 	while (w->UpdateWindow() && !Window::GetKeyboard()->KeyDown(KeyCodes::ESCAPE)) {
 		float dt = w->GetTimer().GetTimeDeltaSeconds();
