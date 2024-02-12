@@ -50,9 +50,12 @@ void NetSystem_Steam::On_LobbyCreated(LobbyCreated_t* pResult, bool bIOFailure)
 	{
 		std::cout << "Set Game Name Success!\n";
 	}
-	CSteamID ownerID = SteamMatchmaking()->GetLobbyOwner(steamIDLobby);
-	string ownerName = SteamFriends()->GetFriendPersonaName(ownerID);
-	std::cout << "Lobby Owner: " << ownerName << std::endl;
+	string OwnerName = SteamFriends()->GetPersonaName();
+	if (SetLobbyData(ELobbyDataType::EOwnerName, OwnerName.c_str()))
+	{
+		std::cout << "Set Owner Name Success!\n";
+	}
+	std::cout << "Lobby Owner: " << OwnerName << std::endl;
 }
 
 void NetSystem_Steam::SearchLobbies()
@@ -122,9 +125,10 @@ bool NetSystem_Steam::SetLobbyData(ELobbyDataType type, string Value)
 
 string NetSystem_Steam::GetLobbyOwnerNameByLobbyID(CSteamID LobbyID) const
 {
-	return string(SteamFriends()->GetFriendPersonaName(SteamMatchmaking()->GetLobbyOwner(LobbyID)));
+	return string(SteamMatchmaking()->GetLobbyData(LobbyID, LobbyDataKey[ELobbyDataType::EOwnerName].c_str()));
 }
 
 void NetSystem_Steam::On_LobbyDataUpdate(LobbyDataUpdate_t* pCallback)
 {
+	
 }

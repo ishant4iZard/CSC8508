@@ -15,11 +15,13 @@ namespace NCL {
 		public:
 			enum ELobbyDataType {
 				EGameName = 0,
+				EOwnerName,
 				ETypeMax
 			};
 
 			vector<string> LobbyDataKey = {
-				"GameName"
+				"GameName",
+				"OwnerName"
 			};
 
 			enum EUserState {
