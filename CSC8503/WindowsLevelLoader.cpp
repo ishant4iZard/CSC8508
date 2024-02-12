@@ -1,5 +1,6 @@
 #include "WindowsLevelLoader.h"
 #include <filesystem>
+#include <Assets.h>
 namespace fs = std::filesystem;
 
 WindowsLevelLoader::WindowsLevelLoader()
@@ -9,7 +10,7 @@ WindowsLevelLoader::WindowsLevelLoader()
 
 void WindowsLevelLoader::LoadLevelFiles()
 {
-    std::string directoryPath = "D:\\C\\Test\\CSC8508\\CSC8503\\LevelData\\";
+    std::string directoryPath = NCL::Assets::ASSETROOT +  "LevelData/";
 
     try {
         int tempFileNum = 0;
