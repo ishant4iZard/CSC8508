@@ -144,7 +144,7 @@ void MultiplayerSearchMenu::DisplaySearchResult(NetSystem_Steam* Steam)
 string MultiplayerSearchMenu::DisplayLobbyLine(NetSystem_Steam* Steam, int Index)
 {
 	string Message = std::to_string(Index);
-	Message += "     ";
+	Message += "       ";
 	Message += Steam->GetLobbyOwnerNameByLobbyID(Steam->GetLobbyIDByIndex(Index));
 	return Message;
 }
