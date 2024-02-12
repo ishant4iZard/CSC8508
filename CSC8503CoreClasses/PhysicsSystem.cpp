@@ -312,18 +312,24 @@ split the world up using an acceleration structure, so that we can only
 compare the collisions that we absolutely need to. 
 
 */
-int itra = 0;
 
-bool broadPhaseHelper(QuadTreeEntry <GameObject*> a, QuadTreeEntry <GameObject*> b) {
-	Vector3 distance = b.pos-a.pos;
-	Vector3 absize = a.size+b.size;
+bool broadPhaseHelper(GameObject* a, GameObject* b) {
+	Vector3 halfSizeA, halfSizeB;
+	a->GetBroadphaseAABB(halfSizeA);
+	b->GetBroadphaseAABB(halfSizeB);
 
-	for (int i = 0; i < 3; i++) {
-		if(std::abs(distance[i]) > absize[i])
-			return false;
+	Vector3 posB = b->GetTransform().GetPosition();
+	Vector3 posA = a->GetTransform().GetPosition();
+
+	Vector3 delta = posB - posA;
+	Vector3 totalSize = halfSizeA + halfSizeB;
+
+	if (abs(delta.x) < totalSize.x &&
+		//abs(delta.y) < totalSize.y &&
+		abs(delta.z)  < totalSize.z) {
+		return true;
 	}
-	
-	return true;
+	return false;
 }
 
 //QuadTree<GameObject*> PhysicsSystem::createStaticTree() {
@@ -374,14 +380,27 @@ void PhysicsSystem::BroadPhase() {
 	std::vector <GameObject*>::const_iterator last;
 	gameWorld.GetObjectIterators(first, last);
 	for (auto i = first; i != last; ++i) {
-		//if (!(*i)->GetBoundingVolume()->isKinematic) {
-		if ((*i)->IsActive()) {
-			Vector3 halfSizes;
-			if (!(*i)->GetBroadphaseAABB(halfSizes)) {
-				continue;
+		if (!(*i)->GetBoundingVolume()->isKinematic) {
+			if ((*i)->IsActive()) {
+				Vector3 halfSizes;
+				if (!(*i)->GetBroadphaseAABB(halfSizes)) {
+					continue;
+				}
+				Vector3 pos = (*i)->GetTransform().GetPosition();
+				tree.Insert(*i, pos, halfSizes);
+				staticTree.OperateOnContents(
+					[&](std::list <QuadTreeEntry <GameObject*>>& data) {
+						CollisionDetection::CollisionInfo info;
+						for (auto j = data.begin(); j != data.end(); ++j) {
+							if (broadPhaseHelper(*i, (*j).object)) {
+								info.a = std::min((*i), (*j).object);
+								info.b = std::max((*i), (*j).object);
+								broadphaseCollisions.insert(info);
+							}
+						}
+					}
+				);
 			}
-			Vector3 pos = (*i)->GetTransform().GetPosition();
-			tree.Insert(*i, pos, halfSizes);
 		}
 		//}
 		/*else

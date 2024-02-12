@@ -149,6 +149,8 @@ void TutorialGame::InitWorld() {
 	InitPlaceholderAIs();
 	InitHole();
 	InitGravityWell();
+
+	physics->createStaticTree();
 }
 
 /*
@@ -161,7 +163,7 @@ GameObject* TutorialGame::AddFloorToWorld(const Vector3& position, const Vector3
 	GameObject* floor = new GameObject();
 
 	Vector3 floorSize = size;
-	AABBVolume* volume = new AABBVolume(floorSize);
+	AABBVolume* volume = new AABBVolume(floorSize , false ,true);
 	floor->SetBoundingVolume((CollisionVolume*)volume);
 	floor->GetTransform()
 		.SetScale(floorSize * 2)
@@ -196,7 +198,7 @@ void TutorialGame::InitHole() {
 
 	float radius = 1.5f;
 	Vector3 sphereSize = Vector3(radius, radius, radius);
-	SphereVolume* volume = new SphereVolume(radius);
+	SphereVolume* volume = new SphereVolume(radius ,false ,true);
 	hole->SetBoundingVolume((CollisionVolume*)volume);
 	hole->GetTransform().SetScale(sphereSize).SetPosition(Vector3(0, 3, 0));
 	hole->SetRenderObject(new RenderObject(&hole->GetTransform(), sphereMesh, basicTex, basicShader));
@@ -215,7 +217,7 @@ void NCL::CSC8503::TutorialGame::InitGravityWell()
 
 	float radius = 1.5f;
 	Vector3 sphereSize = Vector3(radius, radius, radius);
-	SphereVolume* volume = new SphereVolume(radius);
+	SphereVolume* volume = new SphereVolume(radius , false, true);
 	gravityWell->SetBoundingVolume((CollisionVolume*)volume);
 	gravityWell->GetTransform().SetScale(sphereSize).SetPosition(Vector3(15, 3, 15));
 	gravityWell->SetRenderObject(new RenderObject(&gravityWell->GetTransform(), sphereMesh, basicTex, basicShader));
@@ -232,7 +234,7 @@ void NCL::CSC8503::TutorialGame::InitGravityWell()
 GameObject* TutorialGame::AddObbCubeToWorld(const Vector3& position, Vector3 dimensions, float inverseMass, float elasticity) {
 	GameObject* cube = new GameObject("cube");
 
-	OBBVolume* volume = new OBBVolume(dimensions);
+	OBBVolume* volume = new OBBVolume(dimensions,false, true);
 	cube->SetBoundingVolume((CollisionVolume*)volume);
 
 	cube->GetTransform()
@@ -253,7 +255,7 @@ GameObject* TutorialGame::AddObbCubeToWorld(const Vector3& position, Vector3 dim
 GameObject* TutorialGame::AddAABBCubeToWorld(const Vector3& position, Vector3 dimensions, float inverseMass, float elasticity) {
 	GameObject* cube = new GameObject("cube");
 
-	AABBVolume* volume = new AABBVolume(dimensions);
+	AABBVolume* volume = new AABBVolume(dimensions, false ,true);
 	cube->SetBoundingVolume((CollisionVolume*)volume);
 
 	cube->GetTransform()
