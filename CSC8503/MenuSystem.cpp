@@ -92,7 +92,7 @@ PushdownState::PushdownResult MultiPlayerLobby::OnUpdate(float dt, PushdownState
 			Debug::Print("You are the joiner!", Vector2(5, 23), Debug::YELLOW);
 			if (Window::GetKeyboard()->KeyPressed(KeyCodes::S))
 			{
-				//Game->StartAsClient(GetIPnumByIndex(0), GetIPnumByIndex(1), GetIPnumByIndex(2), GetIPnumByIndex(3));
+				Game->StartAsClient(GetIPnumByIndex(0), GetIPnumByIndex(1), GetIPnumByIndex(2), GetIPnumByIndex(3));
 				*newState = new PlayingHUD();
 				return PushdownResult::Push;
 			}
@@ -107,15 +107,24 @@ char MultiPlayerLobby::GetIPnumByIndex(int index)
 	NetSystem_Steam* Steam = (NetSystem_Steam*)steam;
 	string IP = Steam->GetLobbyHolderIPv4Address();
 	int PointAccml = 0;
+	int IPnum = 0;
 	for (auto i : IP)
 	{
+		if (i == '.')
+		{
+			++PointAccml;
+			continue;
+		}
+		if (PointAccml > index)
+		{
+			break;
+		}
 		if (PointAccml == index)
 		{
-
+			IPnum = IPnum * 10 + i - 48;
 		}
-
 	}
-	return 1;
+	return IPnum;
 }
 
 /** Multiplayer Search Menu Update */
