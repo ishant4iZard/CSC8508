@@ -39,13 +39,12 @@ TutorialGame::TutorialGame() : controller(*Window::GetWindow()->GetKeyboard(), *
 	controller.MapAxis(4, "YLook");
 	currentlevel = level::level1;
 
-	gameover = false;
-
 	InitialiseAssets();
 
 #ifdef  _WIN32
 	ui = UIWindows::GetInstance();
 #endif //  _WIN32
+	appState = ApplicationState::GetInstance();
 }
 
 /*
@@ -90,7 +89,7 @@ TutorialGame::~TutorialGame()	{
 
 void TutorialGame::UpdateGame(float dt) {
 	
-	if (gameover) {
+	if (appState->GetIsGameOver()) {
 		world->ClearAndErase();
 		physics->Clear();
 		InitCamera();
@@ -103,7 +102,7 @@ void TutorialGame::UpdateGame(float dt) {
 		ui->DrawStringText("Press 'ESC' to exit", Vector2(40, 50), UIBase::WHITE);
 
 	}
-	else if (gameWon)
+	else if (appState->GetHasWonGame())
 	{
 		world->ClearAndErase();
 		physics->Clear();
@@ -121,13 +120,13 @@ void TutorialGame::UpdateGame(float dt) {
 		ui->DrawStringText("Press 'ESC' to exit", Vector2(40, 50), UIBase::YELLOW);
 	}
 
-	else if(serverStarted) {
+	else if(appState->GetIsServer()) {
 		timer += dt;
 
 		world->GetMainCamera().UpdateCamera(dt);
 
 		if (timer > TIME_LIMIT) {
-			gameover = true;
+			appState->SetIsGameOver(true);
 		}
 
 
@@ -149,7 +148,6 @@ void TutorialGame::InitCamera() {
 }
 
 void TutorialGame::InitWorld() {
-	gameover = false;
 	world->ClearAndErase();
 	physics->Clear();
 	InitCamera();

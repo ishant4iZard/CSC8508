@@ -26,6 +26,8 @@ struct MessagePacket : public GamePacket {
 };
 
 NetworkedGame::NetworkedGame()	{
+	appState = ApplicationState::GetInstance();
+
 	thisServer = nullptr;
 	thisClient = nullptr;
 
@@ -72,7 +74,7 @@ bool NetworkedGame::StartAsServer() {
 
 	thisServer->RegisterPacketHandler(Received_State, this);
 
-	serverStarted = true;
+	appState->SetIsServer(true);
 
 	StartLevel();
 
@@ -106,7 +108,7 @@ void NetworkedGame::UpdateGame(float dt) {
 	Debug::UpdateRenderables(dt);
 	TestMenu->Update(dt);
 
-	if (!gameover) {
+	if (!appState->GetIsGameOver()) {
 		timeToNextPacket -= dt;
 		if (timeToNextPacket < 0) {
 			if (thisServer) {

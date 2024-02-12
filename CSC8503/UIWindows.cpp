@@ -50,6 +50,13 @@ UIWindows* UIWindows::GetInstance(){
     return ui;
 }
 
+void UIWindows::Destroy() { 
+    if (ui == nullptr)
+        return;
+
+    delete ui; 
+}
+
 void UIWindows::DrawStringText(
     std::string text,
     NCL::Maths::Vector2 position,
@@ -80,6 +87,10 @@ void UIWindows::DrawButton(
     newElement->text = text;
     newElement->color = color;
     newElement->callback = callback;
+
+    NCL::Maths::Vector2i windowSize = NCL::Window::GetWindow()->GetScreenSize();
+    position.x *= (windowSize.x / 100.0f);
+    position.y *= (windowSize.y / 100.0f);
     newElement->position = position;
 
     uiElements.push_back(newElement);

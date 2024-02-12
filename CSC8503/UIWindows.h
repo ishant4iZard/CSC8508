@@ -12,8 +12,8 @@
 
 class UIWindows : public UIBase {
 public :	
-	~UIWindows();
 	static UIWindows* GetInstance();
+	static void Destroy();
 	void DrawStringText(
 		std::string text,
 		NCL::Maths::Vector2 position,
@@ -30,6 +30,7 @@ public :
 
 protected :
 	UIWindows();
+	~UIWindows();
 	ImFont* font;
 	static UIWindows* ui;  
 	std::vector<UIElementProps*> uiElements;

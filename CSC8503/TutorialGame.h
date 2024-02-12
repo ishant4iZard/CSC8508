@@ -11,6 +11,7 @@
 #include "BouncePad.h"
 #include <vector>
 
+#include "ApplicationState.h"
 #include "../CSC8503/UIBase.h"
 #ifdef  _WIN32
 #include "../CSC8503/UIWindows.h"
@@ -96,11 +97,8 @@ namespace NCL {
 
 			//Coursework Additional functionality	
 
-			bool gameover;
-			bool gameWon;
 			float timer;
 			float finaltimer;
-			bool serverStarted = false;
 
 			level currentlevel;
 			int score = 0;
@@ -121,6 +119,8 @@ namespace NCL {
 #pragma region UI
 			UIBase* ui;
 #pragma endregion
+
+			ApplicationState* appState;
 		};
 	}
 }

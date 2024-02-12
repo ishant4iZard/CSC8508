@@ -5,6 +5,7 @@
 #include "Projectile.h"
 
 #include "GameClient.h"
+#include "ApplicationState.h"
 
 #include "../CSC8503/UIBase.h"
 #ifdef  _WIN32
@@ -80,6 +81,7 @@ namespace NCL {
 			GameClient* thisClient;
 			float timeToNextPacket;
 			int packetsToSnapshot;
+			ApplicationState* appState;
 
 			std::map<int, NetworkObject*> networkObjects;
 
@@ -145,6 +147,7 @@ namespace NCL {
 		{
 		public :
 			MainMenu() {
+				appState = ApplicationState::GetInstance();
 #ifdef  _WIN32
 				ui = UIWindows::GetInstance();
 #endif //  _WIN32
@@ -155,12 +158,12 @@ namespace NCL {
 			{
 				if (game)
 				{
-					/*Debug::Print("Press 1 : Start As Server", Vector2(5, 23), Debug::YELLOW);
-					Debug::Print("Press 2 : Start As Client", Vector2(5, 33), Debug::YELLOW);
-					Debug::Print("Press Esc : Game Over", Vector2(5, 43), Debug::YELLOW);*/
-					ui->DrawStringText("Press 1 : Start As Server", Vector2(5, 23), UIBase::YELLOW);
-					ui->DrawStringText("Press 2 : Start As Client", Vector2(5, 33), UIBase::YELLOW);
-					ui->DrawStringText("Press Esc : Game Over", Vector2(5, 43), UIBase::YELLOW);
+					//Debug::Print("Press 1 : Start As Server", Vector2(5, 23), Debug::YELLOW);
+					//Debug::Print("Press 2 : Start As Client", Vector2(5, 33), Debug::YELLOW);
+					//Debug::Print("Press Esc : Game Over", Vector2(5, 43), Debug::YELLOW);
+					//ui->DrawStringText("Press 1 : Start As Server", Vector2(5, 23), UIBase::YELLOW);
+					//ui->DrawStringText("Press 2 : Start As Client", Vector2(5, 33), UIBase::YELLOW);
+					//ui->DrawStringText("Press Esc : Game Over", Vector2(5, 43), UIBase::YELLOW);
 
 					if (StartAsServerDisplayTime > 0.0f)
 					{
@@ -189,7 +192,9 @@ namespace NCL {
 						}
 						return PushdownResult::NoChange;
 					}
-					if (Window::GetKeyboard()->KeyPressed(KeyCodes::NUM1))
+
+					// React based on app state_____________________________________________________________
+					if (appState->GetIsServer())
 					{
 						if (thisGame->StartAsServer())
 						{
@@ -201,7 +206,7 @@ namespace NCL {
 							StartAsServerDisplayTime = 3.0f;
 						}
 					}
-					if (Window::GetKeyboard()->KeyPressed(KeyCodes::NUM2))
+					if (appState->GetIsClient())
 					{
 						if (!thisGame->StartAsClient(127, 0, 0, 1))
 						{
@@ -209,16 +214,32 @@ namespace NCL {
 						}
 					}
 
-					// Testing
+					// UI Menu______________________________________________________________________________
+					// To do : Find center location based on text size
+
+					ui->DrawStringText("Main Menu", Vector2(45, 30), UIBase::YELLOW);
+
 					ui->DrawButton(
 						"Start As Server",
-						Vector2(40, 10),
-						[]() {});
+						Vector2(35, 35),
+						[]() {
+							ApplicationState* appState = ApplicationState::GetInstance();
+							appState->SetIsServer(true);
+						},
+						UIBase::WHITE,
+						KeyCodes::NUM1 // Only for PS
+						);
 
 					ui->DrawButton(
 						"Start As Client",
-						Vector2(40, 80),
-						[]() {});
+						Vector2(35, 45),
+						[]() {
+							ApplicationState* appState = ApplicationState::GetInstance();
+							appState->SetIsClient(true);
+						},
+						UIBase::WHITE,
+						KeyCodes::NUM2 // Only for PS
+						);
 					
 				}
 
@@ -230,6 +251,7 @@ namespace NCL {
 #pragma region UI
 			UIBase* ui;
 #pragma endregion
+			ApplicationState* appState;
 		};
 #pragma endregion
 
