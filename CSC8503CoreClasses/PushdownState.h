@@ -20,8 +20,11 @@ namespace NCL {
 			void GetGame(void** game) { *game = this->game; }
 			void SetGame(void* val) { this->game = val; }
 
+			void SetSteam(void* val) { this->steam = val; }
+
 		protected:
 			void* game = nullptr;
+			void* steam = nullptr;
 		};
 	}
 }

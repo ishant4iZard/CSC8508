@@ -139,6 +139,7 @@ void TutorialGame::UpdateGame(float dt) {
 			appState->SetIsGameOver(true);
 		}
 
+		//Debug::UpdateRenderables(dt);
 
 		std::string timeText = "Time left : " + std::to_string((int)(TIME_LIMIT - timer));
 		ui->DrawStringText(timeText, Vector2(5, 10));

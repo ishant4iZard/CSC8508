@@ -3,6 +3,7 @@
 #include "Debug.h"
 
 #include "NetworkedGame.h"
+#include "MenuSystem.h"
 
 using namespace NCL;
 using namespace CSC8503;
@@ -17,8 +18,20 @@ using namespace CSC8503;
 #else //_ORBIS
 #include "UIPlaystation.h"
 #endif
+#include <steam_api.h>
+
 
 int main() {
+	if (SteamAPI_Init())
+	{
+		std::cout << "Steam API initialized successfully.\n";
+	}
+	else
+	{
+		std::cout << "Steam API failed to initialize.\n";
+		std::cout << "You may need run the steam app.\n";
+	}
+
 	Window*w = Window::CreateGameWindow("CSC8503 Game technology!", 1280, 720 , false);
 
 	if (!w->HasInitialised()) {
@@ -29,13 +42,18 @@ int main() {
 	w->LockMouseToWindow(false);
 
 	NetworkedGame* g = new NetworkedGame();
+
+	std::string IPAdd;
+	w->GetLocalIPV4Address(IPAdd);
+	g->GetMenuSystem()->SetLocalIPv4Address(IPAdd);
+
 	w->GetTimer().GetTimeDeltaSeconds(); //Clear the timer so we don't get a larget first dt!
 	while (w->UpdateWindow() && !Window::GetKeyboard()->KeyDown(KeyCodes::ESCAPE)) {
 		float dt = w->GetTimer().GetTimeDeltaSeconds();
-		if (dt > 0.2f) {
-			std::cout << "Skipping large time delta" << std::endl;
-			continue; //must have hit a breakpoint or something to have a 1 second frame time!
-		}
+		//if (dt > 0.2f) {
+		//	std::cout << "Skipping large time delta" << std::endl;
+		//	continue; //must have hit a breakpoint or something to have a 1 second frame time!
+		//}
 		if (Window::GetKeyboard()->KeyPressed(KeyCodes::PRIOR)) {
 			w->ShowConsole(true);
 		}
@@ -49,6 +67,7 @@ int main() {
 
 		w->SetTitle("Gametech frame time:" + std::to_string(1000.0f * dt));
 
+		SteamAPI_RunCallbacks();
 
 		g->UpdateGame(dt);
 	}
@@ -60,6 +79,8 @@ int main() {
 #else //_ORBIS
 	UIPlaystation::Destroy();
 #endif
+
+	SteamAPI_Shutdown();
 
 	Window::DestroyGameWindow();
 }

@@ -36,6 +36,7 @@ bool PushdownMachine::Update(float dt) {
 				stateStack.push(newState);
 				activeState = newState;
 				activeState->SetGame(game);
+				activeState->SetSteam(steam);
 				activeState->OnAwake();
 			}break;
 		}
@@ -44,6 +45,7 @@ bool PushdownMachine::Update(float dt) {
 		stateStack.push(initialState);
 		activeState = initialState;
 		activeState->SetGame(game);
+		activeState->SetSteam(steam);
 		activeState->OnAwake();
 	}
 	return true;
