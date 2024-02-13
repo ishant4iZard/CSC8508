@@ -117,7 +117,7 @@ void NetworkPlayer::MovePlayerInSquarePattern(float dt) {
 		Vector3{1, 0, 0},
 		Vector3{0, 0, -1}
 	};
-	const static float BUFFER_DISTANCE = 5;
+	const static float BUFFER_DISTANCE = 10;
 
 	for (int i = 0; i < 4; i++) {
 		float distanceFromCorner = (CORNERS[i] - GetTransform().GetPosition()).Length();

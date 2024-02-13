@@ -212,7 +212,7 @@ void TutorialGame::SpawnDataDrivenLevel(GameLevelNumber inGameLevelNumber)
 
 void NCL::CSC8503::TutorialGame::SpawnWall(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale)
 {
-	GameObject* tempWall = AddAABBCubeToWorld(
+	GameObject* tempWall = AddObbCubeToWorld(
 		inPosition,
 		inScale,
 		0, 0.5f);
@@ -239,7 +239,7 @@ void NCL::CSC8503::TutorialGame::SpawnTarget(const Vector3& inPosition, const Ve
 {
 	Hole* hole = new Hole();
 
-	float radius = 1.5f;
+	float radius = 2.0f;
 	Vector3 sphereSize = Vector3(radius, radius, radius);
 	SphereVolume* volume = new SphereVolume(radius);
 	hole->SetBoundingVolume((CollisionVolume*)volume);
