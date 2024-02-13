@@ -21,4 +21,5 @@ Projectile::~Projectile()
 
 void Projectile::OnCollisionBegin(GameObject* otherObject)
 {
+	//std::cout << transform.GetPosition().y<<"\n";
 }
