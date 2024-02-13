@@ -17,6 +17,14 @@
 #include "WindowsLevelLoader.h"
 #endif // _WIN32
 
+#include "ApplicationState.h"
+#include "../CSC8503/UIBase.h"
+#ifdef _WIN32
+#include "../CSC8503/UIWindows.h"
+#else //_ORBIS
+#include "../CSC8503/UIPlaystation.h"
+#endif
+
 enum class level {
 	level1 = 1,
 	level2 = 2,
@@ -104,11 +112,8 @@ namespace NCL {
 
 			//Coursework Additional functionality	
 
-			bool gameover;
-			bool gameWon;
 			float timer;
 			float finaltimer;
-			bool serverStarted = false;
 
 			level currentlevel;
 			int score = 0;
@@ -135,6 +140,12 @@ namespace NCL {
 			typedef void (TutorialGame::*dataSpawnFunction) (const Vector3&, const Vector3&, const Vector3&);
 			dataSpawnFunction levelObjectSpawnFunctionList[static_cast<int>(LevelObjectEnum::MAX_OBJECT_TYPE)] = { &TutorialGame::SpawnWall , &TutorialGame::SpawnFloor , &TutorialGame::SpawnBouncingPad, &TutorialGame::SpawnTarget , &TutorialGame::SpawnBlackHole };
 #pragma endregion
+
+#pragma region UI
+			UIBase* ui;
+#pragma endregion
+
+			ApplicationState* appState;
 		};
 	}
 }

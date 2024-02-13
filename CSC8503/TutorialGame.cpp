@@ -45,8 +45,14 @@ TutorialGame::TutorialGame() : controller(*Window::GetWindow()->GetKeyboard(), *
 	controller.MapAxis(4, "YLook");
 	currentlevel = level::level1;
 
-	gameover = false;
 	InitialiseAssets();
+
+#ifdef _WIN32
+	ui = UIWindows::GetInstance();
+#else //_ORBIS
+	ui = UIPlaystation::GetInstance();
+#endif
+	appState = ApplicationState::GetInstance();
 }
 
 /*
@@ -93,39 +99,49 @@ TutorialGame::~TutorialGame()	{
 
 void TutorialGame::UpdateGame(float dt) {
 	
-	if (gameover) {
+	if (appState->GetIsGameOver()) {
 		world->ClearAndErase();
 		physics->Clear();
 		InitCamera();
-		Debug::Print("GameOver", Vector2(40, 10), Debug::RED);
-		Debug::Print("Final Score:" + std::to_string((int)(score)), Vector2(40, 30));
-		Debug::Print("Press 'ESC' to exit", Vector2(40, 50));
+		//Debug::Print("GameOver", Vector2(40, 10), Debug::RED);
+		//Debug::Print("Final Score:" + std::to_string((int)(score)), Vector2(40, 30));
+		//Debug::Print("Press 'ESC' to exit", Vector2(40, 50));
+
+		ui->DrawStringText("GameOver", Vector2(40, 10), UIBase::RED);
+		ui->DrawStringText("Final Score:" + std::to_string((int)(score)), Vector2(40, 30));
+		ui->DrawStringText("Press 'ESC' to exit", Vector2(40, 50), UIBase::WHITE);
+
 	}
-	else if (gameWon)
+	else if (appState->GetHasWonGame())
 	{
 		world->ClearAndErase();
 		physics->Clear();
 		InitCamera();
-		Debug::Print("You Won!!!", Vector2(40, 10), Debug::GREEN);
+		/*Debug::Print("You Won!!!", Vector2(40, 10), Debug::GREEN);
 		Debug::Print("You saved the world from goats!!!", Vector2(40, 20), Debug::GREEN);
 		Debug::Print("Final Score:" + std::to_string((int)(score + (300 - finaltimer) / 10)), Vector2(40, 30));
 		Debug::Print("Finish Time:" + std::to_string((int)(finaltimer)), Vector2(40, 40));
-		
-		Debug::Print("Press 'ESC' to exit", Vector2(40, 50));
+		Debug::Print("Press 'ESC' to exit", Vector2(40, 50));*/
+
+		ui->DrawStringText("You Won!!!", Vector2(40, 10), UIBase::GREEN);
+		ui->DrawStringText("You saved the world from goats!!!", Vector2(40, 20), UIBase::GREEN);
+		ui->DrawStringText("Final Score:" + std::to_string((int)(score + (300 - finaltimer) / 10)), Vector2(40, 30), UIBase::YELLOW);
+		ui->DrawStringText("Finish Time:" + std::to_string((int)(finaltimer)), Vector2(40, 40), UIBase::YELLOW);
+		ui->DrawStringText("Press 'ESC' to exit", Vector2(40, 50), UIBase::YELLOW);
 	}
 
-	else if(serverStarted) {
+	else if(appState->GetIsServer()) {
 		timer += dt;
 
 		world->GetMainCamera().UpdateCamera(dt);
 
 		if (timer > TIME_LIMIT) {
-			gameover = true;
+			appState->SetIsGameOver(true);
 		}
 
 
-		Debug::Print("Time left:" + std::to_string((int)(TIME_LIMIT-timer)), Vector2(5, 10));
-
+		std::string timeText = "Time left : " + std::to_string((int)(TIME_LIMIT - timer));
+		ui->DrawStringText(timeText, Vector2(5, 10));
 	}
 	world->UpdateWorld(dt);
 	renderer->Render();
@@ -142,7 +158,6 @@ void TutorialGame::InitCamera() {
 }
 
 void TutorialGame::InitWorld() {
-	gameover = false;
 	world->ClearAndErase();
 	physics->Clear();
 	InitCamera();

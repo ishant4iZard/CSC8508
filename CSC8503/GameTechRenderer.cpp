@@ -64,11 +64,18 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 
 	SetDebugStringBufferSizes(10000);
 	SetDebugLineBufferSizes(1000);
+
+#ifdef _WIN32
+	ui = UIWindows::GetInstance();
+#else //_ORBIS
+	ui = UIPlaystation::GetInstance();
+#endif
 }
 
 GameTechRenderer::~GameTechRenderer()	{
 	glDeleteTextures(1, &shadowTex);
 	glDeleteFramebuffers(1, &shadowFBO);
+	delete ui;
 }
 
 void GameTechRenderer::LoadSkybox() {
@@ -128,6 +135,8 @@ void GameTechRenderer::RenderFrame() {
 	glDisable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	ui->RenderUI();
 }
 
 void GameTechRenderer::BuildObjectList() {
