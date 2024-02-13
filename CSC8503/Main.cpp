@@ -12,6 +12,11 @@ using namespace CSC8503;
 #include <sstream>
 
 #include "ApplicationState.h"
+#ifdef _WIN32
+#include "UIWindows.h"
+#else //_ORBIS
+#include "UIPlaystation.h"
+#endif
 
 int main() {
 	Window*w = Window::CreateGameWindow("CSC8503 Game technology!", 1280, 720 , false);
@@ -53,7 +58,7 @@ int main() {
 #ifdef _WIN32
 	UIWindows::Destroy();
 #else //_ORBIS
-
+	UIPlaystation::Destroy();
 #endif
 
 	Window::DestroyGameWindow();

@@ -7,9 +7,11 @@
 #include "GameWorld.h"
 
 #include "../CSC8503/UIBase.h"
-#ifdef  _WIN32
+#ifdef _WIN32
 #include "../CSC8503/UIWindows.h"
-#endif //  _WIN32
+#else //_ORBIS
+#include "../CSC8503/UIPlaystation.h"
+#endif
 
 namespace NCL {
 	class Maths::Vector3;

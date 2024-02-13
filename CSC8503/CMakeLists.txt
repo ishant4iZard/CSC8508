@@ -16,6 +16,7 @@ set(Header_Files
     "UIBase.h"
     "UIWindows.h"
     "ApplicationState.h"
+    "UIPlaystation.h"
 )
 source_group("Header Files" FILES ${Header_Files})
 
@@ -32,6 +33,7 @@ set(Source_Files
     "GravityWell.cpp"
     "UIWindows.cpp"
     "ApplicationState.cpp"
+    "UIPlaystation.cpp"
 )
 
 if(USE_VULKAN)

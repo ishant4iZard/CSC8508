@@ -3,7 +3,7 @@
 
 UIWindows* UIWindows::ui = nullptr;
 
-#pragma region StaticColors
+#ifdef _WIN32
 const NCL::Maths::Vector4 UIBase::RED =     NCL::Maths::Vector4(255, 0, 0, 255);
 const NCL::Maths::Vector4 UIBase::GREEN =   NCL::Maths::Vector4(0, 255, 0, 255);
 const NCL::Maths::Vector4 UIBase::BLUE =    NCL::Maths::Vector4(0, 0, 255, 255);
@@ -12,7 +12,7 @@ const NCL::Maths::Vector4 UIBase::WHITE =   NCL::Maths::Vector4(255, 255, 255, 2
 const NCL::Maths::Vector4 UIBase::YELLOW =  NCL::Maths::Vector4(255, 255, 0, 255);
 const NCL::Maths::Vector4 UIBase::MAGENTA = NCL::Maths::Vector4(255, 0, 255, 255);
 const NCL::Maths::Vector4 UIBase::CYAN =    NCL::Maths::Vector4(0, 255, 255, 255);
-#pragma endregion
+#endif
 
 UIWindows::UIWindows(){
     HWND windowHandle = NCL::Win32Code::Win32Window::windowHandle;
@@ -32,8 +32,8 @@ UIWindows::UIWindows(){
     ImGui_ImplOpenGL3_Init();
 
     // Fonts
-    //font = io.Fonts->AddFontFromFileTTF("../../Assets/Fonts/Roboto-Medium.ttf", 25);
-    font = io.Fonts->AddFontFromFileTTF("../../Assets/Fonts/AstroSpace.ttf", 20);
+    font = io.Fonts->AddFontFromFileTTF("../../Assets/Fonts/Roboto-Medium.ttf", 25);
+    //font = io.Fonts->AddFontFromFileTTF("../../Assets/Fonts/PLANK___.ttf", 35);
     io.Fonts->Build();
 }
 
@@ -55,6 +55,7 @@ void UIWindows::Destroy() {
         return;
 
     delete ui; 
+    ui = nullptr;
 }
 
 void UIWindows::DrawStringText(

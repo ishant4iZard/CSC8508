@@ -8,9 +8,12 @@
 #include "ApplicationState.h"
 
 #include "../CSC8503/UIBase.h"
-#ifdef  _WIN32
+
+#ifdef _WIN32
 #include "../CSC8503/UIWindows.h"
-#endif //  _WIN32
+#else //_ORBIS
+#include "../CSC8503/UIPlaystation.h"
+#endif
 
 namespace NCL {
 	namespace CSC8503 {
@@ -112,9 +115,11 @@ namespace NCL {
 		{
 		public :
 			PlayerMenu() {
-#ifdef  _WIN32
+#ifdef _WIN32
 				ui = UIWindows::GetInstance();
-#endif //  _WIN32
+#else //_ORBIS
+				ui = UIPlaystation::GetInstance();
+#endif
 			}
 
 
@@ -148,9 +153,11 @@ namespace NCL {
 		public :
 			MainMenu() {
 				appState = ApplicationState::GetInstance();
-#ifdef  _WIN32
+#ifdef _WIN32
 				ui = UIWindows::GetInstance();
-#endif //  _WIN32
+#else //_ORBIS
+				ui = UIPlaystation::GetInstance();
+#endif
 			}
 
 		protected :

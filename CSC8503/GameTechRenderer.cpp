@@ -65,9 +65,11 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 	SetDebugStringBufferSizes(10000);
 	SetDebugLineBufferSizes(1000);
 
-#ifdef  _WIN32
+#ifdef _WIN32
 	ui = UIWindows::GetInstance();
-#endif //  _WIN32
+#else //_ORBIS
+	ui = UIPlaystation::GetInstance();
+#endif
 }
 
 GameTechRenderer::~GameTechRenderer()	{

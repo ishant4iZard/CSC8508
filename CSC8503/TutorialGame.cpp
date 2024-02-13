@@ -41,9 +41,11 @@ TutorialGame::TutorialGame() : controller(*Window::GetWindow()->GetKeyboard(), *
 
 	InitialiseAssets();
 
-#ifdef  _WIN32
+#ifdef _WIN32
 	ui = UIWindows::GetInstance();
-#endif //  _WIN32
+#else //_ORBIS
+	ui = UIPlaystation::GetInstance();
+#endif
 	appState = ApplicationState::GetInstance();
 }
 
