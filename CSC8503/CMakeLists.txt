@@ -28,6 +28,8 @@ set(Header_Files
     "ApplicationState.h"
     "UIPlaystation.h"
     "MenuSystem.h"
+    "Event.h"
+    "EventType.h"
 )
 source_group("Header Files" FILES ${Header_Files})
 
@@ -47,6 +49,7 @@ set(Source_Files
     "ApplicationState.cpp"
     "UIPlaystation.cpp"
     "MenuSystem.cpp"
+    "Event.cpp"
 )
 
 if(USE_VULKAN)

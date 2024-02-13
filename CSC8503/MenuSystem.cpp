@@ -39,8 +39,27 @@ PushdownState::PushdownResult MainMenu::OnUpdate(float dt, PushdownState** newSt
 	{
 		NetSystem_Steam* Steam = (NetSystem_Steam*)steam;
 
-		Debug::Print("Press 1 : Create Lobby", Vector2(5, 23), Debug::YELLOW);
-		Debug::Print("Press 2 : Join Lobby", Vector2(5, 33), Debug::YELLOW);
+		ui->DrawButton(
+			"Create Lobby",
+			Vector2(5, 23),
+			[]() {
+				EventEmitter* emitter = EventEmitter::GetInstance();
+				emitter->EmitEvent(CREATE_LOBBY);
+			},
+			UIBase::WHITE,
+			KeyCodes::NUM1 // Only for PS
+		);
+
+		ui->DrawButton(
+			"Join Lobby",
+			Vector2(5, 33),
+			[]() {
+				EventEmitter* emitter = EventEmitter::GetInstance();
+				emitter->EmitEvent(JOIN_LOBBY);
+			},
+			UIBase::WHITE,
+			KeyCodes::NUM2 // Only for PS
+		);
 
 		switch (Steam->GetUserCurrentState())
 		{
@@ -49,11 +68,11 @@ PushdownState::PushdownResult MainMenu::OnUpdate(float dt, PushdownState** newSt
 			return PushdownResult::Push;
 			break;
 		case NetSystem_Steam::EUserState::EAvailable:
-			if (Window::GetKeyboard()->KeyPressed(KeyCodes::NUM1))
+			if (isCreatingLobby)
 			{
 				Steam->CreateLobby();
 			}
-			if (Window::GetKeyboard()->KeyPressed(KeyCodes::NUM2))
+			if (isJoiningLobby)
 			{
 				*newState = new MultiplayerSearchMenu();
 				return PushdownResult::Push;
@@ -64,6 +83,22 @@ PushdownState::PushdownResult MainMenu::OnUpdate(float dt, PushdownState** newSt
 	return PushdownResult::NoChange;
 }
 
+void MainMenu::ReceiveEvent(const EventType eventType) {
+	switch (eventType)
+	{
+	case JOIN_LOBBY :
+		isJoiningLobby = true;
+		break;
+
+	case CREATE_LOBBY :
+		isCreatingLobby = true;
+		break;
+
+	default:
+		break;
+	}
+}
+
 /** Multiplayer Lobby Update */
 PushdownState::PushdownResult MultiPlayerLobby::OnUpdate(float dt, PushdownState** newState)
 {
@@ -72,16 +107,25 @@ PushdownState::PushdownResult MultiPlayerLobby::OnUpdate(float dt, PushdownState
 		NetSystem_Steam* Steam = (NetSystem_Steam*)steam;
 		NetworkedGame* Game = (NetworkedGame*)game;
 
-		Debug::Print("Your Name: " + Steam->GetCurrentUserName(), Vector2(5, 13), Debug::YELLOW);
-		Debug::Print("===============================================", Vector2(5, 30), Debug::YELLOW);
-		Debug::Print("===============================================", Vector2(5, 65), Debug::YELLOW);
-		Debug::Print("Press S: Start Game", Vector2(5, 75), Debug::YELLOW);
+		ui->DrawStringText("UserName: " + Steam->GetCurrentUserName(), Vector2(5, 13), UIBase::WHITE);
+		ui->DrawStringText("______________________________________________________________________________________________", Vector2(5, 30), UIBase::BLACK);
+		ui->DrawStringText("______________________________________________________________________________________________", Vector2(5, 65), UIBase::BLACK);
 
 		switch (Steam->GetUserCurrentState())
 		{
 		case NetSystem_Steam::EUserState::ELobbyHolder:
-			Debug::Print("You are the holder!", Vector2(5, 23), Debug::YELLOW);
-			if (Window::GetKeyboard()->KeyPressed(KeyCodes::S))
+			ui->DrawStringText("You are the holder!", Vector2(5, 18), UIBase::WHITE);
+			ui->DrawButton(
+				"Start Game",
+				Vector2(5, 75),
+				[]() {
+					EventEmitter* emitter = EventEmitter::GetInstance();
+					emitter->EmitEvent(START_AS_SERVER);
+				},
+				UIBase::WHITE,
+				KeyCodes::S // Only for PS
+				);
+			if (appState->GetIsServer())
 			{
 				Game->StartAsServer();
 				*newState = new PlayingHUD();
@@ -89,8 +133,18 @@ PushdownState::PushdownResult MultiPlayerLobby::OnUpdate(float dt, PushdownState
 			}
 			break;
 		case NetSystem_Steam::EUserState::ELobbyJoiner:
-			Debug::Print("You are the joiner!", Vector2(5, 23), Debug::YELLOW);
-			if (Window::GetKeyboard()->KeyPressed(KeyCodes::S))
+			ui->DrawStringText("You are the joiner!", Vector2(5, 23), UIBase::WHITE);
+			ui->DrawButton(
+				"Start Game",
+				Vector2(5, 75),
+				[]() {
+					EventEmitter* emitter = EventEmitter::GetInstance();
+					emitter->EmitEvent(START_AS_CLIENT);
+				},
+				UIBase::WHITE,
+				KeyCodes::S // Only for PS
+				);
+			if (appState->GetIsClient())
 			{
 				Game->StartAsClient(GetIPnumByIndex(0), GetIPnumByIndex(1), GetIPnumByIndex(2), GetIPnumByIndex(3));
 				*newState = new PlayingHUD();
@@ -100,6 +154,21 @@ PushdownState::PushdownResult MultiPlayerLobby::OnUpdate(float dt, PushdownState
 		}
 	}
 	return PushdownResult::NoChange;
+}
+
+void MultiPlayerLobby::ReceiveEvent(const EventType eventType) {
+	switch (eventType) {
+	case START_AS_SERVER :
+		appState->SetIsServer(true);
+		break;
+
+	case START_AS_CLIENT :
+		appState->SetIsClient(true);
+		break;
+
+	default :
+		break;
+	}
 }
 
 char MultiPlayerLobby::GetIPnumByIndex(int index)
@@ -134,30 +203,54 @@ PushdownState::PushdownResult MultiplayerSearchMenu::OnUpdate(float dt, Pushdown
 	{
 		NetSystem_Steam* Steam = (NetSystem_Steam*)steam;
 
-		Debug::Print("Your Name: " + Steam->GetCurrentUserName(), Vector2(5, 13), Debug::YELLOW);
-		Debug::Print("Lobbies list", Vector2(38, 30), Debug::YELLOW);
-		Debug::Print("===============================================", Vector2(5, 35), Debug::YELLOW);
-		Debug::Print("===============================================", Vector2(5, 70), Debug::YELLOW);
-		Debug::Print("Press S: Join the selected lobby", Vector2(5, 70), Debug::YELLOW);
+		ui->DrawStringText("UserName: " + Steam->GetCurrentUserName(), Vector2(5, 13), UIBase::WHITE);
+		ui->DrawStringText("Available Lobbies :", Vector2(5, 30), UIBase::WHITE);
+		ui->DrawStringText("______________________________________________________________________________________________", Vector2(5, 35), UIBase::BLACK);
+		ui->DrawStringText("______________________________________________________________________________________________", Vector2(5, 70), UIBase::BLACK);
+		ui->DrawButton(
+			"Join Selected Lobby",
+			Vector2(5, 75),
+			[]() {
+				EventEmitter* emitter = EventEmitter::GetInstance();
+				emitter->EmitEvent(JOIN_CURRENT_LOBBY);
+			},
+			UIBase::WHITE,
+			KeyCodes::S // Only for PS
+		);
 		
 		switch (Steam->GetUserCurrentState())
 		{
 		case NetSystem_Steam::EUserState::EAvailable:
-			Debug::Print("Press 1: Refresh Lobby List", Vector2(5, 23), Debug::YELLOW);
-			if (Window::GetKeyboard()->KeyPressed(KeyCodes::NUM1))
+			ui->DrawButton(
+				"Refresh Lobby List",
+				Vector2(5, 83),
+				[]() {
+					EventEmitter* emitter = EventEmitter::GetInstance();
+					emitter->EmitEvent(REFRESH_LOBBY);
+				},
+				UIBase::WHITE,
+				KeyCodes::NUM1 // Only for PS
+				);
+			if (shouldRefreshLobbyList)
 			{
 				Steam->SearchLobbies();
 				CurrentSelectLobby = 0;
+				shouldRefreshLobbyList = false;
 			}
 			DisplaySearchResult(Steam);
-			if (Window::GetKeyboard()->KeyPressed(KeyCodes::S))
+			if (shouldJoinSelectedLobby)
 			{
+				if (CurrentSelectLobby == 0) {
+
+				}
+
 				Steam->SelectLobbyByIndex(CurrentSelectLobby);
 				Steam->JoinLobby();
+				shouldJoinSelectedLobby = false;
 			}
 			break;
 		case NetSystem_Steam::EUserState::ESearching:
-			Debug::Print("Searching Available Lobbies...", Vector2(5, 23), Debug::YELLOW);
+			ui->DrawStringText("Searching For Lobbies...", Vector2(5, 18), UIBase::WHITE);
 			break;
 		case  NetSystem_Steam::EUserState::ELobbyJoiner:
 			*newState = new MultiPlayerLobby();
@@ -169,22 +262,39 @@ PushdownState::PushdownResult MultiplayerSearchMenu::OnUpdate(float dt, Pushdown
 	return PushdownResult::NoChange;
 }
 
+void MultiplayerSearchMenu::ReceiveEvent(const EventType eventType) {
+	switch (eventType) {
+		case JOIN_CURRENT_LOBBY:
+			shouldJoinSelectedLobby = true;
+			break;
+
+		case REFRESH_LOBBY :
+			shouldRefreshLobbyList = true;
+			break;
+
+		default : break;
+	}
+}
+
 void MultiplayerSearchMenu::DisplaySearchResult(NetSystem_Steam* Steam)
 {
 	int num = Steam->GetNumOfLobbyMatchList();
 	if (num == -1 || num == 0)
 	{
-		Debug::Print("There is no lobby existed.", Vector2(5, 42), Debug::YELLOW);
+		//Debug::Print("There is no lobby existed. :-(", Vector2(5, 42), Debug::YELLOW);
+		ui->DrawStringText("No Lobbies Found :-(", Vector2(5, 42), UIBase::RED);
 		return;
 	}
 
-	Debug::Print("->", Vector2(5, 42), Debug::RED);
+	//Debug::Print("->", Vector2(5, 42), Debug::RED);
+	ui->DrawStringText("->", Vector2(5, 42), UIBase::RED);
 	for (int i = 0; i < 4; ++i)
 	{
 		int CurrentDisplayLobbyIndex = CurrentSelectLobby + i;
 		if (CurrentDisplayLobbyIndex < num)
 		{
-			Debug::Print(DisplayLobbyLine(Steam, CurrentDisplayLobbyIndex), Vector2(12, 42 + i * 7), Debug::YELLOW);
+			//Debug::Print(DisplayLobbyLine(Steam, CurrentDisplayLobbyIndex), Vector2(12, 42 + i * 7), Debug::YELLOW);
+			ui->DrawStringText(DisplayLobbyLine(Steam, CurrentDisplayLobbyIndex), Vector2(12, 42 + i * 7), UIBase::RED);
 		}
 	}
 }

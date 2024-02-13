@@ -1,5 +1,7 @@
 #pragma once
 
+// For managing states shared accross multiple components
+
 class ApplicationState {
 public :
 	static ApplicationState*	GetInstance();
