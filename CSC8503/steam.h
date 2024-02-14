@@ -51,6 +51,8 @@ namespace NCL {
 
 			void JoinLobby();
 
+			void LeaveLobby();
+
 			bool SetLobbyData(ELobbyDataType DataType, string Value);
 
 			string GetLobbyOwnerNameByLobbyID(CSteamID LobbyID) const;

@@ -115,11 +115,25 @@ void NetSystem_Steam::On_LobbyJoined(LobbyEnter_t* pResult, bool bIOFailure)
 	std::cout << "Join lobby of : " << SteamFriends()->GetFriendPersonaName(SteamMatchmaking()->GetLobbyOwner(pResult->m_ulSteamIDLobby)) << std::endl;
 	LobbyHolderIPv4Address = SteamMatchmaking()->GetLobbyData(steamIDLobby, LobbyDataKey[ELobbyDataType::ELocalIPv4Address].c_str());
 	std::cout << "OnwerIPAddress: " << LobbyHolderIPv4Address << std::endl;
+
+	int numMembers = SteamMatchmaking()->GetNumLobbyMembers(pResult->m_ulSteamIDLobby);
+	for (int i = 0; i < numMembers; ++i)
+	{
+		std::cout << "Member " << i << ":";
+		std::cout << SteamFriends()->GetFriendPersonaName(SteamMatchmaking()->GetLobbyMemberByIndex(pResult->m_ulSteamIDLobby, i)) << std::endl;
+	}
+}
+
+void NetSystem_Steam::LeaveLobby()
+{
+	if (steamIDLobby == 0) return;
+
+	SteamMatchmaking()->LeaveLobby(steamIDLobby);
 }
 
 void NetSystem_Steam::On_LobbyChatUpdate(LobbyChatUpdate_t* pCallback)
 {
-	
+	std::cout << SteamFriends()->GetFriendPersonaName(pCallback->m_ulSteamIDUserChanged) << " data changed: " << pCallback->m_rgfChatMemberStateChange;
 }
 
 bool NetSystem_Steam::SetLobbyData(ELobbyDataType type, string Value)

@@ -18,6 +18,7 @@ namespace NCL {
 			void OscillatePlayer(float dt);
 			void RotatePlayer(float dt);
 			void MovePlayerInSquarePattern(float dt); // The player will move along the boundaries of the level in a square pattern
+			void MovePlayerTowardsCursor(float dt);
 			void ReplenishProjectiles(float dt);
 
 			bool isFire = false;
@@ -38,6 +39,7 @@ namespace NCL {
 			float timeElapsed;
 			float movementSpeed;
 			Vector3 movementDirection;
+			Vector3 pointPos;
 
 			const int MAX_PROJECTILE_CAPACITY = 10;
 			int numProjectilesAccumulated;
