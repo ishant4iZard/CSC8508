@@ -143,10 +143,8 @@ void NetworkedGame::UpdatePlayerState(float dt) {
 	{
 		if (i != nullptr)
 		{
-			//i->OscillatePlayer(dt);
-			i->RotatePlayer(dt);
 			i->ReplenishProjectiles(dt);
-			i->MovePlayerInSquarePattern(dt);
+			i->MovePlayerTowardsCursor(dt);
 		}
 	}
 }
