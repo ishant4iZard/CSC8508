@@ -61,7 +61,7 @@ namespace NCL::Maths {
 		inline void Transpose() {
 			float tempValues[3];
 
-			tempValues[0] = array[0][1];
+			/*tempValues[0] = array[0][1];
 			tempValues[1] = array[0][2];
 			tempValues[2] = array[1][0];
 
@@ -71,7 +71,18 @@ namespace NCL::Maths {
 
 			array[1][0] = tempValues[0];
 			array[2][0] = tempValues[1];
-			array[0][1] = tempValues[2];
+			array[0][1] = tempValues[2];*/
+			tempValues[0] = array[0][1];
+			tempValues[1] = array[0][2];
+			tempValues[2] = array[1][2];
+
+			array[0][1] = array[1][0];
+			array[0][2] = array[2][0];
+			array[1][2] = array[2][1];
+
+			array[1][0] = tempValues[0];
+			array[2][0] = tempValues[1];
+			array[2][1] = tempValues[2];
 		}
 
 		Vector3 operator*(const Vector3 &v) const;

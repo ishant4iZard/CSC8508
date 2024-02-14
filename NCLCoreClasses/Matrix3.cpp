@@ -49,7 +49,7 @@ Matrix3::Matrix3(const Matrix4 &m4) {
 
 	array[1][0] = m4.array[1][0];
 	array[1][1] = m4.array[1][1];
-	array[2][2] = m4.array[2][2];
+	array[1][2] = m4.array[1][2];
 
 	array[2][0] = m4.array[2][0];
 	array[2][1] = m4.array[2][1];

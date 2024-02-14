@@ -78,6 +78,14 @@ void Matrix4::ToZero()	{
 	}
 }
 
+void Matrix4::ToIdentity() {
+	ToZero();
+	array[0][0] = 1.0f;
+	array[1][1] = 1.0f;
+	array[2][2] = 1.0f;
+	array[3][3] = 1.0f;
+}
+
 Vector3 Matrix4::GetPositionVector() const{
 	return Vector3(array[3][0] ,array[3][1] ,array[3][2] );
 }
