@@ -22,8 +22,12 @@ void NCL::CSC8503::Teleporter::OnTriggerBegin(GameObject* otherObject)
 	if (otherObject->gettag() == "Projectile") {
 		Projectile* Bullet = dynamic_cast<Projectile*>(otherObject);
 		if (Bullet->getTeleport() && connectedTeleporter!=NULL) {
-			Vector3 outNormal = connectedTeleporter->GetTransform().GetOrientation() * Vector3(0, 0, 1);
-			Bullet->GetTransform().SetPosition(connectedTeleporter->GetTransform().GetPosition() + outNormal * 5 );
+			Matrix4 orientation  =this->GetTransform().GetOrientation();
+			Matrix4 invOrientation = orientation.Inverse();
+			Vector3 outNormal = connectedTeleporter->GetTransform().GetOrientation() * (invOrientation * Bullet->GetPhysicsObject()->GetLinearVelocity() .Normalised());
+			Vector3 localBulletPosition = invOrientation * (this->GetTransform().GetPosition() - Bullet->GetTransform().GetPosition());
+
+			Bullet->GetTransform().SetPosition(connectedTeleporter->GetTransform().GetPosition() + connectedTeleporter->GetTransform().GetOrientation() *localBulletPosition /*+  outNormal * 5*/ );
 			float speed = Bullet->GetPhysicsObject()->GetLinearVelocity().Length();
 			Bullet->GetPhysicsObject()->SetLinearVelocity(outNormal * speed);
 			Bullet->setTeleport(false);
