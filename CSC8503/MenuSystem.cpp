@@ -43,8 +43,7 @@ PushdownState::PushdownResult MainMenu::OnUpdate(float dt, PushdownState** newSt
 			"Create Lobby",
 			Vector2(5, 23),
 			[]() {
-				EventEmitter* emitter = EventEmitter::GetInstance();
-				emitter->EmitEvent(CREATE_LOBBY);
+				EventEmitter::EmitEvent(CREATE_LOBBY);
 			},
 			UIBase::WHITE,
 			KeyCodes::NUM1 // Only for PS
@@ -54,8 +53,7 @@ PushdownState::PushdownResult MainMenu::OnUpdate(float dt, PushdownState** newSt
 			"Join Lobby",
 			Vector2(5, 33),
 			[]() {
-				EventEmitter* emitter = EventEmitter::GetInstance();
-				emitter->EmitEvent(JOIN_LOBBY);
+				EventEmitter::EmitEvent(JOIN_LOBBY);
 			},
 			UIBase::WHITE,
 			KeyCodes::NUM2 // Only for PS
@@ -119,8 +117,7 @@ PushdownState::PushdownResult MultiPlayerLobby::OnUpdate(float dt, PushdownState
 				"Start Game",
 				Vector2(5, 75),
 				[]() {
-					EventEmitter* emitter = EventEmitter::GetInstance();
-					emitter->EmitEvent(START_AS_SERVER);
+					EventEmitter::EmitEvent(START_AS_SERVER);
 				},
 				UIBase::WHITE,
 				KeyCodes::S // Only for PS
@@ -138,8 +135,7 @@ PushdownState::PushdownResult MultiPlayerLobby::OnUpdate(float dt, PushdownState
 				"Start Game",
 				Vector2(5, 75),
 				[]() {
-					EventEmitter* emitter = EventEmitter::GetInstance();
-					emitter->EmitEvent(START_AS_CLIENT);
+					EventEmitter::EmitEvent(START_AS_CLIENT);
 				},
 				UIBase::WHITE,
 				KeyCodes::S // Only for PS
@@ -211,8 +207,7 @@ PushdownState::PushdownResult MultiplayerSearchMenu::OnUpdate(float dt, Pushdown
 			"Join Selected Lobby",
 			Vector2(5, 75),
 			[]() {
-				EventEmitter* emitter = EventEmitter::GetInstance();
-				emitter->EmitEvent(JOIN_CURRENT_LOBBY);
+				EventEmitter::EmitEvent(JOIN_CURRENT_LOBBY);
 			},
 			UIBase::WHITE,
 			KeyCodes::S // Only for PS
@@ -225,8 +220,7 @@ PushdownState::PushdownResult MultiplayerSearchMenu::OnUpdate(float dt, Pushdown
 				"Refresh Lobby List",
 				Vector2(5, 83),
 				[]() {
-					EventEmitter* emitter = EventEmitter::GetInstance();
-					emitter->EmitEvent(REFRESH_LOBBY);
+					EventEmitter::EmitEvent(REFRESH_LOBBY);
 				},
 				UIBase::WHITE,
 				KeyCodes::NUM1 // Only for PS

@@ -20,6 +20,8 @@ using namespace CSC8503;
 #endif
 #include <steam_api.h>
 
+#include "Event.h"
+std::multimap<EventType, EventListener*> EventEmitter::listeners;
 
 int main() {
 	if (SteamAPI_Init())
@@ -65,7 +67,8 @@ int main() {
 			w->SetWindowPosition(0, 0);
 		}
 
-		w->SetTitle("Gametech frame time:" + std::to_string(1000.0f * dt));
+		//w->SetTitle("Gametech frame time:" + std::to_string(1000.0f * dt));
+		w->SetTitle("Frame Rate : " + std::to_string(1.0f / dt));
 
 		SteamAPI_RunCallbacks();
 

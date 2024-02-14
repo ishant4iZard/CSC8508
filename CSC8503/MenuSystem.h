@@ -44,9 +44,8 @@ namespace NCL {
 #else //_ORBIS
 				ui = UIPlaystation::GetInstance();
 #endif
-				emitter = EventEmitter::GetInstance();
-				emitter->RegisterForEvent(REFRESH_LOBBY, this);
-				emitter->RegisterForEvent(JOIN_CURRENT_LOBBY, this);
+				EventEmitter::RegisterForEvent(REFRESH_LOBBY, this);
+				EventEmitter::RegisterForEvent(JOIN_CURRENT_LOBBY, this);
 			}
 
 			PushdownResult OnUpdate(float dt, PushdownState** newState) override;
@@ -58,7 +57,6 @@ namespace NCL {
 
 			int CurrentSelectLobby = 0;
 			UIBase* ui;
-			EventEmitter* emitter;
 
 			// Local states
 			bool shouldRefreshLobbyList = false;
@@ -76,9 +74,8 @@ namespace NCL {
 #endif
 				appState = ApplicationState::GetInstance();
 
-				emitter = EventEmitter::GetInstance();
-				emitter->RegisterForEvent(START_AS_SERVER, this);
-				emitter->RegisterForEvent(START_AS_CLIENT, this);
+				EventEmitter::RegisterForEvent(START_AS_SERVER, this);
+				EventEmitter::RegisterForEvent(START_AS_CLIENT, this);
 			}
 			PushdownResult OnUpdate(float dt, PushdownState** newState) override;
 			void ReceiveEvent(const EventType eventType) override;
@@ -86,7 +83,6 @@ namespace NCL {
 		protected:
 			char GetIPnumByIndex(int index);
 			UIBase* ui;
-			EventEmitter* emitter;
 			ApplicationState* appState;
 		};
 
@@ -99,9 +95,8 @@ namespace NCL {
 #else //_ORBIS
 				ui = UIPlaystation::GetInstance();
 #endif
-				emitter = EventEmitter::GetInstance();
-				emitter->RegisterForEvent(JOIN_LOBBY, this);
-				emitter->RegisterForEvent(CREATE_LOBBY, this);
+				EventEmitter::RegisterForEvent(JOIN_LOBBY, this);
+				EventEmitter::RegisterForEvent(CREATE_LOBBY, this);
 			}
 
 			PushdownResult OnUpdate(float dt, PushdownState** newState) override;
@@ -109,7 +104,6 @@ namespace NCL {
 
 		protected:
 			UIBase* ui;
-			EventEmitter* emitter;
 
 			// Local States 
 			bool isCreatingLobby = false;

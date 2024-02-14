@@ -49,7 +49,6 @@ set(Source_Files
     "ApplicationState.cpp"
     "UIPlaystation.cpp"
     "MenuSystem.cpp"
-    "Event.cpp"
 )
 
 if(USE_VULKAN)
