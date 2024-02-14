@@ -75,6 +75,36 @@ namespace NCL {
 			GLuint textColourVBO;
 			GLuint textTexVBO;
 			size_t textCount;
+
+
+			//PBR Lighting*************
+			OGLShader* pbrShader;
+			Vector3 lightPositions[4];
+			Vector3 lightColors[4];
+
+			//surface parameters
+			GLuint albedo;
+			GLuint normal;
+			GLuint metallic;
+			GLuint roughness;
+			GLuint ao;
+
+			//setting the objects
+			//now for testing
+			int nrRows;
+			int nrColumns;
+			float spacing;
+
+			void InitPBR();
+			void PBRTest();
+			void RenderSphere();
+
+			GLuint sphereVAO;
+			GLuint sphereIndexCount;
+
+
+			//PBR Lighting*************
+
 		};
 	}
 }

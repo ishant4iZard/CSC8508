@@ -64,6 +64,9 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 
 	SetDebugStringBufferSizes(10000);
 	SetDebugLineBufferSizes(1000);
+
+	//PBR init
+	InitPBR();
 }
 
 GameTechRenderer::~GameTechRenderer()	{
@@ -118,6 +121,14 @@ void GameTechRenderer::RenderFrame() {
 	SortObjectList();
 	RenderShadowMap();
 	RenderSkybox();
+
+	/*glClearColor(0.6f, 0.6f, 0.6f, 0.2f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glEnable(GL_DEPTH_TEST);*/
+
+	//PBR test
+	PBRTest();
+
 	RenderCamera();
 	glDisable(GL_CULL_FACE); //Todo - text indices are going the wrong way...
 	glDisable(GL_BLEND);
@@ -128,6 +139,8 @@ void GameTechRenderer::RenderFrame() {
 	glDisable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	
 }
 
 void GameTechRenderer::BuildObjectList() {
@@ -464,4 +477,192 @@ void GameTechRenderer::SetDebugLineBufferSizes(size_t newVertCount) {
 
 		glBindVertexArray(0);
 	}
+}
+
+//PBR Lighting
+void GameTechRenderer::InitPBR() {
+	pbrShader = new OGLShader("./OGL/PBR/pbrDirectLightVertex.glsl", "./OGL/PBR/pbrDirectLightFragment.glsl");
+
+	lightPositions[0] = Vector3(-10.0f, 10.0f, 10.0f);
+	lightPositions[1] = Vector3(10.0f, 10.0f, 10.0f);
+	lightPositions[2] = Vector3(-10.0f, -10.0f, 10.0f);
+	lightPositions[3] = Vector3(10.0f, -10.0f, 10.0f);
+
+	lightColors[0] = Vector3(150.0f, 150.0f, 150.0f);
+	lightColors[1] = Vector3(150.0f, 150.0f, 150.0f);
+	lightColors[2] = Vector3(150.0f, 150.0f, 150.0f);
+	lightColors[3] = Vector3(150.0f, 150.0f, 150.0f);
+
+	nrRows = 7;
+	nrColumns = 7;
+	spacing = 2.5f;
+
+	BindShader(*pbrShader);
+	glUniform1f(glGetUniformLocation(pbrShader->GetProgramID(), "ao"), 1.0f);
+	glUniform3f(glGetUniformLocation(pbrShader->GetProgramID(), "albedo"), 0.5f, 0.0f, 0.0f);
+
+	Matrix4 projMatrix = gameWorld.GetMainCamera().BuildProjectionMatrix(hostWindow.GetScreenAspect());
+	glUniformMatrix4fv(glGetUniformLocation(pbrShader->GetProgramID(), "projMatrix"), 1, false, (float*)&projMatrix);
+
+	//set the camera position
+}
+
+void GameTechRenderer::PBRTest() {
+
+	BindShader(*pbrShader);
+
+	Matrix4 viewMatrix = gameWorld.GetMainCamera().BuildViewMatrix();
+	glUniformMatrix4fv(glGetUniformLocation(pbrShader->GetProgramID(), "viewMatrix"), 1, false, (float*)&viewMatrix);
+
+	Vector3 camPostion = Vector3(0.0f, 0.0f, 3.0f);
+	glUniform3fv(glGetUniformLocation(pbrShader->GetProgramID(), "camPos"), 1, (float*)&camPostion);
+
+	Matrix4 model;
+	model.ToIdentity();
+
+	//set the metallic and roughness according to row and col
+
+	for (int row = 0; row < nrRows; row++) {
+		glUniform1f(glGetUniformLocation(pbrShader->GetProgramID(), "metallic"), (float)row / (float)nrRows);
+
+		for (int col = 0; col < nrColumns; col++) {
+			glUniform1f(glGetUniformLocation(pbrShader->GetProgramID(), "roughness"), std::clamp((float)col / (float)nrColumns, 0.05f, 1.0f));
+
+			model.ToIdentity();
+			model = model * Matrix4::Translation(
+				Vector3(
+					(col - (nrRows / 2)) * spacing,
+					(row - (nrColumns / 2)) * spacing,
+					0.0f));
+			glUniformMatrix4fv(glGetUniformLocation(pbrShader->GetProgramID(), "modelMatrix"), 1, false, (float*)&model);
+			Matrix4 invModel = model.Inverse();
+			Matrix3 temp(model);
+			temp.Transposed();
+
+			glUniformMatrix3fv(glGetUniformLocation(pbrShader->GetProgramID(), "normalMatrix"), 1, false, (float*)&temp);
+
+			RenderSphere();
+		}
+
+	}
+
+	//set light
+
+	for (unsigned i = 0; i < 4; i++) {
+		Vector3 newPos = lightPositions[i] + Vector3(sin(i * 5.0f) * 5.0f, 0.0f, 0.0f);
+
+		std::string lightPosIndex = "lightPositions[" + std::to_string(i) + "]";
+		glUniform3fv(glGetUniformLocation(pbrShader->GetProgramID(), lightPosIndex.c_str()), 1, (float*)&newPos);
+
+		std::string lightColorIndex = "lightColors[" + std::to_string(i) + "]";
+		glUniform3fv(glGetUniformLocation(pbrShader->GetProgramID(), lightColorIndex.c_str()), 1, (float*)&lightColors[i]);
+
+		model.ToIdentity();
+		model = model * Matrix4::Translation(newPos);
+		model = model * Matrix4::Scale(Vector3(0.5f, 0.5f, 0.5f));
+
+		glUniformMatrix4fv(glGetUniformLocation(pbrShader->GetProgramID(), "modelMatrix"), 1, false, (float*)&model);
+		Matrix4 invModel = model.Inverse();
+
+		//这一段还有问题
+		Matrix3 temp(model);
+		temp.Transposed();
+		//invModel.Transpose();
+		//glUniformMatrix3fv(glGetUniformLocation(pbrShader->GetProgramID(), "normalMatrix"), 1, false, (float*)&temp);
+		glUniformMatrix3fv(glGetUniformLocation(pbrShader->GetProgramID(), "normalMatrix"), 1, false, (float*)&temp);
+
+		RenderSphere();
+	}
+}
+
+void GameTechRenderer::RenderSphere() {
+	if (sphereVAO == 0)
+	{
+		glGenVertexArrays(1, &sphereVAO);
+
+		unsigned int vbo, ebo;
+		glGenBuffers(1, &vbo);
+		glGenBuffers(1, &ebo);
+
+		std::vector<Vector3> positions;
+		std::vector<Vector2> uv;
+		std::vector<Vector3> normals;
+		std::vector<unsigned int> indices;
+
+		const unsigned int X_SEGMENTS = 64;
+		const unsigned int Y_SEGMENTS = 64;
+		const float PI = 3.14159265359f;
+		for (unsigned int x = 0; x <= X_SEGMENTS; ++x)
+		{
+			for (unsigned int y = 0; y <= Y_SEGMENTS; ++y)
+			{
+				float xSegment = (float)x / (float)X_SEGMENTS;
+				float ySegment = (float)y / (float)Y_SEGMENTS;
+				float xPos = std::cos(xSegment * 2.0f * PI) * std::sin(ySegment * PI);
+				float yPos = std::cos(ySegment * PI);
+				float zPos = std::sin(xSegment * 2.0f * PI) * std::sin(ySegment * PI);
+
+				positions.push_back(Vector3(xPos, yPos, zPos));
+				uv.push_back(Vector2(xSegment, ySegment));
+				normals.push_back(Vector3(xPos, yPos, zPos));
+			}
+		}
+
+		bool oddRow = false;
+		for (unsigned int y = 0; y < Y_SEGMENTS; ++y)
+		{
+			if (!oddRow) // even rows: y == 0, y == 2; and so on
+			{
+				for (unsigned int x = 0; x <= X_SEGMENTS; ++x)
+				{
+					indices.push_back(y * (X_SEGMENTS + 1) + x);
+					indices.push_back((y + 1) * (X_SEGMENTS + 1) + x);
+				}
+			}
+			else
+			{
+				for (int x = X_SEGMENTS; x >= 0; --x)
+				{
+					indices.push_back((y + 1) * (X_SEGMENTS + 1) + x);
+					indices.push_back(y * (X_SEGMENTS + 1) + x);
+				}
+			}
+			oddRow = !oddRow;
+		}
+		sphereIndexCount = static_cast<unsigned int>(indices.size());
+
+		std::vector<float> data;
+		for (unsigned int i = 0; i < positions.size(); ++i)
+		{
+			data.push_back(positions[i].x);
+			data.push_back(positions[i].y);
+			data.push_back(positions[i].z);
+			if (normals.size() > 0)
+			{
+				data.push_back(normals[i].x);
+				data.push_back(normals[i].y);
+				data.push_back(normals[i].z);
+			}
+			if (uv.size() > 0)
+			{
+				data.push_back(uv[i].x);
+				data.push_back(uv[i].y);
+			}
+		}
+		glBindVertexArray(sphereVAO);
+		glBindBuffer(GL_ARRAY_BUFFER, vbo);
+		glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(float), &data[0], GL_STATIC_DRAW);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
+		unsigned int stride = (3 + 2 + 3) * sizeof(float);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, (void*)0);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, stride, (void*)(3 * sizeof(float)));
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, stride, (void*)(6 * sizeof(float)));
+	}
+
+	glBindVertexArray(sphereVAO);
+	glDrawElements(GL_TRIANGLE_STRIP, sphereIndexCount, GL_UNSIGNED_INT, 0);
 }
