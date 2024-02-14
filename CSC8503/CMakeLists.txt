@@ -30,6 +30,9 @@ set(Header_Files
     "MenuSystem.h"
     "Event.h"
     "EventType.h"
+    "Singleton.h"
+    "BaseTextureManager.h"
+    "OGLTextureManager.h"
 )
 source_group("Header Files" FILES ${Header_Files})
 
@@ -49,7 +52,11 @@ set(Source_Files
     "ApplicationState.cpp"
     "UIPlaystation.cpp"
     "MenuSystem.cpp"
+    "Singleton.cpp"
+    "BaseTextureManager.cpp"
+    "OGLTextureManager.cpp"
 )
+source_group("Source Files" FILES ${Source_Files})
 
 if(USE_VULKAN)
 list(APPEND Header_Files "GameTechVulkanRenderer.h")
@@ -61,7 +68,6 @@ file(GLOB SHADER_FILES ${ASSET_ROOT}/Shaders/VK/*.*)
 
 endif()
 
-source_group("Source Files" FILES ${Source_Files})
 
 set(ImGUI_Files
     "imconfig.h"
