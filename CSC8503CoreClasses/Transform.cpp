@@ -34,3 +34,26 @@ Transform& Transform::SetOrientation(const Quaternion& worldOrientation) {
 	UpdateMatrix();
 	return *this;
 }
+
+Transform& Transform::RandomPosition(const Vector3& worldPos,bool openorclose)
+{
+	if (openorclose)
+	{
+		float offsetX = randomFloat(minX, maxX);
+		//float offsetY = randomFloat(minY, maxY);
+		float offsetZ = randomFloat(minZ, maxZ);
+
+		position =  Vector3(offsetX, 0, offsetZ);
+		
+	}
+	else {
+		position = worldPos;
+	}
+	UpdateMatrix();
+	return *this;
+}
+
+float Transform::randomFloat(float min, float max) {
+	return min + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (max - min)));
+}
+

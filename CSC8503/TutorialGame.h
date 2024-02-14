@@ -64,6 +64,7 @@ namespace NCL {
 #endif
 			PhysicsSystem*		physics;
 			GameWorld*			world;
+			AiTreeObject*		 aitreetest;
 
 			KeyboardMouseController controller;
 

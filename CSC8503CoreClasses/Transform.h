@@ -15,6 +15,8 @@ namespace NCL {
 			Transform& SetPosition(const Vector3& worldPos);
 			Transform& SetScale(const Vector3& worldScale);
 			Transform& SetOrientation(const Quaternion& newOr);
+			Transform& RandomPosition(const Vector3& worldPos,bool openorclose);
+			float randomFloat(float min, float max);
 
 			Vector3 GetPosition() const {
 				return position;
@@ -38,6 +40,13 @@ namespace NCL {
 			Quaternion	orientation;
 			Vector3		position;
 			Vector3		scale;
+
+			float minX=-50;
+			float minY;
+			float maxX=50;
+			float maxY;
+			float minZ=-50;
+			float maxZ=50;
 		};
 	}
 }

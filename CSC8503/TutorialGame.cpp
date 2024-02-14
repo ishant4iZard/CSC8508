@@ -15,6 +15,7 @@ using namespace CSC8503;
 
 
 TutorialGame::TutorialGame() : controller(*Window::GetWindow()->GetKeyboard(), *Window::GetWindow()->GetMouse()) {
+	aitreetest = new AiTreeObject("aitree");
 	world		= new GameWorld();
 #ifdef USEVULKAN
 	renderer	= new GameTechVulkanRenderer(*world);
@@ -81,6 +82,7 @@ TutorialGame::~TutorialGame()	{
 	delete physics;
 	delete renderer;
 	delete world;
+	delete aitreetest;
 }
 
 void TutorialGame::UpdateGame(float dt) {
@@ -119,10 +121,29 @@ void TutorialGame::UpdateGame(float dt) {
 
 		Debug::Print("Time left:" + std::to_string((int)(TIME_LIMIT-timer)), Vector2(5, 10));
 	}
+
+	if (Window::GetKeyboard()->KeyDown(KeyCodes::C)) {
+		//claptrap->OnAwake(2);
+		aitreetest->ResetBehaviourTree();
+		aitreetest->OnBehaviour();
+	}
+
+	aitreetest-> Update(dt);
+	
 	world->UpdateWorld(dt);
 	renderer->Render();
 	renderer->Update(dt);
 
+
+	static int frameCounter = 0;
+
+	frameCounter++;
+
+	if (frameCounter >= 100) {
+		aitreetest->GetTransform().RandomPosition(aitreetest->GetTransform().GetPosition(), true).SetScale(Vector3(10, 10, 10) * 2);
+		frameCounter = 0; 
+	}
+	
 }
 
 void TutorialGame::InitCamera() {
@@ -143,6 +164,7 @@ void TutorialGame::InitWorld() {
 	timer = 0;
 
 	InitDefaultFloor();
+
 	InitBouncePad();
 	InitLevelWall();
 	
@@ -186,6 +208,7 @@ physics worlds. You'll probably need another function for the creation of OBB cu
 
 void TutorialGame::InitDefaultFloor() {
 	AddFloorToWorld(Vector3(0, -2, 0), Vector3(100, 2, 100));
+	AddAiToWorld(Vector3(0, -2, 0), Vector3(10, 10, 10), 1.0, 1.0);
 }
 
 void TutorialGame::InitHole() {
@@ -228,27 +251,30 @@ GameObject* TutorialGame::AddObbCubeToWorld(const Vector3& position, Vector3 dim
 	return cube;
 }
 
-//AiTreeObject* TutorialGame::AddAiToWorld(const Vector3& position, Vector3 dimensions, float inverseMass, float elasticity) {
-//	AiTreeObject* cube = new AiTreeObject("cube");
-//
-//	OBBVolume* volume = new OBBVolume(dimensions);
-//	cube->SetBoundingVolume((CollisionVolume*)volume);
-//
-//	cube->GetTransform()
-//		.SetPosition(position)
-//		.SetScale(dimensions * 2);
-//
-//	cube->SetRenderObject(new RenderObject(&cube->GetTransform(), cubeMesh, basicTex, basicShader));
-//	cube->SetPhysicsObject(new PhysicsObject(&cube->GetTransform(), cube->GetBoundingVolume()));
-//
-//	cube->GetPhysicsObject()->SetInverseMass(inverseMass);
-//	cube->GetPhysicsObject()->InitCubeInertia();
-//	cube->GetPhysicsObject()->SetElasticity(elasticity);
-//
-//	world->AddGameObject(cube);
-//
-//	return cube;
-//}
+AiTreeObject* TutorialGame::AddAiToWorld(const Vector3& position, Vector3 dimensions, float inverseMass, float elasticity) {
+	aitreetest = new AiTreeObject("Aitreeobject");
+
+	OBBVolume* volume = new OBBVolume(dimensions);
+	aitreetest->SetBoundingVolume((CollisionVolume*)volume);
+
+	//aitreetest->GetTransform().RandomPosition(position, true).SetScale(dimensions * 2);
+		//.SetPosition(position).SetScale(dimensions * 2);
+
+	aitreetest->SetRenderObject(new RenderObject(&aitreetest->GetTransform(), cubeMesh, basicTex, basicShader));
+	aitreetest->SetPhysicsObject(new PhysicsObject(&aitreetest->GetTransform(), aitreetest->GetBoundingVolume()));
+
+	aitreetest->GetPhysicsObject()->SetInverseMass(inverseMass);
+	aitreetest->GetPhysicsObject()->InitCubeInertia();
+	aitreetest->GetPhysicsObject()->SetElasticity(elasticity);
+	aitreetest->BehaviorTree();
+
+
+
+
+	world->AddGameObject(aitreetest);
+	return aitreetest;
+
+}
 
 void TutorialGame::InitBouncePad()
 {
