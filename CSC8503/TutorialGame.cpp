@@ -6,6 +6,7 @@
 #include "Hole.h"
 #include "BouncePad.h"
 #include "GravityWell.h"
+#include "Teleporter.h"
 
 #include <Maths.h>
 #include <cstdlib> 
@@ -167,6 +168,7 @@ void TutorialGame::InitWorld() {
 	timer = 0;
 
 	SpawnDataDrivenLevel(GameLevelNumber::LEVEL_1);
+	InitTeleporters();
 	physics->createStaticTree();
 }
 
@@ -384,6 +386,57 @@ GameObject* TutorialGame::AddAABBCubeToWorld(const Vector3& position, Vector3 di
 	return cube;
 }
 
+GameObject* NCL::CSC8503::TutorialGame::AddTeleporterToWorld(const Vector3& position1,const Vector3& position2,const Vector3& rotation1 , const Vector3& rotation2, Vector3 dimensions, float inverseMass, float elasticity)
+{
+	Teleporter* teleporter1 = new Teleporter();
+
+	OBBVolume* volume1 = new OBBVolume(dimensions, true, true);
+	teleporter1->SetBoundingVolume((CollisionVolume*)volume1);
+
+
+	teleporter1->GetTransform()
+		.SetPosition(position1)
+		.SetScale(dimensions * 2)
+		.SetOrientation(Quaternion::EulerAnglesToQuaternion(rotation1.x,rotation1.y,rotation1.z));
+
+	teleporter1->SetRenderObject(new RenderObject(&teleporter1->GetTransform(), cubeMesh, basicTex, basicShader));
+	teleporter1->GetRenderObject()->SetColour(Vector4(0.2f, 0.2f, 0.2f, 0.5f));
+	teleporter1->SetPhysicsObject(new PhysicsObject(&teleporter1->GetTransform(), teleporter1->GetBoundingVolume()));
+
+	teleporter1->GetPhysicsObject()->SetInverseMass(inverseMass);
+	teleporter1->GetPhysicsObject()->InitCubeInertia();
+	teleporter1->GetPhysicsObject()->SetElasticity(elasticity);
+
+
+	Teleporter* teleporter2 = new Teleporter(teleporter1);
+
+	OBBVolume* volume2 = new OBBVolume(dimensions, true, true);
+	teleporter2->SetBoundingVolume((CollisionVolume*)volume2);
+
+	teleporter2->GetTransform()
+		.SetPosition(position2)
+		.SetScale(dimensions * 2)
+		.SetOrientation(Quaternion::EulerAnglesToQuaternion(rotation2.x, rotation2.y, rotation2.z));
+
+	teleporter1->setOutNormal(teleporter1->GetTransform().GetOrientation().ToEuler());
+	teleporter2->setOutNormal(teleporter2->GetTransform().GetOrientation().ToEuler());
+
+	teleporter2->SetRenderObject(new RenderObject(&teleporter2->GetTransform(), cubeMesh, basicTex, basicShader));
+	teleporter2->SetPhysicsObject(new PhysicsObject(&teleporter2->GetTransform(), teleporter2->GetBoundingVolume()));
+	teleporter2->GetRenderObject()->SetColour(Vector4(0.2f, 0.2f, 0.2f, 0.5f));
+
+	teleporter2->GetPhysicsObject()->SetInverseMass(inverseMass);
+	teleporter2->GetPhysicsObject()->InitCubeInertia();
+	teleporter2->GetPhysicsObject()->SetElasticity(elasticity);
+
+	//teleporter1->setConnectedTeleporter(teleporter2);
+
+	world->AddGameObject(teleporter1);
+	world->AddGameObject(teleporter2);
+
+	return teleporter1;
+}
+
 
 
 void TutorialGame::InitBouncePad()
@@ -410,6 +463,13 @@ void TutorialGame::InitLevelWall()
 	AddAABBCubeToWorld(Vector3(-96, 0, 0), Vector3(10, 20, 100), 0, 0.5f);
 	AddAABBCubeToWorld(Vector3(0,0, 96), Vector3(100, 20, 10), 0, 0.5f);
 	AddAABBCubeToWorld(Vector3(0, 0, -96), Vector3(100, 20, 10), 0, 0.5f);
+}
+
+
+
+void NCL::CSC8503::TutorialGame::InitTeleporters()
+{
+	AddTeleporterToWorld((Vector3(48, 5.6f, 0)), (Vector3(-48, 5.6f, 45)), Vector3(0, -45, 0), Vector3(0, 90, 0) , Vector3(7, 10, 2));
 }
 
 void TutorialGame::InitPlaceholderAIs() {
