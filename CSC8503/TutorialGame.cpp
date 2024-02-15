@@ -128,7 +128,14 @@ void TutorialGame::UpdateGame(float dt) {
 		aitreetest->OnBehaviour();
 	}
 
-	aitreetest-> Update(dt);
+	//if (aitreetest) {
+	//	aitreetest-> Update(dt);
+	//}
+
+	//testStateObject->getPositionfromobject()
+	if (testStateObject) {
+		testStateObject->Update(dt);
+	}
 	
 	world->UpdateWorld(dt);
 	renderer->Render();
@@ -168,6 +175,7 @@ void TutorialGame::InitWorld() {
 	timer = 0;
 
 	InitDefaultFloor();
+	InitAI();
 
 	InitBouncePad();
 	InitLevelWall();
@@ -277,6 +285,28 @@ AiTreeObject* TutorialGame::AddAiToWorld(const Vector3& position, Vector3 dimens
 
 }
 
+AiStatemachineObject* TutorialGame::AddAiStateObjectToWorld(const Vector3& position) {
+	testStateObject = new AiStatemachineObject();
+
+	SphereVolume* volume = new SphereVolume(5.0f);
+	testStateObject->SetBoundingVolume((CollisionVolume*)volume);
+	testStateObject->GetTransform()
+		.SetScale(Vector3(3, 3, 3))
+		.SetPosition(position);
+
+	testStateObject->SetRenderObject(new RenderObject(&testStateObject->GetTransform(), sphereMesh, nullptr, basicShader));
+	testStateObject->SetPhysicsObject(new PhysicsObject(&testStateObject->GetTransform(), testStateObject->GetBoundingVolume()));
+
+	testStateObject->GetPhysicsObject()->SetInverseMass(1.0f);
+	testStateObject->GetPhysicsObject()->InitSphereInertia();
+
+	//testStateObject->SetRenderObject()->SetColour(Debug::RED);
+
+	world->AddGameObject(testStateObject);
+
+	return testStateObject;
+}
+
 void TutorialGame::InitBouncePad()
 {
 	for (size_t i = 0; i < 5; i++)
@@ -301,6 +331,11 @@ void TutorialGame::InitLevelWall()
 	AddObbCubeToWorld(Vector3(-96, 0, 0), Vector3(10, 20, 100), 0, 0.5f);
 	AddObbCubeToWorld(Vector3(0,0, 96), Vector3(100, 20, 10), 0, 0.5f);
 	AddObbCubeToWorld(Vector3(0, 0, -96), Vector3(100, 20, 10), 0, 0.5f);
+}
+
+void TutorialGame::InitAI()
+{
+	AddAiStateObjectToWorld(Vector3(10, 2, 0));
 }
 
 void TutorialGame::ProcessFrameAddresses() {

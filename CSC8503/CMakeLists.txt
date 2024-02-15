@@ -7,8 +7,6 @@ set(Header_Files
     "GameTechRenderer.h"
     "NetworkedGame.h"
     "NetworkPlayer.h"
-    "AitreeObject.h"
-    "AiStatemachine.h"
     "TutorialGame.h"
     "Projectile.h"
     "Hole.h"
@@ -21,13 +19,21 @@ set(Source_Files
     "Main.cpp"
     "NetworkedGame.cpp"
     "NetworkPlayer.cpp"
-    "AitreeObject.cpp"
-    "AiStatemachine.cpp"
+
     "TutorialGame.cpp"
     "Projectile.cpp"
     "Hole.cpp"
     "BouncePad.cpp"
 )
+
+set(AI_Files
+    "AiStatemachineObject.cpp"
+    "AiStatemachineObject.h"
+    "AitreeObject.cpp"
+    "AitreeObject.h"
+)
+source_group("AI_Files" FILES ${AI_Files})
+
 
 if(USE_VULKAN)
 list(APPEND Header_Files "GameTechVulkanRenderer.h")
@@ -44,6 +50,7 @@ source_group("Source Files" FILES ${Source_Files})
 set(ALL_FILES
     ${Header_Files}
     ${Source_Files}
+    ${AI_Files}
 )
 
 if(USE_VULKAN)

@@ -8,6 +8,7 @@
 #include "PhysicsSystem.h"
 
 #include "AiTreeObject.h"
+#include "AiStatemachineObject.h"
 #include "BouncePad.h"
 
 enum class level {
@@ -49,7 +50,7 @@ namespace NCL {
 			void InitHole();
 			void InitBouncePad();
 			void InitLevelWall();
-
+			void InitAI();
 			void InitDefaultFloor();
 			void ProcessFrameAddresses();
 
@@ -93,6 +94,9 @@ namespace NCL {
 			float timer;
 			float finaltimer;
 			bool serverStarted = false;
+
+			AiStatemachineObject * AddAiStateObjectToWorld(const Vector3& position);
+			AiStatemachineObject* testStateObject;
 
 			level currentlevel;
 			int score = 0;
