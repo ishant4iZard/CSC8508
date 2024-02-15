@@ -6,6 +6,16 @@
 using namespace NCL;
 using namespace CSC8503;
 
+Vector3 Lerp(const Vector3& start, const Vector3& end, float t) {
+	t = std::clamp(t, 0.0f, 1.0f);
+
+	float lerpedX = start.x + t * (end.x - start.x);
+	float lerpedY = start.y + t * (end.y - start.y);
+	float lerpedZ = start.z + t * (end.z - start.z);
+
+	return Vector3(lerpedX, lerpedY, lerpedZ);
+}
+
 NetworkPlayer::NetworkPlayer(NetworkedGame* game, int num)	{
 	this->game = game;
 	playerNum  = num;
@@ -42,6 +52,7 @@ Quaternion GenerateOrientation(const Vector3& axis, float angle)
 
 void NetworkPlayer::SetPlayerYaw(const Vector3& pointPos)
 {
+	this->pointPos = pointPos;
 	Quaternion orientation;
 	Vector3 pos = transform.GetPosition();
 	Vector3 targetForwardVec = (pointPos - pos);
@@ -129,6 +140,16 @@ void NetworkPlayer::MovePlayerInSquarePattern(float dt) {
 	}
 
 	Vector3 velocity = movementDirection * movementSpeed;
+	this->GetPhysicsObject()->SetLinearVelocity(velocity);
+}
+
+void NetworkPlayer::MovePlayerTowardsCursor(float dt){
+	Vector3 movementDirection = (pointPos - transform.GetPosition()).Normalised();
+
+	Vector3 currentVelocity = this->GetPhysicsObject()->GetLinearVelocity();
+	Vector3 targetVelocity = movementDirection * movementSpeed;
+	Vector3 velocity = Lerp(currentVelocity, targetVelocity, dt);
+
 	this->GetPhysicsObject()->SetLinearVelocity(velocity);
 }
 

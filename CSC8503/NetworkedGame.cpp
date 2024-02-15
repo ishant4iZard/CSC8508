@@ -116,7 +116,7 @@ void NetworkedGame::UpdateGame(float dt) {
 			else if (thisClient) {
 				UpdateAsClient(dt);
 			}
-			timeToNextPacket += 1.0f / 30.0f; //30hz server/client update
+			timeToNextPacket += 1.0f / 60.0f; //60hz server/client update
 		}
 
 		// Server and Client Receive and process there packet
@@ -143,10 +143,8 @@ void NetworkedGame::UpdatePlayerState(float dt) {
 	{
 		if (i != nullptr)
 		{
-			//i->OscillatePlayer(dt);
-			i->RotatePlayer(dt);
 			i->ReplenishProjectiles(dt);
-			i->MovePlayerInSquarePattern(dt);
+			i->MovePlayerTowardsCursor(dt);
 		}
 	}
 }
@@ -345,7 +343,7 @@ NetworkPlayer* NetworkedGame::AddNetworkPlayerToWorld(const Vector3& position, i
 {
 	float meshSize = 2.0f;
 	Vector3 volumeSize = Vector3(1.0, 1.6, 1.0);
-	float inverseMass = 1.0f / 60.0f;
+	float inverseMass = 1.0f / 600000.0f;
 
 	NetworkPlayer* character = new NetworkPlayer(this, playerNum);
 
