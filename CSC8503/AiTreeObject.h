@@ -31,7 +31,8 @@ namespace NCL {
             void ReboundbulletAction(float dt);
             void ChasecloseroneAction(float dt);
             void TrytoattackAction(float dt);
-
+            
+            void AIpathfindingtest(vector<Vector3>& waypoints);
 
 
             BehaviourSelector* SelectorLevel1;

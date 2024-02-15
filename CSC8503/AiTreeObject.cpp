@@ -68,6 +68,10 @@ void AiTreeObject::TrytoattackAction(float dt) {
 	//cout << "TrytoattackAction" << endl;
 }
 
+void AiTreeObject::AIpathfindingtest(vector<Vector3>& waypoints)
+{
+
+}
 
 void AiTreeObject::OnCollisionBegin(GameObject* otherObject)
 {

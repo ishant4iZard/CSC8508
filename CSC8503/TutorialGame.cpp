@@ -136,11 +136,15 @@ void TutorialGame::UpdateGame(float dt) {
 
 
 	static int frameCounter = 0;
-
+	//aitreetest->GetTransform().RandomPosition(aitreetest->GetTransform().GetPosition(), true).SetScale(Vector3(10, 10, 10) * 2);
 	frameCounter++;
 
 	if (frameCounter >= 100) {
-		aitreetest->GetTransform().RandomPosition(aitreetest->GetTransform().GetPosition(), true).SetScale(Vector3(10, 10, 10) * 2);
+		aitreetest->GetTransform().RandomPosition(aitreetest->GetTransform().GetPosition(), true);
+		Vector3 aichaseposition = aitreetest->GetTransform().GetPosition();
+		frameAddresses.push_back(aichaseposition);
+		
+		ProcessFrameAddresses();
 		frameCounter = 0; 
 	}
 	
@@ -208,7 +212,7 @@ physics worlds. You'll probably need another function for the creation of OBB cu
 
 void TutorialGame::InitDefaultFloor() {
 	AddFloorToWorld(Vector3(0, -2, 0), Vector3(100, 2, 100));
-	AddAiToWorld(Vector3(0, -2, 0), Vector3(10, 10, 10), 1.0, 1.0);
+	//AddAiToWorld(Vector3(0, -2, 0), Vector3(10, 10, 10), 1.0, 1.0);
 }
 
 void TutorialGame::InitHole() {
@@ -268,9 +272,6 @@ AiTreeObject* TutorialGame::AddAiToWorld(const Vector3& position, Vector3 dimens
 	aitreetest->GetPhysicsObject()->SetElasticity(elasticity);
 	aitreetest->BehaviorTree();
 
-
-
-
 	world->AddGameObject(aitreetest);
 	return aitreetest;
 
@@ -300,4 +301,13 @@ void TutorialGame::InitLevelWall()
 	AddObbCubeToWorld(Vector3(-96, 0, 0), Vector3(10, 20, 100), 0, 0.5f);
 	AddObbCubeToWorld(Vector3(0,0, 96), Vector3(100, 20, 10), 0, 0.5f);
 	AddObbCubeToWorld(Vector3(0, 0, -96), Vector3(100, 20, 10), 0, 0.5f);
+}
+
+void TutorialGame::ProcessFrameAddresses() {
+
+	for (auto address : frameAddresses) {
+
+		std::cout << "Address: " << address << std::endl;
+	}
+	//frameAddresses.clear();
 }

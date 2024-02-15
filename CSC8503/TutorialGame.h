@@ -30,8 +30,6 @@ namespace NCL {
 
 			virtual void UpdateGame(float dt);
 
-
-
 		protected:
 			void InitialiseAssets();
 
@@ -53,6 +51,7 @@ namespace NCL {
 			void InitLevelWall();
 
 			void InitDefaultFloor();
+			void ProcessFrameAddresses();
 
 			GameObject* AddFloorToWorld(const Vector3& position, const Vector3& size = Vector3(128,2,128));
 
@@ -65,6 +64,8 @@ namespace NCL {
 			PhysicsSystem*		physics;
 			GameWorld*			world;
 			AiTreeObject*		 aitreetest;
+			vector<Vector3> frameAddresses;
+			Vector3 aichaseposition;
 
 			KeyboardMouseController controller;
 
