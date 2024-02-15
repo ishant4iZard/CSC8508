@@ -21,6 +21,7 @@
 #include "../CSC8503/UIBase.h"
 #ifdef _WIN32
 #include "../CSC8503/UIWindows.h"
+#include "OGLTextureManager.h"
 #else //_ORBIS
 #include "../CSC8503/UIPlaystation.h"
 #endif
@@ -105,6 +106,9 @@ namespace NCL {
 			Texture*	basicTex	= nullptr;
 			Texture*	sandTex		= nullptr;
 			Shader*		basicShader = nullptr;
+			Shader* pbrShader = nullptr;
+
+			Texture* solarCellTextureList[(uint8_t)TextureType::MAX_TYPE];
 
 			//Coursework Meshes
 			Mesh*	charMesh	= nullptr;
@@ -148,6 +152,7 @@ namespace NCL {
 #pragma endregion
 
 			ApplicationState* appState;
+			OGLTextureManager* bm;
 		};
 	}
 }

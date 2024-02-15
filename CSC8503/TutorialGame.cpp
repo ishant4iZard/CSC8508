@@ -54,6 +54,7 @@ TutorialGame::TutorialGame() : controller(*Window::GetWindow()->GetKeyboard(), *
 	ui = UIPlaystation::GetInstance();
 #endif
 	appState = ApplicationState::GetInstance();
+	bm = new OGLTextureManager();
 }
 
 /*
@@ -74,11 +75,18 @@ void TutorialGame::InitialiseAssets() {
 
 	basicTex	= renderer->LoadTexture("checkerboard.png");
 	sandTex		= renderer->LoadTexture("sand.jpg");
-	basicShader = renderer->LoadShader("scene.vert", "scene.frag");
 
+	solarCellTextureList[(uint8_t)TextureType::ALBEDO] = renderer->LoadTexture("SolarCells/T_SC_albedo.png");
+	solarCellTextureList[(uint8_t)TextureType::NORMAL] = renderer->LoadTexture("SolarCells/T_SC_normal.png");
+	solarCellTextureList[(uint8_t)TextureType::METAL] = renderer->LoadTexture("SolarCells/T_SC_metallic.png");
+	solarCellTextureList[(uint8_t)TextureType::ROUGHNESS] = renderer->LoadTexture("SolarCells/T_SC_roughness.png");
+	solarCellTextureList[(uint8_t)TextureType::AO] = renderer->LoadTexture("SolarCells/T_SC_ao.png");
+
+	basicShader = renderer->LoadShader("scene.vert", "scene.frag");
+	pbrShader = renderer->LoadShader("pbr.vert", "pbr.frag");
+	
 	InitCamera();
 	InitWorld();
-	
 }
 
 TutorialGame::~TutorialGame()	{
@@ -90,12 +98,15 @@ TutorialGame::~TutorialGame()	{
 
 	delete basicTex;
 	delete basicShader;
+	delete pbrShader;
 
 	delete physics;
 	delete renderer;
 	delete world;
 
 	delete levelFileLoader;
+
+	delete[] solarCellTextureList;
 }
 
 void TutorialGame::UpdateGame(float dt) {
@@ -246,7 +257,11 @@ void NCL::CSC8503::TutorialGame::SpawnFloor(const Vector3& inPosition, const Vec
 
 void NCL::CSC8503::TutorialGame::SpawnBouncingPad(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale)
 {
-	BouncePad* tempBouncePad = new BouncePad(cubeMesh, basicTex, basicShader);
+	BouncePad* tempBouncePad = new BouncePad(cubeMesh, basicTex, pbrShader);
+	for (size_t i = 0; i < (uint8_t)TextureType::MAX_TYPE; i++)
+	{
+		tempBouncePad->GetRenderObject()->SetTexture((TextureType)i, solarCellTextureList[i]);
+	}
 	tempBouncePad->GetRenderObject()->SetColour(Debug::CYAN);
 	world->AddGameObject(tempBouncePad);
 
