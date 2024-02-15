@@ -4,6 +4,8 @@ set(PROJECT_NAME CSC8503)
 # Source groups
 ################################################################################
 set(NetPlugins
+    "OnlineSubsystemBase.h"
+    "OnlineSubsystemBase.cpp"
     "steam.h"
     "steam.cpp"
 )

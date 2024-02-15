@@ -14,6 +14,7 @@ namespace NCL {
 	namespace  CSC8503 {
 		class PushdownMachine;
 		class NetworkedGame;
+		class OnlineSubsystemBase;
 		class NetSystem_Steam;
 
 		class MenuSystem
@@ -32,7 +33,37 @@ namespace NCL {
 		private:
 			PushdownMachine* MenuMachine;
 
-			NetSystem_Steam* steam;
+			OnlineSubsystemBase* OnlineSubsystem;
+		};
+
+		/** Main Menu */
+		class MainMenu : public PushdownState, public EventListener
+		{
+		public:
+			MainMenu() {
+#ifdef _WIN32
+				ui = UIWindows::GetInstance();
+#else //_ORBIS
+				ui = UIPlaystation::GetInstance();
+#endif
+				appState = ApplicationState::GetInstance();
+
+				EventEmitter::RegisterForEvent(LOBBY_CREATED, this);
+				EventEmitter::RegisterForEvent(LOBBY_CREATEFAILED, this);
+			}
+
+			PushdownResult OnUpdate(float dt, PushdownState** newState) override;
+			void ReceiveEvent(const EventType eventType) override;
+
+		protected:
+			UIBase* ui;
+			ApplicationState* appState;
+
+			// Local States 
+			bool isCreatingLobby = false;
+			bool isLobbyCreated = false;
+			bool isSearchLobbyBtnPressed = false;
+			bool isJoiningLobby = false;
 		};
 
 		class MultiplayerSearchMenu : public PushdownState, public EventListener
@@ -44,23 +75,30 @@ namespace NCL {
 #else //_ORBIS
 				ui = UIPlaystation::GetInstance();
 #endif
-				EventEmitter::RegisterForEvent(REFRESH_LOBBY, this);
-				EventEmitter::RegisterForEvent(JOIN_CURRENT_LOBBY, this);
+				EventEmitter::RegisterForEvent(LOBBY_SEARCHCOMPLETED, this);
+				EventEmitter::RegisterForEvent(LOBBY_JOINED, this);
+				EventEmitter::RegisterForEvent(LOBBY_JOINFAILED, this);
 			}
 
 			PushdownResult OnUpdate(float dt, PushdownState** newState) override;
 			void ReceiveEvent(const EventType eventType) override;
 
 		protected:
-			void DisplaySearchResult(NetSystem_Steam* Steam);
-			std::string DisplayLobbyLine(NetSystem_Steam* Steam, int Index);
+			void CheckAndDisplaySearchResult(OnlineSubsystemBase* Subsystem);
+			std::string DisplayLobbyLine(OnlineSubsystemBase* Subsystem, int Index);
 
 			int CurrentSelectLobby = 0;
+			void ChangeCurrentSelectLobbyByAmount(OnlineSubsystemBase* Subsystem, int num);
+
+			int FirstDisplayedLobbyIndex = 0;
+
 			UIBase* ui;
 
 			// Local states
-			bool shouldRefreshLobbyList = false;
-			bool shouldJoinSelectedLobby = false;
+			bool isSearchingLobbies = false;
+			bool isCanJoinSelectLobby = false;
+			bool isJoiningLobby = false;
+			bool isLobbyJoined = false;
 		};
 
 		class MultiPlayerLobby : public PushdownState, public EventListener
@@ -81,33 +119,13 @@ namespace NCL {
 			void ReceiveEvent(const EventType eventType) override;
 
 		protected:
+			void CheckAndDisplayLobbyMembersList(OnlineSubsystemBase* Subsystem);
+			std::string DisplayMemberLineByIndex(OnlineSubsystemBase* Subsystem, int Index);
+
 			char GetIPnumByIndex(int index);
+
 			UIBase* ui;
 			ApplicationState* appState;
-		};
-
-		class MainMenu : public PushdownState, public EventListener
-		{
-		public:
-			MainMenu() {
-#ifdef _WIN32
-				ui = UIWindows::GetInstance();
-#else //_ORBIS
-				ui = UIPlaystation::GetInstance();
-#endif
-				EventEmitter::RegisterForEvent(JOIN_LOBBY, this);
-				EventEmitter::RegisterForEvent(CREATE_LOBBY, this);
-			}
-
-			PushdownResult OnUpdate(float dt, PushdownState** newState) override;
-			void ReceiveEvent(const EventType eventType) override;
-
-		protected:
-			UIBase* ui;
-
-			// Local States 
-			bool isCreatingLobby = false;
-			bool isJoiningLobby = false;
 		};
 
 		class PlayingHUD : public PushdownState
