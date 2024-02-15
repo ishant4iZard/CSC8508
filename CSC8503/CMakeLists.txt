@@ -9,6 +9,12 @@ set(NetPlugins
 )
 source_group("NetPlugins" FILES ${NetPlugins})
 
+set(AudioEngine
+    "AudioEngine.h"
+    "AudioEngine.cpp"
+)
+source_group("AudioEngine" FILES ${AudioEngine})
+
 set(Header_Files
     "GameTechRenderer.h"
     "NetworkedGame.h"
@@ -90,6 +96,7 @@ set(ALL_FILES
     ${Source_Files}
     ${ImGUI_Files}
     ${NetPlugins}
+    ${AudioEngine}
 )
 
 if(USE_VULKAN)
@@ -97,6 +104,7 @@ if(USE_VULKAN)
         ${Header_Files}
         ${Source_Files}
         ${NetPlugins}
+        ${AudioEngine}
         ${SHADER_FILES}
         ${ImGUI_Files}
     )
@@ -261,6 +269,7 @@ include_directories("../OpenGLRendering/")
 include_directories("../NCLCoreClasses/")
 include_directories("../CSC8503CoreClasses/")
 include_directories("../Steamworksdk/public/steam/")
+include_directories("../Dependencies/FMOD/Windows/include/")
 
 #link_directories("../Steamworksdk/redistributable_bin/win64/")
 
@@ -268,6 +277,8 @@ target_link_libraries(${PROJECT_NAME} LINK_PUBLIC NCLCoreClasses)
 target_link_libraries(${PROJECT_NAME} LINK_PUBLIC CSC8503CoreClasses)
 target_link_libraries(${PROJECT_NAME} LINK_PUBLIC OpenGLRendering)
 target_link_libraries(${PROJECT_NAME} LINK_PUBLIC "../../Steamworksdk/redistributable_bin/win64/steam_api64")
+target_link_libraries(${PROJECT_NAME} LINK_PUBLIC  "../../Dependencies/FMOD/Windows/lib/fmod_vc")
+target_link_libraries(${PROJECT_NAME} LINK_PUBLIC  "../../Dependencies/FMOD/Windows/lib/fmodL_vc")
 
 
 if(USE_VULKAN)

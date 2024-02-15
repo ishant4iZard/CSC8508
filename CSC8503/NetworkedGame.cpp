@@ -44,11 +44,21 @@ NetworkedGame::NetworkedGame()	{
 		PlayersList.push_back(-1);
 		ControledPlayersList.push_back(nullptr);
 	}
+
+	audioEngine = new AudioEngine();
+
+	// Looping background music
+	backGroundMusic = audioEngine->CreateSound("../../Assets/Audio/abc.mp3", true);
+	audioEngine->PlaySound(backGroundMusic, true);
+
+	// Trigger music
+	fireSFX = audioEngine->CreateSound("../../Assets/Audio/jump.mp3", false);
 }
 
 NetworkedGame::~NetworkedGame()	{
 	delete thisServer;
 	delete thisClient;
+	delete audioEngine;
 }
 
 bool NetworkedGame::StartAsServer() {
@@ -137,6 +147,7 @@ void NetworkedGame::UpdateGame(float dt) {
 		}
 
 	}
+	audioEngine->Update();
 	TutorialGame::UpdateGame(dt);
 	Debug::UpdateRenderables(dt);
 }
@@ -226,13 +237,19 @@ void NCL::CSC8503::NetworkedGame::HandleInputAsServer()
 {
 	if (LocalPlayer)
 	{
-		if (Window::GetMouse()->ButtonPressed(MouseButtons::Type::Left)) { ServerFired = true; }
+		if (Window::GetMouse()->ButtonPressed(MouseButtons::Type::Left)) { 
+			ServerFired = true; 
+			audioEngine->PlaySound(fireSFX, false);
+		}
 	}
 }
 
 void NCL::CSC8503::NetworkedGame::HandleInputAsClient()
 {
-	if (Window::GetMouse()->ButtonPressed(MouseButtons::Type::Left)) { ClientFired = true; }
+	if (Window::GetMouse()->ButtonPressed(MouseButtons::Type::Left)) { 
+		ClientFired = true; 
+		audioEngine->PlaySound(fireSFX, false);
+	}
 }
 
 void NetworkedGame::BroadcastSnapshot(bool deltaFrame) {
