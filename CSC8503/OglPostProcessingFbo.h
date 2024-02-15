@@ -51,10 +51,6 @@ namespace NCL
 			bool BindHdrFrameBuffer(GLuint& inFbo)
 			{
 				glBindFramebuffer(GL_FRAMEBUFFER, inFbo);
-				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
-					GL_TEXTURE_2D, depthBuffer, 0);
-				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT,
-					GL_TEXTURE_2D, depthBuffer, 0);
 				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
 					GL_TEXTURE_2D, colorBuffer, 0);
 

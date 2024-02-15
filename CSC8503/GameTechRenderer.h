@@ -60,6 +60,7 @@ namespace NCL {
 
 			OGLShader*  debugShader;
 			OGLShader*  skyboxShader;
+			OGLShader* pbrShader;
 			OGLShader* toneMapperShader;
 			OGLShader* gammaCorrectionShader;
 			OGLMesh*	skyboxMesh;

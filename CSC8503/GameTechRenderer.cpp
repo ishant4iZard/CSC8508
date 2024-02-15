@@ -22,6 +22,9 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 
 	debugShader  = new OGLShader("debug.vert", "debug.frag");
 	shadowShader = new OGLShader("shadow.vert", "shadow.frag");
+	toneMapperShader = new OGLShader("basic.vert", "ReinhardTonemap.frag");
+	pbrShader = new OGLShader("pbr.vert", "pbr.frag");
+	gammaCorrectionShader = new OGLShader("basic.vert", "gammaCorrection.frag");
 
 	glGenTextures(1, &shadowTex);
 	glBindTexture(GL_TEXTURE_2D, shadowTex);
@@ -50,7 +53,7 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 
 	//Setup directional light
 	directionalLight = new DirectionalLight(
-		Vector3(0.8f, 0.8f, 0.5f),
+		Vector3(-0.2f, -220.0f, -10.0f),
 		1.0f,
 		Vector4(77.0f, 77.0f, 255.0f, 1.0f));
 	//Skybox!
@@ -320,9 +323,9 @@ void GameTechRenderer::UpdateGlobalLightUniform(const OGLShader* inShader)
 	GLint globalLightColorLocation = glGetUniformLocation(inShader->GetProgramID(), "globalLightColor");
 	GLint globalIntensityLocation = glGetUniformLocation(inShader->GetProgramID(), "globalIntensity");
 
-	//glUniform3fv(lightDirLocation, 1, (float*)(&directionalLight->GetDirection()));
-	//glUniform4fv(globalLightColorLocation, 1, (float*)(&directionalLight->GetColor()));
-	//glUniform1f(globalIntensityLocation, directionalLight->GetIntensity());
+	glUniform3fv(lightDirLocation, 1, (float*)(&(directionalLight->GetDirection())));
+	glUniform4fv(globalLightColorLocation, 1, (float*)(&(directionalLight->GetColor())));
+	glUniform1f(globalIntensityLocation, directionalLight->GetIntensity());
 }
 
 void GameTechRenderer::RenderCamera() {

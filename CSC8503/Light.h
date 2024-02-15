@@ -15,7 +15,7 @@ namespace NCL
 				color = inColor;
 			}
 
-			NCL::Maths::Vector4 GetColor() const { return color; }
+			const NCL::Maths::Vector4& GetColor()  { return color; }
 			void SetColor(const NCL::Maths::Vector4& inColor) { color = inColor; }
 		};
 	}

@@ -17,7 +17,7 @@ namespace NCL
                 intensity = inIntensity;
             }
 
-            NCL::Maths::Vector3 GetDirection() { return direction; }
+            const NCL::Maths::Vector3& GetDirection() { return direction; }
             /// <summary>
             /// Returns specular intensity of the light.
             /// </summary>

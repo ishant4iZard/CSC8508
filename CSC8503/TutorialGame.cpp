@@ -199,7 +199,7 @@ GameObject* TutorialGame::AddFloorToWorld(const Vector3& position, const Vector3
 		.SetScale(floorSize * 2)
 		.SetPosition(position);
 
-	floor->SetRenderObject(new RenderObject(&floor->GetTransform(), cubeMesh, basicTex, basicShader));
+	floor->SetRenderObject(new RenderObject(&floor->GetTransform(), cubeMesh, basicTex, pbrShader));
 	floor->SetPhysicsObject(new PhysicsObject(&floor->GetTransform(), floor->GetBoundingVolume()));
 
 	floor->GetPhysicsObject()->SetInverseMass(0);
@@ -250,9 +250,14 @@ void NCL::CSC8503::TutorialGame::SpawnWall(const Vector3& inPosition, const Vect
 
 void NCL::CSC8503::TutorialGame::SpawnFloor(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale)
 {
-	AddFloorToWorld(
+	GameObject* tempFloor = AddFloorToWorld(
 		inPosition,
 		inScale);
+
+	for (size_t i = 0; i < (uint8_t)TextureType::MAX_TYPE; i++)
+	{
+		tempFloor->GetRenderObject()->SetTexture((TextureType)i, solarCellTextureList[i]);
+	}
 }
 
 void NCL::CSC8503::TutorialGame::SpawnBouncingPad(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale)

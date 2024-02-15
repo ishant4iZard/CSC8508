@@ -1,5 +1,6 @@
 #version 400 core
 
+uniform sampler2D 	mainTex;
 uniform sampler2D diffuseTex;
 uniform sampler2D normalTex;
 uniform sampler2D metallicTex;
@@ -12,7 +13,7 @@ uniform vec3 cameraPos;
 
 // Directional Light
 uniform vec3 globalLightDirection;
-uniform vec3 globalLightColor;
+uniform vec4 globalLightColor;
 uniform float globalIntensity;
 
 //Point Light
@@ -254,7 +255,7 @@ void main()
     
     if(lOut == vec3(0.0))
     {
-        lOut += DirectionalLightPbr(globalLightDirection, IN.worldPos, globalLightColor, normal, roughness, metallic, albedo, cameraPos);
+        lOut += DirectionalLightPbr(globalLightDirection, IN.worldPos, globalLightColor.xyz, normal, roughness, metallic, albedo, cameraPos);
     }
 
     vec3 ambient = vec3(0.33) * albedo * ao;
