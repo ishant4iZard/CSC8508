@@ -34,6 +34,8 @@ set(Header_Files
     "Singleton.h"
     "BaseTextureManager.h"
     "OGLTextureManager.h"
+    "Light.h"
+    "DirectionalLight.h"
 )
 source_group("Header Files" FILES ${Header_Files})
 
@@ -59,6 +61,12 @@ set(Source_Files
     "OGLTextureManager.cpp"
 )
 source_group("Source Files" FILES ${Source_Files})
+
+set(OGL_Rendering_Files
+    "OglHdrFbo.h"
+    "OglPostProcessingFbo.h"
+)
+source_group("OGL Rendering Files" FILES ${OGL_Rendering_Files})
 
 if(USE_VULKAN)
 list(APPEND Header_Files "GameTechVulkanRenderer.h")
@@ -96,6 +104,7 @@ set(ALL_FILES
     ${Source_Files}
     ${ImGUI_Files}
     ${NetPlugins}
+    ${OGL_Rendering_Files}
 )
 
 if(USE_VULKAN)
