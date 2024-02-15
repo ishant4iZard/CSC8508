@@ -225,6 +225,9 @@ bool CollisionDetection::ObjectIntersection(GameObject* a, GameObject* b, Collis
 		return OBBIntersection((OBBVolume&)*volA, transformA, (OBBVolume&)*volB, transformB, collisionInfo);
 	}
 	//Two Capsules
+	if (pairType == VolumeType::Capsule) {
+		//capsule intersection
+	}
 
 	//AABB vs Sphere pairs
 	if (volA->type == VolumeType::AABB && volB->type == VolumeType::Sphere) {
@@ -438,11 +441,71 @@ bool CollisionDetection::AABBCapsuleIntersection(
 	return false;
 }
 
+float SqDistPointSegment(Vector3 a, Vector3 b, Vector3 c)
+{
+	Vector3 ab = b - a, ac = c - a, bc = c - b;
+	float e = Vector3::Dot(ac, ab);
+	// Handle cases where c projects outside ab
+	if (e <= 0.0f) return Vector3::Dot(ac, ac);
+	float f = Vector3::Dot(ab, ab);
+	if (e >= f) return Vector3::Dot(bc, bc);
+	// Handle cases where c projects onto ab
+	return (Vector3::Dot(ac, ac)) - e * e / f;
+}
+
+void ClosestPtPointSegment(Vector3 a, Vector3 b, Vector3 c, float& t, Vector3& d) {
+
+	//std::cout << a.y << "\n";
+	//std::cout << b.y << "\n";
+	Vector3 ab = b - a;
+	t = Vector3::Dot(c - a, ab) / Vector3::Dot(ab, ab);
+	d = a + ab * fmin(fmax(t, 0), 1) ;
+}
+
 bool CollisionDetection::SphereCapsuleIntersection(
 	const CapsuleVolume& volumeA, const Transform& worldTransformA,
 	const SphereVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo) {
-	//fill
-	return false;
+	
+	Vector3	capsulePos = worldTransformA.GetPosition();
+	Quaternion orientation = worldTransformA.GetOrientation();
+	float capsuleRadius = volumeA.GetRadius();
+	float halfHeight = volumeA.GetHalfHeight();
+	Vector3 Updirection = orientation * Vector3(0, 1, 0);
+	Vector3 pa = capsulePos + Updirection * halfHeight;
+	Vector3 pb = capsulePos - Updirection * halfHeight;
+
+
+	Vector3 spherePos = worldTransformB.GetPosition();
+	float sphereRadius = volumeB.GetRadius();
+
+	float radius = sphereRadius + capsuleRadius;
+	/*float dist2 = SqDistPointSegment(pa, pb, spherePos);
+
+	float penetration = radius - sqrt(dist2);
+	if (penetration < 0) {
+		return false;
+	}*/
+
+	Vector3 bestTpoint;
+	float bestT;
+
+	ClosestPtPointSegment(pa, pb, spherePos, bestT, bestTpoint);
+
+	float penetration = radius - (bestTpoint - spherePos).Length();
+	if (penetration < 0) {
+		return false;
+	}
+
+	//std::cout << bestT<<"\n";
+	//Vector3 localA = collisionPoint - capsulePos;
+
+	Vector3 collisionNormal = (spherePos - bestTpoint).Normalised();
+
+	collisionInfo.AddContactPoint(bestTpoint - collisionNormal*capsuleRadius, Vector3(),
+		collisionNormal, penetration);
+
+
+	return true;
 }
 
 

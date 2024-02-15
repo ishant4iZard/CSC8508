@@ -34,7 +34,7 @@ TutorialGame::TutorialGame() : controller(*Window::GetWindow()->GetKeyboard(), *
 	levelFileLoader = new WindowsLevelLoader();
 #endif // _WIN32
 
-	useGravity		= true;
+	useGravity		= false;
 
 	world->GetMainCamera().SetController(controller);
 
@@ -148,7 +148,7 @@ void TutorialGame::UpdateGame(float dt) {
 	world->UpdateWorld(dt);
 	renderer->Render();
 	renderer->Update(dt);
-	
+	//std::cout << "capsule" << capsule->GetTransform().GetPosition().y<<"\n";
 }
 
 void TutorialGame::InitCamera() {
@@ -168,6 +168,7 @@ void TutorialGame::InitWorld() {
 	timer = 0;
 
 	SpawnDataDrivenLevel(GameLevelNumber::LEVEL_1);
+	capsule = AddCapsuleToWorld(Vector3(-80, 7, -80), 2.0f, 5.0f);
 	InitTeleporters();
 	physics->createStaticTree();
 }
@@ -300,6 +301,29 @@ physics worlds. You'll probably need another function for the creation of OBB cu
 
 */
 
+
+GameObject* TutorialGame::AddCapsuleToWorld(const Vector3& position, float radius, float halfHeight, float inverseMass, float elasticity) {
+	GameObject* capsule = new GameObject("capsule");
+
+	CapsuleVolume* volume = new CapsuleVolume(halfHeight, radius, false, true);
+	capsule->SetBoundingVolume((CollisionVolume*)volume);
+	Vector3 capsuleSize = Vector3(2 * radius, 2 * halfHeight, 2 * radius);
+
+	capsule->GetTransform()
+		.SetPosition(position)
+		.SetScale(capsuleSize);
+
+	capsule->SetRenderObject(new RenderObject(&capsule->GetTransform(), capsuleMesh, basicTex, basicShader));
+	capsule->SetPhysicsObject(new PhysicsObject(&capsule->GetTransform(), capsule->GetBoundingVolume()));
+
+	capsule->GetPhysicsObject()->SetInverseMass(0);
+	capsule->GetPhysicsObject()->InitCubeInertia();
+	capsule->GetPhysicsObject()->SetElasticity(elasticity);
+
+	world->AddGameObject(capsule);
+
+	return capsule;
+}
 
 void TutorialGame::InitDefaultFloor() {
 	AddFloorToWorld(Vector3(0, -2, 0), Vector3(100, 2, 100));

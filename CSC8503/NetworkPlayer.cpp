@@ -145,6 +145,7 @@ void NetworkPlayer::MovePlayerInSquarePattern(float dt) {
 
 void NetworkPlayer::MovePlayerTowardsCursor(float dt){
 	Vector3 movementDirection = (pointPos - transform.GetPosition()).Normalised();
+	movementDirection.y = 0;
 
 	Vector3 currentVelocity = this->GetPhysicsObject()->GetLinearVelocity();
 	Vector3 targetVelocity = movementDirection * movementSpeed;
