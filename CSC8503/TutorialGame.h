@@ -7,7 +7,8 @@
 #endif
 #include "PhysicsSystem.h"
 
-#include "StateGameObject.h"
+#include "AiTreeObject.h"
+#include "AiStatemachineObject.h"
 #include "BouncePad.h"
 #include <vector>
 #include "LevelEnum.h"
@@ -88,6 +89,14 @@ namespace NCL {
 			GameObject* capsule;
 
 
+			void InitAI();
+			//void InitDefaultFloor();
+			void ProcessFrameAddresses();
+			void ObjectRay(GameObject* gameObject, GameObject* gameObject2);
+
+			//GameObject* AddFloorToWorld(const Vector3& position, const Vector3& size = Vector3(128,2,128));
+
+			AiTreeObject* AddAiToWorld(const Vector3& position, Vector3 dimensions, float inverseMass, float elasticity);
 #ifdef USEVULKAN
 			GameTechVulkanRenderer*	renderer;
 #else
@@ -95,6 +104,9 @@ namespace NCL {
 #endif
 			PhysicsSystem*		physics;
 			GameWorld*			world;
+			AiTreeObject*		 aitreetest;
+			vector<Vector3> frameAddresses;
+			Vector3 aichaseposition;
 
 			KeyboardMouseController controller;
 
@@ -119,6 +131,12 @@ namespace NCL {
 
 			float timer;
 			float finaltimer;
+
+			AiStatemachineObject * AddAiStateObjectToWorld(const Vector3& position);
+			AiStatemachineObject* testStateObject;
+
+			GameObject* cube;
+			GameObject* floor;
 
 			level currentlevel;
 			int score = 0;

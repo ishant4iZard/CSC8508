@@ -19,7 +19,6 @@ set(Header_Files
     "GameTechRenderer.h"
     "NetworkedGame.h"
     "NetworkPlayer.h"
-    "StateGameObject.h"
     "TutorialGame.h"
     "Projectile.h"
     "Hole.h"
@@ -45,7 +44,7 @@ set(Source_Files
     "Main.cpp"
     "NetworkedGame.cpp"
     "NetworkPlayer.cpp"
-    "StateGameObject.cpp"
+
     "TutorialGame.cpp"
     "Projectile.cpp"
     "Hole.cpp"
@@ -58,6 +57,15 @@ set(Source_Files
     "UIPlaystation.cpp"
     "MenuSystem.cpp"
 )
+
+set(AI_Files
+    "AiStatemachineObject.cpp"
+    "AiStatemachineObject.h"
+    "AitreeObject.cpp"
+    "AitreeObject.h"
+)
+source_group("AI_Files" FILES ${AI_Files})
+
 
 if(USE_VULKAN)
 list(APPEND Header_Files "GameTechVulkanRenderer.h")
