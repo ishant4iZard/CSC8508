@@ -34,7 +34,7 @@ AiStatemachineObject::AiStatemachineObject() {
 	stateMachine->AddTransition(new StateTransition(stateA, stateC,
 		[&]() -> bool
 		{
-			return this->counter > 13.0f;
+			return this->counter > 5.0f;
 		}
 	));
 
@@ -42,7 +42,7 @@ AiStatemachineObject::AiStatemachineObject() {
 		[&]() -> bool
 		{
 			///GetPhysicsObject()->SetLinearVelocity({ 0,0,0 });
-			return this->counter > 18.0f;
+			return this->counter > 10.0f;
 		}
 	));
 
@@ -65,26 +65,20 @@ void AiStatemachineObject::Update(float dt) {
 
 
 void AiStatemachineObject::MoveRound(float dt) {
-
-	GetPhysicsObject()->AddForce({ 10 , 0 , 0 });
-	GetPhysicsObject()->SetLinearVelocity({ GetPhysicsObject()->GetLinearVelocity().x,0, 0 });
-	/*Vector3 velocityDir = Vector3::Cross(Vector3(0, 1, 0), ORBIT_CENTER - this->GetTransform().GetPosition()).Normalised();
-	this->GetPhysicsObject()->SetLinearVelocity(velocityDir * ORBIT_SPEED);*/
+	GetPhysicsObject()->AddForce({ 0 , 0 , 10 });
+	//GetPhysicsObject()->SetLinearVelocity({ GetPhysicsObject()->GetLinearVelocity().x,0, 0 });
 	counter += dt;
 }
 
 void AiStatemachineObject::MoveRight(float dt) {
-
-	GetPhysicsObject()->AddForce({ 0 , 0 , -10 });
-	GetPhysicsObject()->SetLinearVelocity({ 0,0, GetPhysicsObject()->GetLinearVelocity().z });
-
+	GetPhysicsObject()->AddForce({ 0 , 0 , 0 });
+	//GetPhysicsObject()->SetLinearVelocity({ 0,0, GetPhysicsObject()->GetLinearVelocity().z });
 	counter -= dt;
 }
 
 void AiStatemachineObject::Moveforward(float dt) {
-
-	GetPhysicsObject()->AddForce({ 0 , 0 , 10 });
-
+	GetPhysicsObject()->AddForce({ 0 , 0 , 0 });
+	//GetPhysicsObject()->SetLinearVelocity({ 0,0, GetPhysicsObject()->GetLinearVelocity().z });
 	counter += dt;
 }
 
@@ -92,4 +86,5 @@ void AiStatemachineObject::getPositionfromobject(Vector3 objectpostion)
 {
 	obstaclespositions = objectpostion;
 }
+
 

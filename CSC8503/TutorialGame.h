@@ -53,6 +53,7 @@ namespace NCL {
 			void InitAI();
 			void InitDefaultFloor();
 			void ProcessFrameAddresses();
+			void ObjectRay(GameObject* gameObject, GameObject* gameObject2);
 
 			GameObject* AddFloorToWorld(const Vector3& position, const Vector3& size = Vector3(128,2,128));
 
@@ -97,6 +98,9 @@ namespace NCL {
 
 			AiStatemachineObject * AddAiStateObjectToWorld(const Vector3& position);
 			AiStatemachineObject* testStateObject;
+
+			GameObject* cube;
+			GameObject* floor;
 
 			level currentlevel;
 			int score = 0;
