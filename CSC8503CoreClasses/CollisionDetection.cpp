@@ -227,6 +227,7 @@ bool CollisionDetection::ObjectIntersection(GameObject* a, GameObject* b, Collis
 	//Two Capsules
 	if (pairType == VolumeType::Capsule) {
 		//capsule intersection
+		return CapsuleIntersection((CapsuleVolume&)*volA, transformA, (CapsuleVolume&)*volB, transformB, collisionInfo);
 	}
 
 	//AABB vs Sphere pairs
@@ -501,7 +502,9 @@ bool CollisionDetection::SphereCapsuleIntersection(
 
 	Vector3 collisionNormal = (spherePos - bestTpoint).Normalised();
 
-	collisionInfo.AddContactPoint(bestTpoint - collisionNormal*capsuleRadius, Vector3(),
+	Vector3 localA = (bestTpoint - collisionNormal * capsuleRadius) - capsulePos;
+
+	collisionInfo.AddContactPoint(localA, collisionNormal * capsuleRadius,
 		collisionNormal, penetration);
 
 
@@ -757,6 +760,82 @@ bool CollisionDetection::OBBIntersection(const OBBVolume& volumeA, const Transfo
 		collisionNormal, minPenetration);
 
 	return true;
+}
+
+
+bool CollisionDetection::CapsuleIntersection(const CapsuleVolume& volumeA, const Transform& worldTransformA,
+	const CapsuleVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo)
+{
+	//upgraded the collison detection from https://wickedengine.net/2020/04/26/capsule-collision-detection/ 
+
+	//Capsule A
+	Vector3	capsuleAPos = worldTransformA.GetPosition();
+	Quaternion capsuleAorientation = worldTransformA.GetOrientation();
+	float capsuleARadius = volumeA.GetRadius();
+	float capsuleAhalfHeight = volumeA.GetHalfHeight();
+	Vector3 capsuleAUpdirection = capsuleAorientation * Vector3(0, 1, 0);
+	Vector3 capsuleApa = capsuleAPos + capsuleAUpdirection * capsuleAhalfHeight;
+	Vector3 capsuleApb = capsuleAPos - capsuleAUpdirection * capsuleAhalfHeight;
+	/*Vector3 capsuleALineEndOffset = capsuleAUpdirection * capsuleARadius;
+	Vector3 capsuleApaEnd = capsuleApa + capsuleALineEndOffset;
+	Vector3 capsuleApbEnd = capsuleApb - capsuleALineEndOffset;*/
+
+	//capsule B
+	Vector3	capsuleBPos = worldTransformB.GetPosition();
+	Quaternion capsuleBorientation = worldTransformB.GetOrientation();
+	float capsuleBRadius = volumeB.GetRadius();
+	float capsuleBhalfHeight = volumeB.GetHalfHeight();
+	Vector3 capsuleBUpdirection = capsuleBorientation * Vector3(0, 1, 0);
+	Vector3 capsuleBpa = capsuleBPos + capsuleBUpdirection * capsuleBhalfHeight;
+	Vector3 capsuleBpb = capsuleBPos - capsuleBUpdirection * capsuleBhalfHeight;
+	//Vector3 capsuleBLineEndOffset = capsuleBUpdirection * capsuleBRadius;
+	/*Vector3 capsuleBpaEnd = capsuleBpa - capsuleBLineEndOffset;
+	Vector3 capsuleBpbEnd = capsuleBpb - capsuleBLineEndOffset;*/
+
+	Vector3 ApaBpa = capsuleBpa - capsuleApa;
+	Vector3 ApaBpb = capsuleBpb - capsuleApa;
+	Vector3 ApbBpa = capsuleBpa - capsuleApb;
+	Vector3 ApbBpb = capsuleBpb - capsuleApb;
+
+	float d0 = ApaBpa.LengthSquared();
+	float d1 = ApaBpb.LengthSquared();
+	float d2 = ApbBpa.LengthSquared();
+	float d3 = ApbBpb.LengthSquared();
+
+	Vector3 bestTApoint, bestTBpoint;
+	float bestTA, bestTB;
+
+	if (d2 < d0 || d2 < d1 || d3 < d0 || d3 < d1)
+	{
+		bestTApoint = capsuleApa;
+	}
+	else
+	{
+		bestTApoint = capsuleApb;
+	}
+
+	ClosestPtPointSegment(capsuleBpa, capsuleBpb, bestTApoint, bestTB, bestTBpoint);
+	ClosestPtPointSegment(capsuleApa, capsuleApb, bestTBpoint, bestTA, bestTApoint);
+
+	//got the best two spheres
+	float radii = capsuleARadius + capsuleBRadius;
+	Vector3 delta = bestTBpoint - bestTApoint;
+
+	float deltaLength = delta.Length();
+
+	if (deltaLength <= radii) {
+		float penetration = (radii - deltaLength);
+		Vector3 normal = delta.Normalised();
+		Vector3 localA = (bestTApoint - normal * capsuleARadius) - capsuleAPos;
+		Vector3 localB = (bestTBpoint + normal * capsuleBRadius) - capsuleBPos;
+		collisionInfo.AddContactPoint(localA, localB, normal, penetration);
+		std::cout << "collision";
+		return true;// we ’re colliding !
+	}
+
+	//std::cout << " no collision";
+
+	return false;
 }
 
 //bool CollisionDetection::OBBIntersection(const OBBVolume& volumeA, const Transform& worldTransformA,
