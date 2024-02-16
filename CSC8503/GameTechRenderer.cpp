@@ -19,9 +19,9 @@ Matrix4 biasMatrix = Matrix4::Translation(Vector3(0.5f, 0.5f, 0.5f)) * Matrix4::
 
 GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetWindow()), gameWorld(world)	{
 	glEnable(GL_DEPTH_TEST);
-
 	debugShader  = new OGLShader("debug.vert", "debug.frag");
 	shadowShader = new OGLShader("shadow.vert", "shadow.frag");
+
 	toneMapperShader = new OGLShader("basic.vert", "ReinhardTonemap.frag");
 	pbrShader = new OGLShader("pbr.vert", "pbr.frag");
 	gammaCorrectionShader = new OGLShader("basic.vert", "gammaCorrection.frag");
@@ -44,7 +44,7 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 	glDrawBuffer(GL_NONE);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	glClearColor(1, 1, 1, 1);
+	glClearColor(0.5f,0.5f,0.5f, 1);
 
 	//Set up the light properties
 	lightColour = Vector4(0.8f, 0.8f, 0.5f, 1.0f);
@@ -93,11 +93,9 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 void GameTechRenderer::CreateScreenQuadMesh()
 {
 	screenQuad = new OGLMesh();
-	screenQuad->SetVertexPositions({ Vector3(-1, 1,-1), Vector3(-1,-1,-1) , Vector3(1,-1,-1) , Vector3(1,1,-1) });
-	screenQuad->SetVertexIndices({ 0,1,2,2,3,0 });
+	screenQuad->SetPrimitiveType(GeometryPrimitive::TriangleStrip);
+	screenQuad->SetVertexPositions({ Vector3(-1, 1,0), Vector3(-1,-1,0) , Vector3(1,1,0) , Vector3(1,-1,0) });
 	screenQuad->SetVertexTextureCoords({ Vector2(0.0f, 1.0f), Vector2(0.0f, 0.0f), Vector2(1.0f, 1.0f), Vector2(1.0f, 0.0f) });
-	screenQuad->SetVertexNormals({ Vector3(0.0f, 0.0f, -1.0f), Vector3(0.0f, 0.0f, -1.0f), Vector3(0.0f, 0.0f, -1.0f), Vector3(0.0f, 0.0f, -1.0f) });
-	screenQuad->SetVertexTangents({ Vector4(1.0f, 0.0f, 0.0f, 1.0f), Vector4(1.0f, 0.0f, 0.0f, 1.0f), Vector4(1.0f, 0.0f, 0.0f, 1.0f), Vector4(1.0f, 0.0f, 0.0f, 1.0f) });
 	screenQuad->UploadToGPU();
 }
 
@@ -152,11 +150,11 @@ void GameTechRenderer::LoadSkybox() {
 
 void GameTechRenderer::RenderFrame() {
 	glEnable(GL_CULL_FACE);
-	glClearColor(1, 1, 1, 1);
+	glClearColor(0.5f, 0.5f, 0.5f, 1);
 	BuildObjectList();
 	SortObjectList();
-	RenderShadowMap();
-	RenderSkybox();
+	//RenderShadowMap();
+	//RenderSkybox();
 	RenderCamera();
 	ApplyToneMapping();
 	RenderProcessedScene();
@@ -262,10 +260,14 @@ void GameTechRenderer::ApplyToneMapping()
 	glBindFramebuffer(GL_FRAMEBUFFER, toneMappingFbo->GetFbo());
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	Matrix4 identityMatrix;
-	identityMatrix.ToIdentity();
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_CULL_FACE);
+	glDisable(GL_BLEND);
 
 	BindShader(*toneMapperShader);
+
+	Matrix4 identityMatrix;
+	identityMatrix.ToIdentity();
 
 	int modelLocation = glGetUniformLocation(toneMapperShader->GetProgramID(), "modelMatrix");
 	int projLocation = glGetUniformLocation(toneMapperShader->GetProgramID(), "projMatrix");
@@ -275,15 +277,27 @@ void GameTechRenderer::ApplyToneMapping()
 	glUniformMatrix4fv(viewLocation, 1, false, (float*)&identityMatrix);
 	glUniformMatrix4fv(projLocation, 1, false, (float*)&identityMatrix);
 
-	BindTextureToShader(pbrFbo->GetColorBuffer(), "diffuseTex", 0);
+	glUniform1i(glGetUniformLocation(toneMapperShader->GetProgramID(),
+		"diffuseTex"), 0);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, pbrFbo->GetColorBuffer());
 
 	BindMesh(*screenQuad);
 	DrawBoundMesh();
+
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_BLEND);
+
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void GameTechRenderer::RenderProcessedScene()
 {
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_CULL_FACE);
+	glDisable(GL_BLEND);
+
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	Matrix4 identityMatrix;
@@ -299,10 +313,17 @@ void GameTechRenderer::RenderProcessedScene()
 	glUniformMatrix4fv(viewLocation, 1, false, (float*)&identityMatrix);
 	glUniformMatrix4fv(projLocation, 1, false, (float*)&identityMatrix);
 
-	BindTextureToShader(toneMappingFbo->GetColorBuffer(), "diffuseTex", 0);
+	glUniform1i(glGetUniformLocation(toneMapperShader->GetProgramID(),
+		"diffuseTex"), 0);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, toneMappingFbo->GetColorBuffer());
 
 	BindMesh(*screenQuad);
 	DrawBoundMesh();
+
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_BLEND);
 }
 
 void GameTechRenderer::UpdatePBRUniforms(const NCL::CSC8503::RenderObject* const& inRenderObj)
@@ -313,7 +334,7 @@ void GameTechRenderer::UpdatePBRUniforms(const NCL::CSC8503::RenderObject* const
 
 		BindTextureToShader(
 			*(OGLTexture*)(*inRenderObj).GetTexture(static_cast<TextureType>(tempType)),
-			(*inRenderObj).GetTextureName(static_cast<TextureType>(tempType)), (int)tempType + 2); //maintex is 0 and shadow tex is 1,hence we are moving PBR texture data ahead by 2 that makes is 2,3,4,....
+			(*inRenderObj).GetTextureName(static_cast<TextureType>(tempType)), (int)tempType + 1); //maintex is 0 and shadow tex is 1,hence we are moving PBR texture data ahead by 2 that makes is 2,3,4,....
 	}
 }
 
@@ -330,7 +351,7 @@ void GameTechRenderer::UpdateGlobalLightUniform(const OGLShader* inShader)
 
 void GameTechRenderer::RenderCamera() {
 	glBindFramebuffer(GL_FRAMEBUFFER, pbrFbo->GetFbo());
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 	Matrix4 viewMatrix = gameWorld.GetMainCamera().BuildViewMatrix();
 	Matrix4 projMatrix = gameWorld.GetMainCamera().BuildProjectionMatrix(hostWindow.GetScreenAspect());
@@ -351,8 +372,8 @@ void GameTechRenderer::RenderCamera() {
 	int cameraLocation = 0;
 
 	//TODO - PUT IN FUNCTION
-	glActiveTexture(GL_TEXTURE0 + 1);
-	glBindTexture(GL_TEXTURE_2D, shadowTex);
+	//glActiveTexture(GL_TEXTURE0 + 1);
+	//glBindTexture(GL_TEXTURE_2D, shadowTex);
 
 	for (const auto&i : activeObjects) {
 		OGLShader* shader = (OGLShader*)(*i).GetShader();
@@ -391,8 +412,8 @@ void GameTechRenderer::RenderCamera() {
 			glUniform4fv(lightColourLocation, 1, (float*)&lightColour);
 			glUniform1f(lightRadiusLocation , lightRadius);
 
-			int shadowTexLocation = glGetUniformLocation(shader->GetProgramID(), "shadowTex");
-			glUniform1i(shadowTexLocation, 1);
+			//int shadowTexLocation = glGetUniformLocation(shader->GetProgramID(), "shadowTex");
+			//glUniform1i(shadowTexLocation, 1);
 
 			activeShader = shader;
 		}
@@ -418,6 +439,7 @@ void GameTechRenderer::RenderCamera() {
 	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
 }
 
 Mesh* GameTechRenderer::LoadMesh(const std::string& name) {

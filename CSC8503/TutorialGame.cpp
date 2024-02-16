@@ -76,13 +76,18 @@ void TutorialGame::InitialiseAssets() {
 	basicTex	= renderer->LoadTexture("checkerboard.png");
 	sandTex		= renderer->LoadTexture("sand.jpg");
 
-	solarCellTextureList[(uint8_t)TextureType::ALBEDO] = renderer->LoadTexture("SolarCells/T_SC_albedo.png");
-	solarCellTextureList[(uint8_t)TextureType::NORMAL] = renderer->LoadTexture("SolarCells/T_SC_normal.png");
-	solarCellTextureList[(uint8_t)TextureType::METAL] = renderer->LoadTexture("SolarCells/T_SC_metallic.png");
-	solarCellTextureList[(uint8_t)TextureType::ROUGHNESS] = renderer->LoadTexture("SolarCells/T_SC_roughness.png");
-	solarCellTextureList[(uint8_t)TextureType::AO] = renderer->LoadTexture("SolarCells/T_SC_ao.png");
+	solarCellTextureList[(uint8_t)TextureType::ALBEDO] = renderer->LoadTexture("RustedIron/rustediron2_basecolor.png");
+	solarCellTextureList[(uint8_t)TextureType::NORMAL] = renderer->LoadTexture("RustedIron/rustediron2_normal.png");
+	solarCellTextureList[(uint8_t)TextureType::METAL] = renderer->LoadTexture("RustedIron/rustediron2_metallic.png");
+	solarCellTextureList[(uint8_t)TextureType::ROUGHNESS] = renderer->LoadTexture("RustedIron/rustediron2_roughness.png");
+	solarCellTextureList[(uint8_t)TextureType::AO] = renderer->LoadTexture("RustedIron/white_ao.png");
 
+#ifdef defined(USE_SHADOW)
 	basicShader = renderer->LoadShader("scene.vert", "scene.frag");
+#else
+	basicShader = renderer->LoadShader("scene.vert", "sceneNoShadow.frag");
+#endif // USE_SHADOW
+
 	pbrShader = renderer->LoadShader("pbr.vert", "pbr.frag");
 	
 	InitCamera();

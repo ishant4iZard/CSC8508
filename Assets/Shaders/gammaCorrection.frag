@@ -1,4 +1,4 @@
-#version 330 core
+#version 400 core
 
 uniform sampler2D diffuseTex;
 in Vertex

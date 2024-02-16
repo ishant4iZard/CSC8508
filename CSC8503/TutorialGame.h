@@ -26,6 +26,7 @@
 #include "../CSC8503/UIPlaystation.h"
 #endif
 
+#define USE_SHADOW = false
 enum class level {
 	level1 = 1,
 	level2 = 2,

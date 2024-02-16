@@ -7,7 +7,11 @@ uniform sampler2D metallicTex;
 uniform sampler2D roughnessTex;
 uniform sampler2D ambiantOccTex;
 
-uniform sampler2DShadow shadowTex; //Shadow
+uniform vec3	lightPos;
+uniform float	lightRadius;
+uniform vec4	lightColour;
+
+//uniform sampler2DShadow shadowTex; //Shadow
 
 uniform vec3 cameraPos;
 
@@ -237,9 +241,9 @@ void main()
       
     float shadow = 1.0; // New !
 	
-	if( IN.shadowProj . w > 0.0) { // New !
-		shadow = textureProj ( shadowTex , IN . shadowProj ) * 0.5f;
-	}
+	// if( IN.shadowProj . w > 0.0) { // New !
+	// 	shadow = textureProj ( shadowTex , IN . shadowProj ) * 0.5f;
+	// }
     
      // reflectance equation
     vec3 lOut = vec3(0.0);
@@ -250,7 +254,9 @@ void main()
     // Calculate point light
     for(int i = 0; i < 1 ; ++i)
     {
-        lOut += PointLightPbr(lightPosList[i], IN.worldPos, lightColorList[i], normal, roughness, metallic, albedo, pointLightConstantLinearQuadList[i].x, pointLightConstantLinearQuadList[i].y, pointLightConstantLinearQuadList[i].z, cameraPos, F0);
+        //lOut += PointLightPbr(lightPosList[i], IN.worldPos, lightColorList[i], normal, roughness, metallic, albedo, pointLightConstantLinearQuadList[i].x, pointLightConstantLinearQuadList[i].y, pointLightConstantLinearQuadList[i].z, cameraPos, F0);
+        lOut += PointLightPbr(vec3(0,60,0), IN.worldPos, vec3(255, 255, 51), normal, roughness, metallic, albedo,
+         1.0f, 0.22f, 0.20f, cameraPos, F0);
     }
     
     if(lOut == vec3(0.0))

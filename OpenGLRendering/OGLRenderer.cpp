@@ -158,7 +158,7 @@ void OGLRenderer::BindTextureToShader(const OGLTexture& t, const std::string& un
 	GLuint slot = glGetUniformLocation(activeShader->GetProgramID(), uniform.c_str());
 
 	if (slot < 0) {
-
+		std::cout << __FUNCTION__ << " shader " << activeShader->GetProgramID() << "does not have slot for" << uniform.c_str() <<"!\n";
 		return;
 	}
 

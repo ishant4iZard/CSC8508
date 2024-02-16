@@ -44,6 +44,8 @@ namespace NCL
 				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, width, height, 0,
 					GL_RGBA, GL_FLOAT, NULL);
 
+				glBindTexture(GL_TEXTURE_2D, 0);
+
 				if (!outBuffer) return false;
 				return true;
 			}
@@ -84,6 +86,7 @@ namespace NCL
 
 				glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, width, height,
 					0, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, NULL);
+				glBindTexture(GL_TEXTURE_2D, 0);
 
 				if (!outBuffer) return false;
 				return true;
