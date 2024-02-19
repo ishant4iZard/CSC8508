@@ -9,17 +9,18 @@
 #include "Debug.h"
 #include "Window.h"
 #include <functional>
+#include <iostream>
 using namespace NCL;
 using namespace CSC8503;
 
 QuadTree <GameObject*> staticTree(Vector2(256, 256), 10, 15);
 
 PhysicsSystem::PhysicsSystem(GameWorld& g) : gameWorld(g)	{
-	applyGravity	= true;
+	applyGravity	= false;
 	useBroadPhase	= true;	
 	dTOffset		= 0.0f;
 	globalDamping	= 0.995f;
-	SetGravity(Vector3(0.0f, -9.8f, 0.0f));
+	//SetGravity(Vector3(0.0f, -9.8f, 0.0f));
 	linearDamping = 0.4f;
 }
 
@@ -289,7 +290,7 @@ void PhysicsSystem::ImpulseResolveCollision(GameObject& a, GameObject& b, Collis
 	float angularEffect = Vector3::Dot(inertiaA + inertiaB, p.normal);
 	float elasticityA = physA->GetElasticity();
 	float elasticityB = physB->GetElasticity();
-	float cRestitution = elasticityA * elasticityB; //0.66f; // disperse some kinectic energy
+	float cRestitution = (elasticityA + elasticityB)/2; 
 
 	float j = (-(1.0f + cRestitution) * impulseForce) /
 		(totalMass + angularEffect);
@@ -311,18 +312,24 @@ split the world up using an acceleration structure, so that we can only
 compare the collisions that we absolutely need to. 
 
 */
-int itra = 0;
 
-bool broadPhaseHelper(QuadTreeEntry <GameObject*> a, QuadTreeEntry <GameObject*> b) {
-	Vector3 distance = b.pos-a.pos;
-	Vector3 absize = a.size+b.size;
+bool broadPhaseHelper(GameObject* a, GameObject* b) {
+	Vector3 halfSizeA, halfSizeB;
+	a->GetBroadphaseAABB(halfSizeA);
+	b->GetBroadphaseAABB(halfSizeB);
 
-	for (int i = 0; i < 3; i++) {
-		if(std::abs(distance[i]) > absize[i])
-			return false;
+	Vector3 posB = b->GetTransform().GetPosition();
+	Vector3 posA = a->GetTransform().GetPosition();
+
+	Vector3 delta = posB - posA;
+	Vector3 totalSize = halfSizeA + halfSizeB;
+
+	if (abs(delta.x) < totalSize.x &&
+		//abs(delta.y) < totalSize.y &&
+		abs(delta.z)  < totalSize.z) {
+		return true;
 	}
-	
-	return true;
+	return false;
 }
 
 //QuadTree<GameObject*> PhysicsSystem::createStaticTree() {
@@ -365,7 +372,7 @@ void PhysicsSystem::createStaticTree() {
 
 void PhysicsSystem::BroadPhase() {
 	broadphaseCollisions.clear();
-	QuadTree <GameObject*> tree(Vector2(512,512), 10, 7);
+	QuadTree <GameObject*> tree(Vector2(128,128), 7, 4);
 	
 	//tree = staticTree;
 
@@ -373,13 +380,28 @@ void PhysicsSystem::BroadPhase() {
 	std::vector <GameObject*>::const_iterator last;
 	gameWorld.GetObjectIterators(first, last);
 	for (auto i = first; i != last; ++i) {
-		//if (!(*i)->GetBoundingVolume()->isKinematic) {
-			Vector3 halfSizes;
-			if (!(*i)->GetBroadphaseAABB(halfSizes)) {
-				continue;
+		if (!(*i)->GetBoundingVolume()->isKinematic) {
+			if ((*i)->IsActive()) {
+				Vector3 halfSizes;
+				if (!(*i)->GetBroadphaseAABB(halfSizes)) {
+					continue;
+				}
+				Vector3 pos = (*i)->GetTransform().GetPosition();
+				tree.Insert(*i, pos, halfSizes);
+				staticTree.OperateOnContents(
+					[&](std::list <QuadTreeEntry <GameObject*>>& data) {
+						CollisionDetection::CollisionInfo info;
+						for (auto j = data.begin(); j != data.end(); ++j) {
+							if (broadPhaseHelper(*i, (*j).object)) {
+								info.a = std::min((*i), (*j).object);
+								info.b = std::max((*i), (*j).object);
+								broadphaseCollisions.insert(info);
+							}
+						}
+					}
+				);
 			}
-			Vector3 pos = (*i)->GetTransform().GetPosition();
-			tree.Insert(*i, pos, halfSizes);
+		}
 		//}
 		/*else
 		{
@@ -466,7 +488,19 @@ void PhysicsSystem::IntegrateAccel(float dt) {
 		}
 		float inverseMass = object -> GetInverseMass();	
 		Vector3 linearVel = object -> GetLinearVelocity();
+		float CoeefFriction = object->GetFriction();
 		Vector3 force = object -> GetForce();
+
+		Vector3 HorVelocity = Vector3(linearVel.x, 0, linearVel.z);
+
+		float NormalForce = (force.y + (9.8) / inverseMass);
+		float frictonForce = (NormalForce > 0) ? (NormalForce * CoeefFriction) : 0;
+
+		if (HorVelocity.Length()) {
+			force -= HorVelocity.Normalised() * frictonForce;
+		}
+
+
 		Vector3 accel = force * inverseMass;
 
 		if (applyGravity && inverseMass > 0) {
@@ -500,7 +534,7 @@ void PhysicsSystem::IntegrateVelocity(float dt) {
 	std::vector <GameObject*>::const_iterator first;
 	std::vector <GameObject*>::const_iterator last;
 	gameWorld.GetObjectIterators(first, last);
-	float frameLinearDamping = 1.0f - (linearDamping * dt);
+	//float frameLinearDamping = 1.0f - (linearDamping * dt);
 	float frameAngularDamping = 1.0f - (0.4f * dt);
 
 	for (auto i = first; i != last; ++i) {
@@ -515,7 +549,7 @@ void PhysicsSystem::IntegrateVelocity(float dt) {
 		position += linearVel * dt;
 		transform.SetPosition(position);
 		// Linear Damping
-		linearVel = linearVel * frameLinearDamping;
+		//linearVel = linearVel * frameLinearDamping;
 		object->SetLinearVelocity(linearVel);
 
 		// Orientation Stuff

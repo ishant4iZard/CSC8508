@@ -3,16 +3,39 @@ set(PROJECT_NAME CSC8503)
 ################################################################################
 # Source groups
 ################################################################################
+set(NetPlugins
+    "steam.h"
+    "steam.cpp"
+)
+source_group("NetPlugins" FILES ${NetPlugins})
+
+set(AudioEngine
+    "AudioEngine.h"
+    "AudioEngine.cpp"
+)
+source_group("AudioEngine" FILES ${AudioEngine})
+
 set(Header_Files
     "GameTechRenderer.h"
     "NetworkedGame.h"
     "NetworkPlayer.h"
-    "StateGameObject.h"
     "TutorialGame.h"
-    "Voxels.h"
-    "PowerUp.h"
-    "Player.h"
-    "Goose.h"
+    "Projectile.h"
+    "Hole.h"
+    "BouncePad.h"
+    "GravityWell.h"
+    "Teleporter.h"
+    "UIBase.h"
+    "LevelFileLoaderBase.h"
+    "WindowsLevelLoader.h"
+    "LevelEnum.h"
+    "LevelObjectEnum.h"
+    "UIWindows.h"
+    "ApplicationState.h"
+    "UIPlaystation.h"
+    "MenuSystem.h"
+    "Event.h"
+    "EventType.h"
 )
 source_group("Header Files" FILES ${Header_Files})
 
@@ -21,15 +44,28 @@ set(Source_Files
     "Main.cpp"
     "NetworkedGame.cpp"
     "NetworkPlayer.cpp"
-    "StateGameObject.cpp"
+
     "TutorialGame.cpp"
-    "Voxels.cpp"
-    "PowerUp.cpp"
-    "Player.cpp"
-    "Goose.cpp"
-
-
+    "Projectile.cpp"
+    "Hole.cpp"
+    "BouncePad.cpp"
+    "GravityWell.cpp"
+    "Teleporter.cpp"
+    "WindowsLevelLoader.cpp"
+    "UIWindows.cpp"
+    "ApplicationState.cpp"
+    "UIPlaystation.cpp"
+    "MenuSystem.cpp"
 )
+
+set(AI_Files
+    "AiStatemachineObject.cpp"
+    "AiStatemachineObject.h"
+    "AitreeObject.cpp"
+    "AitreeObject.h"
+)
+source_group("AI_Files" FILES ${AI_Files})
+
 
 if(USE_VULKAN)
 list(APPEND Header_Files "GameTechVulkanRenderer.h")
@@ -43,16 +79,43 @@ endif()
 
 source_group("Source Files" FILES ${Source_Files})
 
+set(ImGUI_Files
+    "imconfig.h"
+    "imgui.h"
+    "imgui.cpp"
+    "imgui_demo.cpp"
+    "imgui_draw.cpp"
+    "imgui_impl_opengl3.cpp"
+    "imgui_impl_opengl3.h"
+    "imgui_impl_opengl3_loader.h"
+    "imgui_impl_win32.h"
+    "imgui_impl_win32.cpp"
+    "imgui_internal.h"
+    "imgui_tables.cpp"
+    "imgui_widgets.cpp"
+    "imstb_rectpack.h"
+    "imstb_textedit.h"
+    "imstb_truetype.h"
+)
+source_group("ImGUI_Files" FILES ${ImGUI_Files})
+
 set(ALL_FILES
     ${Header_Files}
     ${Source_Files}
+    ${ImGUI_Files}
+    ${NetPlugins}
+    ${AudioEngine}
+    ${AI_Files}
 )
 
 if(USE_VULKAN)
     set(ALL_FILES 
         ${Header_Files}
         ${Source_Files}
+        ${NetPlugins}
+        ${AudioEngine}
         ${SHADER_FILES}
+        ${ImGUI_Files}
     )
 
 foreach (file ${SHADER_FILES})
@@ -214,10 +277,18 @@ endif()
 include_directories("../OpenGLRendering/")
 include_directories("../NCLCoreClasses/")
 include_directories("../CSC8503CoreClasses/")
+include_directories("../Steamworksdk/public/steam/")
+include_directories("../Dependencies/FMOD/Windows/include/")
+
+#link_directories("../Steamworksdk/redistributable_bin/win64/")
 
 target_link_libraries(${PROJECT_NAME} LINK_PUBLIC NCLCoreClasses)
 target_link_libraries(${PROJECT_NAME} LINK_PUBLIC CSC8503CoreClasses)
 target_link_libraries(${PROJECT_NAME} LINK_PUBLIC OpenGLRendering)
+target_link_libraries(${PROJECT_NAME} LINK_PUBLIC "../../Steamworksdk/redistributable_bin/win64/steam_api64")
+target_link_libraries(${PROJECT_NAME} LINK_PUBLIC  "../../Dependencies/FMOD/Windows/lib/fmod_vc")
+target_link_libraries(${PROJECT_NAME} LINK_PUBLIC  "../../Dependencies/FMOD/Windows/lib/fmodL_vc")
+
 
 if(USE_VULKAN)
     include_directories("../VulkanRendering/")
@@ -233,3 +304,5 @@ if(USE_VULKAN)
 
     add_dependencies(${PROJECT_NAME} SHADER_FILES)
 endif()
+
+

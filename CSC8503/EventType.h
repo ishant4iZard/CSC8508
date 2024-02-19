@@ -1,0 +1,11 @@
+#pragma once
+
+enum EventType {
+    JOIN_LOBBY = 0,
+    CREATE_LOBBY,
+    REFRESH_LOBBY,
+    JOIN_CURRENT_LOBBY,
+    START_AS_SERVER,
+    START_AS_CLIENT,
+    MAX_EVENT_TYPE
+};

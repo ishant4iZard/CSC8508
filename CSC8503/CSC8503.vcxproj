@@ -197,6 +197,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503/CSC8503.dir/Release/cmake_pch.pch</PrecompiledHeaderOutputFile>
       <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
     </ClCompile>
+    <ClCompile Include="Projectile.cpp" />
     <ClInclude Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503\GameTechRenderer.h" />
     <ClInclude Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503\NetworkedGame.h" />
     <ClInclude Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503\NetworkPlayer.h" />
@@ -268,6 +269,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </ClCompile>
     <ClInclude Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503\CMakeFiles\CSC8503.dir\Debug\cmake_pch.hxx" />
     <ClInclude Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503\CMakeFiles\CSC8503.dir\Release\cmake_pch.hxx" />
+    <ClInclude Include="Projectile.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\ZERO_CHECK.vcxproj">

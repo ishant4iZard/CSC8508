@@ -187,5 +187,7 @@ namespace NCL::Maths {
 				current.y + toVector_y / dist * maxDistanceDelta,
 				current.z + toVector_z / dist * maxDistanceDelta);
 		}
+
+
 	};
 }

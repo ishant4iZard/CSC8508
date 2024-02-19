@@ -7,6 +7,16 @@
 namespace NCL {
 	namespace CSC8503 {
 		class GameObject;
+
+		enum EClientState
+		{	
+			CLIENT_STATE_NONE = 0,
+			CLIENT_STATE_DISCONNECTED = 1,
+			CLIENT_STATE_CONNECTING = 2,
+			CLIENT_STATE_CONNECTED = 3,
+			CLIENT_STATE_MAX = 4,
+		};
+
 		class GameClient : public NetworkBase {
 		public:
 			GameClient();
@@ -17,8 +27,15 @@ namespace NCL {
 			void SendPacket(GamePacket&  payload);
 
 			void UpdateClient();
+
 		protected:	
 			_ENetPeer*	netPeer;
+			int CurrentConnetNetID;
+
+			EClientState clientState;
+		public:
+			inline int GetClientNetID() const { return CurrentConnetNetID; }
+			inline EClientState GetClientState() const { return clientState; }
 		};
 	}
 }

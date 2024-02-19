@@ -6,6 +6,36 @@
 namespace NCL::CSC8503 {
 	class GameObject;
 
+	struct DeactivateProjectilePacket : public GamePacket {
+		int   NetObjectID;
+
+		DeactivateProjectilePacket() {
+			type = Projectile_Deactivate;
+			size = sizeof(DeactivateProjectilePacket);
+		}
+	};
+
+	struct PlayerFirePacket : public GamePacket {
+		char	PlayerNum;
+		int   NetObjectID;
+
+		PlayerFirePacket() {
+			type = Player_Fire;
+			size = sizeof(PlayerFirePacket);
+		}
+	};
+
+	struct ClientPacket : public GamePacket {
+		int		lastID;
+		Vector3 PointerPos;
+		bool bIsFireBtnClicked = false;
+
+		ClientPacket() {
+			type = Received_State;
+			size = sizeof(ClientPacket);
+		}
+	};
+
 	struct PLayersListPacket : public GamePacket
 	{
 		char playerList[4];
@@ -51,15 +81,6 @@ namespace NCL::CSC8503 {
 		}
 	};
 
-	struct ClientPacket : public GamePacket {
-		int		lastID;
-		char	buttonstates[8];
-
-		ClientPacket() {
-			size = sizeof(ClientPacket);
-		}
-	};
-
 	class NetworkObject		{
 	public:
 		NetworkObject(GameObject& o, int id);
@@ -71,11 +92,12 @@ namespace NCL::CSC8503 {
 		virtual bool WritePacket(GamePacket** p, bool deltaFrame, int stateID);
 
 		void UpdateStateHistory(int minID);
-
-	protected:
-
 		NetworkState& GetLatestNetworkState();
 
+		GameObject* GetGameObject() const { return &object; }
+		inline int GetNetworkID() const { return networkID; }
+
+	protected:
 		bool GetNetworkState(int frameID, NetworkState& state);
 
 		virtual bool ReadDeltaPacket(DeltaPacket &p);

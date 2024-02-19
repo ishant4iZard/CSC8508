@@ -67,11 +67,17 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 
 	//PBR init
 	InitPBR();
+#ifdef _WIN32
+	ui = UIWindows::GetInstance();
+#else //_ORBIS
+	ui = UIPlaystation::GetInstance();
+#endif
 }
 
 GameTechRenderer::~GameTechRenderer()	{
 	glDeleteTextures(1, &shadowTex);
 	glDeleteFramebuffers(1, &shadowFBO);
+	delete ui;
 }
 
 void GameTechRenderer::LoadSkybox() {
@@ -140,7 +146,7 @@ void GameTechRenderer::RenderFrame() {
 	glEnable(GL_DEPTH_TEST);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	
+	ui->RenderUI();
 }
 
 void GameTechRenderer::BuildObjectList() {
@@ -564,7 +570,7 @@ void GameTechRenderer::PBRTest() {
 		glUniformMatrix4fv(glGetUniformLocation(pbrShader->GetProgramID(), "modelMatrix"), 1, false, (float*)&model);
 		Matrix4 invModel = model.Inverse();
 
-		//这一段还有问题
+		//锟斤拷一锟轿伙拷锟斤拷锟斤拷锟斤拷
 		Matrix3 temp(model);
 		temp.Transposed();
 		//invModel.Transpose();

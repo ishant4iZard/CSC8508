@@ -46,8 +46,9 @@ namespace NCL::Win32Code {
 		void	SetFullScreen(bool state)			override;
 		void	SetWindowPosition(int x, int y)		override;
 
-		HWND		GetHandle()			const { return windowHandle; }
-		HINSTANCE	GetInstance()		const { return windowInstance; }
+		static	HWND 	windowHandle;
+		HWND		GetHandle()				{ return windowHandle; }
+		HINSTANCE	GetInstance()	const	{ return windowInstance; }
 
 	protected:
 		Win32Window(const std::string& title, int sizeX, int sizeY, bool fullScreen, int offsetX, int offsetY);
@@ -59,7 +60,6 @@ namespace NCL::Win32Code {
 		void					CheckMessages(MSG &msg);
 		static LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
-		HWND			windowHandle;
 		HINSTANCE		windowInstance;
 
 		bool			forceQuit;
