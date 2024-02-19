@@ -145,6 +145,7 @@ void NetworkPlayer::MovePlayerInSquarePattern(float dt) {
 
 void NetworkPlayer::MovePlayerTowardsCursor(float dt){
 	Vector3 movementDirection = (pointPos - transform.GetPosition()).Normalised();
+	movementDirection.y = 0;
 
 	Vector3 currentVelocity = this->GetPhysicsObject()->GetLinearVelocity();
 	Vector3 targetVelocity = movementDirection * movementSpeed;
@@ -170,8 +171,10 @@ void NetworkPlayer::Fire()
 	if (numProjectilesAccumulated <= 0) return;
 	numProjectilesAccumulated--;
 
-	Vector3 fireDir = GetPlayerForwardVector();
+	Vector3 fireDir = GetPlayerForwardVector().Normalised();
 	Vector3 firePos = transform.GetPosition() + fireDir * 3;
+	std::cout << firePos.y;
+
 	game->SpawnProjectile(this, firePos, fireDir);
 	//std::cout << "player " << playerNum << " fired!" << std::endl;
 }

@@ -14,6 +14,7 @@
 #else //_ORBIS
 #include "../CSC8503/UIPlaystation.h"
 #endif
+#include "AudioEngine.h"
 
 namespace NCL {
 	namespace CSC8503 {
@@ -104,6 +105,10 @@ namespace NCL {
 			bool ClientFired;
 
 			NetworkPlayer* LocalPlayer;
+
+			AudioEngine* audioEngine;
+			int backGroundMusic = -1;
+			int fireSFX = -1;
 
 		public:
 			inline bool IsServer() { return thisServer != nullptr ? true : false; }

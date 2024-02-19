@@ -7,7 +7,8 @@
 #endif
 #include "PhysicsSystem.h"
 
-#include "StateGameObject.h"
+#include "AiTreeObject.h"
+#include "AiStatemachineObject.h"
 #include "BouncePad.h"
 #include <vector>
 #include "LevelEnum.h"
@@ -67,6 +68,7 @@ namespace NCL {
 
 			GameObject* AddObbCubeToWorld(const Vector3& position, Vector3 dimensions, float inverseMass = 10.0f, float elasticity = 0.81f);
 			GameObject* AddAABBCubeToWorld(const Vector3& position, Vector3 dimensions, float inverseMass = 10.0f, float elasticity = 0.81f);
+			GameObject* AddCapsuleToWorld(const Vector3& position, float radius, float halfHeight, float inverseMass = 0.01f, float elasticity = 0.81f);
 			GameObject* AddTeleporterToWorld(const Vector3& position1, const Vector3& position2, const Vector3& rotation1, const Vector3& rotation2, Vector3 dimensions, float inverseMass = 0.0f, float elasticity = 0.0f);
 
 			void InitHole();
@@ -86,7 +88,17 @@ namespace NCL {
 			void SpawnTarget(const Vector3 & inPosition, const Vector3 & inRotation, const Vector3 & inScale);
 			void SpawnBlackHole(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale);
 
+			GameObject* capsule;
 
+
+			void InitAI();
+			//void InitDefaultFloor();
+			void ProcessFrameAddresses();
+			void ObjectRay(GameObject* gameObject, GameObject* gameObject2);
+
+			//GameObject* AddFloorToWorld(const Vector3& position, const Vector3& size = Vector3(128,2,128));
+
+			AiTreeObject* AddAiToWorld(const Vector3& position, Vector3 dimensions, float inverseMass, float elasticity);
 #ifdef USEVULKAN
 			GameTechVulkanRenderer*	renderer;
 #else
@@ -94,6 +106,9 @@ namespace NCL {
 #endif
 			PhysicsSystem*		physics;
 			GameWorld*			world;
+			AiTreeObject*		 aitreetest;
+			vector<Vector3> frameAddresses;
+			Vector3 aichaseposition;
 
 			KeyboardMouseController controller;
 
@@ -121,6 +136,12 @@ namespace NCL {
 
 			float timer;
 			float finaltimer;
+
+			AiStatemachineObject * AddAiStateObjectToWorld(const Vector3& position);
+			AiStatemachineObject* testStateObject;
+
+			GameObject* cube;
+			GameObject* floor;
 
 			level currentlevel;
 			int score = 0;

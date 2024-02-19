@@ -19,6 +19,7 @@ using namespace NCL;
 using namespace CSC8503;
 
 TutorialGame::TutorialGame() : controller(*Window::GetWindow()->GetKeyboard(), *Window::GetWindow()->GetMouse()) {
+	aitreetest = new AiTreeObject("aitree");
 	world		= new GameWorld();
 #ifdef USEVULKAN
 	renderer	= new GameTechVulkanRenderer(*world);
@@ -34,7 +35,7 @@ TutorialGame::TutorialGame() : controller(*Window::GetWindow()->GetKeyboard(), *
 	levelFileLoader = new WindowsLevelLoader();
 #endif // _WIN32
 
-	useGravity		= true;
+	useGravity		= false;
 
 	world->GetMainCamera().SetController(controller);
 
@@ -72,7 +73,6 @@ void TutorialGame::InitialiseAssets() {
 	bonusMesh	= renderer->LoadMesh("sphere.msh");
 	gooseMesh	= renderer->LoadMesh("goose.msh");
 	capsuleMesh = renderer->LoadMesh("capsule.msh");
-
 	basicTex	= renderer->LoadTexture("checkerboard.png");
 	sandTex		= renderer->LoadTexture("sand.jpg");
 
@@ -100,7 +100,6 @@ TutorialGame::~TutorialGame()	{
 	delete charMesh;
 	delete enemyMesh;
 	delete bonusMesh;
-
 	delete basicTex;
 	delete basicShader;
 	delete pbrShader;
@@ -112,6 +111,7 @@ TutorialGame::~TutorialGame()	{
 	delete levelFileLoader;
 
 	delete[] solarCellTextureList;
+	delete aitreetest;
 }
 
 void TutorialGame::UpdateGame(float dt) {
@@ -151,6 +151,9 @@ void TutorialGame::UpdateGame(float dt) {
 		timer += dt;
 
 		world->GetMainCamera().UpdateCamera(dt);
+		if (testStateObject) {
+			testStateObject->Update(dt);
+		}
 
 		if (timer > TIME_LIMIT) {
 			appState->SetIsGameOver(true);
@@ -161,10 +164,42 @@ void TutorialGame::UpdateGame(float dt) {
 		std::string timeText = "Time left : " + std::to_string((int)(TIME_LIMIT - timer));
 		ui->DrawStringText(timeText, Vector2(5, 10));
 	}
+
+	if (Window::GetKeyboard()->KeyDown(KeyCodes::C)) {
+		//claptrap->OnAwake(2);
+		aitreetest->ResetBehaviourTree();
+		aitreetest->OnBehaviour();
+	}
+
+	//if (aitreetest) {
+	//	aitreetest-> Update(dt);
+	//}
+
+	//testStateObject->getPositionfromobject()
+	//if (testStateObject) {
+	//	testStateObject->Update(dt);
+	//}
+	
+	static int frameCounter = 0;
+	//aitreetest->GetTransform().RandomPosition(aitreetest->GetTransform().GetPosition(), true).SetScale(Vector3(10, 10, 10) * 2);
+	frameCounter++;
+
+	ObjectRay(testStateObject, floor);
+
 	world->UpdateWorld(dt);
 	renderer->Render();
 	renderer->Update(dt);
-	
+	//std::cout << "capsule" << capsule->GetTransform().GetPosition().y<<"\n";
+
+
+	if (frameCounter >= 100) {
+		aitreetest->GetTransform().RandomPosition(aitreetest->GetTransform().GetPosition(), true);
+		Vector3 aichaseposition = aitreetest->GetTransform().GetPosition();
+		frameAddresses.push_back(aichaseposition);
+		//ProcessFrameAddresses();
+		frameCounter = 0; 
+	}
+
 }
 
 void TutorialGame::InitCamera() {
@@ -184,8 +219,13 @@ void TutorialGame::InitWorld() {
 	timer = 0;
 
 	SpawnDataDrivenLevel(GameLevelNumber::LEVEL_1);
+	capsule = AddCapsuleToWorld(Vector3(-80, 7, -80), 2.0f, 5.0f);
+	AddCapsuleToWorld(Vector3(-75, 7, -75), 2.0f, 5.0f);
+
 	InitTeleporters();
 	physics->createStaticTree();
+	
+	InitAI();
 }
 
 /*
@@ -195,7 +235,7 @@ A single function to add a large immoveable cube to the bottom of our world
 */
 
 GameObject* TutorialGame::AddFloorToWorld(const Vector3& position, const Vector3& size) {
-	GameObject* floor = new GameObject();
+	floor = new GameObject();
 
 	Vector3 floorSize = size;
 	AABBVolume* volume = new AABBVolume(floorSize , false ,true);
@@ -326,8 +366,32 @@ physics worlds. You'll probably need another function for the creation of OBB cu
 */
 
 
+GameObject* TutorialGame::AddCapsuleToWorld(const Vector3& position, float radius, float halfHeight, float inverseMass, float elasticity) {
+	GameObject* capsule = new GameObject("capsule");
+
+	CapsuleVolume* volume = new CapsuleVolume(halfHeight, radius, false, false);
+	capsule->SetBoundingVolume((CollisionVolume*)volume);
+	Vector3 capsuleSize = Vector3(2 * radius, 2 * halfHeight, 2 * radius);
+
+	capsule->GetTransform()
+		.SetPosition(position)
+		.SetScale(capsuleSize);
+
+	capsule->SetRenderObject(new RenderObject(&capsule->GetTransform(), capsuleMesh, basicTex, basicShader));
+	capsule->SetPhysicsObject(new PhysicsObject(&capsule->GetTransform(), capsule->GetBoundingVolume()));
+
+	capsule->GetPhysicsObject()->SetInverseMass(0.001);
+	capsule->GetPhysicsObject()->InitCubeInertia();
+	capsule->GetPhysicsObject()->SetElasticity(elasticity);
+
+	world->AddGameObject(capsule);
+
+	return capsule;
+}
+
 void TutorialGame::InitDefaultFloor() {
 	AddFloorToWorld(Vector3(0, -2, 0), Vector3(100, 2, 100));
+	//AddAiToWorld(Vector3(0, -2, 0), Vector3(10, 10, 10), 1.0, 1.0);
 }
 
 void TutorialGame::InitHole() {
@@ -369,7 +433,7 @@ void NCL::CSC8503::TutorialGame::InitGravityWell()
 }
 
 GameObject* TutorialGame::AddObbCubeToWorld(const Vector3& position, Vector3 dimensions, float inverseMass, float elasticity) {
-	GameObject* cube = new GameObject("cube");
+	 cube = new GameObject("cube");
 
 	OBBVolume* volume = new OBBVolume(dimensions,false, true);
 	cube->SetBoundingVolume((CollisionVolume*)volume);
@@ -464,11 +528,56 @@ GameObject* NCL::CSC8503::TutorialGame::AddTeleporterToWorld(const Vector3& posi
 
 
 
+AiTreeObject* TutorialGame::AddAiToWorld(const Vector3& position, Vector3 dimensions, float inverseMass, float elasticity) {
+	aitreetest = new AiTreeObject("Aitreeobject");
+
+	OBBVolume* volume = new OBBVolume(dimensions);
+	aitreetest->SetBoundingVolume((CollisionVolume*)volume);
+
+	//aitreetest->GetTransform().RandomPosition(position, true).SetScale(dimensions * 2);
+		//.SetPosition(position).SetScale(dimensions * 2);
+
+	aitreetest->SetRenderObject(new RenderObject(&aitreetest->GetTransform(), cubeMesh, basicTex, basicShader));
+	aitreetest->SetPhysicsObject(new PhysicsObject(&aitreetest->GetTransform(), aitreetest->GetBoundingVolume()));
+
+	aitreetest->GetPhysicsObject()->SetInverseMass(inverseMass);
+	aitreetest->GetPhysicsObject()->InitCubeInertia();
+	aitreetest->GetPhysicsObject()->SetElasticity(elasticity);
+	aitreetest->BehaviorTree();
+
+	world->AddGameObject(aitreetest);
+	return aitreetest;
+
+}
+
+AiStatemachineObject* TutorialGame::AddAiStateObjectToWorld(const Vector3& position) {
+	testStateObject = new AiStatemachineObject();
+
+	SphereVolume* volume = new SphereVolume(1.0f);
+	testStateObject->SetBoundingVolume((CollisionVolume*)volume);
+	testStateObject->GetTransform()
+		.SetScale(Vector3(3, 3, 3))
+		.SetPosition(position);
+
+	testStateObject->SetRenderObject(new RenderObject(&testStateObject->GetTransform(), sphereMesh, nullptr, basicShader));
+	testStateObject->SetPhysicsObject(new PhysicsObject(&testStateObject->GetTransform(), testStateObject->GetBoundingVolume()));
+
+	testStateObject->GetPhysicsObject()->SetInverseMass(1.0f);
+	testStateObject->GetPhysicsObject()->InitSphereInertia();
+
+	//testStateObject->SetRenderObject()->SetColour(Debug::RED);
+
+	world->AddGameObject(testStateObject);
+
+	return testStateObject;
+}
+
 void TutorialGame::InitBouncePad()
 {
+	/*
 	for (size_t i = 0; i < 5; i++)
 	{
-		BouncePad* tempBouncePad = new BouncePad(cubeMesh, basicTex, basicShader);
+		BouncePad * tempBouncePad = new BouncePad(cubeMesh, basicTex, basicShader);
 		tempBouncePad->GetRenderObject()->SetColour(Debug::CYAN);
 		bouncePadList[i] = tempBouncePad;
 		world->AddGameObject(bouncePadList[i]);
@@ -478,7 +587,7 @@ void TutorialGame::InitBouncePad()
 	bouncePadList[1]->GetTransform().SetPosition(Vector3(-48, 0, 0));
 	bouncePadList[2]->GetTransform().SetPosition(Vector3(48, 0, 48));
 	bouncePadList[3]->GetTransform().SetPosition(Vector3(48, 0, -48));
-	bouncePadList[4]->GetTransform().SetPosition(Vector3(-30, 0, 48));
+	bouncePadList[4]->GetTransform().SetPosition(Vector3(-30, 0, 48));*/
 
 }
 
@@ -512,5 +621,40 @@ void TutorialGame::InitPlaceholderAIs() {
 			(std::rand() % (2 * GAME_ARENA_LENGTH)) - GAME_ARENA_LENGTH);
 		placeHolderAIs.push_back(AddObbCubeToWorld(randomPosition, AI_SCALE, ENEMY_AI_WEIGHT, ENEMY_AI_ELASTICITY));
 		placeHolderAIs[i]->GetRenderObject()->SetColour(Debug::RED);
+	}
+}
+
+void TutorialGame::InitAI()
+{
+	AddAiStateObjectToWorld(Vector3(20, 2, 30));
+	AddFloorToWorld(Vector3(20, 2, 20), Vector3(2, 2, 2))->GetPhysicsObject()->SetInverseMass(1.0);
+	AddFloorToWorld(Vector3(20, 2, 40), Vector3(2, 2, 2))->GetPhysicsObject()->SetInverseMass(1.0);
+}
+
+void TutorialGame::ProcessFrameAddresses() {
+
+	for (auto address : frameAddresses) {
+
+		std::cout << "Address: " << address << std::endl;
+	}
+	//frameAddresses.clear();
+}
+
+
+void TutorialGame::ObjectRay(GameObject* gameObject, GameObject* gameObject2) {
+
+	Vector3 objectPosition = gameObject->GetTransform().GetPosition() + Vector3(0, 0, 10);
+	Vector3 objectForward = gameObject->GetTransform().GetOrientation() * Vector3(0, 0, 1);
+	Ray ray(objectPosition, objectForward);
+
+	RayCollision closestCollision;
+	closestCollision.rayDistance = 100.0f;
+
+	if (world->Raycast(ray, closestCollision, true, gameObject)) {
+		if (closestCollision.node == gameObject2) {
+			Debug::DrawLine(objectPosition, objectForward * 100, Debug::BLACK);
+			gameObject2->GetPhysicsObject()->AddForceAtPosition(ray.GetDirection() * 100, closestCollision.collidedAt);
+		}
+		Debug::DrawLine(objectPosition, objectForward * 100, Debug::RED);
 	}
 }

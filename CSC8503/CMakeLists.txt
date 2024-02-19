@@ -9,11 +9,16 @@ set(NetPlugins
 )
 source_group("NetPlugins" FILES ${NetPlugins})
 
+set(AudioEngine
+    "AudioEngine.h"
+    "AudioEngine.cpp"
+)
+source_group("AudioEngine" FILES ${AudioEngine})
+
 set(Header_Files
     "GameTechRenderer.h"
     "NetworkedGame.h"
     "NetworkPlayer.h"
-    "StateGameObject.h"
     "TutorialGame.h"
     "Projectile.h"
     "Hole.h"
@@ -44,7 +49,7 @@ set(Source_Files
     "Main.cpp"
     "NetworkedGame.cpp"
     "NetworkPlayer.cpp"
-    "StateGameObject.cpp"
+
     "TutorialGame.cpp"
     "Projectile.cpp"
     "Hole.cpp"
@@ -67,6 +72,15 @@ set(OGL_Rendering_Files
     "OglPostProcessingFbo.h"
 )
 source_group("OGL Rendering Files" FILES ${OGL_Rendering_Files})
+
+set(AI_Files
+    "AiStatemachineObject.cpp"
+    "AiStatemachineObject.h"
+    "AitreeObject.cpp"
+    "AitreeObject.h"
+)
+source_group("AI_Files" FILES ${AI_Files})
+
 
 if(USE_VULKAN)
 list(APPEND Header_Files "GameTechVulkanRenderer.h")
@@ -105,6 +119,8 @@ set(ALL_FILES
     ${ImGUI_Files}
     ${NetPlugins}
     ${OGL_Rendering_Files}
+    ${AudioEngine}
+    ${AI_Files}
 )
 
 if(USE_VULKAN)
@@ -112,6 +128,7 @@ if(USE_VULKAN)
         ${Header_Files}
         ${Source_Files}
         ${NetPlugins}
+        ${AudioEngine}
         ${SHADER_FILES}
         ${ImGUI_Files}
     )
@@ -276,6 +293,7 @@ include_directories("../OpenGLRendering/")
 include_directories("../NCLCoreClasses/")
 include_directories("../CSC8503CoreClasses/")
 include_directories("../Steamworksdk/public/steam/")
+include_directories("../Dependencies/FMOD/Windows/include/")
 
 #link_directories("../Steamworksdk/redistributable_bin/win64/")
 
@@ -283,6 +301,8 @@ target_link_libraries(${PROJECT_NAME} LINK_PUBLIC NCLCoreClasses)
 target_link_libraries(${PROJECT_NAME} LINK_PUBLIC CSC8503CoreClasses)
 target_link_libraries(${PROJECT_NAME} LINK_PUBLIC OpenGLRendering)
 target_link_libraries(${PROJECT_NAME} LINK_PUBLIC "../../Steamworksdk/redistributable_bin/win64/steam_api64")
+target_link_libraries(${PROJECT_NAME} LINK_PUBLIC  "../../Dependencies/FMOD/Windows/lib/fmod_vc")
+target_link_libraries(${PROJECT_NAME} LINK_PUBLIC  "../../Dependencies/FMOD/Windows/lib/fmodL_vc")
 
 
 if(USE_VULKAN)
