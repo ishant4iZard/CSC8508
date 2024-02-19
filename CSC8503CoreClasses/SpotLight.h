@@ -10,6 +10,7 @@ protected:
     /// Specifies the radius of this spot light
     /// </summary>
     float cutoffAngle;
+
     Vector3 position;
 public:
     SpotLight(const Vector3& inPos, const Vector3& inDir, const Vector3& inColor, const float& inCutOffAngle) : Light(inColor)

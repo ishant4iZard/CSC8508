@@ -2,8 +2,7 @@
 #include "Light.h"
 #include <utility>
 
-class DirectionalLight :
-    public Light
+class DirectionalLight : public Light
 {
 protected:
     Vector3 direction;

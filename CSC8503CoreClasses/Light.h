@@ -1,27 +1,38 @@
 #pragma once
+#include "Vector4.h"
 #include "Vector3.h"
 using namespace NCL::Maths;
 
 class Light
 {
 protected:
-	Vector3 color;
-	Vector3 pos;
+	Vector4 color;
+	Vector3 position;
+	float radius;
 
 public:
-	Light(const Vector3& inColor)
-	{
-		color = inColor;
+	Light() {} // Default constructor , we � ll be needing this later !
+	Light(const Vector3 & position, const Vector4 & color, float radius) {
+	this -> position = position;
+	this -> color = color;
+	this -> radius = radius;
 	}
-
-	Light(const Vector3& inPos, const Vector3& inColor) {
-		color = inColor;
-		pos = inPos;
+	Light(const Vector3& color) {
+		this->color = color;
 	}
+	Light(const Vector3& position, const Vector4& color) {
+		this->position = position;
+		this->color = color;
+	}
+	~Light(void) {};
 
-	Vector3 GetColor()	{return color;}
-	void	SetColor(const Vector3& inColor)	{ color = inColor; }
+	Vector3 GetPosition() const { return position; }
+	void SetPosition(const Vector3 & val) { position = val; }
 
-	Vector3 GetPos()	{return pos;}
-	void	SetPos(const Vector3& inPos)		{ pos = inPos; }
+	float GetRadius() const { return radius; }
+	void SetRadius(float val) { radius = val; }
+
+	Vector4 GetColour() const { return color; }
+	void SetColour(const Vector4 & val) { color = val; }
+
 };

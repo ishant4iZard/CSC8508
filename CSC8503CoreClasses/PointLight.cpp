@@ -4,6 +4,7 @@ PointLight::PointLight(const Vector3& inPos, const Vector3& inColor) : Light(inC
 {
 	position = inPos;
 	color = inColor;
+	constantLinearQuadratic = Vector3(1.0f, 0.0f, 0.0f); // Default values
 }
 
 PointLight::PointLight(const Vector3& inPos, const Vector3& inColor, const float& inConstant, const float& inLinear, const float& inQuadratic)
