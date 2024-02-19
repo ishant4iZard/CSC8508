@@ -124,7 +124,9 @@ namespace NCL {
 			Shader*		basicShader = nullptr;
 			Shader* pbrShader = nullptr;
 
-			Texture* solarCellTextureList[(uint8_t)TextureType::MAX_TYPE];
+			Texture* groundTextureList[(uint8_t)TextureType::MAX_TYPE];
+			Texture* wallTextureList[(uint8_t)TextureType::MAX_TYPE];
+			Texture* sandTextureList[(uint8_t)TextureType::MAX_TYPE];
 
 			//Coursework Meshes
 			Mesh*	charMesh	= nullptr;

@@ -76,11 +76,23 @@ void TutorialGame::InitialiseAssets() {
 	basicTex	= renderer->LoadTexture("checkerboard.png");
 	sandTex		= renderer->LoadTexture("sand.jpg");
 
-	solarCellTextureList[(uint8_t)TextureType::ALBEDO] = renderer->LoadTexture("RustedIron/rustediron2_basecolor.png");
-	solarCellTextureList[(uint8_t)TextureType::NORMAL] = renderer->LoadTexture("RustedIron/rustediron2_normal.png");
-	solarCellTextureList[(uint8_t)TextureType::METAL] = renderer->LoadTexture("RustedIron/rustediron2_metallic.png");
-	solarCellTextureList[(uint8_t)TextureType::ROUGHNESS] = renderer->LoadTexture("RustedIron/rustediron2_roughness.png");
-	solarCellTextureList[(uint8_t)TextureType::AO] = renderer->LoadTexture("RustedIron/white_ao.png");
+	groundTextureList[(uint8_t)TextureType::ALBEDO] = renderer->LoadTexture("GrassWithRock01/albedo.png");
+	groundTextureList[(uint8_t)TextureType::NORMAL] = renderer->LoadTexture("GrassWithRock01/normal_gl.png");
+	groundTextureList[(uint8_t)TextureType::METAL] = renderer->LoadTexture("GrassWithRock01/metallic.png");
+	groundTextureList[(uint8_t)TextureType::ROUGHNESS] = renderer->LoadTexture("GrassWithRock01/roughness.png");
+	groundTextureList[(uint8_t)TextureType::AO] = renderer->LoadTexture("GrassWithRock01/ao.png");
+
+	wallTextureList[(uint8_t)TextureType::ALBEDO] = renderer->LoadTexture("StoneBrickWall01/albedo.png");
+	wallTextureList[(uint8_t)TextureType::NORMAL] = renderer->LoadTexture("StoneBrickWall01/normal_gl.png");
+	wallTextureList[(uint8_t)TextureType::METAL] = renderer->LoadTexture("StoneBrickWall01/metallic.png");
+	wallTextureList[(uint8_t)TextureType::ROUGHNESS] = renderer->LoadTexture("StoneBrickWall01/roughness.png");
+	wallTextureList[(uint8_t)TextureType::AO] = renderer->LoadTexture("StoneBrickWall01/ao.png");
+
+	sandTextureList[(uint8_t)TextureType::ALBEDO] = renderer->LoadTexture("Sand_02/albedo.png");
+	sandTextureList[(uint8_t)TextureType::NORMAL] = renderer->LoadTexture("Sand_02/normal_gl.png");
+	sandTextureList[(uint8_t)TextureType::METAL] = renderer->LoadTexture("Sand_02/metallic.png");
+	sandTextureList[(uint8_t)TextureType::ROUGHNESS] = renderer->LoadTexture("Sand_02/roughness.png");
+	sandTextureList[(uint8_t)TextureType::AO] = renderer->LoadTexture("Sand_02/ao.png");
 
 #ifdef defined(USE_SHADOW)
 	basicShader = renderer->LoadShader("scene.vert", "scene.frag");
@@ -110,7 +122,9 @@ TutorialGame::~TutorialGame()	{
 
 	delete levelFileLoader;
 
-	delete[] solarCellTextureList;
+	delete[] groundTextureList;
+	delete[] wallTextureList;
+	delete[] sandTextureList;
 	delete aitreetest;
 }
 
@@ -286,11 +300,16 @@ void TutorialGame::SpawnDataDrivenLevel(GameLevelNumber inGameLevelNumber)
 
 void NCL::CSC8503::TutorialGame::SpawnWall(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale)
 {
-	GameObject* tempWall = AddObbCubeToWorld(
+	GameObject* tempWall = AddAABBCubeToWorld(
 		inPosition,
 		inScale,
 		0, 0.5f);
-	tempWall->GetTransform().SetOrientation(Quaternion::EulerAnglesToQuaternion(inRotation.x, inRotation.y, inRotation.z));
+	tempWall->GetRenderObject()->SetShader(pbrShader);
+	tempWall->GetRenderObject()->SetTiling(Vector2(10.0f, 0.02f));
+	for (size_t i = 0; i < (uint8_t)TextureType::MAX_TYPE; i++)
+	{
+		tempWall->GetRenderObject()->SetTexture((TextureType)i, wallTextureList[i]);
+	}
 }
 
 void NCL::CSC8503::TutorialGame::SpawnFloor(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale)
@@ -298,10 +317,11 @@ void NCL::CSC8503::TutorialGame::SpawnFloor(const Vector3& inPosition, const Vec
 	GameObject* tempFloor = AddFloorToWorld(
 		inPosition,
 		inScale);
+	tempFloor->GetRenderObject()->SetTiling(Vector2(5, 5));
 
 	for (size_t i = 0; i < (uint8_t)TextureType::MAX_TYPE; i++)
 	{
-		tempFloor->GetRenderObject()->SetTexture((TextureType)i, solarCellTextureList[i]);
+		tempFloor->GetRenderObject()->SetTexture((TextureType)i, sandTextureList[i]);
 	}
 }
 
@@ -310,7 +330,7 @@ void NCL::CSC8503::TutorialGame::SpawnBouncingPad(const Vector3& inPosition, con
 	BouncePad* tempBouncePad = new BouncePad(cubeMesh, basicTex, pbrShader);
 	for (size_t i = 0; i < (uint8_t)TextureType::MAX_TYPE; i++)
 	{
-		tempBouncePad->GetRenderObject()->SetTexture((TextureType)i, solarCellTextureList[i]);
+		tempBouncePad->GetRenderObject()->SetTexture((TextureType)i, groundTextureList[i]);
 	}
 	tempBouncePad->GetRenderObject()->SetColour(Debug::CYAN);
 	world->AddGameObject(tempBouncePad);
