@@ -218,7 +218,7 @@ A single function to add a large immoveable cube to the bottom of our world
 */
 
 GameObject* TutorialGame::AddFloorToWorld(const Vector3& position, const Vector3& size) {
-	 floor = new GameObject();
+	floor = new GameObject();
 
 	Vector3 floorSize = size;
 	AABBVolume* volume = new AABBVolume(floorSize , false ,true);
@@ -548,9 +548,10 @@ AiStatemachineObject* TutorialGame::AddAiStateObjectToWorld(const Vector3& posit
 
 void TutorialGame::InitBouncePad()
 {
-	/*for (size_t i = 0; i < 5; i++)
+	/*
+	for (size_t i = 0; i < 5; i++)
 	{
-	  BouncePad * tempBouncePad = new BouncePad(cubeMesh, basicTex, basicShader);
+		BouncePad * tempBouncePad = new BouncePad(cubeMesh, basicTex, basicShader);
 		tempBouncePad->GetRenderObject()->SetColour(Debug::CYAN);
 		bouncePadList[i] = tempBouncePad;
 		world->AddGameObject(bouncePadList[i]);

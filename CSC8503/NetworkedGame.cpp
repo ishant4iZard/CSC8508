@@ -329,19 +329,19 @@ void NetworkedGame::CheckPlayerListAndSpawnPlayers()
 				switch (i)
 				{
 				case 0:
-					pos = Vector3(0, 3, -75);
+					pos = Vector3(0, 5.6, -75);
 					movementDirection = Vector3(1, 0, 0);
 					break;
 				case 1:
-					pos = Vector3(75, 3, 0);
+					pos = Vector3(75, 5.6, 0);
 					movementDirection = Vector3(0, 0, 1);
 					break;
 				case 2:
-					pos = Vector3(0, 3, 75);
+					pos = Vector3(0, 5.6, 75);
 					movementDirection = Vector3(-1, 0, 0);
 					break;
 				case 3:
-					pos = Vector3(-75, 3, 0);
+					pos = Vector3(-75, 5.6, 0);
 					movementDirection = Vector3(0, 0, -1);
 					break;
 				}
@@ -367,7 +367,7 @@ NetworkPlayer* NetworkedGame::AddNetworkPlayerToWorld(const Vector3& position, i
 
 	NetworkPlayer* character = new NetworkPlayer(this, playerNum);
 
-	AABBVolume* volume = new AABBVolume(volumeSize);
+	SphereVolume* volume = new SphereVolume(1.6f);
 
 	character->SetBoundingVolume((CollisionVolume*)volume);
 	character->GetTransform()

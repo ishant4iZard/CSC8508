@@ -105,6 +105,7 @@ set(ALL_FILES
     ${ImGUI_Files}
     ${NetPlugins}
     ${AudioEngine}
+    ${AI_Files}
 )
 
 if(USE_VULKAN)
