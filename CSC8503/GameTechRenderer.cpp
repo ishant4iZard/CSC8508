@@ -360,6 +360,7 @@ void GameTechRenderer::RenderCamera() {
 	int projLocation	= 0;
 	int viewLocation	= 0;
 	int modelLocation	= 0;
+	int tilingLocation = 0;
 	int colourLocation  = 0;
 	int hasVColLocation = 0;
 	int hasTexLocation  = 0;
@@ -389,6 +390,7 @@ void GameTechRenderer::RenderCamera() {
 			projLocation	= glGetUniformLocation(shader->GetProgramID(), "projMatrix");
 			viewLocation	= glGetUniformLocation(shader->GetProgramID(), "viewMatrix");
 			modelLocation	= glGetUniformLocation(shader->GetProgramID(), "modelMatrix");
+			tilingLocation = glGetUniformLocation(shader->GetProgramID(), "tiling");
 			shadowLocation  = glGetUniformLocation(shader->GetProgramID(), "shadowMatrix");
 			colourLocation  = glGetUniformLocation(shader->GetProgramID(), "objectColour");
 			hasVColLocation = glGetUniformLocation(shader->GetProgramID(), "hasVertexColours");
@@ -421,6 +423,9 @@ void GameTechRenderer::RenderCamera() {
 		Matrix4 modelMatrix = (*i).GetTransform()->GetMatrix();
 		glUniformMatrix4fv(modelLocation, 1, false, (float*)&modelMatrix);			
 		
+		const Vector2 tempTiling = (*i).GetTiling();
+		glUniform2f(tilingLocation, tempTiling.x, tempTiling.y);
+
 		Matrix4 fullShadowMat = shadowMatrix * modelMatrix;
 		glUniformMatrix4fv(shadowLocation, 1, false, (float*)&fullShadowMat);
 

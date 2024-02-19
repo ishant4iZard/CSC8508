@@ -60,6 +60,8 @@ namespace NCL {
 				return shader;
 			}
 
+			void SetShader(Shader* inShader) { this->shader = inShader; }
+
 			void SetColour(const Vector4& c) {
 				colour = c;
 			}
@@ -73,6 +75,9 @@ namespace NCL {
 				return colour;
 			}
 
+			Vector2 GetTiling() const { return tiling; }
+			void SetTiling(const Vector2& inTiling) { this->tiling = inTiling; }
+
 		protected:
 			Mesh*		mesh;
 			Texture*	texture;
@@ -80,6 +85,7 @@ namespace NCL {
 			Shader*		shader;
 			Transform*	transform;
 			Vector4		colour;
+			Vector2 tiling;
 			const char* textureNameList[(uint8_t)TextureType::MAX_TYPE] = {
 				"diffuseTex",
 				"normalTex",
