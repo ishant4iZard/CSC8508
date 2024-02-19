@@ -6,6 +6,16 @@
 using namespace NCL;
 using namespace CSC8503;
 
+Vector3 Lerp(const Vector3& start, const Vector3& end, float t) {
+	t = std::clamp(t, 0.0f, 1.0f);
+
+	float lerpedX = start.x + t * (end.x - start.x);
+	float lerpedY = start.y + t * (end.y - start.y);
+	float lerpedZ = start.z + t * (end.z - start.z);
+
+	return Vector3(lerpedX, lerpedY, lerpedZ);
+}
+
 NetworkPlayer::NetworkPlayer(NetworkedGame* game, int num)	{
 	this->game = game;
 	playerNum  = num;
@@ -42,6 +52,7 @@ Quaternion GenerateOrientation(const Vector3& axis, float angle)
 
 void NetworkPlayer::SetPlayerYaw(const Vector3& pointPos)
 {
+	this->pointPos = pointPos;
 	Quaternion orientation;
 	Vector3 pos = transform.GetPosition();
 	Vector3 targetForwardVec = (pointPos - pos);
@@ -132,6 +143,17 @@ void NetworkPlayer::MovePlayerInSquarePattern(float dt) {
 	this->GetPhysicsObject()->SetLinearVelocity(velocity);
 }
 
+void NetworkPlayer::MovePlayerTowardsCursor(float dt){
+	Vector3 movementDirection = (pointPos - transform.GetPosition()).Normalised();
+	movementDirection.y = 0;
+
+	Vector3 currentVelocity = this->GetPhysicsObject()->GetLinearVelocity();
+	Vector3 targetVelocity = movementDirection * movementSpeed;
+	Vector3 velocity = Lerp(currentVelocity, targetVelocity, dt);
+
+	this->GetPhysicsObject()->SetLinearVelocity(velocity);
+}
+
 void NetworkPlayer::ReplenishProjectiles(float dt) {
 	const static int PROJECTILE_RELOAD_RATE = 1; // 1 projectile per second is replenished
 
@@ -149,8 +171,10 @@ void NetworkPlayer::Fire()
 	if (numProjectilesAccumulated <= 0) return;
 	numProjectilesAccumulated--;
 
-	Vector3 fireDir = GetPlayerForwardVector();
+	Vector3 fireDir = GetPlayerForwardVector().Normalised();
 	Vector3 firePos = transform.GetPosition() + fireDir * 3;
+	std::cout << firePos.y;
+
 	game->SpawnProjectile(this, firePos, fireDir);
 	//std::cout << "player " << playerNum << " fired!" << std::endl;
 }

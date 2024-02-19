@@ -34,7 +34,6 @@ namespace NCL::Maths {
 
 		void		Normalise(); 
 		Quaternion	Normalised() const;
-
 			
 		static float Dot(const Quaternion &a, const Quaternion &b);
 

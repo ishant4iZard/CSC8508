@@ -11,16 +11,22 @@ set(NetPlugins
 )
 source_group("NetPlugins" FILES ${NetPlugins})
 
+set(AudioEngine
+    "AudioEngine.h"
+    "AudioEngine.cpp"
+)
+source_group("AudioEngine" FILES ${AudioEngine})
+
 set(Header_Files
     "GameTechRenderer.h"
     "NetworkedGame.h"
     "NetworkPlayer.h"
-    "StateGameObject.h"
     "TutorialGame.h"
     "Projectile.h"
     "Hole.h"
     "BouncePad.h"
     "GravityWell.h"
+    "Teleporter.h"
     "UIBase.h"
     "LevelFileLoaderBase.h"
     "WindowsLevelLoader.h"
@@ -40,18 +46,27 @@ set(Source_Files
     "Main.cpp"
     "NetworkedGame.cpp"
     "NetworkPlayer.cpp"
-    "StateGameObject.cpp"
     "TutorialGame.cpp"
     "Projectile.cpp"
     "Hole.cpp"
     "BouncePad.cpp"
     "GravityWell.cpp"
+    "Teleporter.cpp"
     "WindowsLevelLoader.cpp"
     "UIWindows.cpp"
     "ApplicationState.cpp"
     "UIPlaystation.cpp"
     "MenuSystem.cpp"
 )
+
+set(AI_Files
+    "AiStatemachineObject.cpp"
+    "AiStatemachineObject.h"
+    "AitreeObject.cpp"
+    "AitreeObject.h"
+)
+source_group("AI_Files" FILES ${AI_Files})
+
 
 if(USE_VULKAN)
 list(APPEND Header_Files "GameTechVulkanRenderer.h")
@@ -90,6 +105,8 @@ set(ALL_FILES
     ${Source_Files}
     ${ImGUI_Files}
     ${NetPlugins}
+    ${AudioEngine}
+    ${AI_Files}
 )
 
 if(USE_VULKAN)
@@ -97,6 +114,7 @@ if(USE_VULKAN)
         ${Header_Files}
         ${Source_Files}
         ${NetPlugins}
+        ${AudioEngine}
         ${SHADER_FILES}
         ${ImGUI_Files}
     )
@@ -261,6 +279,7 @@ include_directories("../OpenGLRendering/")
 include_directories("../NCLCoreClasses/")
 include_directories("../CSC8503CoreClasses/")
 include_directories("../Steamworksdk/public/steam/")
+include_directories("../Dependencies/FMOD/Windows/include/")
 
 #link_directories("../Steamworksdk/redistributable_bin/win64/")
 
@@ -268,6 +287,8 @@ target_link_libraries(${PROJECT_NAME} LINK_PUBLIC NCLCoreClasses)
 target_link_libraries(${PROJECT_NAME} LINK_PUBLIC CSC8503CoreClasses)
 target_link_libraries(${PROJECT_NAME} LINK_PUBLIC OpenGLRendering)
 target_link_libraries(${PROJECT_NAME} LINK_PUBLIC "../../Steamworksdk/redistributable_bin/win64/steam_api64")
+target_link_libraries(${PROJECT_NAME} LINK_PUBLIC  "../../Dependencies/FMOD/Windows/lib/fmod_vc")
+target_link_libraries(${PROJECT_NAME} LINK_PUBLIC  "../../Dependencies/FMOD/Windows/lib/fmodL_vc")
 
 
 if(USE_VULKAN)
@@ -285,4 +306,47 @@ if(USE_VULKAN)
     add_dependencies(${PROJECT_NAME} SHADER_FILES)
 endif()
 
+# Function to copy files
+function(copy_files_from_source_to_destinations SOURCE_DIR DESTINATIONS FILE_PATTERN)
+    message("Copying files from Source: " ${SOURCE_DIR})
 
+    if ("${FILE_PATTERN}" MATCHES "\\*")
+        file(GLOB_RECURSE FILES ${SOURCE_DIR}/**/${FILE_PATTERN})
+    else()
+        set(FILES ${SOURCE_DIR}/${FILE_PATTERN})
+    endif()
+
+    foreach(DEST_DIR ${DESTINATIONS})
+        message("Copying files to Destination: " ${DEST_DIR})
+        file(COPY ${FILES} DESTINATION ${DEST_DIR})
+    endforeach()
+endfunction()
+
+# FMOD dlls
+set(FMOD_SOURCE_DIR ${CMAKE_SOURCE_DIR}/Dependencies)
+set(FMOD_DESTINATIONS
+    ${CMAKE_BINARY_DIR}/CSC8503
+    ${CMAKE_SOURCE_DIR}/x64/Debug
+    ${CMAKE_SOURCE_DIR}/x64/Release
+)
+copy_files_from_source_to_destinations(${FMOD_SOURCE_DIR} "${FMOD_DESTINATIONS}" "*.dll")
+
+# Steam dlls
+set(STEAM_SOURCE_DIR ${CMAKE_SOURCE_DIR}/Steamworksdk)
+set(STEAM_DESTINATIONS
+    ${CMAKE_BINARY_DIR}/CSC8503
+    ${CMAKE_SOURCE_DIR}/x64/Debug
+    ${CMAKE_SOURCE_DIR}/x64/Release
+)
+copy_files_from_source_to_destinations(${STEAM_SOURCE_DIR} "${STEAM_DESTINATIONS}" "*.dll")
+
+# Steam app id
+set(APP_ID_SOURCE_DIR ${CMAKE_SOURCE_DIR}/Steamworksdk)
+set(APP_ID_DESTINATIONS
+    ${CMAKE_BINARY_DIR}/CSC8503
+    ${CMAKE_SOURCE_DIR}/x64/Debug
+    ${CMAKE_SOURCE_DIR}/x64/Release
+)
+copy_files_from_source_to_destinations(${APP_ID_SOURCE_DIR} "${APP_ID_DESTINATIONS}" "steam_appid.txt")
+
+# TO DO : copy files to ORBIS

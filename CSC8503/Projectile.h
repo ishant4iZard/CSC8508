@@ -26,10 +26,19 @@ namespace NCL {
 			void ReduceTimeLeft(float dt) { timeLeft -= dt; }
 			const float GetTimeLeft() { return timeLeft; }
 
+			bool getTeleport() {
+				return canTeleport;
+			}
+
+			void setTeleport(bool teleport) {
+				canTeleport = teleport;
+			}
+
 		protected:
 			NetworkedGame* Game;
 			NetworkPlayer* Owner;
 			float timeLeft;
+			bool canTeleport = true;
 			const int LIFE_TIME_AMOUNT = 15;
 		};
 

@@ -44,11 +44,21 @@ NetworkedGame::NetworkedGame()	{
 		PlayersList.push_back(-1);
 		ControledPlayersList.push_back(nullptr);
 	}
+
+	audioEngine = new AudioEngine();
+
+	// Looping background music
+	backGroundMusic = audioEngine->CreateSound("../../Assets/Audio/abc.mp3", true);
+	audioEngine->PlaySound(backGroundMusic, true);
+
+	// Trigger music
+	fireSFX = audioEngine->CreateSound("../../Assets/Audio/jump.mp3", false);
 }
 
 NetworkedGame::~NetworkedGame()	{
 	delete thisServer;
 	delete thisClient;
+	delete audioEngine;
 }
 
 bool NetworkedGame::StartAsServer() {
@@ -116,7 +126,7 @@ void NetworkedGame::UpdateGame(float dt) {
 			else if (thisClient) {
 				UpdateAsClient(dt);
 			}
-			timeToNextPacket += 1.0f / 30.0f; //30hz server/client update
+			timeToNextPacket += 1.0f / 60.0f; //60hz server/client update
 		}
 
 		// Server and Client Receive and process there packet
@@ -125,6 +135,9 @@ void NetworkedGame::UpdateGame(float dt) {
 			HandleInputAsServer();
 			UpdatePlayerState(dt);
 			UpdateProjectiles(dt);
+			
+			
+			
 			gravitywell->PullProjectilesWithinField(ProjectileList);
 			physics->Update(dt);
 		}
@@ -134,6 +147,7 @@ void NetworkedGame::UpdateGame(float dt) {
 		}
 
 	}
+	audioEngine->Update();
 	TutorialGame::UpdateGame(dt);
 	Debug::UpdateRenderables(dt);
 }
@@ -143,10 +157,8 @@ void NetworkedGame::UpdatePlayerState(float dt) {
 	{
 		if (i != nullptr)
 		{
-			//i->OscillatePlayer(dt);
-			i->RotatePlayer(dt);
 			i->ReplenishProjectiles(dt);
-			i->MovePlayerInSquarePattern(dt);
+			i->MovePlayerTowardsCursor(dt);
 		}
 	}
 }
@@ -225,13 +237,19 @@ void NCL::CSC8503::NetworkedGame::HandleInputAsServer()
 {
 	if (LocalPlayer)
 	{
-		if (Window::GetMouse()->ButtonPressed(MouseButtons::Type::Left)) { ServerFired = true; }
+		if (Window::GetMouse()->ButtonPressed(MouseButtons::Type::Left)) { 
+			ServerFired = true; 
+			audioEngine->PlaySound(fireSFX, false);
+		}
 	}
 }
 
 void NCL::CSC8503::NetworkedGame::HandleInputAsClient()
 {
-	if (Window::GetMouse()->ButtonPressed(MouseButtons::Type::Left)) { ClientFired = true; }
+	if (Window::GetMouse()->ButtonPressed(MouseButtons::Type::Left)) { 
+		ClientFired = true; 
+		audioEngine->PlaySound(fireSFX, false);
+	}
 }
 
 void NetworkedGame::BroadcastSnapshot(bool deltaFrame) {
@@ -311,19 +329,19 @@ void NetworkedGame::CheckPlayerListAndSpawnPlayers()
 				switch (i)
 				{
 				case 0:
-					pos = Vector3(0, 3, -75);
+					pos = Vector3(0, 5.6, -75);
 					movementDirection = Vector3(1, 0, 0);
 					break;
 				case 1:
-					pos = Vector3(75, 3, 0);
+					pos = Vector3(75, 5.6, 0);
 					movementDirection = Vector3(0, 0, 1);
 					break;
 				case 2:
-					pos = Vector3(0, 3, 75);
+					pos = Vector3(0, 5.6, 75);
 					movementDirection = Vector3(-1, 0, 0);
 					break;
 				case 3:
-					pos = Vector3(-75, 3, 0);
+					pos = Vector3(-75, 5.6, 0);
 					movementDirection = Vector3(0, 0, -1);
 					break;
 				}
@@ -345,11 +363,11 @@ NetworkPlayer* NetworkedGame::AddNetworkPlayerToWorld(const Vector3& position, i
 {
 	float meshSize = 2.0f;
 	Vector3 volumeSize = Vector3(1.0, 1.6, 1.0);
-	float inverseMass = 1.0f / 60.0f;
+	float inverseMass = 1.0f / 600000.0f;
 
 	NetworkPlayer* character = new NetworkPlayer(this, playerNum);
 
-	AABBVolume* volume = new AABBVolume(volumeSize);
+	SphereVolume* volume = new SphereVolume(1.6f);
 
 	character->SetBoundingVolume((CollisionVolume*)volume);
 	character->GetTransform()
