@@ -32,9 +32,7 @@ namespace NCL {
 			NetSystem_Steam() : 
 				m_LobbyChatUpdateCallback(this, &NetSystem_Steam::On_LobbyChatUpdate),
 				m_LobbyDataUpdateCallback(this, &NetSystem_Steam::On_LobbyDataUpdate)
-			{
-				CurrentUserName = SteamFriends()->GetPersonaName();
-			}
+			{ }
 
 		public:
 			void CreateLobby() override;
@@ -56,6 +54,8 @@ namespace NCL {
 			int GetNumLobbyMembersByIndex(int Index) const override;
 
 			string GetLobbyMemberNameByIndex(int Index) const override;
+
+			void SetCurrentUserName() override;
 
 			void On_LobbyCreated(LobbyCreated_t* pResult, bool bIOFailure);
 			void On_LobbyMatchList(LobbyMatchList_t* pLobbyMatchList, bool bIOFailure);

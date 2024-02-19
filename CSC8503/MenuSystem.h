@@ -25,6 +25,8 @@ namespace NCL {
 
 			void Update(float dt);
 
+			void SetIsNetsystemInitSuccess(bool result);
+
 			void SetLocalIPv4Address(const std::string& IP);
 
 		protected:

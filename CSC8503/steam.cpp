@@ -217,6 +217,11 @@ string NetSystem_Steam::GetLobbyMemberNameByIndex(int Index) const
 	return SteamFriends()->GetFriendPersonaName(SteamMatchmaking()->GetLobbyMemberByIndex(steamIDLobby, Index));
 }
 
+void NetSystem_Steam::SetCurrentUserName()
+{
+	CurrentUserName = SteamFriends()->GetPersonaName();
+}
+
 void NetSystem_Steam::On_LobbyDataUpdate(LobbyDataUpdate_t* pCallback)
 {
 	

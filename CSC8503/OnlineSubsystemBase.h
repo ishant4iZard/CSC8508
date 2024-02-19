@@ -30,10 +30,15 @@ namespace NCL {
 
 			virtual string GetLobbyMemberNameByIndex(int Index) const = 0;
 
+			virtual void SetCurrentUserName() = 0;
+
 			virtual void SetLocalIPv4Address(const string& IPAddress) = 0;
 
 			inline string GetCurrentUserName() const { return CurrentUserName; }
 			inline int GetNumOfLobbyMatchList() const { return numLobbyMatchList; }
+
+			inline bool GetIsOnlineSubsystemInitSuccess() const { return isOnlineSubsystemInitSuccess; }
+			inline void SetIsOnlineSubsystemInitSuccess(bool result) { isOnlineSubsystemInitSuccess = result; }
 
 		protected:
 			virtual void OnCreateLobbySuccess() = 0;
@@ -44,6 +49,8 @@ namespace NCL {
 
 			string CurrentUserName;
 			int numLobbyMatchList = 0;
+
+			bool isOnlineSubsystemInitSuccess;
 		};
 	}
 }

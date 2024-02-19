@@ -30,6 +30,11 @@ void MenuSystem::Update(float dt)
 	MenuMachine->Update(dt);
 }
 
+void MenuSystem::SetIsNetsystemInitSuccess(bool result)
+{
+	OnlineSubsystem->SetIsOnlineSubsystemInitSuccess(result);
+}
+
 void MenuSystem::SetLocalIPv4Address(const std::string& IP)
 {
 	OnlineSubsystem->SetLocalIPv4Address(IP);
@@ -41,6 +46,16 @@ PushdownState::PushdownResult MainMenu::OnUpdate(float dt, PushdownState** newSt
 	if (game && OnlineSubsystem)
 	{
 		OnlineSubsystemBase* Subsystem = (OnlineSubsystemBase*)OnlineSubsystem;
+
+		if (!Subsystem->GetIsOnlineSubsystemInitSuccess())
+		{
+			ui->DrawStringText("NetSystem init failed! Please check your steam or playstation 5 network state and restart game!", Vector2(5, 40), UIBase::RED);
+			return PushdownResult::NoChange;
+		}
+		else
+		{
+			Subsystem->SetCurrentUserName();
+		}
 
 		if (isLobbyCreated)
 		{
