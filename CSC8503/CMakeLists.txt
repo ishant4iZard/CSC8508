@@ -319,4 +319,20 @@ if(USE_VULKAN)
     add_dependencies(${PROJECT_NAME} SHADER_FILES)
 endif()
 
+# Copy dlls into build directory_____________________________________________________________________
 
+# FMOD
+set(DLL_SOURCE_DIR ${CMAKE_SOURCE_DIR}/Dependencies)
+message("Source" ${CMAKE_SOURCE_DIR}/Dependencies)
+set(DLL_DEST_DIR ${CMAKE_BINARY_DIR}/CSC8503)
+message("Build" ${CMAKE_BINARY_DIR}/CSC8503)
+file(GLOB_RECURSE DLL_FILES ${DLL_SOURCE_DIR}/**/*.dll)
+file(COPY ${DLL_FILES} DESTINATION ${DLL_DEST_DIR})
+
+# Steam
+set(DLL_SOURCE_DIR ${CMAKE_SOURCE_DIR}/Steamworksdk)
+message("Source" ${CMAKE_SOURCE_DIR}/Steamworksdk)
+set(DLL_DEST_DIR ${CMAKE_BINARY_DIR}/CSC8503)
+message("Build" ${CMAKE_BINARY_DIR}/CSC8503)
+file(GLOB_RECURSE DLL_FILES ${DLL_SOURCE_DIR}/**/*.dll)
+file(COPY ${DLL_FILES} DESTINATION ${DLL_DEST_DIR})
