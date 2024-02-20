@@ -27,6 +27,7 @@ namespace NCL::Maths {
 
 		//Set all matrix values to zero
 		void	ToZero();
+		void ToIdentity();
 
 		void	ToIdentity();
 

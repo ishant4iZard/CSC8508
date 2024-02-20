@@ -158,7 +158,7 @@ void OGLRenderer::BindTextureToShader(const OGLTexture& t, const std::string& un
 	GLuint slot = glGetUniformLocation(activeShader->GetProgramID(), uniform.c_str());
 
 	if (slot < 0) {
-
+		std::cout << __FUNCTION__ << " shader " << activeShader->GetProgramID() << "does not have slot for" << uniform.c_str() <<"!\n";
 		return;
 	}
 
@@ -169,6 +169,13 @@ void OGLRenderer::BindTextureToShader(const OGLTexture& t, const std::string& un
 }
 
 #ifdef _WIN32
+
+void OGLRenderer::SetTextureRepeating(Texture& inT)
+{
+	glBindTexture(GL_TEXTURE_2D, inT.GetAssetID());
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+}
 void OGLRenderer::InitWithWin32(Window& w) {
 	Win32Code::Win32Window* realWindow = (Win32Code::Win32Window*)&w;
 

@@ -44,7 +44,7 @@ namespace NCL {
 			}
 
 			virtual bool SetVerticalSync(VerticalSyncState s);
-
+			void SetTextureRepeating(Texture& inT);
 		protected:			
 			void BeginFrame()	override;
 			void RenderFrame()	override;

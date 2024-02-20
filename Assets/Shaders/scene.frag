@@ -8,6 +8,10 @@ uniform vec3	lightPos;
 uniform float	lightRadius;
 uniform vec4	lightColour;
 
+uniform vec3 globalLightDirection;
+uniform vec4 globalLightColor;
+uniform float globalIntensity;
+
 uniform vec3	cameraPos;
 
 uniform bool hasTexture;

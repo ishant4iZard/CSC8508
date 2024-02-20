@@ -78,7 +78,8 @@ void Matrix4::ToZero()	{
 	}
 }
 
-void Matrix4::ToIdentity() {
+void Matrix4::ToIdentity()
+{
 	ToZero();
 	array[0][0] = 1.0f;
 	array[1][1] = 1.0f;
