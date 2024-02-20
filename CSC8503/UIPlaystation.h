@@ -14,14 +14,15 @@ public:
 		NCL::Maths::Vector2 position,
 		NCL::Maths::Vector4 color = UIBase::WHITE
 	)  override;
-	void RenderUI()  override;
-	void DrawButton(
+	virtual void DrawButton(
 		std::string text,
 		NCL::Maths::Vector2 position,
 		std::function<void(void)> callback,
-		NCL::Maths::Vector4 color = UIBase::WHITE,
-		NCL::KeyCodes::Type keyCode = NCL::KeyCodes::RETURN // Keycode is NOT required for buttons created with imgui
+		NCL::Maths::Vector4 color = WHITE,
+		NCL::KeyCodes::Type keyCode = NCL::KeyCodes::RETURN,
+		NCL::Maths::Vector2 size = NCL::Maths::Vector2(360, 50)
 	) override;
+	void RenderUI()  override;
 
 protected:
 	UIPlaystation() {};

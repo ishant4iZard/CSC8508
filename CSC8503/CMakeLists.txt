@@ -15,6 +15,15 @@ set(AudioEngine
 )
 source_group("AudioEngine" FILES ${AudioEngine})
 
+set(UI
+    "UIBase.h"
+    "UIWindows.h"
+    "UIPlaystation.h"
+    "UIWindows.cpp"
+    "UIPlaystation.cpp"
+)
+source_group("UI" FILES ${UI})
+
 set(Header_Files
     "GameTechRenderer.h"
     "NetworkedGame.h"
@@ -25,14 +34,11 @@ set(Header_Files
     "BouncePad.h"
     "GravityWell.h"
     "Teleporter.h"
-    "UIBase.h"
     "LevelFileLoaderBase.h"
     "WindowsLevelLoader.h"
     "LevelEnum.h"
     "LevelObjectEnum.h"
-    "UIWindows.h"
     "ApplicationState.h"
-    "UIPlaystation.h"
     "MenuSystem.h"
     "Event.h"
     "EventType.h"
@@ -56,9 +62,7 @@ set(Source_Files
     "GravityWell.cpp"
     "Teleporter.cpp"
     "WindowsLevelLoader.cpp"
-    "UIWindows.cpp"
     "ApplicationState.cpp"
-    "UIPlaystation.cpp"
     "MenuSystem.cpp"
     "Singleton.cpp"
     "BaseTextureManager.cpp"
@@ -120,6 +124,7 @@ set(ALL_FILES
     ${OGL_Rendering_Files}
     ${AudioEngine}
     ${AI_Files}
+    ${UI}
 )
 
 if(USE_VULKAN)
@@ -130,6 +135,7 @@ if(USE_VULKAN)
         ${AudioEngine}
         ${SHADER_FILES}
         ${ImGUI_Files}
+        ${UI}
     )
 
 foreach (file ${SHADER_FILES})
