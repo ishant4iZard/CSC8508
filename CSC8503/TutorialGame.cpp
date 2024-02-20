@@ -7,7 +7,6 @@
 #include "BouncePad.h"
 #include "GravityWell.h"
 #include "Teleporter.h"
-
 #include <Maths.h>
 #include <cstdlib> 
 
@@ -99,6 +98,8 @@ TutorialGame::~TutorialGame()	{
 
 void TutorialGame::UpdateGame(float dt) {
 	
+	//ObjectRay(testStateObject, testGameObjects);
+
 	if (appState->GetIsGameOver()) {
 		world->ClearAndErase();
 		physics->Clear();
@@ -167,7 +168,6 @@ void TutorialGame::UpdateGame(float dt) {
 	//aitreetest->GetTransform().RandomPosition(aitreetest->GetTransform().GetPosition(), true).SetScale(Vector3(10, 10, 10) * 2);
 	frameCounter++;
 
-	ObjectRay(testStateObject, floor);
 
 	world->UpdateWorld(dt);
 	renderer->Render();
@@ -218,7 +218,7 @@ A single function to add a large immoveable cube to the bottom of our world
 */
 
 GameObject* TutorialGame::AddFloorToWorld(const Vector3& position, const Vector3& size) {
-	floor = new GameObject();
+	GameObject *floor = new GameObject();
 
 	Vector3 floorSize = size;
 	AABBVolume* volume = new AABBVolume(floorSize , false ,true);
@@ -501,6 +501,44 @@ GameObject* NCL::CSC8503::TutorialGame::AddTeleporterToWorld(const Vector3& posi
 }
 
 
+GameObject* TutorialGame::AddtestcubeToWorld(const Vector3& position1, const Vector3& position2, const Vector3& size) {
+	testCube1 = new GameObject();
+
+	Vector3 floorSize = size;
+	AABBVolume* volume = new AABBVolume(floorSize, false, true);
+	testCube1->SetBoundingVolume((CollisionVolume*)volume);
+	testCube1->GetTransform()
+		.SetScale(floorSize * 2)
+		.SetPosition(position1);
+
+	testCube1->SetRenderObject(new RenderObject(&testCube1->GetTransform(), cubeMesh, basicTex, basicShader));
+	testCube1->SetPhysicsObject(new PhysicsObject(&testCube1->GetTransform(), testCube1->GetBoundingVolume()));
+
+	testCube1->GetPhysicsObject()->SetInverseMass(1);
+	testCube1->GetPhysicsObject()->InitCubeInertia();
+
+
+	testCube2 = new GameObject();
+	testCube2->SetBoundingVolume((CollisionVolume*)volume);
+	testCube2->GetTransform()
+		.SetScale(floorSize * 2)
+		.SetPosition(position2);
+
+	testCube2->SetRenderObject(new RenderObject(&testCube2->GetTransform(), cubeMesh, basicTex, basicShader));
+	testCube2->SetPhysicsObject(new PhysicsObject(&testCube2->GetTransform(), testCube2->GetBoundingVolume()));
+
+	testCube2->GetPhysicsObject()->SetInverseMass(1);
+	testCube2->GetPhysicsObject()->InitCubeInertia();
+
+	world->AddGameObject(testCube1);
+	world->AddGameObject(testCube2);
+
+	testGameObjects.push_back(testCube1);
+	testGameObjects.push_back(testCube2);
+
+
+	return testCube1;
+}
 
 AiTreeObject* TutorialGame::AddAiToWorld(const Vector3& position, Vector3 dimensions, float inverseMass, float elasticity) {
 	aitreetest = new AiTreeObject("Aitreeobject");
@@ -525,12 +563,12 @@ AiTreeObject* TutorialGame::AddAiToWorld(const Vector3& position, Vector3 dimens
 }
 
 AiStatemachineObject* TutorialGame::AddAiStateObjectToWorld(const Vector3& position) {
-	testStateObject = new AiStatemachineObject();
+	testStateObject = new AiStatemachineObject(world);
 
 	SphereVolume* volume = new SphereVolume(1.0f);
 	testStateObject->SetBoundingVolume((CollisionVolume*)volume);
 	testStateObject->GetTransform()
-		.SetScale(Vector3(3, 3, 3))
+		.SetScale(Vector3(5, 5, 5))
 		.SetPosition(position);
 
 	testStateObject->SetRenderObject(new RenderObject(&testStateObject->GetTransform(), sphereMesh, nullptr, basicShader));
@@ -600,9 +638,11 @@ void TutorialGame::InitPlaceholderAIs() {
 
 void TutorialGame::InitAI()
 {
-	AddAiStateObjectToWorld(Vector3(20, 2, 30));
-	AddFloorToWorld(Vector3(20, 2, 20), Vector3(2, 2, 2))->GetPhysicsObject()->SetInverseMass(1.0);
-	AddFloorToWorld(Vector3(20, 2, 40), Vector3(2, 2, 2))->GetPhysicsObject()->SetInverseMass(1.0);
+	AddAiStateObjectToWorld(Vector3(60, 5.6, 30))->GetRenderObject()->SetColour(Debug::BLUE);
+	//AddtestcubeToWorld(Vector3(60, 5.6, 20), Vector3(60, 5.6, 80), Vector3(5, 5, 5));
+	//AddFloorToWorld(Vector3(20, 2, 20), Vector3(2, 2, 2))->GetPhysicsObject()->SetInverseMass(1.0);
+	//AddFloorToWorld(Vector3(60, 2, 80), Vector3(20, 20, 20))->GetPhysicsObject()->SetInverseMass(1.0);
+	//floor1->settag("aitestcube");
 }
 
 void TutorialGame::ProcessFrameAddresses() {
@@ -615,20 +655,36 @@ void TutorialGame::ProcessFrameAddresses() {
 }
 
 
-void TutorialGame::ObjectRay(GameObject* gameObject, GameObject* gameObject2) {
+//void TutorialGame::ObjectRay(GameObject* gameObject, const std::vector<GameObject*>& gameObjects) {
+//
+//	Vector3 objectPosition = gameObject->GetTransform().GetPosition();
+//	Vector3 objectForward = gameObject->GetTransform().GetOrientation() * Vector3(0, 0, 1);
+//
+//	Ray ray1(objectPosition, objectForward);
+//
+//	RayCollision closestCollision;
+//	closestCollision.rayDistance = 0.01f;
+//
+//	if (world->Raycast(ray1, closestCollision, true, gameObject))//)&& world->Raycast(ray2, closestCollision, true, gameObject)&& world->Raycast(ray3, closestCollision, true, gameObject)) {
+//	{
+//		if (closestCollision.rayDistance < 15.0f)
+//		{
+//		for (auto testGameObjects : gameObjects) {
+//			if (closestCollision.node == testGameObjects)
+//			{
+//				Debug::DrawLine(objectPosition, objectForward * 100, Debug::BLACK);
+//				testGameObjects->GetPhysicsObject()->AddForceAtPosition(ray1.GetDirection() * 10, closestCollision.collidedAt);
+//			}
+//			Debug::DrawLine(objectPosition, objectForward * 100, Debug::RED);
+//		}
+//		}
+//
+//
+//	}
+//}
 
-	Vector3 objectPosition = gameObject->GetTransform().GetPosition() + Vector3(0, 0, 10);
-	Vector3 objectForward = gameObject->GetTransform().GetOrientation() * Vector3(0, 0, 1);
-	Ray ray(objectPosition, objectForward);
 
-	RayCollision closestCollision;
-	closestCollision.rayDistance = 100.0f;
-
-	if (world->Raycast(ray, closestCollision, true, gameObject)) {
-		if (closestCollision.node == gameObject2) {
-			Debug::DrawLine(objectPosition, objectForward * 100, Debug::BLACK);
-			gameObject2->GetPhysicsObject()->AddForceAtPosition(ray.GetDirection() * 100, closestCollision.collidedAt);
-		}
-		Debug::DrawLine(objectPosition, objectForward * 100, Debug::RED);
-	}
+void TutorialGame::GettestGameObjects(AiStatemachineObject* testStateObject1)
+{
+	testStateObject = testStateObject1;
 }

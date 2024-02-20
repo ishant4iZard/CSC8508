@@ -48,6 +48,12 @@ namespace NCL {
 
 			void OnPlayerCollision(NetworkPlayer* a, NetworkPlayer* b);
 
+			//void ObjectDetectRay(GameObject* gameObject);
+			//void Chasethebullets(float dt);
+			std::vector<Projectile*> ProjectileList;
+			std::vector<Projectile*> ProjectilePositions;
+
+			
 			/** Network public function */
 			int GetConnectedClientsNum();
 			int GetLocalPlayerNumber() const;
@@ -99,12 +105,14 @@ namespace NCL {
 			/** List for Networking Players*/
 			std::vector<int> PlayersList;
 			std::vector<NetworkPlayer*> ControledPlayersList;
-			std::vector<Projectile*> ProjectileList;
+
 
 			bool ServerFired;
 			bool ClientFired;
 
 			NetworkPlayer* LocalPlayer;
+
+			GameObject* projectileToChase;
 
 			AudioEngine* audioEngine;
 			int backGroundMusic = -1;

@@ -12,6 +12,7 @@
 #include "Projectile.h"
 #include "Hole.h"
 #include "GravityWell.h"
+#include <cmath>
 
 #define COLLISION_MSG 30
 
@@ -147,9 +148,17 @@ void NetworkedGame::UpdateGame(float dt) {
 		}
 
 	}
+
+	//AI part:
+	//ObjectDetectRay(testStateObject);
+
+
+
+
 	audioEngine->Update();
 	TutorialGame::UpdateGame(dt);
 	Debug::UpdateRenderables(dt);
+
 }
 
 void NetworkedGame::UpdatePlayerState(float dt) {
@@ -467,6 +476,7 @@ void NetworkedGame::SpawnProjectile(NetworkPlayer* owner, Vector3 firePos, Vecto
 	newBullet->GetPhysicsObject()->AddForce(force);
 
 	ProjectileList.push_back(newBullet);
+	
 
 	if (thisServer)
 	{
@@ -660,3 +670,61 @@ bool NetworkedGame::clientProcessDeltaPacket(DeltaPacket* dp)
 	itr->second->ReadPacket(*dp);
 	return true;
 }
+
+//void NetworkedGame::ObjectDetectRay(GameObject* gameObject) {
+//
+//	Vector3 objectPosition = gameObject->GetTransform().GetPosition();
+//	Vector3 objectForward = gameObject->GetTransform().GetOrientation() * Vector3(0, 0, 1);
+//	Ray ray(objectPosition, objectForward);
+//
+//	const int numRays = 30;
+//	const float angleIncrement = 2 * 3.14 / numRays;
+//
+//	vector<Ray> rays;
+//	for (int i = 0; i < numRays; i++) {
+//		float angle = angleIncrement * i;
+//		float x = cos(angle); 
+//		float z = sin(angle); 
+//
+//		Vector3 dir = Vector3(x, 0, z);
+//		rays.push_back(Ray(objectPosition, dir));
+//		Debug::DrawLine(objectPosition, dir * 100, Debug::RED);
+//	}
+//
+//	RayCollision closestCollision;
+//	//	closestCollision.rayDistance = 100.0f;
+//
+//	float shortDistance = 999999;
+//	for (auto ray : rays) {
+//		if (world->Raycast(ray, closestCollision, true, gameObject)) {
+//			GameObject* ObjectHited = (GameObject*)closestCollision.node;
+//
+//			if (ObjectHited)
+//			{
+//				if (ObjectHited->gettag() == "Projectile"&&closestCollision.rayDistance<10.0f)
+//				{
+//					//std::cout << "Object detected";
+//					float distance = (ObjectHited->GetTransform().GetPosition() - objectPosition).Length();
+//
+//					if (distance < shortDistance) {
+//						projectileToChase = ObjectHited;
+//						shortDistance = distance;
+//					}
+//					//ObjectHited->GetPhysicsObject()->AddForceAtPosition(ray.GetDirection() * 100000, closestCollision.collidedAt);	
+//				}
+//			}	
+//		}
+//	}
+//
+//	Chasethebullets(0.2);
+//}
+//
+//void NetworkedGame::Chasethebullets(float dt) {
+//	
+//	if (projectileToChase == nullptr) return;
+//
+//	Vector3 movementDirection = projectileToChase->GetTransform().GetPosition() - testStateObject->GetTransform().GetPosition();
+//	movementDirection.Normalised();
+//
+//	testStateObject->GetPhysicsObject()->SetLinearVelocity(movementDirection * 10 * 0.2);
+//}
