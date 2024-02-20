@@ -100,6 +100,10 @@ void UIWindows::DrawButton(
 }
 
 void UIWindows::RenderUI() {
+    static const ImVec4 buttonColor { 0, 0.35f, 0.65f, 1.0f };
+    static const ImVec4 pressColor { 0, 0.2f, 0.8f, 1.0f };
+    static const ImVec4 hoverColor { 0, 0.3f, 0.7f, 1.0f };
+
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
@@ -124,6 +128,9 @@ void UIWindows::RenderUI() {
         switch (uiElement->elementType) {
         case Button :
             ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(uiElement->color.x, uiElement->color.y, uiElement->color.z, 255));
+            ImGui::PushStyleColor(ImGuiCol_Button, buttonColor);
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, pressColor);
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, hoverColor);
             ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 10.0f);
             ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1.0f);
             ImGui::SetCursorScreenPos(ImVec2(uiElement->position.x, uiElement->position.y));
@@ -134,7 +141,7 @@ void UIWindows::RenderUI() {
             }
             ImGui::PopStyleVar();
             ImGui::PopStyleVar();
-            ImGui::PopStyleColor();
+            ImGui::PopStyleColor(4);
             break;
         case Text:
             ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(uiElement->color.x, uiElement->color.y, uiElement->color.z, 255));
