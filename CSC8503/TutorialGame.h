@@ -82,11 +82,11 @@ namespace NCL {
 
 			void SpawnDataDrivenLevel(GameLevelNumber inGameLevelNumber);
 
-			void SpawnWall(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale);
-			void SpawnFloor(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale);
-			void SpawnBouncingPad(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale);
-			void SpawnTarget(const Vector3 & inPosition, const Vector3 & inRotation, const Vector3 & inScale);
-			void SpawnBlackHole(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale);
+			void SpawnWall(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling);
+			void SpawnFloor(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling);
+			void SpawnBouncingPad(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling);
+			void SpawnTarget(const Vector3 & inPosition, const Vector3 & inRotation, const Vector3 & inScale, const Vector2& inTiling);
+			void SpawnBlackHole(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling);
 
 			GameObject* capsule;
 
@@ -167,7 +167,7 @@ namespace NCL {
 			const int TIME_LIMIT = 200;
 
 #pragma region Function Pointers
-			typedef void (TutorialGame::*dataSpawnFunction) (const Vector3&, const Vector3&, const Vector3&);
+			typedef void (TutorialGame::*dataSpawnFunction) (const Vector3&, const Vector3&, const Vector3&, const Vector2&);
 			dataSpawnFunction levelObjectSpawnFunctionList[static_cast<int>(LevelObjectEnum::MAX_OBJECT_TYPE)] = { &TutorialGame::SpawnWall , &TutorialGame::SpawnFloor , &TutorialGame::SpawnBouncingPad, &TutorialGame::SpawnTarget , &TutorialGame::SpawnBlackHole };
 #pragma endregion
 
