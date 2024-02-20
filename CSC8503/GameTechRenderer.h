@@ -18,10 +18,14 @@ namespace NCL {
 	class Maths::Vector4;
 	namespace CSC8503 {
 		class RenderObject;
+		class DirectionalLight;
+		class OglHdrFbo;
+		class OglPostProcessingFbo;
 
 		class GameTechRenderer : public OGLRenderer	{
 		public:
 			GameTechRenderer(GameWorld& world);
+			void CreateScreenQuadMesh();
 			~GameTechRenderer();
 
 			Mesh*		LoadMesh(const std::string& name);
@@ -41,9 +45,12 @@ namespace NCL {
 			void BuildObjectList();
 			void SortObjectList();
 			void RenderShadowMap();
-			void RenderCamera(); 
+			void UpdatePBRUniforms(const NCL::CSC8503::RenderObject* const& i);
+			void UpdateGlobalLightUniform(const OGLShader* inShader);
+			void RenderCamera();
 			void RenderSkybox();
-
+			void ApplyToneMapping();
+			void RenderProcessedScene();
 			void LoadSkybox();
 
 			void SetDebugStringBufferSizes(size_t newVertCount);
@@ -53,7 +60,11 @@ namespace NCL {
 
 			OGLShader*  debugShader;
 			OGLShader*  skyboxShader;
+			OGLShader* pbrShader;
+			OGLShader* toneMapperShader;
+			OGLShader* gammaCorrectionShader;
 			OGLMesh*	skyboxMesh;
+			OGLMesh* screenQuad;
 			GLuint		skyboxTex;
 
 			//shadow mapping things
@@ -85,7 +96,16 @@ namespace NCL {
 #pragma region UI
 			UIBase* ui;
 #pragma endregion
+
+#pragma region Lights
+			DirectionalLight* directionalLight;
+#pragma endregion
+
+#pragma region FrameBuffers
+			OglHdrFbo* pbrFbo;
+			OglPostProcessingFbo* toneMappingFbo;
+#pragma endregion
+
 		};
 	}
 }
-

@@ -22,10 +22,12 @@
 #include "../CSC8503/UIBase.h"
 #ifdef _WIN32
 #include "../CSC8503/UIWindows.h"
+#include "OGLTextureManager.h"
 #else //_ORBIS
 #include "../CSC8503/UIPlaystation.h"
 #endif
 
+#define USE_SHADOW = false
 enum class level {
 	level1 = 1,
 	level2 = 2,
@@ -120,6 +122,11 @@ namespace NCL {
 			Texture*	basicTex	= nullptr;
 			Texture*	sandTex		= nullptr;
 			Shader*		basicShader = nullptr;
+			Shader* pbrShader = nullptr;
+
+			Texture* groundTextureList[(uint8_t)TextureType::MAX_TYPE];
+			Texture* wallTextureList[(uint8_t)TextureType::MAX_TYPE];
+			Texture* sandTextureList[(uint8_t)TextureType::MAX_TYPE];
 
 			//Coursework Meshes
 			Mesh*	charMesh	= nullptr;
@@ -169,6 +176,7 @@ namespace NCL {
 #pragma endregion
 
 			ApplicationState* appState;
+			OGLTextureManager* bm;
 		};
 	}
 }

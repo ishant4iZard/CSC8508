@@ -55,8 +55,6 @@ void main() {
 	fragColor.rgb += albedo.rgb * lightColour.rgb * lambert * shadow; //diffuse light
 	
 	fragColor.rgb += lightColour.rgb * sFactor * shadow; //specular light
-	
-	fragColor.rgb = pow(fragColor.rgb, vec3(1.0 / 2.2f));
 
 	fragColor.a = albedo.a;
 }

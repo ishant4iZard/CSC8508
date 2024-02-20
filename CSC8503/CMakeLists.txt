@@ -38,6 +38,11 @@ set(Header_Files
     "MenuSystem.h"
     "Event.h"
     "EventType.h"
+    "Singleton.h"
+    "BaseTextureManager.h"
+    "OGLTextureManager.h"
+    "Light.h"
+    "DirectionalLight.h"
 )
 source_group("Header Files" FILES ${Header_Files})
 
@@ -57,7 +62,17 @@ set(Source_Files
     "ApplicationState.cpp"
     "UIPlaystation.cpp"
     "MenuSystem.cpp"
+    "Singleton.cpp"
+    "BaseTextureManager.cpp"
+    "OGLTextureManager.cpp"
 )
+source_group("Source Files" FILES ${Source_Files})
+
+set(OGL_Rendering_Files
+    "OglHdrFbo.h"
+    "OglPostProcessingFbo.h"
+)
+source_group("OGL Rendering Files" FILES ${OGL_Rendering_Files})
 
 set(AI_Files
     "AiStatemachineObject.cpp"
@@ -78,7 +93,6 @@ file(GLOB SHADER_FILES ${ASSET_ROOT}/Shaders/VK/*.*)
 
 endif()
 
-source_group("Source Files" FILES ${Source_Files})
 
 set(ImGUI_Files
     "imconfig.h"
@@ -105,6 +119,7 @@ set(ALL_FILES
     ${Source_Files}
     ${ImGUI_Files}
     ${NetPlugins}
+    ${OGL_Rendering_Files}
     ${AudioEngine}
     ${AI_Files}
 )
