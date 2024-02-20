@@ -13,6 +13,7 @@ using namespace CSC8503;
 
 AiStatemachineObject::AiStatemachineObject(GameWorld* world) {
 	counter = 0.0f;
+	detectionOfBall = true;
 	stateMachine = new StateMachine();
 
 	this->world = world;
@@ -23,8 +24,8 @@ AiStatemachineObject::AiStatemachineObject(GameWorld* world) {
 	);
 	State* stateB = new State([&](float dt) -> void
 		{
-			this->ObjectDetectRay(this);
-			this->Chasethebullets(0.2f);
+			this->ObjectDetectRay(this, dt);
+			//this->Chasethebullets(0.2f);
 			
 		}
 	);
@@ -36,7 +37,7 @@ AiStatemachineObject::AiStatemachineObject(GameWorld* world) {
 	stateMachine->AddTransition(new StateTransition(stateA, stateB,
 		[&]() -> bool
 		{
-			return this->counter > 5.0f;
+			return this->counter > 10.0f;
 		}
 	));
 
@@ -44,7 +45,7 @@ AiStatemachineObject::AiStatemachineObject(GameWorld* world) {
 		[&]() -> bool
 		{
 			///GetPhysicsObject()->SetLinearVelocity({ 0,0,0 });
-			return this->counter < 0.0f;
+			return this->counter < 2.0f;
 		}
 	));
 
@@ -118,8 +119,8 @@ void AiStatemachineObject::getPositionfromobject(Vector3 objectpostion)
 //}
 
 
-void AiStatemachineObject::ObjectDetectRay(GameObject* gameObject) {
-
+void AiStatemachineObject::ObjectDetectRay(GameObject* gameObject,float dt) {
+	counter -= dt;
 	Vector3 objectPosition = gameObject->GetTransform().GetPosition();
 	Vector3 objectForward = gameObject->GetTransform().GetOrientation() * Vector3(0, 0, 1);
 	Ray ray(objectPosition, objectForward);
@@ -162,7 +163,6 @@ void AiStatemachineObject::ObjectDetectRay(GameObject* gameObject) {
 			}
 		}
 	}
-
 	Chasethebullets(0.2);
 }
 
@@ -174,5 +174,5 @@ void AiStatemachineObject::Chasethebullets(float dt) {
 	movementDirection.Normalised();
 
 	this->GetPhysicsObject()->SetLinearVelocity(movementDirection * 10 * 0.2);
-	counter -= dt;
+
 }

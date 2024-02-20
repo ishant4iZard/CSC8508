@@ -13,7 +13,7 @@ namespace NCL {
             ~AiStatemachineObject();
             void getPositionfromobject(Vector3 objectposition);
 
-            void ObjectDetectRay(GameObject* gameObject);
+            void ObjectDetectRay(GameObject* gameObject,float dt);
             void Chasethebullets(float dt);
 
             void TestPathfinding();
@@ -28,12 +28,16 @@ namespace NCL {
             void MoveRight(float dt);
             void Moveforward(float dt);
             StateMachine* stateMachine;
+            
+            bool detectionOfBall;
             float counter;
             Vector3 obstaclespositions;
             vector < Vector3 > testNodes;
             GameWorld* world;
 
             GameObject* projectileToChase;
+
+            RayCollision closestCollision;
 
            // AiStatemachineObject* testStateObject = nullptr;
         };
