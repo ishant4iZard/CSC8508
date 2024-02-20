@@ -23,10 +23,12 @@
 #include "../CSC8503/UIBase.h"
 #ifdef _WIN32
 #include "../CSC8503/UIWindows.h"
+#include "OGLTextureManager.h"
 #else //_ORBIS
 #include "../CSC8503/UIPlaystation.h"
 #endif
 
+#define USE_SHADOW = false
 enum class level {
 	level1 = 1,
 	level2 = 2,
@@ -86,11 +88,11 @@ namespace NCL {
 
 			void SpawnDataDrivenLevel(GameLevelNumber inGameLevelNumber);
 
-			void SpawnWall(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale);
-			void SpawnFloor(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale);
-			void SpawnBouncingPad(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale);
-			void SpawnTarget(const Vector3 & inPosition, const Vector3 & inRotation, const Vector3 & inScale);
-			void SpawnBlackHole(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale);
+			void SpawnWall(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling);
+			void SpawnFloor(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling);
+			void SpawnBouncingPad(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling);
+			void SpawnTarget(const Vector3 & inPosition, const Vector3 & inRotation, const Vector3 & inScale, const Vector2& inTiling);
+			void SpawnBlackHole(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling);
 
 
 
@@ -128,6 +130,11 @@ namespace NCL {
 			Texture*	basicTex	= nullptr;
 			Texture*	sandTex		= nullptr;
 			Shader*		basicShader = nullptr;
+			Shader* pbrShader = nullptr;
+
+			Texture* groundTextureList[(uint8_t)TextureType::MAX_TYPE];
+			Texture* wallTextureList[(uint8_t)TextureType::MAX_TYPE];
+			Texture* sandTextureList[(uint8_t)TextureType::MAX_TYPE];
 
 			//Coursework Meshes
 			Mesh*	charMesh	= nullptr;
@@ -170,7 +177,7 @@ namespace NCL {
 			const int TIME_LIMIT = 200;
 
 #pragma region Function Pointers
-			typedef void (TutorialGame::*dataSpawnFunction) (const Vector3&, const Vector3&, const Vector3&);
+			typedef void (TutorialGame::*dataSpawnFunction) (const Vector3&, const Vector3&, const Vector3&, const Vector2&);
 			dataSpawnFunction levelObjectSpawnFunctionList[static_cast<int>(LevelObjectEnum::MAX_OBJECT_TYPE)] = { &TutorialGame::SpawnWall , &TutorialGame::SpawnFloor , &TutorialGame::SpawnBouncingPad, &TutorialGame::SpawnTarget , &TutorialGame::SpawnBlackHole };
 #pragma endregion
 
@@ -179,6 +186,7 @@ namespace NCL {
 #pragma endregion
 
 			ApplicationState* appState;
+			OGLTextureManager* bm;
 		};
 	}
 }

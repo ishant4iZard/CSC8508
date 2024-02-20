@@ -54,6 +54,7 @@ TutorialGame::TutorialGame() : controller(*Window::GetWindow()->GetKeyboard(), *
 	ui = UIPlaystation::GetInstance();
 #endif
 	appState = ApplicationState::GetInstance();
+	bm = new OGLTextureManager();
 }
 
 /*
@@ -73,11 +74,35 @@ void TutorialGame::InitialiseAssets() {
 	capsuleMesh = renderer->LoadMesh("capsule.msh");
 	basicTex	= renderer->LoadTexture("checkerboard.png");
 	sandTex		= renderer->LoadTexture("sand.jpg");
-	basicShader = renderer->LoadShader("scene.vert", "scene.frag");
 
+	groundTextureList[(uint8_t)TextureType::ALBEDO] = renderer->LoadTexture("GrassWithRock01/albedo.png");
+	groundTextureList[(uint8_t)TextureType::NORMAL] = renderer->LoadTexture("GrassWithRock01/normal_gl.png");
+	groundTextureList[(uint8_t)TextureType::METAL] = renderer->LoadTexture("GrassWithRock01/metallic.png");
+	groundTextureList[(uint8_t)TextureType::ROUGHNESS] = renderer->LoadTexture("GrassWithRock01/roughness.png");
+	groundTextureList[(uint8_t)TextureType::AO] = renderer->LoadTexture("GrassWithRock01/ao.png");
+
+	wallTextureList[(uint8_t)TextureType::ALBEDO] = renderer->LoadTexture("Metal_03/albedo.png");
+	wallTextureList[(uint8_t)TextureType::NORMAL] = renderer->LoadTexture("Metal_03/normal_gl.png");
+	wallTextureList[(uint8_t)TextureType::METAL] = renderer->LoadTexture("Metal_03/metallic.png");
+	wallTextureList[(uint8_t)TextureType::ROUGHNESS] = renderer->LoadTexture("Metal_03/roughness.png");
+	wallTextureList[(uint8_t)TextureType::AO] = renderer->LoadTexture("Metal_03/ao.png");
+
+	sandTextureList[(uint8_t)TextureType::ALBEDO] = renderer->LoadTexture("Sand_02/albedo.png");
+	sandTextureList[(uint8_t)TextureType::NORMAL] = renderer->LoadTexture("Sand_02/normal_gl.png");
+	sandTextureList[(uint8_t)TextureType::METAL] = renderer->LoadTexture("Sand_02/metallic.png");
+	sandTextureList[(uint8_t)TextureType::ROUGHNESS] = renderer->LoadTexture("Sand_02/roughness.png");
+	sandTextureList[(uint8_t)TextureType::AO] = renderer->LoadTexture("Sand_02/ao.png");
+
+#ifdef defined(USE_SHADOW)
+	basicShader = renderer->LoadShader("scene.vert", "scene.frag");
+#else
+	basicShader = renderer->LoadShader("scene.vert", "sceneNoShadow.frag");
+#endif // USE_SHADOW
+
+	pbrShader = renderer->LoadShader("pbr.vert", "pbr.frag");
+	
 	InitCamera();
 	InitWorld();
-	
 }
 
 TutorialGame::~TutorialGame()	{
@@ -88,11 +113,17 @@ TutorialGame::~TutorialGame()	{
 	delete bonusMesh;
 	delete basicTex;
 	delete basicShader;
+	delete pbrShader;
+
 	delete physics;
 	delete renderer;
 	delete world;
 
 	delete levelFileLoader;
+
+	delete[] groundTextureList;
+	delete[] wallTextureList;
+	delete[] sandTextureList;
 	delete aitreetest;
 }
 
@@ -227,7 +258,7 @@ GameObject* TutorialGame::AddFloorToWorld(const Vector3& position, const Vector3
 		.SetScale(floorSize * 2)
 		.SetPosition(position);
 
-	floor->SetRenderObject(new RenderObject(&floor->GetTransform(), cubeMesh, basicTex, basicShader));
+	floor->SetRenderObject(new RenderObject(&floor->GetTransform(), cubeMesh, basicTex, pbrShader));
 	floor->SetPhysicsObject(new PhysicsObject(&floor->GetTransform(), floor->GetBoundingVolume()));
 
 	floor->GetPhysicsObject()->SetInverseMass(0);
@@ -248,7 +279,7 @@ void TutorialGame::SpawnDataDrivenLevel(GameLevelNumber inGameLevelNumber)
 		return;
 	}
 
-	float tempLevelNodeData[10];
+	float tempLevelNodeData[12];
 	int tempIndex = 0;
 	for (std::string line; std::getline(input, line);) 
 	{
@@ -262,37 +293,54 @@ void TutorialGame::SpawnDataDrivenLevel(GameLevelNumber inGameLevelNumber)
 		Vector3 tempPosition = Vector3(tempLevelNodeData[1], tempLevelNodeData[2], tempLevelNodeData[3]);
 		Vector3 tempRotation = Vector3(tempLevelNodeData[4], tempLevelNodeData[5], tempLevelNodeData[6]);
 		Vector3 tempScale = Vector3(tempLevelNodeData[7], tempLevelNodeData[8], tempLevelNodeData[9]) / 2.0f;
-		
-		(this->*levelObjectSpawnFunctionList[(int)tempLevelNodeData[0]])(tempPosition, tempRotation, tempScale);
+		Vector2 tempTiling = Vector2(tempLevelNodeData[10], tempLevelNodeData[11]);
+
+		(this->*levelObjectSpawnFunctionList[(int)tempLevelNodeData[0]])(tempPosition, tempRotation, tempScale, tempTiling);
 	}
 }
 
-void NCL::CSC8503::TutorialGame::SpawnWall(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale)
+void NCL::CSC8503::TutorialGame::SpawnWall(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling)
 {
-	GameObject* tempWall = AddObbCubeToWorld(
+	GameObject* tempWall = AddAABBCubeToWorld(
 		inPosition,
 		inScale,
 		0, 0.5f);
-	tempWall->GetTransform().SetOrientation(Quaternion::EulerAnglesToQuaternion(inRotation.x, inRotation.y, inRotation.z));
+	tempWall->GetRenderObject()->SetShader(pbrShader);
+	tempWall->GetRenderObject()->SetTiling(inTiling);
+	for (size_t i = 0; i < (uint8_t)TextureType::MAX_TYPE; i++)
+	{
+		tempWall->GetRenderObject()->SetTexture((TextureType)i, wallTextureList[i]);
+	}
 }
 
-void NCL::CSC8503::TutorialGame::SpawnFloor(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale)
+void NCL::CSC8503::TutorialGame::SpawnFloor(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling)
 {
-	AddFloorToWorld(
+	GameObject* tempFloor = AddFloorToWorld(
 		inPosition,
 		inScale);
+	tempFloor->GetRenderObject()->SetTiling(inTiling);
+
+	for (size_t i = 0; i < (uint8_t)TextureType::MAX_TYPE; i++)
+	{
+		tempFloor->GetRenderObject()->SetTexture((TextureType)i, sandTextureList[i]);
+	}
 }
 
-void NCL::CSC8503::TutorialGame::SpawnBouncingPad(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale)
+void NCL::CSC8503::TutorialGame::SpawnBouncingPad(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling)
 {
-	BouncePad* tempBouncePad = new BouncePad(cubeMesh, basicTex, basicShader);
+	BouncePad* tempBouncePad = new BouncePad(cubeMesh, basicTex, pbrShader);
+	for (size_t i = 0; i < (uint8_t)TextureType::MAX_TYPE; i++)
+	{
+		tempBouncePad->GetRenderObject()->SetTexture((TextureType)i, groundTextureList[i]);
+	}
 	tempBouncePad->GetRenderObject()->SetColour(Debug::CYAN);
+	tempBouncePad->GetRenderObject()->SetTiling(inTiling);
 	world->AddGameObject(tempBouncePad);
 
 	tempBouncePad->GetTransform().SetPosition(inPosition);
 }
 
-void NCL::CSC8503::TutorialGame::SpawnTarget(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale)
+void NCL::CSC8503::TutorialGame::SpawnTarget(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling)
 {
 	Hole* hole = new Hole();
 
@@ -307,11 +355,11 @@ void NCL::CSC8503::TutorialGame::SpawnTarget(const Vector3& inPosition, const Ve
 	hole->GetPhysicsObject()->InitSphereInertia();
 
 	hole->GetRenderObject()->SetColour(Vector4(0, 0, 0, 1));
-
+	hole->GetRenderObject()->SetTiling(inTiling);
 	world->AddGameObject(hole);
 }
 
-void NCL::CSC8503::TutorialGame::SpawnBlackHole(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale)
+void NCL::CSC8503::TutorialGame::SpawnBlackHole(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling)
 {
 	//GravityWell
 	GravityWell* gravityWell = new GravityWell();
@@ -327,7 +375,7 @@ void NCL::CSC8503::TutorialGame::SpawnBlackHole(const Vector3& inPosition, const
 	gravityWell->GetPhysicsObject()->InitSphereInertia();
 
 	gravityWell->GetRenderObject()->SetColour(Vector4(0, 0.4, 0.4, 1));
-
+	gravityWell->GetRenderObject()->SetTiling(inTiling);
 	gravitywell = gravityWell;
 	world->AddGameObject(gravityWell);
 }

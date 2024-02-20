@@ -36,6 +36,11 @@ set(Header_Files
     "MenuSystem.h"
     "Event.h"
     "EventType.h"
+    "Singleton.h"
+    "BaseTextureManager.h"
+    "OGLTextureManager.h"
+    "Light.h"
+    "DirectionalLight.h"
 )
 source_group("Header Files" FILES ${Header_Files})
 
@@ -55,7 +60,17 @@ set(Source_Files
     "ApplicationState.cpp"
     "UIPlaystation.cpp"
     "MenuSystem.cpp"
+    "Singleton.cpp"
+    "BaseTextureManager.cpp"
+    "OGLTextureManager.cpp"
 )
+source_group("Source Files" FILES ${Source_Files})
+
+set(OGL_Rendering_Files
+    "OglHdrFbo.h"
+    "OglPostProcessingFbo.h"
+)
+source_group("OGL Rendering Files" FILES ${OGL_Rendering_Files})
 
 set(AI_Files
     "AiStatemachineObject.cpp"
@@ -76,7 +91,6 @@ file(GLOB SHADER_FILES ${ASSET_ROOT}/Shaders/VK/*.*)
 
 endif()
 
-source_group("Source Files" FILES ${Source_Files})
 
 set(ImGUI_Files
     "imconfig.h"
@@ -103,6 +117,7 @@ set(ALL_FILES
     ${Source_Files}
     ${ImGUI_Files}
     ${NetPlugins}
+    ${OGL_Rendering_Files}
     ${AudioEngine}
     ${AI_Files}
 )
@@ -304,4 +319,47 @@ if(USE_VULKAN)
     add_dependencies(${PROJECT_NAME} SHADER_FILES)
 endif()
 
+# Function to copy files
+function(copy_files_from_source_to_destinations SOURCE_DIR DESTINATIONS FILE_PATTERN)
+    message("Copying files from Source: " ${SOURCE_DIR})
 
+    if ("${FILE_PATTERN}" MATCHES "\\*")
+        file(GLOB_RECURSE FILES ${SOURCE_DIR}/**/${FILE_PATTERN})
+    else()
+        set(FILES ${SOURCE_DIR}/${FILE_PATTERN})
+    endif()
+
+    foreach(DEST_DIR ${DESTINATIONS})
+        message("Copying files to Destination: " ${DEST_DIR})
+        file(COPY ${FILES} DESTINATION ${DEST_DIR})
+    endforeach()
+endfunction()
+
+# FMOD dlls
+set(FMOD_SOURCE_DIR ${CMAKE_SOURCE_DIR}/Dependencies)
+set(FMOD_DESTINATIONS
+    ${CMAKE_BINARY_DIR}/CSC8503
+    ${CMAKE_SOURCE_DIR}/x64/Debug
+    ${CMAKE_SOURCE_DIR}/x64/Release
+)
+copy_files_from_source_to_destinations(${FMOD_SOURCE_DIR} "${FMOD_DESTINATIONS}" "*.dll")
+
+# Steam dlls
+set(STEAM_SOURCE_DIR ${CMAKE_SOURCE_DIR}/Steamworksdk)
+set(STEAM_DESTINATIONS
+    ${CMAKE_BINARY_DIR}/CSC8503
+    ${CMAKE_SOURCE_DIR}/x64/Debug
+    ${CMAKE_SOURCE_DIR}/x64/Release
+)
+copy_files_from_source_to_destinations(${STEAM_SOURCE_DIR} "${STEAM_DESTINATIONS}" "*.dll")
+
+# Steam app id
+set(APP_ID_SOURCE_DIR ${CMAKE_SOURCE_DIR}/Steamworksdk)
+set(APP_ID_DESTINATIONS
+    ${CMAKE_BINARY_DIR}/CSC8503
+    ${CMAKE_SOURCE_DIR}/x64/Debug
+    ${CMAKE_SOURCE_DIR}/x64/Release
+)
+copy_files_from_source_to_destinations(${APP_ID_SOURCE_DIR} "${APP_ID_DESTINATIONS}" "steam_appid.txt")
+
+# TO DO : copy files to ORBIS
