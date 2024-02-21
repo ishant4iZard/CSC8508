@@ -101,7 +101,8 @@ void TutorialGame::InitialiseAssets() {
 #endif // USE_SHADOW
 
 	pbrShader = renderer->LoadShader("pbr.vert", "pbr.frag");
-	
+	portalShader = renderer->LoadShader("scene.vert", "portal.frag");
+
 	InitCamera();
 	InitWorld();
 }
@@ -240,6 +241,11 @@ void TutorialGame::InitWorld() {
 	physics->createStaticTree();
 	
 	InitAI();
+
+	// Only for testing
+	// Will remove later
+	GameObject* test = AddObbCubeToWorld(Vector3(0, 0, 0), Vector3(100, 100, 100), 0, 0);
+	test->GetRenderObject()->SetShader(portalShader);
 }
 
 /*
@@ -510,7 +516,7 @@ GameObject* NCL::CSC8503::TutorialGame::AddTeleporterToWorld(const Vector3& posi
 		.SetScale(dimensions * 2)
 		.SetOrientation(Quaternion::EulerAnglesToQuaternion(rotation1.x,rotation1.y,rotation1.z));
 
-	teleporter1->SetRenderObject(new RenderObject(&teleporter1->GetTransform(), cubeMesh, basicTex, basicShader));
+	teleporter1->SetRenderObject(new RenderObject(&teleporter1->GetTransform(), cubeMesh, basicTex, portalShader));
 	teleporter1->GetRenderObject()->SetColour(Vector4(0.2f, 0.2f, 0.2f, 0.5f));
 	teleporter1->SetPhysicsObject(new PhysicsObject(&teleporter1->GetTransform(), teleporter1->GetBoundingVolume()));
 
@@ -532,7 +538,7 @@ GameObject* NCL::CSC8503::TutorialGame::AddTeleporterToWorld(const Vector3& posi
 	teleporter1->setOutNormal(teleporter1->GetTransform().GetOrientation().ToEuler());
 	teleporter2->setOutNormal(teleporter2->GetTransform().GetOrientation().ToEuler());
 
-	teleporter2->SetRenderObject(new RenderObject(&teleporter2->GetTransform(), cubeMesh, basicTex, basicShader));
+	teleporter2->SetRenderObject(new RenderObject(&teleporter2->GetTransform(), cubeMesh, basicTex, portalShader));
 	teleporter2->SetPhysicsObject(new PhysicsObject(&teleporter2->GetTransform(), teleporter2->GetBoundingVolume()));
 	teleporter2->GetRenderObject()->SetColour(Vector4(0.2f, 0.2f, 0.2f, 0.5f));
 

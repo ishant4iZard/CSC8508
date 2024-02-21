@@ -400,6 +400,15 @@ void GameTechRenderer::RenderCamera() {
 			lightColourLocation = glGetUniformLocation(shader->GetProgramID(), "lightColour");
 			lightRadiusLocation = glGetUniformLocation(shader->GetProgramID(), "lightRadius");
 
+			GLint timeLocation = glGetUniformLocation(shader->GetProgramID(), "time");
+			GLint portalTexLocation = glGetUniformLocation(shader->GetProgramID(), "portalTex");
+
+			// Time
+			static float time = 0;
+			const static float dt = 1 / 60.0f; // To Do : Replace with actual dt
+			time += dt;
+			glUniform1f(timeLocation, time);
+
 			UpdateGlobalLightUniform(shader);
 
 			cameraLocation = glGetUniformLocation(shader->GetProgramID(), "cameraPos");

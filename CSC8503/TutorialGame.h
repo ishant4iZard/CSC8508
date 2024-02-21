@@ -119,10 +119,11 @@ namespace NCL {
 			Mesh*	cubeMesh	= nullptr;
 			Mesh*	sphereMesh	= nullptr;
 
-			Texture*	basicTex	= nullptr;
-			Texture*	sandTex		= nullptr;
-			Shader*		basicShader = nullptr;
-			Shader* pbrShader = nullptr;
+			Texture*	basicTex		= nullptr;
+			Texture*	sandTex			= nullptr;
+			Shader*		basicShader		= nullptr;
+			Shader*		pbrShader		= nullptr;
+			Shader*		portalShader	= nullptr;
 
 			Texture* groundTextureList[(uint8_t)TextureType::MAX_TYPE];
 			Texture* wallTextureList[(uint8_t)TextureType::MAX_TYPE];
