@@ -67,6 +67,20 @@ for this module, even in the coursework, but you can add it if you like!
 */
 void TutorialGame::InitialiseAssets() {
 	cubeMesh	= renderer->LoadMesh("cube.msh");
+	wallMesh = renderer->LoadMesh("cube.msh");
+	vector<Matrix4> t;
+
+	for (size_t i = 0; i < 1000; i = i + 10)
+	{
+		for (size_t j = 0; j < 1000; j = j + 10)
+		{
+			Matrix4 m1;
+			m1.SetPositionVector(Vector3(i, 5, j));
+			m1.SetDiagonal(Vector3(2, 2, 2));
+			t.push_back(m1);
+		}
+	}
+
 	sphereMesh	= renderer->LoadMesh("sphere.msh");
 	charMesh	= renderer->LoadMesh("goat.msh");
 	enemyMesh	= renderer->LoadMesh("Keeper.msh");
@@ -101,13 +115,16 @@ void TutorialGame::InitialiseAssets() {
 #endif // USE_SHADOW
 
 	pbrShader = renderer->LoadShader("pbr.vert", "pbr.frag");
-	
+	instancePbrShader = renderer->LoadShader("pbrInstanced.vert", "pbr.frag");
+
 	InitCamera();
 	InitWorld();
+
 }
 
 TutorialGame::~TutorialGame()	{
 	delete cubeMesh;
+	delete wallMesh;
 	delete sphereMesh;
 	delete charMesh;
 	delete enemyMesh;
@@ -305,8 +322,9 @@ void NCL::CSC8503::TutorialGame::SpawnWall(const Vector3& inPosition, const Vect
 		inPosition,
 		inScale,
 		0, 0.5f);
-	tempWall->GetRenderObject()->SetShader(pbrShader);
+	tempWall->GetRenderObject()->SetShader(instancePbrShader);
 	tempWall->GetRenderObject()->SetTiling(inTiling);
+	tempWall->GetRenderObject()->GetMesh()->AddInstanceModelMatrices(tempWall->GetTransform().GetMatrix());
 	for (size_t i = 0; i < (uint8_t)TextureType::MAX_TYPE; i++)
 	{
 		tempWall->GetRenderObject()->SetTexture((TextureType)i, wallTextureList[i]);

@@ -208,14 +208,14 @@ void GameTechRenderer::RenderShadowMap() {
 
 	shadowMatrix = biasMatrix * mvMatrix; //we'll use this one later on
 
-	for (const auto&i : activeObjects) {
-		Matrix4 modelMatrix = (*i).GetTransform()->GetMatrix();
+	for (const auto&tempRenderObj : activeObjects) {
+		Matrix4 modelMatrix = (*tempRenderObj).GetTransform()->GetMatrix();
 		Matrix4 mvpMatrix	= mvMatrix * modelMatrix;
 		glUniformMatrix4fv(mvpLocation, 1, false, (float*)&mvpMatrix);
-		BindMesh((OGLMesh&)*(*i).GetMesh());
-		size_t layerCount = (*i).GetMesh()->GetSubMeshCount();
+		BindMesh((OGLMesh&)*(*tempRenderObj).GetMesh());
+		size_t layerCount = (*tempRenderObj).GetMesh()->GetSubMeshCount();
 		for (size_t i = 0; i < layerCount; ++i) {
-			DrawBoundMesh((uint32_t)i);
+			DrawBoundMesh((uint32_t)i, (*tempRenderObj).GetMesh()->GetInstanceCount());
 		}
 	}
 
@@ -376,15 +376,15 @@ void GameTechRenderer::RenderCamera() {
 	//glActiveTexture(GL_TEXTURE0 + 1);
 	//glBindTexture(GL_TEXTURE_2D, shadowTex);
 
-	for (const auto&i : activeObjects) {
-		OGLShader* shader = (OGLShader*)(*i).GetShader();
+	for (const auto&tempRenderObj : activeObjects) {
+		OGLShader* shader = (OGLShader*)(*tempRenderObj).GetShader();
 		BindShader(*shader);
 
-		if ((*i).GetDefaultTexture()) {
-			BindTextureToShader(*(OGLTexture*)(*i).GetDefaultTexture(), "mainTex", 0);
+		if ((*tempRenderObj).GetDefaultTexture()) {
+			BindTextureToShader(*(OGLTexture*)(*tempRenderObj).GetDefaultTexture(), "mainTex", 0);
 		}
 
-		UpdatePBRUniforms(i);
+		UpdatePBRUniforms(tempRenderObj);
 
 		if (activeShader != shader) {
 			projLocation	= glGetUniformLocation(shader->GetProgramID(), "projMatrix");
@@ -420,26 +420,26 @@ void GameTechRenderer::RenderCamera() {
 			activeShader = shader;
 		}
 
-		Matrix4 modelMatrix = (*i).GetTransform()->GetMatrix();
+		Matrix4 modelMatrix = (*tempRenderObj).GetTransform()->GetMatrix();
 		glUniformMatrix4fv(modelLocation, 1, false, (float*)&modelMatrix);			
 		
-		const Vector2 tempTiling = (*i).GetTiling();
+		const Vector2 tempTiling = (*tempRenderObj).GetTiling();
 		glUniform2f(tilingLocation, tempTiling.x, tempTiling.y);
 
 		Matrix4 fullShadowMat = shadowMatrix * modelMatrix;
 		glUniformMatrix4fv(shadowLocation, 1, false, (float*)&fullShadowMat);
 
-		Vector4 colour = i->GetColour();
+		Vector4 colour = tempRenderObj->GetColour();
 		glUniform4fv(colourLocation, 1, &colour.x);
 
-		glUniform1i(hasVColLocation, !(*i).GetMesh()->GetColourData().empty());
+		glUniform1i(hasVColLocation, !(*tempRenderObj).GetMesh()->GetColourData().empty());
 
-		glUniform1i(hasTexLocation, (OGLTexture*)(*i).GetDefaultTexture() ? 1:0);
+		glUniform1i(hasTexLocation, (OGLTexture*)(*tempRenderObj).GetDefaultTexture() ? 1:0);
 
-		BindMesh((OGLMesh&)*(*i).GetMesh());
-		size_t layerCount = (*i).GetMesh()->GetSubMeshCount();
+		BindMesh((OGLMesh&)*(*tempRenderObj).GetMesh());
+		size_t layerCount = (*tempRenderObj).GetMesh()->GetSubMeshCount();
 		for (size_t i = 0; i < layerCount; ++i) {
-			DrawBoundMesh((uint32_t)i);
+			DrawBoundMesh((uint32_t)i , (*tempRenderObj).GetMesh()->GetInstanceCount());
 		}
 	}
 
