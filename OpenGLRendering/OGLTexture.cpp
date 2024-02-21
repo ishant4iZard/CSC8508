@@ -9,7 +9,7 @@ License: MIT (see LICENSE file at the top of the source tree)
 #include "OGLRenderer.h"
 
 #include "TextureLoader.h"
-
+#define MAX_ANISOTROPY 8.0f
 using namespace NCL;
 using namespace NCL::Rendering;
 
@@ -46,6 +46,8 @@ UniqueOGLTexture OGLTexture::TextureFromData(char* data, int width, int height, 
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	SetAnisotropicFilteringLevel(MAX_ANISOTROPY);
 
 	glGenerateMipmap(GL_TEXTURE_2D);
 
@@ -112,4 +114,13 @@ UniqueOGLTexture OGLTexture::LoadCubemap(
 	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
 	return tex;
+}
+
+void NCL::Rendering::OGLTexture::SetAnisotropicFilteringLevel(const float& inMaxAnisotropy)
+{
+	GLfloat tempValue;
+	glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &tempValue);
+
+	tempValue = (tempValue > inMaxAnisotropy) ? inMaxAnisotropy : tempValue;
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, tempValue);
 }
