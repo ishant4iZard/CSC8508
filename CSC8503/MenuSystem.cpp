@@ -111,6 +111,7 @@ void MainMenu::ReceiveEvent(const EventType eventType) {
 
 	case LOBBY_CREATEFAILED :
 		isCreatingLobby = false;
+		break;
 
 	default:
 		break;
@@ -131,6 +132,21 @@ PushdownState::PushdownResult MultiPlayerLobby::OnUpdate(float dt, PushdownState
 
 		CheckAndDisplayLobbyMembersList(Subsystem);
 
+		if (isLeaveLobbyPressed)
+		{
+			isLeaveLobbyPressed = false;
+			return PushdownResult::Pop;
+		}
+		ui->DrawButton(
+			"Leave Lobby",
+			Vector2(47, 75),
+			[Subsystem]() {
+				Subsystem->LeaveLobby();
+				EventEmitter::EmitEvent(LEAVE_CURRENT_LOBBY);
+			},
+			UIBase::WHITE,
+			KeyCodes::L
+		);
 		if (appState->GetIsLobbyHolder())
 		{
 			if (appState->GetIsServer())
@@ -161,15 +177,6 @@ PushdownState::PushdownResult MultiPlayerLobby::OnUpdate(float dt, PushdownState
 				UIBase::WHITE,
 				KeyCodes::S // Only for PS
 			);
-			ui->DrawButton(
-				"Leave Lobby",
-				Vector2(5, 85),
-				[]() {
-					EventEmitter::EmitEvent(LEAVE_CURRENT_LOBBY);
-				},
-				UIBase::WHITE,
-				KeyCodes::L
-			);
 			if (appState->GetIsClient())
 			{
 				Game->StartAsClient(GetIPnumByIndex(0), GetIPnumByIndex(1), GetIPnumByIndex(2), GetIPnumByIndex(3));
@@ -193,7 +200,8 @@ void MultiPlayerLobby::ReceiveEvent(const EventType eventType) {
 		break;
 
 	case LEAVE_CURRENT_LOBBY:
-		
+		isLeaveLobbyPressed = true;
+		break;
 
 	default :
 		break;

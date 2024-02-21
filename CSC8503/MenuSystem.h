@@ -116,6 +116,7 @@ namespace NCL {
 
 				EventEmitter::RegisterForEvent(START_AS_SERVER, this);
 				EventEmitter::RegisterForEvent(START_AS_CLIENT, this);
+				EventEmitter::RegisterForEvent(LEAVE_CURRENT_LOBBY, this);
 			}
 			PushdownResult OnUpdate(float dt, PushdownState** newState) override;
 			void ReceiveEvent(const EventType eventType) override;
@@ -128,6 +129,8 @@ namespace NCL {
 
 			UIBase* ui;
 			ApplicationState* appState;
+
+			bool isLeaveLobbyPressed = false;
 		};
 
 		class PlayingHUD : public PushdownState
