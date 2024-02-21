@@ -174,7 +174,7 @@ void NetSystem_Steam::LeaveLobby()
 
 void NetSystem_Steam::On_LobbyChatUpdate(LobbyChatUpdate_t* pCallback)
 {
-	std::cout << SteamFriends()->GetFriendPersonaName(pCallback->m_ulSteamIDUserChanged) << " data changed: " << pCallback->m_rgfChatMemberStateChange;
+	std::cout << SteamFriends()->GetFriendPersonaName(pCallback->m_ulSteamIDUserChanged) << " data changed: " << pCallback->m_rgfChatMemberStateChange << "\n";
 
 	int numMembers = GetNumCurrentLobbyMembers();
 	for (int i = 0; i < numMembers; ++i)

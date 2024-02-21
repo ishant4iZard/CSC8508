@@ -133,6 +133,12 @@ PushdownState::PushdownResult MultiPlayerLobby::OnUpdate(float dt, PushdownState
 
 		if (appState->GetIsLobbyHolder())
 		{
+			if (appState->GetIsServer())
+			{
+				Game->StartAsServer();
+				*newState = new PlayingHUD();
+				return PushdownResult::Push;
+			}
 			ui->DrawButton(
 				"Start Game",
 				Vector2(5, 75),
@@ -142,12 +148,6 @@ PushdownState::PushdownResult MultiPlayerLobby::OnUpdate(float dt, PushdownState
 				UIBase::WHITE,
 				KeyCodes::S // Only for PS
 			);
-			if (appState->GetIsServer())
-			{
-				Game->StartAsServer();
-				*newState = new PlayingHUD();
-				return PushdownResult::Push;
-			}
 		}
 		else
 		{
