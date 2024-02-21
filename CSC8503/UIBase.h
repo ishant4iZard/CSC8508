@@ -23,17 +23,17 @@ class UIBase {
 
 public:
 	virtual void DrawStringText(
-		std::string text,
-		NCL::Maths::Vector2 position,
-		NCL::Maths::Vector4 color = WHITE
+		const std::string& text,
+		const NCL::Maths::Vector2& position,
+		const NCL::Maths::Vector4& color = WHITE
 	) = 0;
 	virtual void DrawButton(
-		std::string text,
-		NCL::Maths::Vector2 position,
+		const std::string& text,
+		const NCL::Maths::Vector2& position,
 		std::function<void(void)> callback,
-		NCL::Maths::Vector4 color = WHITE,
-		NCL::KeyCodes::Type keyCode = NCL::KeyCodes::RETURN,
-		NCL::Maths::Vector2 size = NCL::Maths::Vector2(360, 50)
+		const NCL::Maths::Vector4& color = WHITE,
+		const NCL::KeyCodes::Type& keyCode = NCL::KeyCodes::RETURN,
+		const NCL::Maths::Vector2& size = NCL::Maths::Vector2(360, 50)
 	) = 0;	
 	virtual void RenderUI() = 0;
 

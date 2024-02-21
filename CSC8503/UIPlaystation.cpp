@@ -32,9 +32,9 @@ void UIPlaystation::Destroy()
 }
 
 void UIPlaystation::DrawStringText(
-    std::string text, 
-    NCL::Maths::Vector2 position, 
-    NCL::Maths::Vector4 color
+    const std::string& text,
+    const NCL::Maths::Vector2& position,
+    const NCL::Maths::Vector4& color
 )
 {
 	UIElementProps* newElement = new UIElementProps();
@@ -44,12 +44,12 @@ void UIPlaystation::DrawStringText(
 }
 
 void UIPlaystation::DrawButton(
-    std::string text, 
-    NCL::Maths::Vector2 position, 
-    std::function<void(void)> callback, 
-    NCL::Maths::Vector4 color, 
-    NCL::KeyCodes::Type keyCode,
-    NCL::Maths::Vector2 size
+    const std::string& text,
+    const NCL::Maths::Vector2& position,
+    std::function<void(void)> callback,
+    const NCL::Maths::Vector4& color,
+    const NCL::KeyCodes::Type& keyCode,
+    const NCL::Maths::Vector2& size
 )
 {
 	UIElementProps* newElement = new UIElementProps();

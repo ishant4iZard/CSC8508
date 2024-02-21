@@ -59,30 +59,30 @@ void UIWindows::Destroy() {
 }
 
 void UIWindows::DrawStringText(
-    std::string text,
-    NCL::Maths::Vector2 position,
-    NCL::Maths::Vector4 color
+    const std::string& text,
+    const NCL::Maths::Vector2& position,
+    const NCL::Maths::Vector4& color
 ){
     UIElementProps* newElement = new UIElementProps();
     newElement->elementType = Text;
     newElement->text = text;
     newElement->color = color;
+    newElement->position = position;
 
     NCL::Maths::Vector2i windowSize = NCL::Window::GetWindow()->GetScreenSize();
-    position.x *= (windowSize.x/100.0f);
-    position.y *= (windowSize.y/100.0f);
-    newElement->position = position;
+    newElement->position.x *= (windowSize.x/100.0f);
+    newElement->position.y *= (windowSize.y/100.0f);
 
     uiElements.push_back(newElement);
 }
 
 void UIWindows::DrawButton(
-    std::string text,
-    NCL::Maths::Vector2 position,
+    const std::string& text,
+    const NCL::Maths::Vector2& position,
     std::function<void(void)> callback,
-    NCL::Maths::Vector4 color,
-    NCL::KeyCodes::Type keyCode,
-    NCL::Maths::Vector2 size
+    const NCL::Maths::Vector4& color,
+    const NCL::KeyCodes::Type& keyCode,
+    const NCL::Maths::Vector2& size
 ) {
     UIElementProps* newElement = new UIElementProps();
     newElement->elementType = Button;
@@ -90,11 +90,11 @@ void UIWindows::DrawButton(
     newElement->color = color;
     newElement->callback = callback;
     newElement->size = size;
+    newElement->position = position;
 
     NCL::Maths::Vector2i windowSize = NCL::Window::GetWindow()->GetScreenSize();
-    position.x *= (windowSize.x / 100.0f);
-    position.y *= (windowSize.y / 100.0f);
-    newElement->position = position;
+    newElement->position.x *= (windowSize.x / 100.0f);
+    newElement->position.y *= (windowSize.y / 100.0f);
 
     uiElements.push_back(newElement);
 }
