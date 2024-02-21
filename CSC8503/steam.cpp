@@ -184,6 +184,7 @@ void NetSystem_Steam::On_LobbyChatUpdate(LobbyChatUpdate_t* pCallback)
 	}
 
 	std::cout << SteamFriends()->GetFriendPersonaName(SteamMatchmaking()->GetLobbyOwner(steamIDLobby)) << std::endl;
+	SetLobbyData(ELobbyDataType::EOwnerName, SteamFriends()->GetFriendPersonaName(SteamMatchmaking()->GetLobbyOwner(steamIDLobby)));
 }
 
 bool NetSystem_Steam::SetLobbyData(ELobbyDataType type, string Value)
