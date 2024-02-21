@@ -30,6 +30,8 @@ namespace NCL {
 
 			virtual string GetLobbyMemberNameByIndex(int Index) const = 0;
 
+			virtual int GetCurrentUserLobbyIndex() const = 0;
+
 			virtual void SetCurrentUserName() = 0;
 
 			virtual void SetLocalIPv4Address(const string& IPAddress) = 0;

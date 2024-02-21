@@ -131,10 +131,16 @@ PushdownState::PushdownResult MultiPlayerLobby::OnUpdate(float dt, PushdownState
 		ui->DrawStringText("______________________________________________________________________________________________", Vector2(5, 65), UIBase::BLACK);
 
 		CheckAndDisplayLobbyMembersList(Subsystem);
+		if (Subsystem->GetCurrentUserLobbyIndex() == 0)
+		{
+			appState->SetIsLobbyHolder(true);
+		}
 
 		if (isLeaveLobbyPressed)
 		{
 			isLeaveLobbyPressed = false;
+			appState->SetIsLobbyHolder(false);
+			EventEmitter::RemoveListner(this);
 			return PushdownResult::Pop;
 		}
 		ui->DrawButton(

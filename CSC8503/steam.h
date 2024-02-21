@@ -55,6 +55,8 @@ namespace NCL {
 
 			string GetLobbyMemberNameByIndex(int Index) const override;
 
+			int GetCurrentUserLobbyIndex() const override;
+
 			void SetCurrentUserName() override;
 
 			void On_LobbyCreated(LobbyCreated_t* pResult, bool bIOFailure);

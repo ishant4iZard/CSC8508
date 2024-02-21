@@ -185,6 +185,11 @@ void NetSystem_Steam::On_LobbyChatUpdate(LobbyChatUpdate_t* pCallback)
 
 	std::cout << SteamFriends()->GetFriendPersonaName(SteamMatchmaking()->GetLobbyOwner(steamIDLobby)) << std::endl;
 	SetLobbyData(ELobbyDataType::EOwnerName, SteamFriends()->GetFriendPersonaName(SteamMatchmaking()->GetLobbyOwner(steamIDLobby)));
+
+	if (GetCurrentUserLobbyIndex() == 0)
+	{
+
+	}
 }
 
 bool NetSystem_Steam::SetLobbyData(ELobbyDataType type, string Value)
@@ -216,6 +221,20 @@ int NetSystem_Steam::GetNumLobbyMembersByIndex(int Index) const
 string NetSystem_Steam::GetLobbyMemberNameByIndex(int Index) const
 {
 	return SteamFriends()->GetFriendPersonaName(SteamMatchmaking()->GetLobbyMemberByIndex(steamIDLobby, Index));
+}
+
+int NetSystem_Steam::GetCurrentUserLobbyIndex() const
+{
+	if (steamIDLobby == 0) return -1;
+
+	for (int i = 0; i < GetNumCurrentLobbyMembers(); ++i)
+	{
+		if (CurrentUserName == GetLobbyMemberNameByIndex(i))
+		{
+			return i;
+		}
+	}
+	return -1;
 }
 
 void NetSystem_Steam::SetCurrentUserName()
