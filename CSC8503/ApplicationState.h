@@ -8,13 +8,15 @@ public :
 	static void					Destory();
 
 	void SetIsServer		(const bool &val) { isServer = val; }
-	void SetIsClient		(const bool& val) { isClient = val; }
-	void SetIsGamePaused	(const bool& val) { isGamePaused = val; }
+	void SetIsClient		(const bool	&val) { isClient = val; }
+	void SetIsLobbyHolder	(const bool	&val) { isLobbyHolder = val; }
+	void SetIsGamePaused	(const bool &val) { isGamePaused = val; }
 	void SetIsGameOver		(const bool &val) { isGameOver = val; }
 	void SetHasWonGame		(const bool &val) { hasWonGame = val; }
 
 	bool GetIsServer()		const { return isServer; }
 	bool GetIsClient()		const { return isClient; }
+	bool GetIsLobbyHolder() const { return isLobbyHolder; }
 	bool GetIsGamePaused()	const { return isGamePaused; }
 	bool GetIsGameOver()	const { return isGameOver; }
 	bool GetHasWonGame()	const { return hasWonGame; }
@@ -24,6 +26,7 @@ protected :
 
 	bool isServer		= false;
 	bool isClient		= false;
+	bool isLobbyHolder	= false;
 	bool isGamePaused	= false;
 	bool isGameOver		= false;
 	bool hasWonGame		= false;
