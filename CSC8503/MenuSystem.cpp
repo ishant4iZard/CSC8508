@@ -279,8 +279,24 @@ PushdownState::PushdownResult MultiplayerSearchMenu::OnUpdate(float dt, Pushdown
 			isLobbyJoined = false;
 			return PushdownResult::Push;
 		}
+		if (isMainMenuPressed)
+		{
+			isMainMenuPressed = false;
+			EventEmitter::RemoveListner(this);
+			return PushdownResult::Pop;
+		}
 
 		CheckAndDisplaySearchResult(Subsystem);
+
+		ui->DrawButton(
+			"Main Menu",
+			Vector2(48,75),
+			[&]() {
+				isMainMenuPressed = true;
+			},
+			UIBase::WHITE,
+			KeyCodes::ESCAPE // Only for PS
+			);
 
 		ui->DrawButton(
 			"Refresh Lobby List",
