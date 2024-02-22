@@ -13,15 +13,25 @@ namespace NCL {
             ~AiStatemachineObject();
             void getPositionfromobject(Vector3 objectposition);
 
-            void ObjectDetectRay(GameObject* gameObject,float dt);
+            void AiDetectRay(GameObject* gameObject,float dt);
+            void ObjectDetectRay(GameObject* floor, float dt);
             void Chasethebullets(float dt);
 
-            void TestPathfinding();
-            void DisplayPathfinding();
+            bool RaychangesDectec1();
+            bool RaychangesDectec2();
+
+
+            void OnCollisionBegin(GameObject* otherObject);
+           // void TestPathfinding();
+          //  void DisplayPathfinding();
 
             virtual void Update(float dt);
+            bool shouldDetectRayChanges = true;
 
-            
+            RayCollision  closestCollision;
+            RayCollision  obstaclesCollision;
+            vector<Ray> rays;
+            GameObject* ObjectHited;
 
         protected:
             void MoveRound(float dt);
@@ -35,9 +45,12 @@ namespace NCL {
             vector < Vector3 > testNodes;
             GameWorld* world;
 
+            Vector3 movementDirection;
+            float abc = 999999;
+            bool k=1;
             GameObject* projectileToChase;
 
-            RayCollision closestCollision;
+
 
            // AiStatemachineObject* testStateObject = nullptr;
         };

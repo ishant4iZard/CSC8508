@@ -307,6 +307,7 @@ void NCL::CSC8503::TutorialGame::SpawnWall(const Vector3& inPosition, const Vect
 		0, 0.5f);
 	tempWall->GetRenderObject()->SetShader(pbrShader);
 	tempWall->GetRenderObject()->SetTiling(inTiling);
+	tempWall->settag("walls");
 	for (size_t i = 0; i < (uint8_t)TextureType::MAX_TYPE; i++)
 	{
 		tempWall->GetRenderObject()->SetTexture((TextureType)i, wallTextureList[i]);
@@ -319,6 +320,7 @@ void NCL::CSC8503::TutorialGame::SpawnFloor(const Vector3& inPosition, const Vec
 		inPosition,
 		inScale);
 	tempFloor->GetRenderObject()->SetTiling(inTiling);
+	tempFloor->settag("floor1");
 
 	for (size_t i = 0; i < (uint8_t)TextureType::MAX_TYPE; i++)
 	{
@@ -329,6 +331,7 @@ void NCL::CSC8503::TutorialGame::SpawnFloor(const Vector3& inPosition, const Vec
 void NCL::CSC8503::TutorialGame::SpawnBouncingPad(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling)
 {
 	BouncePad* tempBouncePad = new BouncePad(cubeMesh, basicTex, pbrShader);
+	tempBouncePad->settag("bouncingpad1");
 	for (size_t i = 0; i < (uint8_t)TextureType::MAX_TYPE; i++)
 	{
 		tempBouncePad->GetRenderObject()->SetTexture((TextureType)i, groundTextureList[i]);
@@ -412,7 +415,7 @@ GameObject* TutorialGame::AddCapsuleToWorld(const Vector3& position, float radiu
 }
 
 void TutorialGame::InitDefaultFloor() {
-	AddFloorToWorld(Vector3(0, -2, 0), Vector3(100, 2, 100));
+	//AddFloorToWorld(Vector3(0, -2, 0), Vector3(100, 2, 100));
 	//AddAiToWorld(Vector3(0, -2, 0), Vector3(10, 10, 10), 1.0, 1.0);
 }
 
@@ -686,7 +689,7 @@ void TutorialGame::InitPlaceholderAIs() {
 
 void TutorialGame::InitAI()
 {
-	AddAiStateObjectToWorld(Vector3(60, 5.6, 30))->GetRenderObject()->SetColour(Debug::BLUE);
+	AddAiStateObjectToWorld(Vector3(90, 5.6, -90))->GetRenderObject()->SetColour(Debug::BLUE);
 	//AddtestcubeToWorld(Vector3(60, 5.6, 20), Vector3(60, 5.6, 80), Vector3(5, 5, 5));
 	//AddFloorToWorld(Vector3(20, 2, 20), Vector3(2, 2, 2))->GetPhysicsObject()->SetInverseMass(1.0);
 	//AddFloorToWorld(Vector3(60, 2, 80), Vector3(20, 20, 20))->GetPhysicsObject()->SetInverseMass(1.0);
