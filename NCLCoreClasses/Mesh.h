@@ -188,7 +188,7 @@ namespace NCL::Rendering {
 		const std::vector<int>& GetJointParents()	const {
 			return jointParents;
 		}
-		const unsigned int& GetInstanceCount() { return instanceCount; }
+		const unsigned int& GetInstanceCount() { return instanceModelMatrices.size(); }
 
 		const std::vector<unsigned int>& GetIndexData()			const { return indices;		}
 
@@ -244,7 +244,7 @@ namespace NCL::Rendering {
 		std::vector<Matrix4>		bindPose;
 		std::vector<Matrix4>		inverseBindPose;
 		
-		unsigned int instanceCount = 1;
+		unsigned int instanceCount = 0;
 	};
 
 	using UniqueMesh = std::unique_ptr<Mesh>;
