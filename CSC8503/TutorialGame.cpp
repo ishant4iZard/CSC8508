@@ -233,8 +233,9 @@ void TutorialGame::InitWorld() {
 	timer = 0;
 
 	SpawnDataDrivenLevel(GameLevelNumber::LEVEL_1);
-	capsule = AddCapsuleToWorld(Vector3(-80, 7, -80), 2.0f, 5.0f);
-	AddCapsuleToWorld(Vector3(-75, 7, -75), 2.0f, 5.0f);
+	capsule = AddCapsuleToWorld(Vector3(-80, 5.6, -80), 1.0f, 2.0f);
+	capsule->GetTransform().SetOrientation(Quaternion::EulerAnglesToQuaternion(0, 0, 90));
+	//AddCapsuleToWorld(Vector3(-75, 10, -75), 2.0f, 5.0f);
 
 	InitTeleporters();
 	physics->createStaticTree();
@@ -402,7 +403,7 @@ GameObject* TutorialGame::AddCapsuleToWorld(const Vector3& position, float radiu
 	capsule->SetRenderObject(new RenderObject(&capsule->GetTransform(), capsuleMesh, basicTex, basicShader));
 	capsule->SetPhysicsObject(new PhysicsObject(&capsule->GetTransform(), capsule->GetBoundingVolume()));
 
-	capsule->GetPhysicsObject()->SetInverseMass(0.001);
+	capsule->GetPhysicsObject()->SetInverseMass(0.1);
 	capsule->GetPhysicsObject()->InitCubeInertia();
 	capsule->GetPhysicsObject()->SetElasticity(elasticity);
 
