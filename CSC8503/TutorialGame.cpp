@@ -234,7 +234,7 @@ void TutorialGame::InitWorld() {
 
 	SpawnDataDrivenLevel(GameLevelNumber::LEVEL_1);
 	capsule = AddCapsuleToWorld(Vector3(-80, 5.6, -80), 1.0f, 2.0f);
-	capsule->GetTransform().SetOrientation(Quaternion::EulerAnglesToQuaternion(0, 0, 90));
+	//capsule->GetTransform().SetOrientation(Quaternion::EulerAnglesToQuaternion(0, 0, 90));
 	//AddCapsuleToWorld(Vector3(-75, 10, -75), 2.0f, 5.0f);
 
 	InitTeleporters();
