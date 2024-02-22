@@ -50,6 +50,7 @@ namespace NCL {
 			virtual void OnLobbyMatchList() = 0;
 			virtual void OnJoinLobbySuccess() = 0;
 			virtual void OnJoinLobbyFailed() = 0;
+			virtual void OnReceiveGameRoundStartSignal() = 0;
 
 			string CurrentUserName;
 			int numLobbyMatchList = 0;

@@ -115,9 +115,8 @@ namespace NCL {
 #endif
 				appState = ApplicationState::GetInstance();
 
-				EventEmitter::RegisterForEvent(START_AS_SERVER, this);
-				EventEmitter::RegisterForEvent(START_AS_CLIENT, this);
-				EventEmitter::RegisterForEvent(LEAVE_CURRENT_LOBBY, this);
+				EventEmitter::RegisterForEvent(LOBBY_GAMESTART, this);
+				EventEmitter::RegisterForEvent(LOBBY_LEAVE, this);
 			}
 			PushdownResult OnUpdate(float dt, PushdownState** newState) override;
 			void ReceiveEvent(const EventType eventType) override;

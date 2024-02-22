@@ -84,6 +84,7 @@ namespace NCL {
 			void OnLobbyMatchList() override;
 			void OnJoinLobbySuccess() override;
 			void OnJoinLobbyFailed() override;
+			void OnReceiveGameRoundStartSignal() override;
 
 		private:
 			static NetSystem_Steam* steam;

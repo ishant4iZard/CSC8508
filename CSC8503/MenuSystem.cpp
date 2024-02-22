@@ -150,7 +150,7 @@ PushdownState::PushdownResult MultiPlayerLobby::OnUpdate(float dt, PushdownState
 			Vector2(47, 75),
 			[Subsystem]() {
 				Subsystem->LeaveLobby();
-				EventEmitter::EmitEvent(LEAVE_CURRENT_LOBBY);
+				EventEmitter::EmitEvent(LOBBY_LEAVE);
 			},
 			UIBase::WHITE,
 			KeyCodes::L
@@ -166,9 +166,9 @@ PushdownState::PushdownResult MultiPlayerLobby::OnUpdate(float dt, PushdownState
 			ui->DrawButton(
 				"Start Game",
 				Vector2(5, 75),
-				[Subsystem]() {
+				[&, Subsystem]() {
 					Subsystem->SendGameRoundStartSignal();
-					EventEmitter::EmitEvent(START_AS_SERVER);
+					appState->SetIsServer(true);
 				},
 				UIBase::WHITE,
 				KeyCodes::S // Only for PS
@@ -177,6 +177,7 @@ PushdownState::PushdownResult MultiPlayerLobby::OnUpdate(float dt, PushdownState
 		else
 		{
 			ui->DrawStringText("You are the joiner!", Vector2(5, 23), UIBase::WHITE);
+			ui->DrawStringText("Wait for holder start!", Vector2(5, 75), UIBase::WHITE);
 			//ui->DrawButton(
 			//	"Start Game",
 			//	Vector2(5, 75),
@@ -200,15 +201,14 @@ PushdownState::PushdownResult MultiPlayerLobby::OnUpdate(float dt, PushdownState
 
 void MultiPlayerLobby::ReceiveEvent(const EventType eventType) {
 	switch (eventType) {
-	case START_AS_SERVER :
-		appState->SetIsServer(true);
+	case LOBBY_GAMESTART:
+		if (!appState->GetIsLobbyHolder())
+		{
+			appState->SetIsClient(true);
+		}
 		break;
 
-	case START_AS_CLIENT :
-		appState->SetIsClient(true);
-		break;
-
-	case LEAVE_CURRENT_LOBBY:
+	case LOBBY_LEAVE:
 		isLeaveLobbyPressed = true;
 		break;
 

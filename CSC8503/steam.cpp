@@ -165,6 +165,11 @@ void NetSystem_Steam::OnJoinLobbyFailed()
 	EventEmitter::EmitEvent(EventType::LOBBY_JOINFAILED);
 }
 
+void NetSystem_Steam::OnReceiveGameRoundStartSignal()
+{
+	EventEmitter::EmitEvent(EventType::LOBBY_GAMESTART);
+}
+
 void NetSystem_Steam::LeaveLobby()
 {
 	if (steamIDLobby == 0) return;
@@ -256,7 +261,10 @@ void NetSystem_Steam::On_LobbyChatMsgReceived(LobbyChatMsg_t* pCallback)
 	EChatEntryType ChatEntryType;
 	SteamMatchmaking()->GetLobbyChatEntry(pCallback->m_ulSteamIDLobby, pCallback->m_iChatID, &SenderID, &msg, sizeof(char), &ChatEntryType);
 
-	if (msg == 1) { std::cout << "Game Start !\n"; }
+	if (msg == 1)
+	{
+		OnReceiveGameRoundStartSignal();
+	}
 }
 
 void NetSystem_Steam::On_LobbyDataUpdate(LobbyDataUpdate_t* pCallback)
