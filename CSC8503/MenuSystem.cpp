@@ -8,6 +8,8 @@
 using namespace NCL;
 using namespace CSC8503;
 
+using std::string;
+
 MenuSystem::MenuSystem(NetworkedGame* Game)
 {
 #ifdef _WIN32
@@ -164,7 +166,8 @@ PushdownState::PushdownResult MultiPlayerLobby::OnUpdate(float dt, PushdownState
 			ui->DrawButton(
 				"Start Game",
 				Vector2(5, 75),
-				[]() {
+				[Subsystem]() {
+					Subsystem->SendGameRoundStartSignal();
 					EventEmitter::EmitEvent(START_AS_SERVER);
 				},
 				UIBase::WHITE,
@@ -174,15 +177,15 @@ PushdownState::PushdownResult MultiPlayerLobby::OnUpdate(float dt, PushdownState
 		else
 		{
 			ui->DrawStringText("You are the joiner!", Vector2(5, 23), UIBase::WHITE);
-			ui->DrawButton(
-				"Start Game",
-				Vector2(5, 75),
-				[]() {
-					EventEmitter::EmitEvent(START_AS_CLIENT);
-				},
-				UIBase::WHITE,
-				KeyCodes::S // Only for PS
-			);
+			//ui->DrawButton(
+			//	"Start Game",
+			//	Vector2(5, 75),
+			//	[]() {
+			//		EventEmitter::EmitEvent(START_AS_CLIENT);
+			//	},
+			//	UIBase::WHITE,
+			//	KeyCodes::S // Only for PS
+			//);
 			if (appState->GetIsClient())
 			{
 				Game->StartAsClient(GetIPnumByIndex(0), GetIPnumByIndex(1), GetIPnumByIndex(2), GetIPnumByIndex(3));

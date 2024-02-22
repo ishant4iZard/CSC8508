@@ -242,8 +242,26 @@ void NetSystem_Steam::SetCurrentUserName()
 	CurrentUserName = SteamFriends()->GetPersonaName();
 }
 
+bool NetSystem_Steam::SendGameRoundStartSignal()
+{
+	char msg = 1;
+	return SteamMatchmaking()->SendLobbyChatMsg(steamIDLobby, &msg, sizeof(char));
+}
+
+void NetSystem_Steam::On_LobbyChatMsgReceived(LobbyChatMsg_t* pCallback)
+{
+	if (pCallback->m_ulSteamIDLobby != steamIDLobby) return;
+	char msg;
+	CSteamID SenderID;
+	EChatEntryType ChatEntryType;
+	SteamMatchmaking()->GetLobbyChatEntry(pCallback->m_ulSteamIDLobby, pCallback->m_iChatID, &SenderID, &msg, sizeof(char), &ChatEntryType);
+
+	if (msg == 1) { std::cout << "Game Start !\n"; }
+}
+
 void NetSystem_Steam::On_LobbyDataUpdate(LobbyDataUpdate_t* pCallback)
 {
 	
 }
+
 

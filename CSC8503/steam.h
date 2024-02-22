@@ -31,7 +31,8 @@ namespace NCL {
 
 			NetSystem_Steam() : 
 				m_LobbyChatUpdateCallback(this, &NetSystem_Steam::On_LobbyChatUpdate),
-				m_LobbyDataUpdateCallback(this, &NetSystem_Steam::On_LobbyDataUpdate)
+				m_LobbyDataUpdateCallback(this, &NetSystem_Steam::On_LobbyDataUpdate),
+				m_LobbyChatMsgCallback(this, &NetSystem_Steam::On_LobbyChatMsgReceived)
 			{ }
 
 		public:
@@ -59,11 +60,14 @@ namespace NCL {
 
 			void SetCurrentUserName() override;
 
+			bool SendGameRoundStartSignal() override;
+
 			void On_LobbyCreated(LobbyCreated_t* pResult, bool bIOFailure);
 			void On_LobbyMatchList(LobbyMatchList_t* pLobbyMatchList, bool bIOFailure);
 			void On_LobbyJoined(LobbyEnter_t* pResult, bool bIOFailure);
 			void On_LobbyChatUpdate(LobbyChatUpdate_t* pCallback);
 			void On_LobbyDataUpdate(LobbyDataUpdate_t* pCallback);
+			void On_LobbyChatMsgReceived(LobbyChatMsg_t* pCallback);
 
 			void SetLocalIPv4Address(const string& IPAddress) override { LocalIPv4Address = IPAddress; }
 
@@ -90,6 +94,7 @@ namespace NCL {
 
 			CCallback<NetSystem_Steam, LobbyChatUpdate_t> m_LobbyChatUpdateCallback;
 			CCallback<NetSystem_Steam, LobbyDataUpdate_t> m_LobbyDataUpdateCallback;
+			CCallback<NetSystem_Steam, LobbyChatMsg_t> m_LobbyChatMsgCallback;
 
 			/** the steam ID of the lobby which you just create or you just choose */
 			uint64 steamIDLobby = 0;

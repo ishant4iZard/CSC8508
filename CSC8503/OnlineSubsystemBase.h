@@ -36,6 +36,8 @@ namespace NCL {
 
 			virtual void SetLocalIPv4Address(const string& IPAddress) = 0;
 
+			virtual bool SendGameRoundStartSignal() = 0;
+
 			inline string GetCurrentUserName() const { return CurrentUserName; }
 			inline int GetNumOfLobbyMatchList() const { return numLobbyMatchList; }
 
