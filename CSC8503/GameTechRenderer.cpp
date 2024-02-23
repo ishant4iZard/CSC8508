@@ -53,9 +53,9 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 
 	//Setup directional light
 	directionalLight = new DirectionalLight(
-		Vector3(-0.2f, -220.0f, -10.0f),
-		1.0f,
-		Vector4(77.0f, 77.0f, 255.0f, 1.0f));
+		Vector3(-0.2f, -220.0f, -100.0f),
+		0.02f,
+		Vector4(247, 149, 64, 1.0f));
 	//Skybox!
 	skyboxShader = new OGLShader("skybox.vert", "skybox.frag");
 	skyboxMesh = new OGLMesh();
@@ -110,12 +110,12 @@ GameTechRenderer::~GameTechRenderer()	{
 
 void GameTechRenderer::LoadSkybox() {
 	std::string filenames[6] = {
-		"/Cubemap/skyrender0004.png",
-		"/Cubemap/skyrender0001.png",
-		"/Cubemap/skyrender0003.png",
-		"/Cubemap/skyrender0006.png",
-		"/Cubemap/skyrender0002.png",
-		"/Cubemap/skyrender0005.png"
+		"/SpaceCubeMap/3.png",
+		"/SpaceCubeMap/0.png",
+		"/SpaceCubeMap/2.png",
+		"/SpaceCubeMap/5.png",
+		"/SpaceCubeMap/1.png",
+		"/SpaceCubeMap/4.png"
 	};
 
 	int width[6]	= { 0 };
@@ -356,6 +356,7 @@ void GameTechRenderer::UpdateGlobalLightUniform(const OGLShader* inShader)
 void GameTechRenderer::RenderCamera() {
 	glBindFramebuffer(GL_FRAMEBUFFER, pbrFbo->GetFbo());
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	RenderSkybox();
 
 	Matrix4 viewMatrix = gameWorld.GetMainCamera().BuildViewMatrix();
 	Matrix4 projMatrix = gameWorld.GetMainCamera().BuildProjectionMatrix(hostWindow.GetScreenAspect());
