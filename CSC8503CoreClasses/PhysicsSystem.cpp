@@ -13,7 +13,7 @@
 using namespace NCL;
 using namespace CSC8503;
 
-QuadTree <GameObject*> staticTree(Vector2(256, 256), 10, 15);
+QuadTree <GameObject*> staticTree(Vector2(200, 200), 10, 15);
 
 PhysicsSystem::PhysicsSystem(GameWorld& g) : gameWorld(g)	{
 	applyGravity	= false;
@@ -349,6 +349,7 @@ bool broadPhaseHelper(GameObject* a, GameObject* b) {
 //}
 
 void PhysicsSystem::createStaticTree() {
+	UpdateObjectAABBs();
 	int numberStatic = 0;
 	int numberObjects = 0;
 	std::vector <GameObject*>::const_iterator first;
@@ -372,7 +373,7 @@ void PhysicsSystem::createStaticTree() {
 
 void PhysicsSystem::BroadPhase() {
 	broadphaseCollisions.clear();
-	QuadTree <GameObject*> tree(Vector2(128,128), 7, 4);
+	QuadTree <GameObject*> tree(Vector2(200,200), 7, 4);
 	
 	//tree = staticTree;
 
@@ -400,6 +401,15 @@ void PhysicsSystem::BroadPhase() {
 						}
 					}
 				);
+				/*std::list< QuadTreeEntry<GameObject*>> possiblelist = staticTree.CheckBroadwithstatic(*i, pos, halfSizes);
+				for (auto j : possiblelist) {
+					CollisionDetection::CollisionInfo info;
+					if (broadPhaseHelper(*i, (j).object)) {
+						info.a = std::min((*i), (j).object);
+						info.b = std::max((*i), (j).object);
+						broadphaseCollisions.insert(info);
+					}
+				}*/
 			}
 		}
 		//}
@@ -420,9 +430,11 @@ void PhysicsSystem::BroadPhase() {
 				for (auto j = std::next(i); j != data.end(); ++j) {
 					// is this pair of items already in the collision set -
 					// if the same pair is in another quadtree node together etc
-					info.a = std::min((*i).object, (*j).object);
-					info.b = std::max((*i).object, (*j).object);
-					broadphaseCollisions.insert(info);
+					if (broadPhaseHelper((*i).object, (*j).object)) {
+						info.a = std::min((*i).object, (*j).object);
+						info.b = std::max((*i).object, (*j).object);
+						broadphaseCollisions.insert(info);
+					}
 				}
 			}
 		}

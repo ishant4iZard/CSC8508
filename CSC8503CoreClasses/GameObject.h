@@ -106,6 +106,12 @@ namespace NCL::CSC8503 {
 		void settag(std::string ttag) {
 			tag = ttag;
 		}
+		
+		void setName(std::string inname) {
+			name = inname;
+		}
+
+
 
 		
 

@@ -231,16 +231,23 @@ void TutorialGame::InitWorld() {
 	physics->UseGravity(false);
 	physics->SetBroadphase(true);
 	timer = 0;
+	AddCapsuleToWorld(Vector3(-75, 10, -75), 2.0f, 5.0f);
+	/*AddCapsuleToWorld(Vector3(-40, 10, -75), 2.0f, 5.0f);
+	AddCapsuleToWorld(Vector3(-35, 10, -75), 2.0f, 5.0f);
+	AddCapsuleToWorld(Vector3(-15, 10, -75), 2.0f, 5.0f);
+	AddCapsuleToWorld(Vector3(-75, 10, -75), 2.0f, 5.0f);
+	AddCapsuleToWorld(Vector3(-70, 10, -70), 2.0f, 5.0f);
+	AddCapsuleToWorld(Vector3(-65, 10, -65), 2.0f, 5.0f);*/
+	capsule = AddCapsuleToWorld(Vector3(-80, 5.6, -80), 1.0f, 2.0f);
 
 	SpawnDataDrivenLevel(GameLevelNumber::LEVEL_1);
-	capsule = AddCapsuleToWorld(Vector3(-80, 5.6, -80), 1.0f, 2.0f);
 	//capsule->GetTransform().SetOrientation(Quaternion::EulerAnglesToQuaternion(0, 0, 90));
-	//AddCapsuleToWorld(Vector3(-75, 10, -75), 2.0f, 5.0f);
 
 	InitTeleporters();
-	physics->createStaticTree();
-	
+	//TestAddStaticObjectsToWorld();
 	InitAI();
+	
+	physics->createStaticTree();//this needs to be at the end of all initiations
 }
 
 /*
@@ -308,6 +315,7 @@ void NCL::CSC8503::TutorialGame::SpawnWall(const Vector3& inPosition, const Vect
 		0, 0.5f);
 	tempWall->GetRenderObject()->SetShader(pbrShader);
 	tempWall->GetRenderObject()->SetTiling(inTiling);
+	tempWall->setName("wall");
 	for (size_t i = 0; i < (uint8_t)TextureType::MAX_TYPE; i++)
 	{
 		tempWall->GetRenderObject()->SetTexture((TextureType)i, wallTextureList[i]);
@@ -392,7 +400,7 @@ physics worlds. You'll probably need another function for the creation of OBB cu
 GameObject* TutorialGame::AddCapsuleToWorld(const Vector3& position, float radius, float halfHeight, float inverseMass, float elasticity) {
 	GameObject* capsule = new GameObject("capsule");
 
-	CapsuleVolume* volume = new CapsuleVolume(halfHeight, radius, false, false);
+	CapsuleVolume* volume = new CapsuleVolume(halfHeight, radius, false, true);
 	capsule->SetBoundingVolume((CollisionVolume*)volume);
 	Vector3 capsuleSize = Vector3(2 * radius, 2 * halfHeight, 2 * radius);
 
@@ -403,7 +411,7 @@ GameObject* TutorialGame::AddCapsuleToWorld(const Vector3& position, float radiu
 	capsule->SetRenderObject(new RenderObject(&capsule->GetTransform(), capsuleMesh, basicTex, basicShader));
 	capsule->SetPhysicsObject(new PhysicsObject(&capsule->GetTransform(), capsule->GetBoundingVolume()));
 
-	capsule->GetPhysicsObject()->SetInverseMass(0.1);
+	capsule->GetPhysicsObject()->SetInverseMass(0);
 	capsule->GetPhysicsObject()->InitCubeInertia();
 	capsule->GetPhysicsObject()->SetElasticity(elasticity);
 
@@ -661,6 +669,18 @@ void TutorialGame::ProcessFrameAddresses() {
 		std::cout << "Address: " << address << std::endl;
 	}
 	//frameAddresses.clear();
+}
+
+void TutorialGame::TestAddStaticObjectsToWorld() {
+	for (int x = 0; x < 10; x++) {
+		//for (int y = 0; y < 10; y++) {
+			for (int z = 0; z < 10; z++) {
+				Vector3 position = Vector3(25 + (x * 2), 5 , 25 + z * 2);
+				AddAABBCubeToWorld(position, Vector3(0.99,0.99,0.99), 0.0f,0);
+
+			}
+		//}
+	}
 }
 
 
