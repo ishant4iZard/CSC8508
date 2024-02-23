@@ -136,8 +136,6 @@ void NetworkedGame::UpdateGame(float dt) {
 			UpdatePlayerState(dt);
 			UpdateProjectiles(dt);
 			
-			
-			
 			gravitywell->PullProjectilesWithinField(ProjectileList);
 			physics->Update(dt);
 		}

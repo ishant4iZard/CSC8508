@@ -29,7 +29,7 @@ out Vertex
 
 void main(void)
 {
-	mat4 mvp 		  = (projMatrix * viewMatrix * modelMatrix);
+	mat4 mvp = (projMatrix * viewMatrix * modelMatrix);
 	mat3 normalMatrix = transpose(inverse(mat3( modelMatrix )));
 
     OUT.normal = normalize ( normalMatrix * normalize ( normal )); //World normal

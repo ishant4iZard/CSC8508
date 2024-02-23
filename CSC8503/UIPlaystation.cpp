@@ -31,34 +31,33 @@ void UIPlaystation::Destroy()
 	ui = nullptr;
 }
 
-void UIPlaystation::DrawStringText(std::string text, NCL::Maths::Vector2 position, NCL::Maths::Vector4 color)
+void UIPlaystation::DrawStringText(
+    const std::string& text,
+    const NCL::Maths::Vector2& position,
+    const NCL::Maths::Vector4& color
+)
 {
 	UIElementProps* newElement = new UIElementProps();
 	newElement->elementType = Text;
-	newElement->text = text;
-	newElement->color = color;
-	newElement->position = position;
-
 	uiElements.push_back(newElement);
-	NCL::Debug::Print(newElement->text, newElement->position, newElement->color);
+	NCL::Debug::Print(text, position, color);
 }
 
-void UIPlaystation::DrawButton(std::string text, NCL::Maths::Vector2 position, std::function<void(void)> callback, NCL::Maths::Vector4 color, NCL::KeyCodes::Type keyCode)
+void UIPlaystation::DrawButton(
+    const std::string& text,
+    const NCL::Maths::Vector2& position,
+    std::function<void(void)> callback,
+    const NCL::Maths::Vector4& color,
+    const NCL::KeyCodes::Type& keyCode,
+    const NCL::Maths::Vector2& size
+)
 {
 	UIElementProps* newElement = new UIElementProps();
 	newElement->elementType = Button;
-	newElement->text = text;
-	newElement->color = color;
-	newElement->callback = callback;
-	newElement->position = position;
-	newElement->keyCode = keyCode;
-
 	uiElements.push_back(newElement);
-
 	std::string displayText = text + " " + keycodeToStringMap[keyCode];
-	NCL::Debug::Print(displayText, newElement->position, newElement->color);
+	NCL::Debug::Print(displayText, position, color);
 }
-
 
 void UIPlaystation::RenderUI()
 {

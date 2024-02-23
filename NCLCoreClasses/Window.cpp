@@ -113,5 +113,8 @@ void Window::GetLocalIPV4Address(std::string& IPAddress)
 
 	freeaddrinfo(addrs);
 	WSACleanup();
+
+#else
+	// play station
 #endif
 }

@@ -249,21 +249,18 @@ void main()
     vec3 lOut = vec3(0.0);
 
     // Calculate spot light
-    lOut += SpotLight(spotLightPosition, spotLightDirection, spotLightCutoffAngle, spotLightColor, normal, roughness, metallic, albedo);
+    //lOut += SpotLight(spotLightPosition, spotLightDirection, spotLightCutoffAngle, spotLightColor, normal, roughness, metallic, albedo);
 
     // Calculate point light
     for(int i = 0; i < 1 ; ++i)
     {
         //lOut += PointLightPbr(lightPosList[i], IN.worldPos, lightColorList[i], normal, roughness, metallic, albedo, pointLightConstantLinearQuadList[i].x, pointLightConstantLinearQuadList[i].y, pointLightConstantLinearQuadList[i].z, cameraPos, F0);
         lOut += PointLightPbr(vec3(0,60,0), IN.worldPos, vec3(255, 255, 51), normal, roughness, metallic, albedo,
-         1.0f, 0.22f, 0.20f, cameraPos, F0);
-    }
-    
-    if(lOut == vec3(0.0))
-    {
-        lOut += DirectionalLightPbr(globalLightDirection, IN.worldPos, globalLightColor.xyz, normal, roughness, metallic, albedo, cameraPos);
+          1.0f, 0.22f, 0.20f, cameraPos, F0);
     }
 
+    lOut += DirectionalLightPbr(globalLightDirection, IN.worldPos, globalLightColor.xyz, normal, roughness, metallic, albedo, cameraPos);
+    
     vec3 ambient = vec3(0.33) * albedo * ao;
     vec3 color = max((ambient + lOut), vec3(0.0));
     fragColour = vec4(color, 1.0);

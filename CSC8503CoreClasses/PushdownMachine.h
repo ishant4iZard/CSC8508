@@ -15,7 +15,7 @@ namespace NCL {
 			void GetGame(void** game) { *game = this->game; }
 			void SetGame(void* val) { this->game = val; }
 
-			void SetSteam(void* val) { this->steam = val; }
+			void SetOnlineSubsystem(void* val) { this->OnlineSubsystem = val; }
 
 		protected:
 			PushdownState* activeState;
@@ -24,7 +24,7 @@ namespace NCL {
 			std::stack<PushdownState*> stateStack;
 
 			void* game;
-			void* steam;
+			void* OnlineSubsystem;
 		};
 	}
 }

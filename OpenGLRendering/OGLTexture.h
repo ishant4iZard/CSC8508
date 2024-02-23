@@ -36,5 +36,7 @@ namespace NCL::Rendering {
 		}
 	protected:						
 		GLuint texID;
+	protected:
+		static void SetAnisotropicFilteringLevel(const float& inMaxAnisotropy);
 	};
 }
