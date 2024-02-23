@@ -7,6 +7,7 @@
 #include "BouncePad.h"
 #include "GravityWell.h"
 #include "Teleporter.h"
+#include "NavigationGrid.h"
 #include <Maths.h>
 #include <cstdlib> 
 
@@ -47,6 +48,11 @@ TutorialGame::TutorialGame() : controller(*Window::GetWindow()->GetKeyboard(), *
 	currentlevel = level::level1;
 
 	InitialiseAssets();
+
+
+	//creat the navigation grid that can detect the object in the world;
+	navGrid = new NavigationGrid(world);
+	InitAI();
 
 #ifdef _WIN32
 	ui = UIWindows::GetInstance();
@@ -239,7 +245,6 @@ void TutorialGame::InitWorld() {
 	InitTeleporters();
 	physics->createStaticTree();
 	
-	InitAI();
 }
 
 /*
@@ -499,7 +504,6 @@ GameObject* TutorialGame::AddAABBCubeToWorld(const Vector3& position, Vector3 di
 
 	return cube;
 }
-
 GameObject* NCL::CSC8503::TutorialGame::AddTeleporterToWorld(const Vector3& position1,const Vector3& position2,const Vector3& rotation1 , const Vector3& rotation2, Vector3 dimensions, float inverseMass, float elasticity)
 {
 	Teleporter* teleporter1 = new Teleporter();
@@ -662,8 +666,6 @@ void TutorialGame::InitLevelWall()
 	AddAABBCubeToWorld(Vector3(0, 0, -96), Vector3(100, 20, 10), 0, 0.5f);
 }
 
-
-
 void NCL::CSC8503::TutorialGame::InitTeleporters()
 {
 	AddTeleporterToWorld((Vector3(48, 5.6f, 0)), (Vector3(-48, 5.6f, 45)), Vector3(0, -45, 0), Vector3(0, 90, 0) , Vector3(7, 10, 2));
@@ -687,6 +689,7 @@ void TutorialGame::InitPlaceholderAIs() {
 	}
 }
 
+//
 void TutorialGame::InitAI()
 {
 	AddAiStateObjectToWorld(Vector3(90, 5.6, -90))->GetRenderObject()->SetColour(Debug::BLUE);

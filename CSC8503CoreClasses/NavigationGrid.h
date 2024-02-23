@@ -1,5 +1,6 @@
 #pragma once
 #include "NavigationMap.h"
+#include "PhysicsSystem.h"
 #include <string>
 namespace NCL {
 	namespace CSC8503 {
@@ -33,6 +34,7 @@ namespace NCL {
 		public:
 			NavigationGrid();
 			NavigationGrid(const std::string&filename);
+			NavigationGrid(GameWorld* world);
 			~NavigationGrid();
 
 			bool FindPath(const Vector3& from, const Vector3& to, NavigationPath& outPath) override;

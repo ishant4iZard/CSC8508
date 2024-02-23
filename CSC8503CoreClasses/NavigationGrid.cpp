@@ -1,5 +1,6 @@
 #include "NavigationGrid.h"
 #include "Assets.h"
+#include "PhysicsSystem.h"
 
 #include <fstream>
 
@@ -14,11 +15,97 @@ const int BOTTOM_NODE	= 3;
 const char WALL_NODE	= 'x';
 const char FLOOR_NODE	= '.';
 
-NavigationGrid::NavigationGrid()	{
-	nodeSize	= 0;
-	gridWidth	= 0;
-	gridHeight	= 0;
-	allNodes	= nullptr;
+NavigationGrid::NavigationGrid() {
+	nodeSize = 0;
+	gridWidth = 0;
+	gridHeight = 0;
+	allNodes = nullptr;
+}
+
+
+//Create a Grid that can detect there are obstacles or not.
+NavigationGrid::NavigationGrid(GameWorld* world)	{
+	nodeSize	= 4;
+	gridWidth	= 200;
+	gridHeight	= 200;
+	allNodes	= new GridNode[gridWidth * gridHeight];
+	Vector3 startpos = Vector3(-98, 0, -98);
+
+	RayCollision  obstaclesCollision;
+
+	int x = -98;
+
+	vector<Ray> rays2;
+	for (int i = 0; i < gridWidth; i++)
+	{
+		x += 4;
+		int z = -98;
+		for (int j = 0; j < gridHeight; j++)
+		{
+			z += 4;
+			//std::cout <<x<< "youmeiyou" <<z<< "\n";
+			//Ray ray(Vector3(x, 20, z), Vector3(x, 0, z));
+			rays2.push_back(Ray(Vector3(x, 20, z), Vector3(x, 0, z)));
+			Debug::DrawLine(Vector3(x, 20, z), Vector3(x, 0, z) * 100, Debug::RED);
+		}
+	}
+
+	int currentIndx = 0;
+	for (int y = 0; y < gridHeight; ++y) {
+		for (int x = 0; x < gridWidth; ++x) {
+			GridNode& n = allNodes[(gridWidth * y) + x];
+
+			if (world->Raycast1(rays2[currentIndx], obstaclesCollision, true)) {
+				GameObject* ObjectDetected = (GameObject*)obstaclesCollision.node;
+
+				if (ObjectDetected)
+				{
+					if (ObjectDetected->gettag() == "walls" || ObjectDetected->gettag() == "bouncingpad1") {
+						n.type = 'x';
+						n.position = Vector3(startpos.x + (float)(x * nodeSize), startpos.y, startpos.z + (float)(y * nodeSize));
+
+					}
+					else {
+						n.type = '.';
+						n.position = Vector3(startpos.x + (float)(x * nodeSize), startpos.y, startpos.z + (float)(y * nodeSize));
+					}
+				}
+			}
+			currentIndx++;
+		}
+	}
+
+	for (int y = 0; y < gridHeight; ++y) {
+		for (int x = 0; x < gridWidth; ++x) {
+
+			GridNode& n = allNodes[(gridWidth * y) + x];
+
+			if (y > 0) { //get the above node
+				n.connected[0] = &allNodes[(gridWidth * (y - 1)) + x];
+			}
+			if (y < gridHeight - 1) { //get the below node
+				n.connected[1] = &allNodes[(gridWidth * (y + 1)) + x];
+			}
+			if (x > 0) { //get left node
+				n.connected[2] = &allNodes[(gridWidth * (y)) + (x - 1)];
+			}
+			if (x < gridWidth - 1) { //get right node
+				n.connected[3] = &allNodes[(gridWidth * (y)) + (x + 1)];
+			}
+
+			for (int i = 0; i < 4; ++i) {
+				if (n.connected[i]) {
+					if (n.connected[i]->type == '.') {//not dectected
+						n.costs[i] = 1;
+					}
+					if (n.connected[i]->type == 'x') {
+						n.connected[i] = nullptr; //actually a wall, disconnect!
+					}
+				}
+			}
+		}
+	}
+
 }
 
 NavigationGrid::NavigationGrid(const std::string&filename) : NavigationGrid() {
@@ -33,7 +120,7 @@ NavigationGrid::NavigationGrid(const std::string&filename) : NavigationGrid() {
 
 	for (int y = 0; y < gridHeight; ++y) {
 		for (int x = 0; x < gridWidth; ++x) {
-			GridNode&n = allNodes[(gridWidth * y) + x];
+			GridNode& n = allNodes[(gridWidth * y) + x];
 			char type = 0;
 			infile >> type;
 			n.type = type;
@@ -60,7 +147,7 @@ NavigationGrid::NavigationGrid(const std::string&filename) : NavigationGrid() {
 			}
 			for (int i = 0; i < 4; ++i) {
 				if (n.connected[i]) {
-					if (n.connected[i]->type == '.') {
+					if (n.connected[i]->type == '.') {//not dectected
 						n.costs[i]		= 1;
 					}
 					if (n.connected[i]->type == 'x') {

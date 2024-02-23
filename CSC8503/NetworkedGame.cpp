@@ -418,7 +418,7 @@ void NetworkedGame::findOSpointerWorldPosition(Vector3& position)
 {
 	Ray ray = CollisionDetection::BuildRayFromMouse(world->GetMainCamera());
 	RayCollision closestCollision;
-	if (world->Raycast(ray, closestCollision, true))
+	if (world->Raycast1(ray, closestCollision, true))
 	{
 		position = closestCollision.collidedAt;
 	}

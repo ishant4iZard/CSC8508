@@ -14,7 +14,7 @@ namespace NCL {
             void getPositionfromobject(Vector3 objectposition);
 
             void AiDetectRay(GameObject* gameObject,float dt);
-            void ObjectDetectRay(GameObject* floor, float dt);
+            void ObjectDetectRay( );
             void Chasethebullets(float dt);
 
             bool RaychangesDectec1();
@@ -29,7 +29,7 @@ namespace NCL {
             bool shouldDetectRayChanges = true;
 
             RayCollision  closestCollision;
-            RayCollision  obstaclesCollision;
+            //RayCollision  obstaclesCollision;
             vector<Ray> rays;
             GameObject* ObjectHited;
 

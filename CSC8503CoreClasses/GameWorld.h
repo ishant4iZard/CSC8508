@@ -40,7 +40,8 @@ namespace NCL {
 				shuffleObjects = state;
 			}
 
-			bool Raycast(Ray& r, RayCollision& closestCollision, bool closestObject = false, GameObject* ignore = nullptr) const;
+			bool Raycast1(Ray& r, RayCollision& closestCollision, bool closestObject = false, GameObject* ignore = nullptr) const;
+			bool Raycast2(Ray& r, RayCollision& closestCollision, bool closestObject = false) const;
 
 			virtual void UpdateWorld(float dt);
 

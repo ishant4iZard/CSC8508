@@ -150,6 +150,8 @@ namespace NCL {
 			AiStatemachineObject * AddAiStateObjectToWorld(const Vector3& position);
 			AiStatemachineObject* testStateObject;
 
+			NavigationGrid* navGrid;
+
 			GameObject* cube;
 			GameObject* floor1;
 

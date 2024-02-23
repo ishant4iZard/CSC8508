@@ -15,7 +15,7 @@ using namespace NCL;
 using namespace CSC8503;
 
 AiStatemachineObject::AiStatemachineObject(GameWorld* world) {
-	counter = 0.0f;
+
 	detectionOfBall = true;
 	stateMachine = new StateMachine();
 
@@ -23,8 +23,7 @@ AiStatemachineObject::AiStatemachineObject(GameWorld* world) {
 
 	State* PatrolState = new State([&](float dt) -> void
 		{
-			ObjectDetectRay(ObjectHited,dt);
-			//AiDetectRay(this, dt);
+			AiDetectRay(this, dt);
 			MoveRound(dt);
 		}
 	);
@@ -49,19 +48,10 @@ AiStatemachineObject::AiStatemachineObject(GameWorld* world) {
 	stateMachine->AddTransition(new StateTransition(ChaseState, PatrolState,
 		[&]() -> bool
 		{
-
-		//return 	;
-			if (counter <  0.0f) {
-
-				//std::cout << "state two rayDistance: " << abc << "\n";
-			}
-			///GetPhysicsObject()->SetLinearVelocity({ 0,0,0 });
 			return this->RaychangesDectec2();
-			//return this->counter <  0.0f;
 		}
 	));
-
-
+	ObjectDetectRay();
 }
 
 AiStatemachineObject::~AiStatemachineObject() {
@@ -106,7 +96,7 @@ void AiStatemachineObject::AiDetectRay(GameObject* gameObject,float dt) {
 	//this->GetPhysicsObject()->SetLinearVelocity(movementDirection * 0 * 0.0);
 	Vector3 objectPosition = gameObject->GetTransform().GetPosition();
 	Vector3 objectForward = gameObject->GetTransform().GetOrientation() * Vector3(0, 0, 1);
-	Ray ray(objectPosition, objectForward);
+	//Ray ray(objectPosition, objectForward);
 
 	const int numRays = 30;
 	const float angleIncrement = 2 * 3.14 / numRays;
@@ -126,16 +116,14 @@ void AiStatemachineObject::AiDetectRay(GameObject* gameObject,float dt) {
 	bool projFound = false;
 	 //abc = 999999;
 	for (auto ray : rays1) {
-		if (world->Raycast(ray, closestCollision, true, gameObject)) {
+		if (world->Raycast1(ray, closestCollision, true, gameObject)) {
 			GameObject* ObjectHited = (GameObject*)closestCollision.node;
 
 			if (ObjectHited)
 			{
-				if (ObjectHited->gettag() == "Projectile" 
-					//&& closestCollision.rayDistance < 20.0f
-					)
+				if (ObjectHited->gettag() == "Projectile")
 				{
-					//std::cout << "Object detected";
+					std::cout << "Object detected";
 					float distance = (ObjectHited->GetTransform().GetPosition() - objectPosition).Length();
 						//std::cout << "Dist " << abc << "\n";
 
@@ -153,12 +141,13 @@ void AiStatemachineObject::AiDetectRay(GameObject* gameObject,float dt) {
 	if (!projFound) abc = 9999999;
 }
 
-void AiStatemachineObject::ObjectDetectRay(GameObject* floor,float dt) {
-	//Vector3 objectPosition = Vector3(-98, 10, -98);
-	//Vector3 objectForward = GetTransform().GetOrientation() * Vector3(0, -1, 0);
+void AiStatemachineObject::ObjectDetectRay() {
+	RayCollision  obstaclesCollision;
+
 	 int x = -98;
-	 const int numRays2 =50;
-	vector<Ray> rays2;
+	 const int numRays2 = 50;
+
+	 vector<Ray> rays2;
 	for (int i = 0; i < numRays2; i++)
 	{
 		x += 4;
@@ -167,25 +156,25 @@ void AiStatemachineObject::ObjectDetectRay(GameObject* floor,float dt) {
 		{
 			z += 4;
 			//std::cout <<x<< "youmeiyou" <<z<< "\n";
-			Ray ray(Vector3(x, 20, z), Vector3(x, 0, z));
-			rays2.push_back(Ray(Vector3(x, 20, z), Vector3(x, 0, z)));
-			Debug::DrawLine(Vector3(x, 20, z), Vector3(x, 0, z) * 100, Debug::RED);
+			//Ray ray(Vector3(x, 20, z), Vector3(x, 0, z));
+			rays2.push_back(Ray(Vector3(x,20, z), Vector3(x, 0, z)));
+			Debug::DrawLine(Vector3(x,20, z), Vector3(x, 0, z) * 100, Debug::RED);
 		}
-
 	}
 
 	for (auto ray : rays2) {
-		if (world->Raycast(ray, obstaclesCollision, true, floor)) {
-			GameObject* ObjectDetected = (GameObject*)closestCollision.node;
+		if (world->Raycast1(ray, obstaclesCollision, true)) {
+			GameObject* ObjectDetected = (GameObject*)obstaclesCollision.node;
 
 			if (ObjectDetected)
 			{
-				if (ObjectDetected->gettag() == "walls"&& ObjectDetected->gettag() == "bouncingpad1"
-					//&& closestCollision.rayDistance < 20.0f
-					)
+				if (ObjectDetected->gettag() == "walls" || ObjectDetected->gettag() == "bouncingpad1")
 				{
-					std::cout << "Object detected";
+					std::cout << "Object detected"<<"\n";
 					//ObjectHited->GetPhysicsObject()->AddForceAtPosition(ray.GetDirection() * 100000, closestCollision.collidedAt);	
+				}
+				else {
+
 				}
 			}
 		}
