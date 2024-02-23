@@ -129,8 +129,8 @@ void Mesh::SetInstanceModelMatrices(const std::vector<Matrix4>& inInstanceModelM
 
 void NCL::Rendering::Mesh::AddInstanceModelMatrices(const Matrix4& inModelMatrix)
 {
-	instanceModelMatrices.push_back(inModelMatrix);
-	instanceCount++;
+	instanceModelMatrices.emplace_back(inModelMatrix);
+	SetInstanceCount(instanceModelMatrices.size());
 	UpdateInstanceModelMatrix();
 }
 

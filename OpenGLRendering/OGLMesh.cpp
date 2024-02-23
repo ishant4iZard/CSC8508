@@ -110,7 +110,7 @@ void NCL::Rendering::OGLMesh::UpdateInstanceModelMatrix()
 	{
 		glEnableVertexAttribArray(i);
 		glVertexAttribPointer(i, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(Vector4), (void*)(vertexCount * sizeof(Vector4)));
-		vertexCount = vertexCount + 1 % 4;
+		vertexCount = (++vertexCount) % 4;
 	}
 	glVertexAttribDivisor(VertexAttribute::InstanceModelMatrix, 1);
 	glVertexAttribDivisor(VertexAttribute::InstanceModelMatrixRow1, 1);

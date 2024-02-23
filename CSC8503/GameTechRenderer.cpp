@@ -219,7 +219,7 @@ void GameTechRenderer::RenderShadowMap() {
 		BindMesh((OGLMesh&)*(*tempRenderObj).GetMesh());
 		size_t layerCount = (*tempRenderObj).GetMesh()->GetSubMeshCount();
 		for (size_t i = 0; i < layerCount; ++i) {
-			DrawBoundMesh((uint32_t)i, (*tempRenderObj).GetMesh()->GetInstanceCount());
+			DrawBoundMesh((uint32_t)i);
 		}
 	}
 
