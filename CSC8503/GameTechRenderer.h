@@ -50,6 +50,7 @@ namespace NCL {
 			void RenderCamera();
 			void RenderInstancedRenderObject();
 			void RenderSkybox();
+			void ApplyFrostingPostProcessing();
 			void ApplyToneMapping();
 			void RenderProcessedScene();
 			void LoadSkybox();

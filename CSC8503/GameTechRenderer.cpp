@@ -157,6 +157,7 @@ void GameTechRenderer::RenderFrame() {
 	//RenderSkybox();
 	RenderCamera();
 	ApplyToneMapping();
+	ApplyFrostingPostProcessing();
 	RenderProcessedScene();
 	glDisable(GL_CULL_FACE); //Todo - text indices are going the wrong way...
 	glDisable(GL_BLEND);
@@ -257,6 +258,10 @@ void GameTechRenderer::RenderSkybox() {
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);
+}
+
+void NCL::CSC8503::GameTechRenderer::ApplyFrostingPostProcessing()
+{
 }
 
 void GameTechRenderer::ApplyToneMapping()
