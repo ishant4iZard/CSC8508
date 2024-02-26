@@ -585,6 +585,9 @@ void GameTechRenderer::Matrix4ToIdentity(Matrix4* mat4) {
 }
 
 void GameTechRenderer::RenderAnimation(Vector3 inPos, Vector3 inScale, Vector4 inRotation) {
+	//avoid transparency
+	glDisable(GL_BLEND);
+
 	BindShader(*anmShader);
 	glUniform1i(glGetUniformLocation(anmShader->GetProgramID(), "diffuseTex"), 0);
 	glUniform1i(glGetUniformLocation(anmShader->GetProgramID(), "bumpTex"), 1);
@@ -628,6 +631,8 @@ void GameTechRenderer::RenderAnimation(Vector3 inPos, Vector3 inScale, Vector4 i
 		DrawBoundMesh((uint32_t)i);
 	}
 	
+
+	glEnable(GL_BLEND);
 }
 
 void GameTechRenderer::Update(float dt) {
