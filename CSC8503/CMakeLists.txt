@@ -36,6 +36,8 @@ set(Header_Files
     "MenuSystem.h"
     "Event.h"
     "EventType.h"
+    "MaleGuard.h"
+    "RenderObjectMaleGuard.h"
 )
 source_group("Header Files" FILES ${Header_Files})
 
@@ -55,6 +57,8 @@ set(Source_Files
     "ApplicationState.cpp"
     "UIPlaystation.cpp"
     "MenuSystem.cpp"
+    "MaleGuard.cpp"
+    "RenderObjectMaleGuard.cpp"
 )
 
 set(AI_Files
