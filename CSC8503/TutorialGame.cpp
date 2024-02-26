@@ -74,6 +74,7 @@ void TutorialGame::InitialiseAssets() {
 	gooseMesh	= renderer->LoadMesh("goose.msh");
 	capsuleMesh = renderer->LoadMesh("capsule.msh");
 	basicTex	= renderer->LoadTexture("checkerboard.png");
+	portalTex	= renderer->LoadTexture("PortalTex.jpg");
 	sandTex		= renderer->LoadTexture("sand.jpg");
 
 	groundTextureList[(uint8_t)TextureType::ALBEDO] = renderer->LoadTexture("GrassWithRock01/albedo.png");
@@ -246,6 +247,7 @@ void TutorialGame::InitWorld() {
 	// Will remove later
 	GameObject* test = AddObbCubeToWorld(Vector3(0, 0, 0), Vector3(100, 100, 100), 0, 0);
 	test->GetRenderObject()->SetShader(portalShader);
+	test->GetRenderObject()->SetDefaultTexture(portalTex);
 }
 
 /*

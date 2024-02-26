@@ -353,6 +353,9 @@ void GameTechRenderer::RenderCamera() {
 	glBindFramebuffer(GL_FRAMEBUFFER, pbrFbo->GetFbo());
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	Matrix4 viewMatrix = gameWorld.GetMainCamera().BuildViewMatrix();
 	Matrix4 projMatrix = gameWorld.GetMainCamera().BuildProjectionMatrix(hostWindow.GetScreenAspect());
 
@@ -403,10 +406,6 @@ void GameTechRenderer::RenderCamera() {
 			GLint timeLocation = glGetUniformLocation(shader->GetProgramID(), "time");
 			GLint portalTexLocation = glGetUniformLocation(shader->GetProgramID(), "portalTex");
 
-			// Time
-			static float time = 0;
-			const static float dt = 1 / 60.0f; // To Do : Replace with actual dt
-			time += dt;
 			glUniform1f(timeLocation, time);
 
 			UpdateGlobalLightUniform(shader);
