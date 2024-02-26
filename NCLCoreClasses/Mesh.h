@@ -44,6 +44,9 @@ namespace NCL::Rendering {
 			Tangents,
 			JointWeights,
 			JointIndices,
+
+			INDEX_BUFFER,
+
 			MAX_ATTRIBUTES
 		};	
 		
@@ -54,7 +57,8 @@ namespace NCL::Rendering {
 			std::string("Normals"),
 			std::string("Tangents"),
 			std::string("Joint Weights"),
-			std::string("Joint Indices")
+			std::string("Joint Indices"),
+			std::string("Index Buffer")
 		};
 	};
 

@@ -41,6 +41,7 @@ namespace NCL {
 	};
 
 	class MeshMaterial	{
+	public:
 		MeshMaterial(const std::string& filename);
 		~MeshMaterial() {}
 		const MeshMaterialEntry* GetMaterialForLayer(int i) const;

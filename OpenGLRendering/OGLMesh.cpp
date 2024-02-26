@@ -80,17 +80,24 @@ void OGLMesh::UploadToGPU(Rendering::RendererBase* renderer) {
 	}
 
 	if (!GetSkinIndexData().empty()) {	//Skeleton joint indices
-		CreateVertexBuffer(attributeBuffers[VertexAttribute::JointIndices], numVertices * sizeof(Vector4), (char*)GetSkinIndexData().data());
-		BindVertexAttribute(VertexAttribute::JointIndices, attributeBuffers[VertexAttribute::JointIndices], VertexAttribute::JointIndices, 4, sizeof(Vector4), 0);
+		/*CreateVertexBuffer(attributeBuffers[VertexAttribute::JointIndices], numVertices * sizeof(Vector4), (char*)GetSkinIndexData().data());
+		BindVertexAttribute(VertexAttribute::JointIndices, attributeBuffers[VertexAttribute::JointIndices], VertexAttribute::JointIndices, 4, sizeof(Vector4), 0);*/
+		glGenBuffers(1, &attributeBuffers[VertexAttribute::JointIndices]);
+		glBindBuffer(GL_ARRAY_BUFFER, attributeBuffers[VertexAttribute::JointIndices]);
+		glBufferData(GL_ARRAY_BUFFER, numVertices * sizeof(int) * 4, (char*)GetSkinIndexData().data(), GL_STATIC_DRAW);
+		glVertexAttribIPointer(VertexAttribute::JointIndices, 4, GL_INT, 0, 0); 
+		glEnableVertexAttribArray(VertexAttribute::JointIndices);
 	}
 
 	if (!GetIndexData().empty()) {		//buffer index data
-		glGenBuffers(1, &attributeBuffers[VertexAttribute::MAX_ATTRIBUTES]);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, attributeBuffers[VertexAttribute::MAX_ATTRIBUTES]);
+		glGenBuffers(1, &attributeBuffers[VertexAttribute::INDEX_BUFFER]);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, attributeBuffers[VertexAttribute::INDEX_BUFFER]);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, numIndices * sizeof(GLuint), (int*)GetIndexData().data(), GL_STATIC_DRAW);
 	}
 
 	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 void OGLMesh::UpdateGPUBuffers(unsigned int startVertex, unsigned int vertexCount) {
@@ -124,7 +131,7 @@ void OGLMesh::UpdateGPUBuffers(unsigned int startVertex, unsigned int vertexCoun
 	}
 
 	if (!GetSkinIndexData().empty()) {	//Skeleton joint indices
-		glBindBuffer(GL_ARRAY_BUFFER, attributeBuffers[VertexAttribute::TextureCoords]);
+		glBindBuffer(GL_ARRAY_BUFFER, attributeBuffers[VertexAttribute::JointIndices]);
 		glBufferSubData(GL_ARRAY_BUFFER, startVertex * sizeof(Vector4i), vertexCount * sizeof(Vector4i), (char*)&GetSkinIndexData()[startVertex]);
 	}
 	glBindBuffer(GL_ARRAY_BUFFER, 0);

@@ -115,7 +115,7 @@ bool MshLoader::LoadMesh(const std::string& filename, Mesh& destinationMesh) {
 		case GeometryChunkTypes::BindPoseInv: {
 			vector<Matrix4> inverseBindPose;
 			ReadRigPose(file, inverseBindPose);
-			destinationMesh.SetBindPose(inverseBindPose);
+			destinationMesh.SetInverseBindPose(inverseBindPose);
 		}break;
 		case GeometryChunkTypes::SubMeshes: {
 			vector<SubMesh> subMeshes;
