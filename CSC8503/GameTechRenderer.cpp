@@ -1,9 +1,13 @@
 #include "GameTechRenderer.h"
 #include "GameObject.h"
 #include "RenderObject.h"
+#include "RenderObjectMaleGuard.h"
 #include "Camera.h"
 #include "TextureLoader.h"
 #include "MshLoader.h"
+
+#include "MaleGuard.h"
+
 using namespace NCL;
 using namespace Rendering;
 using namespace CSC8503;
@@ -145,6 +149,16 @@ void GameTechRenderer::BuildObjectList() {
 	gameWorld.OperateOnContents(
 		[&](GameObject* o) {
 			if (o->IsActive()) {
+
+				//find MaleGuard and load assets, especially the animation in current frame
+				if (o->GetName() == "MaleGuard") {
+					OGLShader* currentShader = (OGLShader*)o->GetRenderObject()->GetShader();
+					currentShaderID = currentShader->GetProgramID();
+
+					MaleGuard* maleGuard = dynamic_cast<MaleGuard*>(o);
+					LoadCurrentAnimationAssets(currentShader, maleGuard->GetMaterial(), maleGuard->GetAnimation());
+				}
+
 				const RenderObject* g = o->GetRenderObject();
 				if (g) {
 					activeObjects.emplace_back(g);
@@ -249,6 +263,20 @@ void GameTechRenderer::RenderCamera() {
 	for (const auto&i : activeObjects) {
 		OGLShader* shader = (OGLShader*)(*i).GetShader();
 		BindShader(*shader);
+
+		//find maleGuard's shader
+		//need to be rendered separately
+		if (shader->GetProgramID() == currentShaderID) {
+
+			RenderObjectMaleGuard* maleGuardRenderObject = static_cast<RenderObjectMaleGuard*>(const_cast<RenderObject*>(i));
+			Vector3 position = maleGuardRenderObject->GetMaleGuardPosition();
+			Vector3 scale = maleGuardRenderObject->GetMaleGuardScale();
+			Vector4 rotation = maleGuardRenderObject->GetMaleGuardRotation();
+
+			RenderAnimation(position, scale, rotation);
+			continue;
+		}
+
 
 		if ((*i).GetDefaultTexture()) {
 			BindTextureToShader(*(OGLTexture*)(*i).GetDefaultTexture(), "mainTex", 0);
@@ -472,5 +500,140 @@ void GameTechRenderer::SetDebugLineBufferSizes(size_t newVertCount) {
 		glEnableVertexAttribArray(1);
 
 		glBindVertexArray(0);
+	}
+}
+
+void GameTechRenderer::LoadAnimationAssets() {
+
+	//Load shader
+	anmShader = new OGLShader("skeletalAnimationSkinning.vert", "skeletalAnimationTexture.frag");
+
+	if (!anmShader->LoadSuccess()) {
+		return;
+	}
+
+	//Load mesh
+	maleGuardMesh = LoadMesh("Male_Guard.msh");
+
+	//Load material
+	maleGuardMaterial	= new MeshMaterial("Male_Guard.mat");
+
+	//Load animation
+	maleGuardAnimationGunfire1 = new MeshAnimation("Gunfire1.anm");
+	maleGuardAnimationHappy = new MeshAnimation("Happy.anm");
+
+
+	LoadTextureToMesh();
+
+	currentFrame = 0;
+	frameTime = 0.0f;
+}
+
+void GameTechRenderer::LoadCurrentAnimationAssets(OGLShader* currentShader, MeshMaterial* currentMaterial, MeshAnimation* currentAnimation) {
+	anmShader = currentShader;
+	
+	maleGuardMaterial = currentMaterial;
+
+	if (maleGuardMesh == nullptr) {
+		maleGuardMesh = LoadMesh("Male_Guard.msh");
+	}
+
+	if (!hasLoadedTextureToSubmesh) {
+		LoadTextureToMesh();
+	}
+	
+	if (activeAnimation != currentAnimation) {
+		activeAnimation = currentAnimation;
+
+		//reset the currentFrame
+		currentFrame = 0;
+	}
+}
+
+
+
+void GameTechRenderer::LoadTextureToMesh() {
+	for (int i = 0; i < maleGuardMesh->GetSubMeshCount(); i++) {
+		const MeshMaterialEntry* matEntry = maleGuardMaterial->GetMaterialForLayer(i);
+
+		const string* diffusePath = nullptr;
+		matEntry->GetEntry("Diffuse", &diffusePath);
+		string diffuseName = *diffusePath;
+		diffuseName.erase(0, 1);
+		OGLTexture* diffuseTex = (OGLTexture*)LoadTexture(diffuseName);
+		GLuint diffuseTexID = diffuseTex->GetObjectID();
+		maleGuardMatDiffuseTextures.emplace_back(diffuseTexID);
+
+		const string* bumpPath = nullptr;
+		matEntry->GetEntry("Bump", &bumpPath);
+		string bumpName = *bumpPath;
+		bumpName.erase(0, 1);
+		OGLTexture* bumpTex = (OGLTexture*)LoadTexture(bumpName);
+		GLuint bumpTexID = bumpTex->GetObjectID();
+		maleGuardMatBumpTextures.emplace_back(bumpTexID);
+
+	}
+	hasLoadedTextureToSubmesh = true;
+}
+
+void GameTechRenderer::Matrix4ToIdentity(Matrix4* mat4) {
+	mat4->ToZero();
+	mat4->array[0][0] = 1.0f;
+	mat4->array[1][1] = 1.0f;
+	mat4->array[2][2] = 1.0f;
+	mat4->array[3][3] = 1.0f;
+}
+
+void GameTechRenderer::RenderAnimation(Vector3 inPos, Vector3 inScale, Vector4 inRotation) {
+	BindShader(*anmShader);
+	glUniform1i(glGetUniformLocation(anmShader->GetProgramID(), "diffuseTex"), 0);
+	glUniform1i(glGetUniformLocation(anmShader->GetProgramID(), "bumpTex"), 1);
+	
+	Matrix4 modelMatrix;
+	Matrix4ToIdentity(&modelMatrix);
+	modelMatrix = 
+		Matrix4::Translation(inPos) * 
+		Matrix4::Scale(inScale) * 
+		Matrix4::Rotation(inRotation.x, Vector3(inRotation.y,inRotation.z,inRotation.w));
+	Matrix4 viewMatrix = gameWorld.GetMainCamera().BuildViewMatrix();
+	Matrix4 projMatrix = gameWorld.GetMainCamera().BuildProjectionMatrix(hostWindow.GetScreenAspect());
+
+	glUniformMatrix4fv(glGetUniformLocation(anmShader->GetProgramID(), "modelMatrix"), 1, false, (float*)&modelMatrix);
+	glUniformMatrix4fv(glGetUniformLocation(anmShader->GetProgramID(), "viewMatrix"), 1, false, (float*)&viewMatrix);
+	glUniformMatrix4fv(glGetUniformLocation(anmShader->GetProgramID(), "projMatrix"), 1, false, (float*)&projMatrix);
+	
+	vector<Matrix4> frameMatrices;
+	maleGuardMesh->CalculateInverseBindPose();
+	const vector<Matrix4> invBindPose = maleGuardMesh->GetInverseBindPose();
+
+	const Matrix4* frameDataAnm = activeAnimation->GetJointData(currentFrame);
+
+	for (GLuint i = 0; i < maleGuardMesh->GetJointCount(); i++) {
+		frameMatrices.emplace_back(frameDataAnm[i] * invBindPose[i]);
+	}
+
+	int	shaderLocation = glGetUniformLocation(anmShader->GetProgramID(), "joints");
+	glUniformMatrix4fv(shaderLocation, frameMatrices.size(), false, (float*)frameMatrices.data());
+
+	for (int i = 0; i < maleGuardMesh->GetSubMeshCount(); i++) {
+		
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, maleGuardMatDiffuseTextures[i]);
+
+		//To do, render another texture
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, maleGuardMatBumpTextures[i]);
+
+		BindMesh((OGLMesh&)*maleGuardMesh);
+		DrawBoundMesh((uint32_t)i);
+	}
+	
+}
+
+void GameTechRenderer::Update(float dt) {
+	frameTime -= dt;
+	while (frameTime < 0.0f) {
+		currentFrame = (currentFrame + 1) % activeAnimation->GetFrameCount();
+		frameTime += 1.0f / activeAnimation->GetFrameTime();
 	}
 }

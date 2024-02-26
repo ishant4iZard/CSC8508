@@ -2,6 +2,7 @@
 #include "GameWorld.h"
 #include "PhysicsObject.h"
 #include "RenderObject.h"
+#include "RenderObjectMaleGuard.h"
 #include "TextureLoader.h"
 #include "Hole.h"
 #include "BouncePad.h"
@@ -79,6 +80,7 @@ void TutorialGame::InitialiseAssets() {
 	InitCamera();
 	InitWorld();
 	
+	InitMaleGuard();
 }
 
 TutorialGame::~TutorialGame()	{
@@ -154,6 +156,16 @@ void TutorialGame::UpdateGame(float dt) {
 		aitreetest->OnBehaviour();
 	}
 
+	if (Window::GetKeyboard()->KeyPressed(KeyCodes::M)) {
+		anmIndex++;
+		maleGuard->SetAnimation(anmIndex);
+		std::cout << "current animation : " << maleGuard->GetAnimationName(anmIndex) << std::endl;
+		if (anmIndex >= 3) {
+			anmIndex -= 4;
+		}
+		
+	}
+
 	//if (aitreetest) {
 	//	aitreetest-> Update(dt);
 	//}
@@ -209,6 +221,9 @@ void TutorialGame::InitWorld() {
 	physics->createStaticTree();
 	
 	InitAI();
+
+	InitMaleGuard();
+	maleGuard = SpawnMaleGuard(Vector3(20, 10, 20), Vector3(20.0f,20.0f,20.0f), 5.0f);
 }
 
 /*
@@ -631,4 +646,36 @@ void TutorialGame::ObjectRay(GameObject* gameObject, GameObject* gameObject2) {
 		}
 		Debug::DrawLine(objectPosition, objectForward * 100, Debug::RED);
 	}
+}
+
+void TutorialGame::InitMaleGuard() {
+	maleGuardMesh		= renderer->LoadMesh("Male_Guard.msh");
+	anmShader			= renderer->LoadShader("skeletalAnimationSkinning.vert", "skeletalAnimationTexture.frag");
+	maleGuardDefultTex	= renderer->LoadTexture("MB_BodyNone_Guard_Albedo.TGA");
+
+
+}
+
+MaleGuard* TutorialGame::SpawnMaleGuard(const Vector3& position, Vector3 dimensions, float inverseMass) {
+	MaleGuard* maleGuard = new MaleGuard("MaleGuard");
+
+	AABBVolume* volume = new AABBVolume(dimensions, false, true);
+	maleGuard->SetBoundingVolume((CollisionVolume*)volume);
+	maleGuard->GetTransform().SetPosition(position).SetScale(dimensions * 2);
+	//maleGuard->SetRenderObject(new RenderObject(&maleGuard->GetTransform(), maleGuardMesh, maleGuardDefultTex, anmShader));
+	maleGuard->SetRenderObject(new RenderObjectMaleGuard(&maleGuard->GetTransform(), maleGuardMesh, maleGuardDefultTex, anmShader, maleGuard->GetMaterial()));
+	maleGuard->SetPhysicsObject(new PhysicsObject(&maleGuard->GetTransform(), maleGuard->GetBoundingVolume()));
+	maleGuard->GetPhysicsObject()->SetInverseMass(1.0f);
+	maleGuard->GetPhysicsObject()->InitCubeInertia();
+
+	//Pass the parameters to RenderObject
+	RenderObject* currentRenderObject = maleGuard->GetRenderObject();
+	RenderObjectMaleGuard* maleGuardRenderObject = static_cast<RenderObjectMaleGuard*>(currentRenderObject);
+	maleGuardRenderObject->SetAnimation(maleGuard->GetAnimation());
+	maleGuardRenderObject->SetMaleGuardPosition(Vector3(0, 0, 0));
+	maleGuardRenderObject->SetMaleGuardScale(Vector3(30, 30, 30));
+	maleGuardRenderObject->SetMaleGuardRotation(Vector4(90, 0, 1, 0));
+
+	world->AddGameObject(maleGuard);
+	return maleGuard;
 }

@@ -6,6 +6,10 @@
 
 #include "GameWorld.h"
 
+#include "MeshMaterial.h"
+#include "MeshAnimation.h"
+#include "Assets.h"
+
 #include "../CSC8503/UIBase.h"
 #ifdef _WIN32
 #include "../CSC8503/UIWindows.h"
@@ -27,6 +31,8 @@ namespace NCL {
 			Mesh*		LoadMesh(const std::string& name);
 			Texture*	LoadTexture(const std::string& name);
 			Shader*		LoadShader(const std::string& vertex, const std::string& fragment);
+
+			void Update(float dt) override;
 
 		protected:
 			void NewRenderLines();
@@ -82,6 +88,42 @@ namespace NCL {
 			GLuint textColourVBO;
 			GLuint textTexVBO;
 			size_t textCount;
+
+			//Skeletal Animation
+			void LoadAnimationAssets();
+			void LoadTextureToMesh();
+			void RenderAnimation(Vector3 inPos,Vector3 inScale, Vector4 inRotation);
+			void LoadCurrentAnimationAssets(OGLShader* currentShader, MeshMaterial* currentMaterial, MeshAnimation* currentAnimation);
+
+			void Matrix4ToIdentity(Matrix4* mat4);
+
+			OGLShader* anmShader;
+
+			Mesh* maleGuardMesh = nullptr;
+			
+			MeshMaterial* maleGuardMaterial;
+
+
+			vector<GLuint> maleGuardMatDiffuseTextures;
+			vector<GLuint> maleGuardMatBumpTextures;
+			vector<GLuint> femaleGuardMatDiffuseTextures;
+			vector<GLuint> femaleGuardMatBumpTextures;
+			vector<GLuint> maxMatDiffuseTextures;
+			vector<GLuint> maxMatBumpTextures;
+
+			MeshAnimation* maleGuardAnimationGunfire1;//Gunfire1.anm
+			MeshAnimation* maleGuardAnimationHappy;//Happy.anm
+			MeshAnimation* activeAnimation = nullptr;
+
+			int currentFrame = 0;
+			float frameTime = 0.0f;
+
+			GLuint currentShaderID;
+			bool hasLoadedTextureToSubmesh = false;
+
+			//Skeletal Animation
+
+
 #pragma region UI
 			UIBase* ui;
 #pragma endregion

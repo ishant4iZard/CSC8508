@@ -13,6 +13,7 @@
 #include <vector>
 #include "LevelEnum.h"
 #include "LevelObjectEnum.h"
+#include "MaleGuard.h"
 
 #ifdef _WIN32
 #include "WindowsLevelLoader.h"
@@ -89,6 +90,12 @@ namespace NCL {
 			GameObject* capsule;
 
 
+			//MaleGuard : Skeletal Animation
+			void InitMaleGuard();
+			MaleGuard* SpawnMaleGuard(const Vector3& position, Vector3 dimensions, float inverseMass);
+
+
+
 			void InitAI();
 			//void InitDefaultFloor();
 			void ProcessFrameAddresses();
@@ -141,6 +148,13 @@ namespace NCL {
 			level currentlevel;
 			int score = 0;
 			float v = 0, h = 0;
+
+			//MaleGuard : Skeletal Animation
+			Mesh* maleGuardMesh;
+			Shader* anmShader;
+			Texture* maleGuardDefultTex;
+			MaleGuard* maleGuard;
+			int anmIndex = 0;
 
 
 #pragma region BouncePad
