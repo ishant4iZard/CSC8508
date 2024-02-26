@@ -48,8 +48,6 @@ namespace NCL {
 
 			void OnPlayerCollision(NetworkPlayer* a, NetworkPlayer* b);
 
-			//void ObjectDetectRay(GameObject* gameObject);
-			//void Chasethebullets(float dt);
 			std::vector<Projectile*> ProjectileList;
 			std::vector<Projectile*> ProjectilePositions;
 

@@ -48,10 +48,6 @@ TutorialGame::TutorialGame() : controller(*Window::GetWindow()->GetKeyboard(), *
 	currentlevel = level::level1;
 
 	InitialiseAssets();
-
-
-	//creat the navigation grid that can detect the object in the world;
-	navGrid = new NavigationGrid(world);
 	InitAI();
 
 #ifdef _WIN32
@@ -172,8 +168,8 @@ void TutorialGame::UpdateGame(float dt) {
 		timer += dt;
 
 		world->GetMainCamera().UpdateCamera(dt);
-		if (testStateObject) {
-			testStateObject->Update(dt);
+		if (AIStateObject) {
+			AIStateObject->Update(dt);
 		}
 
 		if (timer > TIME_LIMIT) {
@@ -618,25 +614,25 @@ AiTreeObject* TutorialGame::AddAiToWorld(const Vector3& position, Vector3 dimens
 }
 
 AiStatemachineObject* TutorialGame::AddAiStateObjectToWorld(const Vector3& position) {
-	testStateObject = new AiStatemachineObject(world);
+	NavigationGrid* navGrid = new NavigationGrid(world);
+	AIStateObject = new AiStatemachineObject(world, navGrid);
 
 	SphereVolume* volume = new SphereVolume(1.0f);
-	testStateObject->SetBoundingVolume((CollisionVolume*)volume);
-	testStateObject->GetTransform()
+	AIStateObject->SetBoundingVolume((CollisionVolume*)volume);
+	AIStateObject->GetTransform()
 		.SetScale(Vector3(5, 5, 5))
 		.SetPosition(position);
 
-	testStateObject->SetRenderObject(new RenderObject(&testStateObject->GetTransform(), sphereMesh, nullptr, basicShader));
-	testStateObject->SetPhysicsObject(new PhysicsObject(&testStateObject->GetTransform(), testStateObject->GetBoundingVolume()));
+	AIStateObject->SetRenderObject(new RenderObject(&AIStateObject->GetTransform(), sphereMesh, nullptr, basicShader));
+	AIStateObject->SetPhysicsObject(new PhysicsObject(&AIStateObject->GetTransform(), AIStateObject->GetBoundingVolume()));
 
-	testStateObject->GetPhysicsObject()->SetInverseMass(1.0f);
-	testStateObject->GetPhysicsObject()->InitSphereInertia();
+	AIStateObject->GetPhysicsObject()->SetInverseMass(1/10000000.0f);
+	AIStateObject->GetPhysicsObject()->SetElasticity(0.002);
+	AIStateObject->GetPhysicsObject()->InitSphereInertia();
 
-	//testStateObject->SetRenderObject()->SetColour(Debug::RED);
+	world->AddGameObject(AIStateObject);
 
-	world->AddGameObject(testStateObject);
-
-	return testStateObject;
+	return AIStateObject;
 }
 
 void TutorialGame::InitBouncePad()
@@ -689,14 +685,9 @@ void TutorialGame::InitPlaceholderAIs() {
 	}
 }
 
-//
 void TutorialGame::InitAI()
 {
 	AddAiStateObjectToWorld(Vector3(90, 5.6, -90))->GetRenderObject()->SetColour(Debug::BLUE);
-	//AddtestcubeToWorld(Vector3(60, 5.6, 20), Vector3(60, 5.6, 80), Vector3(5, 5, 5));
-	//AddFloorToWorld(Vector3(20, 2, 20), Vector3(2, 2, 2))->GetPhysicsObject()->SetInverseMass(1.0);
-	//AddFloorToWorld(Vector3(60, 2, 80), Vector3(20, 20, 20))->GetPhysicsObject()->SetInverseMass(1.0);
-	//floor1->settag("aitestcube");
 }
 
 void TutorialGame::ProcessFrameAddresses() {
@@ -707,7 +698,6 @@ void TutorialGame::ProcessFrameAddresses() {
 	}
 	//frameAddresses.clear();
 }
-
 
 //void TutorialGame::ObjectRay(GameObject* gameObject, const std::vector<GameObject*>& gameObjects) {
 //
@@ -736,9 +726,3 @@ void TutorialGame::ProcessFrameAddresses() {
 //
 //	}
 //}
-
-
-void TutorialGame::GettestGameObjects(AiStatemachineObject* testStateObject1)
-{
-	testStateObject = testStateObject1;
-}

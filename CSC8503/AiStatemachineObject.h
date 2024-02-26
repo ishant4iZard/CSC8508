@@ -9,50 +9,25 @@ namespace NCL {
         class StateMachine;
         class AiStatemachineObject : public GameObject {
         public:
-            AiStatemachineObject(GameWorld* world);
+            AiStatemachineObject(GameWorld* world, NavigationGrid* navGrid);
             ~AiStatemachineObject();
-            void getPositionfromobject(Vector3 objectposition);
 
-            void AiDetectRay(GameObject* gameObject,float dt);
-            void ObjectDetectRay( );
-            void Chasethebullets(float dt);
-
-            bool RaychangesDectec1();
-            bool RaychangesDectec2();
-
-
-            void OnCollisionBegin(GameObject* otherObject);
-           // void TestPathfinding();
-          //  void DisplayPathfinding();
+            void OnCollisionBegin(GameObject* otherObject) override;
 
             virtual void Update(float dt);
-            bool shouldDetectRayChanges = true;
-
-            RayCollision  closestCollision;
-            //RayCollision  obstaclesCollision;
-            vector<Ray> rays;
-            GameObject* ObjectHited;
 
         protected:
-            void MoveRound(float dt);
-            void MoveRight(float dt);
-            void Moveforward(float dt);
             StateMachine* stateMachine;
-            
-            bool detectionOfBall;
-            float counter;
-            Vector3 obstaclespositions;
-            vector < Vector3 > testNodes;
+            NavigationGrid* navGrid;
+            const float DETECTION_RADIUS = 30.0f;
+            const float DEACTIVATION_DISTANCE = 1.0f;
             GameWorld* world;
-
-            Vector3 movementDirection;
-            float abc = 999999;
-            bool k=1;
+            float distanceToNearestProj = INT_MAX;
             GameObject* projectileToChase;
 
-
-
-           // AiStatemachineObject* testStateObject = nullptr;
+            void DetectProjectiles(GameObject* gameObject,float dt);
+            void MoveRandomly(float dt);
+            void ChaseClosestProjectile(float dt);
         };
     }
 }

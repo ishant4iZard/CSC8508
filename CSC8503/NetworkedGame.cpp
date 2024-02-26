@@ -150,7 +150,7 @@ void NetworkedGame::UpdateGame(float dt) {
 	}
 
 	//AI part:
-	//ObjectDetectRay(testStateObject);
+	//DetectProjectiles(testStateObject);
 
 
 
@@ -671,7 +671,7 @@ bool NetworkedGame::clientProcessDeltaPacket(DeltaPacket* dp)
 	return true;
 }
 
-//void NetworkedGame::ObjectDetectRay(GameObject* gameObject) {
+//void NetworkedGame::DetectProjectiles(GameObject* gameObject) {
 //
 //	Vector3 objectPosition = gameObject->GetTransform().GetPosition();
 //	Vector3 objectForward = gameObject->GetTransform().GetOrientation() * Vector3(0, 0, 1);
@@ -716,10 +716,10 @@ bool NetworkedGame::clientProcessDeltaPacket(DeltaPacket* dp)
 //		}
 //	}
 //
-//	Chasethebullets(0.2);
+//	ChaseClosestProjectile(0.2);
 //}
 //
-//void NetworkedGame::Chasethebullets(float dt) {
+//void NetworkedGame::ChaseClosestProjectile(float dt) {
 //	
 //	if (projectileToChase == nullptr) return;
 //

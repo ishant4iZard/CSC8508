@@ -51,7 +51,6 @@ namespace NCL {
 			virtual void UpdateGame(float dt);
 
 			GravityWell* gravitywell;
-			void GettestGameObjects(AiStatemachineObject *testGameObjects);
 
 		protected:
 			void InitialiseAssets();
@@ -148,9 +147,7 @@ namespace NCL {
 			float finaltimer;
 
 			AiStatemachineObject * AddAiStateObjectToWorld(const Vector3& position);
-			AiStatemachineObject* testStateObject;
-
-			NavigationGrid* navGrid;
+			AiStatemachineObject* AIStateObject;
 
 			GameObject* cube;
 			GameObject* floor1;
