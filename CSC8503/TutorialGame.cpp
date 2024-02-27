@@ -102,8 +102,8 @@ void TutorialGame::InitialiseAssets() {
 	basicShader = renderer->LoadShader("scene.vert", "sceneNoShadow.frag");
 #endif // USE_SHADOW
 
-	pbrShader = renderer->LoadShader("pbr.vert", "pbr.frag");
-	instancePbrShader = renderer->LoadShader("pbrInstanced.vert", "pbr.frag");
+	pbrShader = renderer->LoadShader("pbr.vert", "gbuffer.frag");
+	instancePbrShader = renderer->LoadShader("pbrInstanced.vert", "gbuffer.frag");
 
 	InitCamera();
 	InitWorld();

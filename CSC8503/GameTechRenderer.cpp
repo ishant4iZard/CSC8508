@@ -7,6 +7,7 @@
 #include "DirectionalLight.h"
 #include "OglHdrFbo.h"
 #include "OglPostProcessingFbo.h"
+#include "OGLGBuffer.h"
 
 using namespace NCL;
 using namespace Rendering;
@@ -25,6 +26,8 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 	toneMapperShader = new OGLShader("basic.vert", "ReinhardTonemap.frag");
 	pbrShader = new OGLShader("pbr.vert", "pbr.frag");
 	gammaCorrectionShader = new OGLShader("basic.vert", "gammaCorrection.frag");
+	gBufferShader = new OGLShader("pbr.vert", "gbuffer.frag");
+	pbrLighting = new OGLShader("pbr.vert", "lightingCalculation.frag");
 
 	glGenTextures(1, &shadowTex);
 	glBindTexture(GL_TEXTURE_2D, shadowTex);
@@ -57,7 +60,7 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 		0.02f,
 		Vector4(247, 149, 64, 1.0f));
 	//Skybox!
-	skyboxShader = new OGLShader("skybox.vert", "skybox.frag");
+	skyboxShader = new OGLShader("skybox.vert", "skyboxGPass.frag");
 	skyboxMesh = new OGLMesh();
 	skyboxMesh->SetVertexPositions({Vector3(-1, 1,-1), Vector3(-1,-1,-1) , Vector3(1,-1,-1) , Vector3(1,1,-1) });
 	skyboxMesh->SetVertexIndices({ 0,1,2,2,3,0 });
@@ -82,7 +85,7 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 
 	pbrFbo = new OglHdrFbo(windowSize.x, windowSize.y);
 	toneMappingFbo = new OglPostProcessingFbo(windowSize.x, windowSize.y);
-
+	gBufferFbo = new OGLGBuffer(windowSize.x, windowSize.y);
 #ifdef _WIN32
 	ui = UIWindows::GetInstance();
 #else //_ORBIS
@@ -106,6 +109,9 @@ GameTechRenderer::~GameTechRenderer()	{
 	SAFE_DELETE(pbrFbo);
 	SAFE_DELETE(toneMappingFbo);
 	SAFE_DELETE(toneMapperShader);
+	SAFE_DELETE(gBufferFbo);
+	SAFE_DELETE(gBufferShader);
+	SAFE_DELETE(pbrLighting);
 }
 
 void GameTechRenderer::LoadSkybox() {
@@ -156,6 +162,7 @@ void GameTechRenderer::RenderFrame() {
 	//RenderShadowMap();
 	//RenderSkybox();
 	RenderCamera();
+	LightScene();
 	ApplyToneMapping();
 	ApplyFrostingPostProcessing();
 	RenderProcessedScene();
@@ -264,6 +271,11 @@ void NCL::CSC8503::GameTechRenderer::ApplyFrostingPostProcessing()
 {
 }
 
+void NCL::CSC8503::GameTechRenderer::LightScene()
+{
+
+}
+
 void GameTechRenderer::ApplyToneMapping()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, toneMappingFbo->GetFbo());
@@ -353,15 +365,15 @@ void GameTechRenderer::UpdateGlobalLightUniform(const OGLShader* inShader)
 	GLint globalLightColorLocation = glGetUniformLocation(inShader->GetProgramID(), "globalLightColor");
 	GLint globalIntensityLocation = glGetUniformLocation(inShader->GetProgramID(), "globalIntensity");
 
-	glUniform3fv(lightDirLocation, 1, (float*)(&(directionalLight->GetDirection())));
-	glUniform4fv(globalLightColorLocation, 1, (float*)(&(directionalLight->GetColor())));
+	glUniform3fv(lightDirLocation, 1, (float*)(&directionalLight->GetDirection()));
+	glUniform4fv(globalLightColorLocation, 1, (float*)(&directionalLight->GetColor()));
 	glUniform1f(globalIntensityLocation, directionalLight->GetIntensity());
 }
 
 void GameTechRenderer::RenderCamera() {
-	glBindFramebuffer(GL_FRAMEBUFFER, pbrFbo->GetFbo());
+	glBindFramebuffer(GL_FRAMEBUFFER, gBufferFbo->GetFBO());
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-	RenderSkybox();
+	//RenderSkybox();
 
 	Matrix4 viewMatrix = gameWorld.GetMainCamera().BuildViewMatrix();
 	Matrix4 projMatrix = gameWorld.GetMainCamera().BuildProjectionMatrix(hostWindow.GetScreenAspect());

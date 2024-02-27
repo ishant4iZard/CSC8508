@@ -37,7 +37,7 @@ void main(void)
     OUT.binormal = cross(OUT.tangent, OUT.normal) * tangent.w;
 	
     OUT.shadowProj 	=  shadowMatrix * vec4 (position,1);
-	OUT.worldPos 	= (modelMatrix * vec4 (position ,1)). xyz ;
+	OUT.worldPos 	= (modelMatrix * vec4 (position ,1)).xyz ;
 		
 	OUT.texCoord	= texCoord * tiling;
 	OUT.colour		= objectColour;
