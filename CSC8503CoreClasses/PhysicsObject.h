@@ -81,6 +81,7 @@ namespace NCL {
 
 		protected:
 			const CollisionVolume* volume;
+			CollisionVolume* sweptVolume;
 			Transform*		transform;
 
 			float inverseMass;

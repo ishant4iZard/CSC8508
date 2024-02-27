@@ -94,31 +94,30 @@ namespace NCL {
 
 			}
 
-			//std::list< QuadTreeEntry<T>> CheckBroadwithstatic(T& object, const Vector3& objectPos, const Vector3& objectSize, int depthLeft, int maxSize) {
-			//	//QuadTreeEntry<T> temp(object, objectPos, objectSize);
-			//	std::list< QuadTreeEntry<T>> info;
-			//	std::list< QuadTreeEntry<T>> temp;
-			//	if (!CollisionDetection::AABBTest(objectPos,
-			//		Vector3(position.x, 0, position.y), objectSize,
-			//		Vector3(size.x, 1000.0f, size.y))) {
-			//		return info;
-			//	}
-			//	if (children) { // not a leaf node , just descend the tree
-			//		for (int i = 0; i < 4; ++i) {
-			//			temp = children[i].CheckBroadwithstatic(object, objectPos, objectSize,depthLeft - 1, maxSize);
-			//			info.insert(info.end(), temp.begin(), temp.end());
-			//		}
-			//		return info;
-			//	}
-			//	else {
-			//		return contents;
-			//	}
-
-			//}
+			std::list< QuadTreeEntry<T>> CheckBroadwithstatic(T& object, const Vector3& objectPos, const Vector3& objectSize, int depthLeft, int maxSize) {
+				//QuadTreeEntry<T> temp(object, objectPos, objectSize);
+				std::list< QuadTreeEntry<T>> info;
+				std::list< QuadTreeEntry<T>> temp;
+				if (!CollisionDetection::AABBTest(objectPos,
+					Vector3(position.x, 0, position.y), objectSize,
+					Vector3(size.x, 1000.0f, size.y))) {
+					return info;
+				}
+				if (children) { // not a leaf node , just descend the tree
+					for (int i = 0; i < 4; ++i) {
+						temp = children[i].CheckBroadwithstatic(object, objectPos, objectSize,depthLeft - 1, maxSize);
+						info.insert(info.end(), temp.begin(), temp.end());
+					}
+					return info;
+				}
+				else {
+					return contents;
+				}
+			}
 
 			void Split() {
 				Vector2 halfSize = size / 2.0f;
-				children = new QuadTreeNode <T >[4];
+				children = new QuadTreeNode <T> [4];
 				children[0] = QuadTreeNode <T >(position +
 					Vector2(-halfSize.x, halfSize.y), halfSize);
 				children[1] = QuadTreeNode <T >(position +
@@ -173,7 +172,7 @@ namespace NCL {
 				this->maxSize	= maxSize;
 			}
 			~QuadTree() {
-
+				//delete root;
 			}
 
 			void Insert(T object, const Vector3& pos, const Vector3& size) {

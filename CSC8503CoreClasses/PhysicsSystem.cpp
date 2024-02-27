@@ -13,7 +13,7 @@
 using namespace NCL;
 using namespace CSC8503;
 
-QuadTree <GameObject*> staticTree(Vector2(200, 200), 10, 15);
+QuadTree <GameObject*> staticTree(Vector2(200, 200), 10, 100);
 
 PhysicsSystem::PhysicsSystem(GameWorld& g) : gameWorld(g)	{
 	applyGravity	= false;
@@ -56,7 +56,7 @@ bool useSimpleContainer = false;
 int constraintIterationCount = 10;
 
 //This is the fixed timestep we'd LIKE to have
-const int   idealHZ = 120;
+const int   idealHZ = 60;
 const float idealDT = 1.0f / idealHZ;
 
 /*
@@ -389,19 +389,7 @@ void PhysicsSystem::BroadPhase() {
 				}
 				Vector3 pos = (*i)->GetTransform().GetPosition();
 				tree.Insert(*i, pos, halfSizes);
-				staticTree.OperateOnContents(
-					[&](std::list <QuadTreeEntry <GameObject*>>& data) {
-						CollisionDetection::CollisionInfo info;
-						for (auto j = data.begin(); j != data.end(); ++j) {
-							if (broadPhaseHelper(*i, (*j).object)) {
-								info.a = std::min((*i), (*j).object);
-								info.b = std::max((*i), (*j).object);
-								broadphaseCollisions.insert(info);
-							}
-						}
-					}
-				);
-				/*std::list< QuadTreeEntry<GameObject*>> possiblelist = staticTree.CheckBroadwithstatic(*i, pos, halfSizes);
+				std::list< QuadTreeEntry<GameObject*>> possiblelist = staticTree.CheckBroadwithstatic(*i, pos, halfSizes);
 				for (auto j : possiblelist) {
 					CollisionDetection::CollisionInfo info;
 					if (broadPhaseHelper(*i, (j).object)) {
@@ -409,19 +397,9 @@ void PhysicsSystem::BroadPhase() {
 						info.b = std::max((*i), (j).object);
 						broadphaseCollisions.insert(info);
 					}
-				}*/
+				}
 			}
 		}
-		//}
-		/*else
-		{
-			Vector3 halfSizes;
-			if (!(*i)->GetBroadphaseAABB(halfSizes)) {
-				continue;
-			}
-			Vector3 pos = (*i)->GetTransform().GetPosition();
-			staticTree.CheckBroadwithstatic(*i, pos, halfSizes);
-		}*/
 	}
 	tree.OperateOnContents(
 		[&](std::list <QuadTreeEntry <GameObject*>>& data) {
@@ -439,8 +417,6 @@ void PhysicsSystem::BroadPhase() {
 			}
 		}
 	);
-
-
 }
 
 /*

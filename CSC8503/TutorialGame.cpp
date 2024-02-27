@@ -244,7 +244,7 @@ void TutorialGame::InitWorld() {
 	//capsule->GetTransform().SetOrientation(Quaternion::EulerAnglesToQuaternion(0, 0, 90));
 
 	InitTeleporters();
-	//TestAddStaticObjectsToWorld();
+	TestAddStaticObjectsToWorld();
 	InitAI();
 	
 	physics->createStaticTree();//this needs to be at the end of all initiations
@@ -672,14 +672,13 @@ void TutorialGame::ProcessFrameAddresses() {
 }
 
 void TutorialGame::TestAddStaticObjectsToWorld() {
-	for (int x = 0; x < 10; x++) {
-		//for (int y = 0; y < 10; y++) {
-			for (int z = 0; z < 10; z++) {
-				Vector3 position = Vector3(25 + (x * 2), 5 , 25 + z * 2);
-				AddAABBCubeToWorld(position, Vector3(0.99,0.99,0.99), 0.0f,0);
-
+	for (int x = 0; x < 25; x++) {
+		for (int y = 0; y < 2; y++) {
+			for (int z = 0; z < 25; z++) {
+				Vector3 position = Vector3(-50 + (x * 4), 5 +(y*4), -50 + z * 4);
+				AddAABBCubeToWorld(position, Vector3(0.99,0.99,0.99), 0.0f, 0);
 			}
-		//}
+		}
 	}
 }
 
