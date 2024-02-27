@@ -107,10 +107,21 @@ namespace NCL {
 										const CapsuleVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo);
 
 
+		static Vector3 OBBSupport(const Transform& worldTransform, Vector3 worldDir) {
+			Vector3 localDir = worldTransform.GetOrientation().Conjugate() * worldDir;
+			Vector3 vertex;
+			vertex.x = localDir.x < 0.0f ? -0.5f : 0.5f;
+			vertex.y = localDir.y < 0.0f ? -0.5f : 0.5f;
+			vertex.z = localDir.z < 0.0f ? -0.5f : 0.5f;
 
+			return worldTransform.GetMatrix() * vertex;
+		}
 
 		static bool OBBSphereIntersection(const OBBVolume& volumeA, const Transform& worldTransformA,
 			const SphereVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo);
+
+		static bool OBBCapsuleIntersection(const OBBVolume& volumeA, const Transform& worldTransformA,
+			const CapsuleVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo);
 
 
 
