@@ -77,7 +77,7 @@ void GameWorld::UpdateWorld(float dt) {
 	}
 }
 
-bool GameWorld::Raycast1(Ray& r, RayCollision& closestCollision, bool closestObject, GameObject* ignoreThis) const {
+bool GameWorld::Raycast(Ray& r, RayCollision& closestCollision, bool closestObject, GameObject* ignoreThis) const {
 	//The simplest raycast just goes through each object and sees if there's a collision
 	RayCollision collision;
 
@@ -112,27 +112,19 @@ bool GameWorld::Raycast1(Ray& r, RayCollision& closestCollision, bool closestObj
 	return false;
 }
 
-bool GameWorld::Raycast2(Ray& r, RayCollision& closestCollision, bool closestObject) const {
-	//The simplest raycast just goes through each object and sees if there's a collision
+bool GameWorld::FindObjectByRaycast(Ray& r, RayCollision& closestCollision, std::string tag, GameObject* ignoreThis) const {
 	RayCollision collision;
 
 	for (auto& i : gameObjects) {
-		if (!i->GetBoundingVolume()) { //objects might not be collideable etc...
+		if ( i->gettag() != tag || !i->GetBoundingVolume() || i == ignoreThis) {
 			continue;
 		}
+
 		RayCollision thisCollision;
 		if (CollisionDetection::RayIntersection(r, *i, thisCollision)) {
-
-			if (!closestObject) {
-				closestCollision = collision;
-				closestCollision.node = i;
-				return true;
-			}
-			else {
-				if (thisCollision.rayDistance < collision.rayDistance) {
-					thisCollision.node = i;
-					collision = thisCollision;
-				}
+			if (thisCollision.rayDistance < collision.rayDistance) {
+				thisCollision.node = i;
+				collision = thisCollision;
 			}
 		}
 	}
@@ -143,7 +135,6 @@ bool GameWorld::Raycast2(Ray& r, RayCollision& closestCollision, bool closestObj
 	}
 	return false;
 }
-
 
 /*
 Constraint Tutorial Stuff
