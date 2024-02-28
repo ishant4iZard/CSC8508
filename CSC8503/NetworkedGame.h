@@ -34,6 +34,8 @@ namespace NCL {
 
 			bool StartAsServer();
 			bool StartAsClient(char a, char b, char c, char d);
+			void DestroyServer();
+			void DestroyClient();
 
 			void UpdateGame(float dt) override;
 

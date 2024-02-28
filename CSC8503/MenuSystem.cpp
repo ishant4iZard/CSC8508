@@ -48,6 +48,7 @@ PushdownState::PushdownResult MainMenu::OnUpdate(float dt, PushdownState** newSt
 	if (game && OnlineSubsystem)
 	{
 		OnlineSubsystemBase* Subsystem = (OnlineSubsystemBase*)OnlineSubsystem;
+		NetworkedGame* Game = (NetworkedGame*)game;
 
 		if (!Subsystem->GetIsOnlineSubsystemInitSuccess())
 		{
@@ -99,7 +100,36 @@ PushdownState::PushdownResult MainMenu::OnUpdate(float dt, PushdownState** newSt
 		);
 
 		/** for devlop only */
-
+		if (appState->GetIsServer())
+		{
+			Game->StartAsServer();
+			*newState = new PlayingHUD();
+			return PushdownResult::Push;
+		}
+		if (appState->GetIsClient())
+		{
+			Game->StartAsClient(127, 0, 0, 1);
+			*newState = new PlayingHUD();
+			return PushdownResult::Push;
+		}
+		ui->DrawButton(
+			"Local: Play As Server",
+			Vector2(5, 43),
+			[&, Game]() {
+				appState->SetIsServer(true);
+			},
+			UIBase::WHITE,
+			KeyCodes::NUM1 // Only for PS
+		);
+		ui->DrawButton(
+			"Local: Play As Client",
+			Vector2(5, 53),
+			[&, Game]() {
+				appState->SetIsClient(true);
+			},
+			UIBase::WHITE,
+			KeyCodes::NUM1 // Only for PS
+		);
 	}
 	return PushdownResult::NoChange;
 }
@@ -436,5 +466,37 @@ void MultiplayerSearchMenu::ChangeCurrentSelectLobbyByAmount(OnlineSubsystemBase
 /** PlaingHUD update */
 PushdownState::PushdownResult PlayingHUD::OnUpdate(float dt, PushdownState** newState)
 {
+	if (game && OnlineSubsystem)
+	{
+		OnlineSubsystemBase* Subsystem = (OnlineSubsystemBase*)OnlineSubsystem;
+		NetworkedGame* Game = (NetworkedGame*)game;
+
+		if (!isRoundGoingOn)
+		{
+			if (appState->GetIsServer())
+			{
+				appState->SetIsServer(false);
+				Game->DestroyServer();
+			}
+			if (appState->GetIsClient())
+			{
+				appState->SetIsClient(false);
+				Game->DestroyClient();
+			}
+			return  PushdownResult::Pop;
+		}
+
+	}
 	return PushdownResult::NoChange;
+}
+
+void PlayingHUD::ReceiveEvent(const EventType eventType)
+{
+	switch (eventType) {
+	case ROUND_OVER:
+		isRoundGoingOn = false;
+		break;
+
+	default: break;
+	}
 }

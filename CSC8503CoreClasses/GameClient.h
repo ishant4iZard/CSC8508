@@ -26,13 +26,16 @@ namespace NCL {
 
 			void SendPacket(GamePacket&  payload);
 
-			void UpdateClient();
+			void UpdateClient(float dt);
 
 		protected:	
 			_ENetPeer*	netPeer;
 			int CurrentConnetNetID;
 
 			EClientState clientState;
+
+			float timeGap = 0.0f;
+
 		public:
 			inline int GetClientNetID() const { return CurrentConnetNetID; }
 			inline EClientState GetClientState() const { return clientState; }

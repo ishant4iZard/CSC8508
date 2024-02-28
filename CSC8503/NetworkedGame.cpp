@@ -113,6 +113,18 @@ bool NetworkedGame::StartAsClient(char a, char b, char c, char d) {
 	//StartLevel();
 }
 
+void NetworkedGame::DestroyServer()
+{
+	delete thisServer;
+	thisServer = nullptr;
+}
+
+void NetworkedGame::DestroyClient()
+{
+	delete thisClient;
+	thisClient = nullptr;
+}
+
 void NetworkedGame::UpdateGame(float dt) {
 	Debug::UpdateRenderables(dt);
 	Menu->Update(dt);
@@ -140,7 +152,7 @@ void NetworkedGame::UpdateGame(float dt) {
 			physics->Update(dt);
 		}
 		if (thisClient) { 
-			thisClient->UpdateClient(); 
+			thisClient->UpdateClient(dt); 
 			HandleInputAsClient();
 		}
 
@@ -218,6 +230,13 @@ void NetworkedGame::UpdateAsServer(float dt) {
 }
 
 void NetworkedGame::UpdateAsClient(float dt) {
+
+	if (thisClient->GetClientState() == CLIENT_STATE_DISCONNECTED)
+	{
+		std::cout << "Client Disconnected!";
+		EventEmitter::EmitEvent(EventType::ROUND_OVER);
+	}
+
 	ClientPacket newPacket;
 
 	Vector3 PointerWorldPos;
