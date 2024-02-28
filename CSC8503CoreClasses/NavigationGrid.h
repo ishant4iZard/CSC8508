@@ -36,6 +36,7 @@ namespace NCL {
 			NavigationGrid(const std::string&filename);
 			NavigationGrid(GameWorld* world);
 			~NavigationGrid();
+			void PrintGrid();
 
 			bool FindPath(const Vector3& from, const Vector3& to, NavigationPath& outPath) override;
 			bool AIFindPath(const std::vector<Vector3>& waypoints, NavigationPath& outPath);
@@ -48,6 +49,8 @@ namespace NCL {
 			int gridHeight;
 
 			GridNode* allNodes;
+			vector<Ray> rays;
+			Vector3 startpos;
 		};
 	}
 }

@@ -47,7 +47,10 @@ TutorialGame::TutorialGame() : controller(*Window::GetWindow()->GetKeyboard(), *
 	controller.MapAxis(4, "YLook");
 	currentlevel = level::level1;
 
+
 	InitialiseAssets();
+	//GameObject* test = AddAABBCubeToWorld(Vector3(0, 1, 0), Vector3(100, 1, 100), 1 / 100, 0.1f);
+	//test->settag("walls");
 	InitAI();
 
 #ifdef _WIN32
@@ -332,12 +335,13 @@ void NCL::CSC8503::TutorialGame::SpawnFloor(const Vector3& inPosition, const Vec
 void NCL::CSC8503::TutorialGame::SpawnBouncingPad(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling)
 {
 	BouncePad* tempBouncePad = new BouncePad(cubeMesh, basicTex, pbrShader);
-	tempBouncePad->settag("bouncingpad1");
+	//GameObject* tempBouncePad = AddAABBCubeToWorld(inPosition, inScale * 2, 0, 1.05);
+
+	tempBouncePad->settag("walls");
 	for (size_t i = 0; i < (uint8_t)TextureType::MAX_TYPE; i++)
 	{
 		tempBouncePad->GetRenderObject()->SetTexture((TextureType)i, groundTextureList[i]);
 	}
-	tempBouncePad->GetRenderObject()->SetColour(Debug::CYAN);
 	tempBouncePad->GetRenderObject()->SetTiling(inTiling);
 	world->AddGameObject(tempBouncePad);
 
@@ -617,10 +621,11 @@ AiStatemachineObject* TutorialGame::AddAiStateObjectToWorld(const Vector3& posit
 	NavigationGrid* navGrid = new NavigationGrid(world);
 	AIStateObject = new AiStatemachineObject(world, navGrid);
 
-	SphereVolume* volume = new SphereVolume(1.0f);
+	float radius = 5.0f;
+	SphereVolume* volume = new SphereVolume(radius);
 	AIStateObject->SetBoundingVolume((CollisionVolume*)volume);
 	AIStateObject->GetTransform()
-		.SetScale(Vector3(5, 5, 5))
+		.SetScale(Vector3(radius, radius, radius))
 		.SetPosition(position);
 
 	AIStateObject->SetRenderObject(new RenderObject(&AIStateObject->GetTransform(), sphereMesh, nullptr, basicShader));
@@ -680,14 +685,16 @@ void TutorialGame::InitPlaceholderAIs() {
 			(std::rand() % (2 * GAME_ARENA_LENGTH)) - GAME_ARENA_LENGTH, // Random value between -length to length
 			0, 
 			(std::rand() % (2 * GAME_ARENA_LENGTH)) - GAME_ARENA_LENGTH);
-		placeHolderAIs.push_back(AddObbCubeToWorld(randomPosition, AI_SCALE, ENEMY_AI_WEIGHT, ENEMY_AI_ELASTICITY));
+		
+		placeHolderAIs.push_back(AddAABBCubeToWorld(randomPosition, AI_SCALE, ENEMY_AI_WEIGHT, ENEMY_AI_ELASTICITY));
 		placeHolderAIs[i]->GetRenderObject()->SetColour(Debug::RED);
+		placeHolderAIs[i]->settag("walls");
 	}
 }
 
 void TutorialGame::InitAI()
 {
-	AddAiStateObjectToWorld(Vector3(90, 5.6, -90))->GetRenderObject()->SetColour(Debug::BLUE);
+	AddAiStateObjectToWorld(Vector3(10, 5.6, -10))->GetRenderObject()->SetColour(Debug::BLUE);
 }
 
 void TutorialGame::ProcessFrameAddresses() {

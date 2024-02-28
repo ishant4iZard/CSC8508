@@ -144,6 +144,10 @@ void NetworkPlayer::MovePlayerInSquarePattern(float dt) {
 }
 
 void NetworkPlayer::MovePlayerTowardsCursor(float dt){
+	Vector3 playerPos = transform.GetPosition();
+	playerPos.y = 5.6;
+	transform.SetPosition(playerPos);
+
 	Vector3 movementDirection = (pointPos - transform.GetPosition()).Normalised();
 	movementDirection.y = 0;
 

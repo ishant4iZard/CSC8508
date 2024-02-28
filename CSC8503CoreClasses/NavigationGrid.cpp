@@ -25,56 +25,56 @@ NavigationGrid::NavigationGrid() {
 
 //Create a Grid that can detect there are obstacles or not.
 NavigationGrid::NavigationGrid(GameWorld* world)	{
-	nodeSize	= 4;
-	gridWidth	= 200;
-	gridHeight	= 200;
-	allNodes	= new GridNode[gridWidth * gridHeight];
-	Vector3 startpos = Vector3(-98, 0, -98);
+	nodeSize	= 2;
 
+	// NOTE : width and height do NOT refer to length but the number of cells
+	gridWidth	= 200 / nodeSize;
+	gridHeight	= 200 / nodeSize;
+
+	allNodes	= new GridNode[gridWidth * gridHeight];
+
+	startpos = Vector3(-100, 0, -100);
 	RayCollision  obstaclesCollision;
 
-	int x = -98;
-
-	vector<Ray> rays2;
-	for (int i = 0; i < gridWidth; i++)
+	int z = startpos.z;
+	for (int j = 0; j < gridHeight; j++)
 	{
-		x += 4;
-		int z = -98;
-		for (int j = 0; j < gridHeight; j++)
+		int x = startpos.x;
+		for (int i = 0; i < gridWidth; i++)
 		{
-			z += 4;
-			//std::cout <<x<< "youmeiyou" <<z<< "\n";
-			//Ray ray(Vector3(x, 20, z), Vector3(x, 0, z));
-			rays2.push_back(Ray(Vector3(x, 20, z), Vector3(x, 0, z)));
-			Debug::DrawLine(Vector3(x, 20, z), Vector3(x, 0, z) * 100, Debug::RED);
+			rays.push_back(Ray(Vector3(x+1, 100, z+1), (Vector3(0, -20, 0) - Vector3(0, 20, 0)).Normalised()));//+1 is to get the centre of the grid
+			x += nodeSize;
 		}
+		z += nodeSize;
 	}
 
+	// Identify grid cell type
 	int currentIndx = 0;
 	for (int y = 0; y < gridHeight; ++y) {
 		for (int x = 0; x < gridWidth; ++x) {
+
 			GridNode& n = allNodes[(gridWidth * y) + x];
 
-			if (world->Raycast1(rays2[currentIndx], obstaclesCollision, true)) {
+			if (world->Raycast(rays[currentIndx], obstaclesCollision, true)) {
 				GameObject* ObjectDetected = (GameObject*)obstaclesCollision.node;
 
-				if (ObjectDetected)
-				{
-					if (ObjectDetected->gettag() == "walls" || ObjectDetected->gettag() == "bouncingpad1") {
-						n.type = 'x';
-						n.position = Vector3(startpos.x + (float)(x * nodeSize), startpos.y, startpos.z + (float)(y * nodeSize));
+				if (!ObjectDetected) continue;
 
-					}
-					else {
-						n.type = '.';
-						n.position = Vector3(startpos.x + (float)(x * nodeSize), startpos.y, startpos.z + (float)(y * nodeSize));
-					}
+				if (ObjectDetected->gettag() == "walls" || ObjectDetected->gettag() == "bouncePads") {//use isKinematic
+					n.type = 'x';
+					n.position = Vector3(startpos.x + (float)(x * nodeSize), startpos.y, startpos.z + (float)(y * nodeSize));
+				}
+				else {
+					n.type = '.';
+					n.position = Vector3(startpos.x + (float)(x * nodeSize), startpos.y, startpos.z + (float)(y * nodeSize));
 				}
 			}
+
 			currentIndx++;
 		}
 	}
 
+	// Connect cells to neighbouring cells
 	for (int y = 0; y < gridHeight; ++y) {
 		for (int x = 0; x < gridWidth; ++x) {
 
@@ -105,7 +105,6 @@ NavigationGrid::NavigationGrid(GameWorld* world)	{
 			}
 		}
 	}
-
 }
 
 NavigationGrid::NavigationGrid(const std::string&filename) : NavigationGrid() {
@@ -165,11 +164,11 @@ NavigationGrid::~NavigationGrid()	{
 
 bool NavigationGrid::FindPath(const Vector3& from, const Vector3& to, NavigationPath& outPath) {
 	//need to work out which node 'from' sits in, and 'to' sits in
-	int fromX = ((int)from.x / nodeSize);
-	int fromZ = ((int)from.z / nodeSize);
+	int fromX = ((int)(from.x - startpos.x) / nodeSize);
+	int fromZ = ((int)(from.z - startpos.z) / nodeSize);
 
-	int toX = ((int)to.x / nodeSize);
-	int toZ = ((int)to.z / nodeSize);
+	int toX = ((int)(to.x - startpos.x) / nodeSize);
+	int toZ = ((int)(to.z - startpos.z) / nodeSize);
 
 	if (fromX < 0 || fromX > gridWidth - 1 ||
 		fromZ < 0 || fromZ > gridHeight - 1) {
@@ -237,6 +236,7 @@ bool NavigationGrid::FindPath(const Vector3& from, const Vector3& to, Navigation
 			closedList.emplace_back(currentBestNode);
 		}
 	}
+
 	return false; //open list emptied out with no path!
 }
 
@@ -355,4 +355,17 @@ GridNode*  NavigationGrid::RemoveBestNode(std::vector<GridNode*>& list) const {
 
 float NavigationGrid::Heuristic(GridNode* hNode, GridNode* endNode) const {
 	return (hNode->position - endNode->position).Length();
+}
+
+void NavigationGrid::PrintGrid() {	
+	for (int j = 0; j < gridWidth; j++) {
+		for (int i = 0; i < gridHeight; i++) {
+			GridNode& n = allNodes[gridWidth * j + i];
+
+			Debug::DrawLine(n.position, n.position + Vector4(nodeSize, 0, 0, 0), (n.type == '.' ? Debug::RED : Debug::CYAN));
+			Debug::DrawLine(n.position, n.position + Vector4(-nodeSize, 0, 0, 0), (n.type == '.' ? Debug::RED : Debug::CYAN));
+			Debug::DrawLine(n.position, n.position + Vector4(0, 0, nodeSize, 0), (n.type == '.' ? Debug::RED : Debug::CYAN));
+			Debug::DrawLine(n.position, n.position + Vector4(0, 0, -nodeSize, 0), (n.type == '.' ? Debug::RED : Debug::CYAN));
+		}
+	}
 }
