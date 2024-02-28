@@ -73,6 +73,10 @@ namespace NCL {
 
 			OGLMesh*	skyboxMesh;
 			OGLMesh* screenQuad;
+			Mesh* tempSphereMesh;
+			Shader* tempPointLightShader;
+			RenderObject* tempInstancedRenderObject;
+
 			GLuint		skyboxTex;
 
 			//shadow mapping things

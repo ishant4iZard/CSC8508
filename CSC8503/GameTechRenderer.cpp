@@ -67,7 +67,25 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 	skyboxMesh->UploadToGPU();
 
 	CreateScreenQuadMesh();
+	/////////---------------D Rendereing-----------------------//////////////////////
+	tempSphereMesh = this->LoadMesh("Sphere.msh");
+	tempPointLightShader = this->LoadShader("DefferedRendering/PointLight.vert", "DefferedRendering/PointLight.frag");
+	Texture* tempTex = nullptr;
 
+	Transform tempRTransform;
+	for (int i = -100; i <= 100; i += 28)
+	{
+		for (int j = -100; j <= 100; j += 28)
+		{
+			Transform tempTransform;
+			tempTransform.SetPosition(Vector3(i, 10, j));
+			tempTransform.SetScale(Vector3(13, 13, 13));
+			tempSphereMesh->AddInstanceModelMatrices(tempTransform.GetMatrix());
+		}
+	}
+	tempInstancedRenderObject = new RenderObject(&tempRTransform, tempSphereMesh, tempTex, tempPointLightShader);
+
+	/////////---------------D Rendereing-----------------------//////////////////////
 	LoadSkybox();
 
 	glGenVertexArrays(1, &lineVAO);
@@ -273,7 +291,69 @@ void NCL::CSC8503::GameTechRenderer::ApplyFrostingPostProcessing()
 
 void NCL::CSC8503::GameTechRenderer::LightScene()
 {
+	glBindFramebuffer(GL_FRAMEBUFFER, pbrFbo->GetFbo());
 
+	OGLShader* activeShader = nullptr;
+
+	Matrix4 viewMatrix = gameWorld.GetMainCamera().BuildViewMatrix();
+	Matrix4 projMatrix = gameWorld.GetMainCamera().BuildProjectionMatrix(hostWindow.GetScreenAspect());
+
+	int projLocation = 0;
+	int viewLocation = 0;
+	int instancedmodelMatricesListLocation = 0;
+
+	int lightColourLocation = 0;
+	int cameraLocation = 0;
+	int diffuseMettalicTexLocation = 0;
+
+	OGLShader* shader = (OGLShader*)(*tempInstancedRenderObject).GetShader();
+	BindShader(*shader);
+
+	if (activeShader != shader) {
+		projLocation = glGetUniformLocation(shader->GetProgramID(), "projMatrix");
+		viewLocation = glGetUniformLocation(shader->GetProgramID(), "viewMatrix");
+		instancedmodelMatricesListLocation = glGetUniformLocation(shader->GetProgramID(), "instanceMatrix");
+		lightColourLocation = glGetUniformLocation(shader->GetProgramID(), "lightColour");
+		cameraLocation = glGetUniformLocation(shader->GetProgramID(), "cameraPos");
+		diffuseMettalicTexLocation = glGetUniformLocation(shader->GetProgramID(), "diffuseMettalicTex");
+		Vector3 camPos = gameWorld.GetMainCamera().GetPosition();
+		glUniform3fv(cameraLocation, 1, &camPos.x);
+
+		glUniform1i(diffuseMettalicTexLocation, 0);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, gBufferFbo->GetDiffuseMettalic());
+
+		glUniform1i(glGetUniformLocation(shader->GetProgramID(),
+			"normalRoughnessTex"), 1);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, gBufferFbo->GetNormalRoughness());
+
+		glUniform1i(glGetUniformLocation(shader->GetProgramID(),
+			"baseReflectivityAmbiantOccTex"), 2);
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, gBufferFbo->GetBaseRefectivityAO());
+
+		glUniform1i(glGetUniformLocation(shader->GetProgramID(),
+			"fragmentPosition"), 3);
+		glActiveTexture(GL_TEXTURE3);
+		glBindTexture(GL_TEXTURE_2D, gBufferFbo->GetFragmentPosition());
+
+		glUniformMatrix4fv(projLocation, 1, false, (float*)&projMatrix);
+		glUniformMatrix4fv(viewLocation, 1, false, (float*)&viewMatrix);
+		lightColour = Vector4(242, 200, 58, 95);
+		glUniform4fv(lightColourLocation, 1, (float*)&lightColour);
+		activeShader = shader;
+	}
+
+	auto modelMatrixList = tempSphereMesh->GetInstanceModelMatricesData();
+	glUniformMatrix4fv(instancedmodelMatricesListLocation, 1, false, (float*)&modelMatrixList);
+
+	BindMesh((OGLMesh&)*(*tempInstancedRenderObject).GetMesh());
+	size_t layerCount = (*tempInstancedRenderObject).GetMesh()->GetSubMeshCount();
+	for (size_t i = 0; i < layerCount; ++i) {
+		DrawBoundMesh((uint32_t)i, (*tempInstancedRenderObject).GetMesh()->GetInstanceCount());
+	}
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void GameTechRenderer::ApplyToneMapping()
