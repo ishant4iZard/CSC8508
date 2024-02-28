@@ -244,7 +244,7 @@ void TutorialGame::InitWorld() {
 	//capsule->GetTransform().SetOrientation(Quaternion::EulerAnglesToQuaternion(0, 0, 90));
 
 	InitTeleporters();
-	TestAddStaticObjectsToWorld();
+	//TestAddStaticObjectsToWorld();
 	InitAI();
 	
 	physics->createStaticTree();//this needs to be at the end of all initiations
