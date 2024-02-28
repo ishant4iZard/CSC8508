@@ -84,12 +84,38 @@ void OGLMesh::UploadToGPU(Rendering::RendererBase* renderer) {
 		BindVertexAttribute(VertexAttribute::JointIndices, attributeBuffers[VertexAttribute::JointIndices], VertexAttribute::JointIndices, 4, sizeof(Vector4), 0);
 	}
 
+	if (!GetInstanceModelMatricesData().empty()) { //Instanced Model Matrix
+		UpdateInstanceModelMatrix();
+	}
+
 	if (!GetIndexData().empty()) {		//buffer index data
 		glGenBuffers(1, &attributeBuffers[VertexAttribute::MAX_ATTRIBUTES]);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, attributeBuffers[VertexAttribute::MAX_ATTRIBUTES]);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, numIndices * sizeof(GLuint), (int*)GetIndexData().data(), GL_STATIC_DRAW);
 	}
 
+	glBindVertexArray(0);
+}
+
+void NCL::Rendering::OGLMesh::UpdateInstanceModelMatrix()
+{
+	glBindVertexArray(vao);
+
+	glGenBuffers(1, &attributeBuffers[VertexAttribute::InstanceModelMatrix]);
+	glBindBuffer(GL_ARRAY_BUFFER, attributeBuffers[VertexAttribute::InstanceModelMatrix]);
+	glBufferData(GL_ARRAY_BUFFER, instanceCount * sizeof(Matrix4), &GetInstanceModelMatricesData()[0], GL_STATIC_DRAW);
+
+	int vertexCount = 0;
+	for (size_t i = VertexAttribute::InstanceModelMatrix; i <= VertexAttribute::InstanceModelMatrixRow3; i++)
+	{
+		glEnableVertexAttribArray(i);
+		glVertexAttribPointer(i, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(Vector4), (void*)(vertexCount * sizeof(Vector4)));
+		vertexCount = (++vertexCount) % 4;
+	}
+	glVertexAttribDivisor(VertexAttribute::InstanceModelMatrix, 1);
+	glVertexAttribDivisor(VertexAttribute::InstanceModelMatrixRow1, 1);
+	glVertexAttribDivisor(VertexAttribute::InstanceModelMatrixRow2, 1);
+	glVertexAttribDivisor(VertexAttribute::InstanceModelMatrixRow3, 1);
 	glBindVertexArray(0);
 }
 

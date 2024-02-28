@@ -120,12 +120,15 @@ namespace NCL {
 
 			Mesh*	capsuleMesh = nullptr;
 			Mesh*	cubeMesh	= nullptr;
+			Mesh* wallMesh = nullptr;
+			Mesh* bouncePlatformMesh = nullptr;
 			Mesh*	sphereMesh	= nullptr;
 
 			Texture*	basicTex	= nullptr;
 			Texture*	sandTex		= nullptr;
 			Shader*		basicShader = nullptr;
 			Shader* pbrShader = nullptr;
+			Shader* instancePbrShader = nullptr;
 
 			Texture* groundTextureList[(uint8_t)TextureType::MAX_TYPE];
 			Texture* wallTextureList[(uint8_t)TextureType::MAX_TYPE];
@@ -147,7 +150,6 @@ namespace NCL {
 
 			GameObject* cube;
 			GameObject* floor;
-
 			level currentlevel;
 			int score = 0;
 			float v = 0, h = 0;

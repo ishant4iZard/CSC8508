@@ -67,6 +67,8 @@ for this module, even in the coursework, but you can add it if you like!
 */
 void TutorialGame::InitialiseAssets() {
 	cubeMesh	= renderer->LoadMesh("cube.msh");
+	wallMesh = renderer->LoadMesh("cube.msh");
+	bouncePlatformMesh = renderer->LoadMesh("cube.msh");
 	sphereMesh	= renderer->LoadMesh("sphere.msh");
 	charMesh	= renderer->LoadMesh("goat.msh");
 	enemyMesh	= renderer->LoadMesh("Keeper.msh");
@@ -101,13 +103,17 @@ void TutorialGame::InitialiseAssets() {
 #endif // USE_SHADOW
 
 	pbrShader = renderer->LoadShader("pbr.vert", "pbr.frag");
-	
+	instancePbrShader = renderer->LoadShader("pbrInstanced.vert", "pbr.frag");
+
 	InitCamera();
 	InitWorld();
+
 }
 
 TutorialGame::~TutorialGame()	{
 	delete cubeMesh;
+	delete wallMesh;
+	delete bouncePlatformMesh;
 	delete sphereMesh;
 	delete charMesh;
 	delete enemyMesh;
@@ -309,13 +315,21 @@ void TutorialGame::SpawnDataDrivenLevel(GameLevelNumber inGameLevelNumber)
 
 void NCL::CSC8503::TutorialGame::SpawnWall(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling)
 {
+	Matrix4 tempTransform = Matrix4();
+	tempTransform.SetPositionVector(inPosition);
+	tempTransform.SetDiagonal(inScale * 2);
+
+	wallMesh->AddInstanceModelMatrices(tempTransform);
+
 	GameObject* tempWall = AddAABBCubeToWorld(
 		inPosition,
 		inScale,
 		0, 0.5f);
-	tempWall->GetRenderObject()->SetShader(pbrShader);
+	tempWall->GetRenderObject()->SetShader(instancePbrShader);
 	tempWall->GetRenderObject()->SetTiling(inTiling);
 	tempWall->setName("wall");
+	tempWall->GetRenderObject()->SetMesh(wallMesh);
+
 	for (size_t i = 0; i < (uint8_t)TextureType::MAX_TYPE; i++)
 	{
 		tempWall->GetRenderObject()->SetTexture((TextureType)i, wallTextureList[i]);
@@ -337,7 +351,7 @@ void NCL::CSC8503::TutorialGame::SpawnFloor(const Vector3& inPosition, const Vec
 
 void NCL::CSC8503::TutorialGame::SpawnBouncingPad(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling)
 {
-	BouncePad* tempBouncePad = new BouncePad(cubeMesh, basicTex, pbrShader);
+	BouncePad* tempBouncePad = new BouncePad(bouncePlatformMesh, basicTex, instancePbrShader);
 	for (size_t i = 0; i < (uint8_t)TextureType::MAX_TYPE; i++)
 	{
 		tempBouncePad->GetRenderObject()->SetTexture((TextureType)i, groundTextureList[i]);
@@ -347,6 +361,8 @@ void NCL::CSC8503::TutorialGame::SpawnBouncingPad(const Vector3& inPosition, con
 	world->AddGameObject(tempBouncePad);
 
 	tempBouncePad->GetTransform().SetPosition(inPosition);
+
+	bouncePlatformMesh->AddInstanceModelMatrices(tempBouncePad->GetTransform().GetMatrix());
 }
 
 void NCL::CSC8503::TutorialGame::SpawnTarget(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling)

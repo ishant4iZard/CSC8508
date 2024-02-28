@@ -22,6 +22,8 @@ namespace NCL::Rendering {
 		void RecalculateNormals();
 
 		void UploadToGPU(Rendering::RendererBase* renderer = nullptr) override;
+		void UpdateInstanceModelMatrix() override;
+
 		void UpdateGPUBuffers(unsigned int startVertex, unsigned int vertexCount);
 
 	protected:
