@@ -120,6 +120,23 @@ void AiStatemachineObject::DetectProjectiles(GameObject* gameObject,float dt) {
 }
 
 void AiStatemachineObject::ChaseClosestProjectile(float dt) {
+
+	if (CanSeeProjectile()) {
+		Vector3 targetPosition = projectileToChase->GetTransform().GetPosition();
+		targetPosition = PredictInterceptionPoint(targetPosition, projectileToChase->GetPhysicsObject()->GetLinearVelocity(), transform.GetPosition(), SPEED);
+
+		targetPosition.y = 5.6f;
+		Vector3 movementDirection = (targetPosition - this->GetTransform().GetPosition()).Normalised();
+		movementDirection.y = 0;
+		this->GetPhysicsObject()->SetLinearVelocity(movementDirection * SPEED);
+
+		return;
+	}
+
+	// Only use path finding if the projectile is not directly acccessible
+
+	FindPathFromAIToProjectile(dt);
+	DisplayPathfinding();
 	const static float bufferDistance = 0.2f;
 	
 	if (projectileToChase == nullptr || pathFromAIToPlayer.empty()) return;
@@ -143,6 +160,19 @@ void AiStatemachineObject::ChaseClosestProjectile(float dt) {
 	Vector3 movementDirection = (targetPosition - this->GetTransform().GetPosition()).Normalised();
 	movementDirection.y = 0;
 	this->GetPhysicsObject()->SetLinearVelocity(movementDirection * SPEED);
+}
+
+bool AiStatemachineObject::CanSeeProjectile() {
+	if (projectileToChase == nullptr) return false;
+
+	Vector3 dir = projectileToChase->GetTransform().GetPosition() - transform.GetPosition();
+	dir = dir.Normalised();
+	Ray ray = Ray(transform.GetPosition(), dir);
+
+	RayCollision  closestCollision;
+	if (world->Raycast(ray, closestCollision, true, this) && ((GameObject*)(closestCollision.node))->gettag() == "Projectile") return true;
+
+	return false;
 }
 
 void AiStatemachineObject::OnCollisionBegin(GameObject* otherObject) {

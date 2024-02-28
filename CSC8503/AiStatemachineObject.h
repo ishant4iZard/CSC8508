@@ -33,6 +33,7 @@ namespace NCL {
             void ChaseClosestProjectile(float dt);
             void FindPathFromAIToProjectile(float dt);
             void DisplayPathfinding();
+            bool CanSeeProjectile();
         };
     }
 }
