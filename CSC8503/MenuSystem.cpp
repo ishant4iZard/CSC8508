@@ -48,6 +48,7 @@ PushdownState::PushdownResult MainMenu::OnUpdate(float dt, PushdownState** newSt
 	if (game && OnlineSubsystem)
 	{
 		OnlineSubsystemBase* Subsystem = (OnlineSubsystemBase*)OnlineSubsystem;
+		NetworkedGame* Game = (NetworkedGame*)game;
 
 		if (!Subsystem->GetIsOnlineSubsystemInitSuccess())
 		{
@@ -71,6 +72,18 @@ PushdownState::PushdownResult MainMenu::OnUpdate(float dt, PushdownState** newSt
 		{
 			isSearchLobbyBtnPressed = false;
 			*newState = new MultiplayerSearchMenu();
+			return Push;
+		}
+		if (isDevSASPressed)
+		{
+			isDevSASPressed = false;
+			*newState = new PlayingHUD();
+			return Push;
+		}
+		if (isDevSACPressed)
+		{
+			isDevSACPressed = false;
+			*newState = new PlayingHUD();
 			return Push;
 		}
 
@@ -99,7 +112,27 @@ PushdownState::PushdownResult MainMenu::OnUpdate(float dt, PushdownState** newSt
 		);
 
 		/** for devlop only */
+		ui->DrawButton(
+			"Dev: Start as server",
+			Vector2(5, 43),
+			[&, Game]() {
+				isDevSASPressed = true;
+				Game->StartAsServer();
+			},
+			UIBase::WHITE,
+			KeyCodes::NUM2 // Only for PS
+		);
 
+		ui->DrawButton(                 
+			"Dev: Start as client",
+			Vector2(5, 53),
+			[&, Game]() {
+				isDevSACPressed = true;
+				Game->StartAsClient(127, 0, 0, 1);
+			},
+			UIBase::WHITE,
+			KeyCodes::NUM2 // Only for PS
+		);
 	}
 	return PushdownResult::NoChange;
 }
@@ -436,5 +469,19 @@ void MultiplayerSearchMenu::ChangeCurrentSelectLobbyByAmount(OnlineSubsystemBase
 /** PlaingHUD update */
 PushdownState::PushdownResult PlayingHUD::OnUpdate(float dt, PushdownState** newState)
 {
+	ui->DrawButton(
+		"Back to lobby",
+		Vector2(5.0f, 5.0f),
+		[]() {
+
+		},
+		UIBase::WHITE,
+		KeyCodes::ESCAPE // Only for PS
+	);
+
 	return PushdownResult::NoChange;
+}
+
+void PlayingHUD::ReceiveEvent(const EventType eventType)
+{
 }

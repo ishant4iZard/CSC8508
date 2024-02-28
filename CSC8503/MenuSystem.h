@@ -66,6 +66,8 @@ namespace NCL {
 			bool isLobbyCreated = false;
 			bool isSearchLobbyBtnPressed = false;
 			bool isJoiningLobby = false;
+			bool isDevSASPressed = false;
+			bool isDevSACPressed = false;
 		};
 
 		class MultiplayerSearchMenu : public PushdownState, public EventListener
@@ -133,10 +135,24 @@ namespace NCL {
 			bool isLeaveLobbyPressed = false;
 		};
 
-		class PlayingHUD : public PushdownState
+		class PlayingHUD : public PushdownState, public EventListener
 		{
 		public:
+			PlayingHUD() {
+#ifdef _WIN32
+				ui = UIWindows::GetInstance();
+#else //_ORBIS
+				ui = UIPlaystation::GetInstance();
+#endif
+				appState = ApplicationState::GetInstance();
+			}
+
 			PushdownResult OnUpdate(float dt, PushdownState** newState) override;
+			void ReceiveEvent(const EventType eventType) override;
+
+		protected:
+			UIBase* ui;
+			ApplicationState* appState;
 		};
 	}
 }

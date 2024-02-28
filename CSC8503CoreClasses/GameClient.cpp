@@ -24,7 +24,7 @@ bool GameClient::Connect(uint8_t a, uint8_t b, uint8_t c, uint8_t d, int portNum
 	{
 		clientState = EClientState::CLIENT_STATE_CONNECTING;
 	}
-	return netPeer != nullptr;
+	return netPeer != nullptr; 
 }
 
 void GameClient::UpdateClient() {
