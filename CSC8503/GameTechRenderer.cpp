@@ -294,12 +294,10 @@ void NCL::CSC8503::GameTechRenderer::ApplyFrostingPostProcessing()
 
 	
 	BindShader(*frostPostProcessing);
-	//int texLocation = glGetUniformLocation(frostPostProcessing->GetProgramID(), "cccTexture");
-	//glUniform1i(texLocation, 0);
-	//glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, frostTexture->GetAssetID());
-
-	
+	int texLocation = glGetUniformLocation(frostPostProcessing->GetProgramID(), "cccTexture");
+	glUniform1i(texLocation, 0);
+	glActiveTexture(GL_TEXTURE0);
+	//glBindTexture(GL_TEXTURE_2D, frostTexture->GetAssetID());
 
 	//screenShader.use();
 	glBindVertexArray(quadVAO);
