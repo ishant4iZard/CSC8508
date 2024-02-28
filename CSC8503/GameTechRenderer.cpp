@@ -306,7 +306,7 @@ void NCL::CSC8503::GameTechRenderer::LightScene()
 	int cameraLocation = 0;
 	int diffuseMettalicTexLocation = 0;
 
-	OGLShader* shader = (OGLShader*)(*tempInstancedRenderObject).GetShader();
+	OGLShader* shader = (OGLShader*)(tempPointLightShader);
 	BindShader(*shader);
 
 	if (activeShader != shader) {
@@ -316,6 +316,7 @@ void NCL::CSC8503::GameTechRenderer::LightScene()
 		lightColourLocation = glGetUniformLocation(shader->GetProgramID(), "lightColour");
 		cameraLocation = glGetUniformLocation(shader->GetProgramID(), "cameraPos");
 		diffuseMettalicTexLocation = glGetUniformLocation(shader->GetProgramID(), "diffuseMettalicTex");
+
 		Vector3 camPos = gameWorld.GetMainCamera().GetPosition();
 		glUniform3fv(cameraLocation, 1, &camPos.x);
 
@@ -345,10 +346,10 @@ void NCL::CSC8503::GameTechRenderer::LightScene()
 		activeShader = shader;
 	}
 
-	auto modelMatrixList = tempSphereMesh->GetInstanceModelMatricesData();
+	auto modelMatrixList = tempInstancedRenderObject->GetMesh()->GetInstanceModelMatricesData();
 	glUniformMatrix4fv(instancedmodelMatricesListLocation, 1, false, (float*)&modelMatrixList);
 
-	BindMesh((OGLMesh&)*(*tempInstancedRenderObject).GetMesh());
+	BindMesh((OGLMesh&)*(tempInstancedRenderObject->GetMesh()));
 	size_t layerCount = (*tempInstancedRenderObject).GetMesh()->GetSubMeshCount();
 	for (size_t i = 0; i < layerCount; ++i) {
 		DrawBoundMesh((uint32_t)i, (*tempInstancedRenderObject).GetMesh()->GetInstanceCount());

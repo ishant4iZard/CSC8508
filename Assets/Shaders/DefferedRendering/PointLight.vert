@@ -10,6 +10,7 @@ layout(location = 7) in mat4 instanceMatrix;
 out Vertex
 {
     vec3 lightWorldPos;
+    vec2 texCoord;
 } OUT;
 
 //LearnOPenGL Point Light

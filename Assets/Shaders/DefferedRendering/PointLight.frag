@@ -8,11 +8,12 @@ uniform vec3 cameraPos;
 
 //Point Light
 uniform vec4 lightColour;
-uniform vec3 pointLightConstantLinearQuad;
+uniform vec3 pointLightConstantLinearQuad = vec3(1.0f, 0.35f, 0.44);
 
 in Vertex
 {
     vec3 lightWorldPos;
+    vec2 texCoord;
 } IN;
 
 out vec4 fragColour;
@@ -91,7 +92,8 @@ vec3 PointLightPbr(vec3 inPos, vec3 inWorldPos, vec3 inColor, vec3 inNormal, flo
 
     // Lambert diffuse BRDF.
 	vec3 diffuseBRDF = (kD * inAlbedo) / PI;
-
+    fragColour = vec4(diffuseBRDF, 1.0);
+    return vec3(1.0f);
     // Cook-Torrance specular microfacet BRDF.
     
     vec3 numerator    = NDF * G * F;
@@ -105,20 +107,26 @@ vec3 PointLightPbr(vec3 inPos, vec3 inWorldPos, vec3 inColor, vec3 inNormal, flo
 
 void main()
 {
-    // const float gamma = 2.2;
-    // vec3 albedo = pow(texture(diffuseMettalicTex, IN.texCoord).rgb, vec3(gamma)); //Albedo already broguht to linear space
-    // vec3 normal = texture(normalRoughnessTex, IN.texCoord).rgb;
-    // float metallic = texture(diffuseMettalicTex, IN.texCoord).a;
-    // float roughness = texture(normalRoughnessTex, IN.texCoord).a;
-    // float ao = texture(baseReflectivityAmbiantOccTex, IN.texCoord).a;
-    // vec3 F0 = texture(baseReflectivityAmbiantOccTex, IN.texCoord).rgb; //surface reflection at zero incidence  
+    const float gamma = 2.2;
+    vec3 albedo = pow(texture(diffuseMettalicTex, IN.texCoord).rgb, vec3(gamma)); //Albedo already broguht to linear space
+    vec3 normal = texture(normalRoughnessTex, IN.texCoord).rgb;
+    float metallic = texture(diffuseMettalicTex, IN.texCoord).a;
+    float roughness = texture(normalRoughnessTex, IN.texCoord).a;
+    float ao = texture(baseReflectivityAmbiantOccTex, IN.texCoord).a;
+    vec3 F0 = texture(baseReflectivityAmbiantOccTex, IN.texCoord).rgb; //surface reflection at zero incidence  
       
-    //  // reflectance equation
-    // vec3 lOut = vec3(0.0);
-
-    // lOut += PointLightPbr(lightPosList[i], texture(fragmentPosition, IN.texCoord).rgb, lightColorList[i], normal, roughness, metallic, albedo, pointLightConstantLinearQuadList[i].x, pointLightConstantLinearQuadList[i].y, pointLightConstantLinearQuadList[i].z, cameraPos, F0);
+    PointLightPbr(
+                IN.lightWorldPos,
+                texture(fragmentPosition, IN.texCoord).rgb,
+                lightColour.rgb,
+                normal,
+                roughness,
+                metallic,
+                albedo,
+                pointLightConstantLinearQuad.x, pointLightConstantLinearQuad.y, pointLightConstantLinearQuad.z,
+                cameraPos, F0);
 
     // vec3 ambient = vec3(0.33) * albedo * ao;
     // vec3 color = max((ambient + lOut), vec3(0.0));
-    fragColour = vec4(lightColour.rgb, 1.0);
+    //fragColour = vec4(lightColour.rgb, 1.0);
 }
