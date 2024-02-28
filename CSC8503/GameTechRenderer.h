@@ -66,6 +66,8 @@ namespace NCL {
 			OGLShader* pbrShader;
 			OGLShader* toneMapperShader;
 			OGLShader* gammaCorrectionShader;
+
+			OGLShader* frostPostProcessing;
 			OGLMesh*	skyboxMesh;
 			OGLMesh* screenQuad;
 			GLuint		skyboxTex;
@@ -96,6 +98,10 @@ namespace NCL {
 			GLuint textColourVBO;
 			GLuint textTexVBO;
 			size_t textCount;
+
+			//Texture
+			Texture* frostTexture;
+
 #pragma region UI
 			UIBase* ui;
 #pragma endregion

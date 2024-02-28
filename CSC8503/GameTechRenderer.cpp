@@ -25,6 +25,7 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 	toneMapperShader = new OGLShader("basic.vert", "ReinhardTonemap.frag");
 	pbrShader = new OGLShader("pbr.vert", "pbr.frag");
 	gammaCorrectionShader = new OGLShader("basic.vert", "gammaCorrection.frag");
+	frostPostProcessing = new OGLShader("frostPostProcessing.vert", "frostPostProcessing.frag");
 
 	glGenTextures(1, &shadowTex);
 	glBindTexture(GL_TEXTURE_2D, shadowTex);
@@ -66,7 +67,7 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 	CreateScreenQuadMesh();
 
 	LoadSkybox();
-
+	frostTexture = this->LoadTexture("/frost.png");
 	glGenVertexArrays(1, &lineVAO);
 	glGenVertexArrays(1, &textVAO);
 
@@ -157,7 +158,7 @@ void GameTechRenderer::RenderFrame() {
 	//RenderSkybox();
 	RenderCamera();
 	ApplyToneMapping();
-	ApplyFrostingPostProcessing();
+	
 	RenderProcessedScene();
 	glDisable(GL_CULL_FACE); //Todo - text indices are going the wrong way...
 	glDisable(GL_BLEND);
@@ -168,7 +169,7 @@ void GameTechRenderer::RenderFrame() {
 	glDisable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
+	ApplyFrostingPostProcessing();
 	ui->RenderUI();
 }
 
@@ -262,6 +263,51 @@ void GameTechRenderer::RenderSkybox() {
 
 void NCL::CSC8503::GameTechRenderer::ApplyFrostingPostProcessing()
 {
+	/*glBindFramebuffer(GL_FRAMEBUFFER, toneMappingFbo->GetFbo());
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	glDisable(GL_CULL_FACE);
+	glDisable(GL_BLEND);
+	glDisable(GL_DEPTH_TEST);*/
+	glDisable(GL_DEPTH_TEST); // disable depth test so screen-space quad isn't discarded due to depth test.
+	float quadVertices[] = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates. NOTE that this plane is now much smaller and at the top of the screen
+		// positions   // texCoords
+		-0.3f,  1.0f,  0.0f, 1.0f,
+		-0.3f,  0.7f,  0.0f, 0.0f,
+		 0.3f,  0.7f,  1.0f, 0.0f,
+
+		-0.3f,  1.0f,  0.0f, 1.0f,
+		 0.3f,  0.7f,  1.0f, 0.0f,
+		 0.3f,  1.0f,  1.0f, 1.0f
+	};
+
+	unsigned int quadVAO, quadVBO;
+	glGenVertexArrays(1, &quadVAO);
+	glGenBuffers(1, &quadVBO);
+	glBindVertexArray(quadVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+
+	
+	BindShader(*frostPostProcessing);
+	//int texLocation = glGetUniformLocation(frostPostProcessing->GetProgramID(), "cccTexture");
+	//glUniform1i(texLocation, 0);
+	//glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, frostTexture->GetAssetID());
+
+	
+
+	//screenShader.use();
+	glBindVertexArray(quadVAO);
+	//glBindTexture(GL_TEXTURE_2D, frostTexture);	// use the color attachment texture as the texture of the quad plane
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glBindVertexArray(0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
 }
 
 void GameTechRenderer::ApplyToneMapping()
