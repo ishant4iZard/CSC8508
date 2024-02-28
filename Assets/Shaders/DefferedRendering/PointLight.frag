@@ -3,22 +3,23 @@
 uniform sampler2D diffuseMettalicTex;
 uniform sampler2D normalRoughnessTex;
 uniform sampler2D baseReflectivityAmbiantOccTex;
-uniform sampler2D fragmentPosition;
+uniform sampler2D depthStencilTex;
 uniform vec3 cameraPos;
+uniform vec2 pixelSize;
+uniform mat4 inverseProjView;
 
 //Point Light
 uniform vec4 lightColour;
-uniform vec3 pointLightConstantLinearQuad = vec3(1.0f, 0.35f, 0.44);
-
-in Vertex
-{
-    vec3 lightWorldPos;
-    vec2 texCoord;
-} IN;
+const vec3 pointLightConstantLinearQuad = vec3(1.0f, 0.35f, 0.44);
 
 out vec4 fragColour;
 
 const float PI = 3.14159265359;
+
+in Vertex
+{
+    vec3 lightWorldPos;
+} IN;
 
 float CalculatePointLightAttenuation(vec3 inLightPos, vec3 inWorldPos, float inConstant, float inLinear, float inQuadratic)
 {
@@ -67,66 +68,55 @@ float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness)
     return ggx1 * ggx2;
 }
 
-vec3 PointLightPbr(vec3 inPos, vec3 inWorldPos, vec3 inColor, vec3 inNormal, float inRoughness, float inMetallic, vec3 inAlbedo, float inConstant, float inLinear, float inQuadratic, vec3 inCameraPos, vec3 inF0)
-{
-    //Calculate light radiance
-    vec3 wi = normalize(inPos - inWorldPos); //direction vector from fragmnet to lightSource
-    vec3 wo = normalize(inCameraPos - inWorldPos); //Direction vector from fragment to camera, in equation it's called Lo
-    vec3 halfVector = normalize(wi + wo);
-
-    //Calculate attenuation for POINT LIGHT
-    float attenuation = CalculatePointLightAttenuation(inPos, inWorldPos, inConstant, inLinear, inQuadratic);
-        
-    vec3 radiance = inColor * attenuation;
-
-	// Specular reflection vector.
-	vec3 Lr = 2.0 * (max(0.0, dot(inNormal, wo))) * inNormal - wo;
-
-    // cook-torrance BRDF
-    float NDF = DistributionGGX(inNormal, halfVector, inRoughness);       
-    float G   = GeometrySmith(inNormal, wo, wi, inRoughness);
-    vec3 F  = fresnelSchlick(dot(halfVector, wo), inF0);
-
-    vec3 kS = F;
-    vec3 kD = mix(vec3(1.0) - F, vec3(0.0), inMetallic);
-
-    // Lambert diffuse BRDF.
-	vec3 diffuseBRDF = (kD * inAlbedo) / PI;
-    fragColour = vec4(diffuseBRDF, 1.0);
-    return vec3(1.0f);
-    // Cook-Torrance specular microfacet BRDF.
-    
-    vec3 numerator    = NDF * G * F;
-    float denominator = max(0.0001, 4.0 * max(dot(inNormal, wo), 0.0) * max(dot(inNormal, wi), 0.0)); //We add 0.0001 to the denominator to prevent a divide by zero in case any dot product ends up 0.0.
-    vec3 specularBRDF = numerator / denominator;
-
-    //add to outgoing radiance lOut
-    float NdotL = max(dot(inNormal, wi), 0.0);  
-    return (diffuseBRDF + specularBRDF) * radiance * NdotL;
-}
-
 void main()
 {
     const float gamma = 2.2;
-    vec3 albedo = pow(texture(diffuseMettalicTex, IN.texCoord).rgb, vec3(gamma)); //Albedo already broguht to linear space
-    vec3 normal = texture(normalRoughnessTex, IN.texCoord).rgb;
-    float metallic = texture(diffuseMettalicTex, IN.texCoord).a;
-    float roughness = texture(normalRoughnessTex, IN.texCoord).a;
-    float ao = texture(baseReflectivityAmbiantOccTex, IN.texCoord).a;
-    vec3 F0 = texture(baseReflectivityAmbiantOccTex, IN.texCoord).rgb; //surface reflection at zero incidence  
-      
-    PointLightPbr(
-                IN.lightWorldPos,
-                texture(fragmentPosition, IN.texCoord).rgb,
-                lightColour.rgb,
-                normal,
-                roughness,
-                metallic,
-                albedo,
-                pointLightConstantLinearQuad.x, pointLightConstantLinearQuad.y, pointLightConstantLinearQuad.z,
-                cameraPos, F0);
+    vec2 texCoord = vec2(gl_FragCoord.xy * pixelSize);
 
-    // vec3 ambient = vec3(0.33) * albedo * ao;
-    // vec3 color = max((ambient + lOut), vec3(0.0));
-    //fragColour = vec4(lightColour.rgb, 1.0);
+    float depth = texture(depthStencilTex, texCoord).r;
+    vec3 ndcPos = vec3(texCoord, depth) * 2.0 - 1.0;
+    vec4 invClipPos = inverseProjView * vec4(ndcPos, 1.0);
+    vec3 worldPos = invClipPos.xyz / invClipPos.w;
+
+    vec3 albedo = pow(texture(diffuseMettalicTex, texCoord).rgb, vec3(gamma)); //Albedo already broguht to linear space
+    vec3 normal = texture(normalRoughnessTex, texCoord).rgb;
+    float metallic = texture(diffuseMettalicTex, texCoord).a;
+    float roughness = texture(normalRoughnessTex, texCoord).a;
+    float ao = texture(baseReflectivityAmbiantOccTex, texCoord).a;
+    vec3 F0 = texture(baseReflectivityAmbiantOccTex, texCoord).rgb; //surface reflection at zero incidence 
+
+    //Calculate light radiance
+    vec3 wi = normalize(IN.lightWorldPos - worldPos); //direction vector from fragmnet to lightSource
+    vec3 wo = normalize(cameraPos - worldPos); //Direction vector from fragment to camera, in equation it's called Lo
+    vec3 halfVector = normalize(wi + wo);
+
+    //Calculate attenuation for POINT LIGHT
+    float attenuation = CalculatePointLightAttenuation(IN.lightWorldPos, worldPos, pointLightConstantLinearQuad.x, pointLightConstantLinearQuad.y, pointLightConstantLinearQuad.z);
+    
+    vec3 radiance = lightColour.rgb * attenuation;
+
+	// Specular reflection vector.
+	vec3 Lr = 2.0 * (max(0.0, dot(normal, wo))) * normal - wo;
+
+    // cook-torrance BRDF
+    float NDF = DistributionGGX(normal, halfVector, roughness);       
+    float G   = GeometrySmith(normal, wo, wi, roughness);
+    vec3 F  = fresnelSchlick(dot(halfVector, wo), F0);
+
+    vec3 kS = F;
+    vec3 kD = mix(vec3(1.0) - F, vec3(0.0), metallic);
+
+    // Lambert diffuse BRDF.
+	vec3 diffuseBRDF = (kD * albedo) / PI;
+    // Cook-Torrance specular microfacet BRDF.
+    
+    vec3 numerator    = NDF * G * F;
+    float denominator = max(0.0001, 4.0 * max(dot(normal, wo), 0.0) * max(dot(normal, wi), 0.0)); //We add 0.0001 to the denominator to prevent a divide by zero in case any dot product ends up 0.0.
+    vec3 specularBRDF = numerator / denominator;
+
+    //add to outgoing radiance lOut
+    float NdotL = max(dot(normal, wi), 0.0);  
+    //return (diffuseBRDF + specularBRDF) * radiance * NdotL;
+    fragColour = vec4(diffuseBRDF * radiance * NdotL, 1.0f);
+    //SpecularPart = specularBRDF * radiance * NdotL;
 }

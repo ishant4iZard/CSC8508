@@ -293,6 +293,13 @@ void NCL::CSC8503::GameTechRenderer::LightScene()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, pbrFbo->GetFbo());
 
+	glClearColor(0, 0, 0, 1);
+	glClear(GL_COLOR_BUFFER_BIT);
+	glBlendFunc(GL_ONE, GL_ONE);
+	glCullFace(GL_FRONT);
+	glDepthFunc(GL_ALWAYS);
+	glDepthMask(GL_FALSE);
+
 	OGLShader* activeShader = nullptr;
 
 	Matrix4 viewMatrix = gameWorld.GetMainCamera().BuildViewMatrix();
@@ -302,9 +309,15 @@ void NCL::CSC8503::GameTechRenderer::LightScene()
 	int viewLocation = 0;
 	int instancedmodelMatricesListLocation = 0;
 
+	int pixelSizeLocation = 0;
 	int lightColourLocation = 0;
 	int cameraLocation = 0;
+	int inverseProjViewLocation = 0;
+
 	int diffuseMettalicTexLocation = 0;
+	int normalRoughnessTexLocation = 0;
+	int baseReflectivityAmbiantOccTexLocation = 0;
+	int depthStencilTexLocation = 0;
 
 	OGLShader* shader = (OGLShader*)(tempPointLightShader);
 	BindShader(*shader);
@@ -312,37 +325,50 @@ void NCL::CSC8503::GameTechRenderer::LightScene()
 	if (activeShader != shader) {
 		projLocation = glGetUniformLocation(shader->GetProgramID(), "projMatrix");
 		viewLocation = glGetUniformLocation(shader->GetProgramID(), "viewMatrix");
-		instancedmodelMatricesListLocation = glGetUniformLocation(shader->GetProgramID(), "instanceMatrix");
-		lightColourLocation = glGetUniformLocation(shader->GetProgramID(), "lightColour");
-		cameraLocation = glGetUniformLocation(shader->GetProgramID(), "cameraPos");
-		diffuseMettalicTexLocation = glGetUniformLocation(shader->GetProgramID(), "diffuseMettalicTex");
 
-		Vector3 camPos = gameWorld.GetMainCamera().GetPosition();
-		glUniform3fv(cameraLocation, 1, &camPos.x);
+		instancedmodelMatricesListLocation = glGetUniformLocation(shader->GetProgramID(), "instanceMatrix"); //TO DO REMOVE THIS AS IT'S NOT A UNIFORM
+
+		diffuseMettalicTexLocation = glGetUniformLocation(shader->GetProgramID(), "diffuseMettalicTex");
+		normalRoughnessTexLocation = glGetUniformLocation(shader->GetProgramID(), "normalRoughnessTex");
+		baseReflectivityAmbiantOccTexLocation = glGetUniformLocation(shader->GetProgramID(), "baseReflectivityAmbiantOccTex");
+		depthStencilTexLocation = glGetUniformLocation(shader->GetProgramID(), "depthStencilTex");
+
+		cameraLocation = glGetUniformLocation(shader->GetProgramID(), "cameraPos");
+		pixelSizeLocation = glGetUniformLocation(shader->GetProgramID(), "pixelSize");
+		inverseProjViewLocation = glGetUniformLocation(shader->GetProgramID(), "inverseProjView");
+		lightColourLocation = glGetUniformLocation(shader->GetProgramID(), "lightColour");
+
+		lightColour = Vector4(242, 200, 58, 95);
+		glUniform4fv(lightColourLocation, 1, (float*)&lightColour);
+
+		glUniformMatrix4fv(projLocation, 1, false, (float*)&projMatrix);
+		glUniformMatrix4fv(viewLocation, 1, false, (float*)&viewMatrix);
 
 		glUniform1i(diffuseMettalicTexLocation, 0);
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, gBufferFbo->GetDiffuseMettalic());
 
-		glUniform1i(glGetUniformLocation(shader->GetProgramID(),
-			"normalRoughnessTex"), 1);
+		glUniform1i(normalRoughnessTexLocation, 1);
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, gBufferFbo->GetNormalRoughness());
 
-		glUniform1i(glGetUniformLocation(shader->GetProgramID(),
-			"baseReflectivityAmbiantOccTex"), 2);
+		glUniform1i(baseReflectivityAmbiantOccTexLocation, 2);
 		glActiveTexture(GL_TEXTURE2);
 		glBindTexture(GL_TEXTURE_2D, gBufferFbo->GetBaseRefectivityAO());
 
-		glUniform1i(glGetUniformLocation(shader->GetProgramID(),
-			"fragmentPosition"), 3);
+		glUniform1i(depthStencilTexLocation, 3);
 		glActiveTexture(GL_TEXTURE3);
-		glBindTexture(GL_TEXTURE_2D, gBufferFbo->GetFragmentPosition());
+		glBindTexture(GL_TEXTURE_2D, gBufferFbo->GetDepth());
 
-		glUniformMatrix4fv(projLocation, 1, false, (float*)&projMatrix);
-		glUniformMatrix4fv(viewLocation, 1, false, (float*)&viewMatrix);
-		lightColour = Vector4(242, 200, 58, 95);
-		glUniform4fv(lightColourLocation, 1, (float*)&lightColour);
+
+		Vector3 camPos = gameWorld.GetMainCamera().GetPosition();
+		glUniform3fv(cameraLocation, 1, (float*)&camPos);
+		glUniform2f(pixelSizeLocation, 1.0f/windowSize.x, 1.0f / windowSize.y);
+
+		Matrix4 invViewProj = projMatrix * viewMatrix;
+		invViewProj.Invert();
+		glUniformMatrix4fv(inverseProjViewLocation, 1, false, (float*)&invViewProj);
+
 		activeShader = shader;
 	}
 
@@ -354,6 +380,12 @@ void NCL::CSC8503::GameTechRenderer::LightScene()
 	for (size_t i = 0; i < layerCount; ++i) {
 		DrawBoundMesh((uint32_t)i, (*tempInstancedRenderObject).GetMesh()->GetInstanceCount());
 	}
+
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glCullFace(GL_BACK);
+	glDepthFunc(GL_LEQUAL);
+	glDepthMask(GL_TRUE);
+	glClearColor(0.2, 0.2, 0.2, 1);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
