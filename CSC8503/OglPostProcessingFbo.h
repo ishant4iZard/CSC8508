@@ -40,9 +40,7 @@ namespace NCL
 				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
-				//Setting internal format as GL_RGBA32F let's us store information from 0-255 
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, width, height, 0,
-					GL_RGBA, GL_FLOAT, NULL);
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE , NULL);
 
 				glBindTexture(GL_TEXTURE_2D, 0);
 
