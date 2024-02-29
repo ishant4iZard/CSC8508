@@ -11,7 +11,6 @@ bool OGLGBuffer::CreateFrameBuffer()
 	if (!CreateTextureBuffer(diffuseMettalic, GL_RGBA16F, GL_RGBA, GL_FLOAT)) return false;
 	if (!CreateTextureBuffer(normalRoughness, GL_RGBA16F, GL_RGBA, GL_FLOAT)) return false;
 	if (!CreateTextureBuffer(baseReflectiveAmbientOcclusion, GL_RGBA, GL_RGBA, GL_FLOAT)) return false;
-	if (!CreateTextureBuffer(fragmentPosition, GL_RGB16F, GL_RGB, GL_FLOAT)) return false;
 
 	if (!CreateTextureBuffer(depthStencil, GL_DEPTH24_STENCIL8, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8)) return false;
 
@@ -50,10 +49,9 @@ bool OGLGBuffer::BindFrameBuffer()
 		GL_TEXTURE_2D, normalRoughness, 0);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2,
 		GL_TEXTURE_2D, baseReflectiveAmbientOcclusion, 0);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3,
-		GL_TEXTURE_2D, fragmentPosition, 0);
-	GLenum draw_buffer[4] = { GL_COLOR_ATTACHMENT0,  GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
-	glDrawBuffers(4, draw_buffer);
+
+	GLenum draw_buffer[3] = { GL_COLOR_ATTACHMENT0,  GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2};
+	glDrawBuffers(3, draw_buffer);
 
 	GLenum status;
 	status = glCheckFramebufferStatus(GL_FRAMEBUFFER);

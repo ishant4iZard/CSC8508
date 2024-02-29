@@ -14,7 +14,6 @@ namespace NCL
 			GLuint diffuseMettalic;
 			GLuint normalRoughness;
 			GLuint baseReflectiveAmbientOcclusion;
-			GLuint fragmentPosition;
 			GLuint depthStencil;
 
 			int widht;
@@ -32,7 +31,6 @@ namespace NCL
 			GLuint GetNormalRoughness() { return normalRoughness; }
 			GLuint GetBaseRefectivityAO() { return baseReflectiveAmbientOcclusion; }
 			GLuint GetDepth() { return depthStencil; }
-			GLuint GetFragmentPosition() { return fragmentPosition; }
 		};
 	}
 }
