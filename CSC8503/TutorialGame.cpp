@@ -621,12 +621,12 @@ AiStatemachineObject* TutorialGame::AddAiStateObjectToWorld(const Vector3& posit
 	NavigationGrid* navGrid = new NavigationGrid(world);
 	AIStateObject = new AiStatemachineObject(world, navGrid);
 
-	float radius = 5.0f;
+	float radius = 4.0f;
 	SphereVolume* volume = new SphereVolume(radius);
 	AIStateObject->SetBoundingVolume((CollisionVolume*)volume);
 	AIStateObject->GetTransform()
 		.SetScale(Vector3(radius, radius, radius))
-		.SetPosition(position);
+		.SetPosition(Vector3(position.x, 5.6, position.z));
 
 	AIStateObject->SetRenderObject(new RenderObject(&AIStateObject->GetTransform(), sphereMesh, nullptr, basicShader));
 	AIStateObject->SetPhysicsObject(new PhysicsObject(&AIStateObject->GetTransform(), AIStateObject->GetBoundingVolume()));

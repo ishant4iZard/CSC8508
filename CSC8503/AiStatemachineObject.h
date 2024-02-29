@@ -5,6 +5,11 @@
 #include "PhysicsSystem.h"
 #include <vector>
 
+enum AIState {
+    CHASE,
+    PATROL
+};
+
 namespace NCL {
     namespace CSC8503 {
         class StateMachine;
@@ -21,12 +26,14 @@ namespace NCL {
             StateMachine* stateMachine;
             NavigationGrid* navGrid;
             const float DETECTION_RADIUS = 50.0f;
-            const int SPEED = 50;
+            const int SPEED = 40;
             const float DEACTIVATION_DISTANCE = 1.0f;
+            Vector3 randomMovementDirection;
             GameWorld* world;
             float distanceToNearestProj = INT_MAX;
             GameObject* projectileToChase;
             std::vector<Vector3> pathFromAIToPlayer;
+            AIState currentState = PATROL;
 
             void DetectProjectiles(GameObject* gameObject,float dt);
             void MoveRandomly(float dt);

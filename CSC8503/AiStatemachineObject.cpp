@@ -15,7 +15,7 @@ using namespace NCL;
 using namespace CSC8503;
 
 Vector3 PredictInterceptionPoint(Vector3 p1, Vector3 v1, Vector3 p2, float s2) {
-	return p1;
+	return p1; // TODO : Make this stop jittering
 
 	// This makes the game lag for some reason
 	Vector3 relativePositions = p1 - p2;
@@ -38,12 +38,16 @@ AiStatemachineObject::AiStatemachineObject(GameWorld* world, NavigationGrid* nav
 
 	State* PatrolState = new State([&](float dt) -> void
 		{
+			this->GetRenderObject()->SetColour(Debug::BLUE);
+			currentState = PATROL;
 			DetectProjectiles(this, dt);
 			MoveRandomly(dt);
 		}
 	);
 	State* ChaseState = new State([&](float dt) -> void
 		{
+			this->GetRenderObject()->SetColour(Debug::RED);
+			currentState = CHASE;
 			DetectProjectiles(this, dt);
 			ChaseClosestProjectile(dt);
 		}
@@ -62,9 +66,12 @@ AiStatemachineObject::AiStatemachineObject(GameWorld* world, NavigationGrid* nav
 	stateMachine->AddTransition(new StateTransition(ChaseState, PatrolState,
 		[&]() -> bool
 		{
-			return (distanceToNearestProj >= DETECTION_RADIUS);
+			return (distanceToNearestProj >= DETECTION_RADIUS + 300);
 		}
 	));
+
+	randomMovementDirection = Vector3(rand() % 200, 5.6, rand() % 200) - transform.GetPosition();
+	randomMovementDirection = randomMovementDirection.Normalised();
 }
 
 AiStatemachineObject::~AiStatemachineObject() {
@@ -77,16 +84,14 @@ void AiStatemachineObject::Update(float dt) {
 }
 
 void AiStatemachineObject::MoveRandomly(float dt) {
-	// To Do : Add random movement
-	GetPhysicsObject()->AddForce({ 0 , 0 , -10 });
-	GetPhysicsObject()->SetLinearVelocity({ GetPhysicsObject()->GetLinearVelocity().x,0, GetPhysicsObject()->GetLinearVelocity().z });
+	this->GetPhysicsObject()->SetLinearVelocity(randomMovementDirection * SPEED / 5);
 }
 
 void AiStatemachineObject::DetectProjectiles(GameObject* gameObject,float dt) {
 	Vector3 objectPosition = gameObject->GetTransform().GetPosition();
 	Vector3 objectForward = gameObject->GetTransform().GetOrientation() * Vector3(0, 0, 1);
 
-	const int numRays = 30;
+	const int numRays = 50;
 	const float angleIncrement = 2 * 3.14 / numRays;
 	vector<Ray> rays;
 	for (int i = 0; i < numRays; i++) {
@@ -158,8 +163,9 @@ void AiStatemachineObject::ChaseClosestProjectile(float dt) {
 	targetPosition.y = 5.6f;
 
 	Vector3 movementDirection = (targetPosition - this->GetTransform().GetPosition()).Normalised();
-	movementDirection.y = 0;
 	this->GetPhysicsObject()->SetLinearVelocity(movementDirection * SPEED);
+
+	randomMovementDirection = movementDirection; // The ai should not rapidly change directions after state change
 }
 
 bool AiStatemachineObject::CanSeeProjectile() {
@@ -178,6 +184,25 @@ bool AiStatemachineObject::CanSeeProjectile() {
 void AiStatemachineObject::OnCollisionBegin(GameObject* otherObject) {
 	if (otherObject->gettag() == "Projectile") {
 		// Nothing to do here :-)
+	}
+	else if (otherObject->GetPhysicsObject()->GetInverseMass() == 0 && currentState == PATROL) {
+		randomMovementDirection = Vector3(rand() % 200, 5.6, rand() % 200) - transform.GetPosition();
+		randomMovementDirection = randomMovementDirection.Normalised();
+
+		// The random direction should not lead to another collision with a static object
+		// Therfore the ai fires a ray and calculates the distance to the nearest static object along the movement direction and checks if the distance is acceptable
+		Ray ray = Ray(transform.GetPosition(), randomMovementDirection);
+		RayCollision  closestCollision;
+		while (true) {
+			world->Raycast(ray, closestCollision, true, this); 
+			float distance = (((GameObject*)(closestCollision.node))->GetTransform().GetPosition() - transform.GetPosition()).Length();
+
+			if (distance > 5)
+				break;
+
+			randomMovementDirection = Vector3(rand() % 200, 5.6, rand() % 200) - transform.GetPosition();
+			randomMovementDirection = randomMovementDirection.Normalised();
+		}
 	}
 }
 
