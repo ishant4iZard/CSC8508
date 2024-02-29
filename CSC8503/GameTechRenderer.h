@@ -22,6 +22,7 @@ namespace NCL {
 		class OglHdrFbo;
 		class OglPostProcessingFbo;
 		class OGLGBuffer;
+		class OGLDefferedLightFbo;
 
 		class GameTechRenderer : public OGLRenderer	{
 		public:
@@ -52,7 +53,8 @@ namespace NCL {
 			void RenderInstancedRenderObject();
 			void RenderSkybox();
 			void ApplyFrostingPostProcessing();
-			void LightScene();
+			void DeferredPointLightScene();
+			void CombineDefferedLight();
 			void ApplyToneMapping();
 			void RenderProcessedScene();
 			void LoadSkybox();
@@ -70,6 +72,7 @@ namespace NCL {
 			OGLShader* gammaCorrectionShader;
 			OGLShader* gBufferShader;
 			OGLShader* pbrLighting;
+			OGLShader* defferedCombineShader;
 
 			OGLMesh*	skyboxMesh;
 			OGLMesh* screenQuad;
@@ -117,8 +120,8 @@ namespace NCL {
 			OglHdrFbo* pbrFbo;
 			OglPostProcessingFbo* toneMappingFbo;
 			OGLGBuffer* gBufferFbo;
+			OGLDefferedLightFbo* defferedLightFbo;
 #pragma endregion
-
 		};
 	}
 }

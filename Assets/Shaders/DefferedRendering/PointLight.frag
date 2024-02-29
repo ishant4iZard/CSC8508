@@ -12,7 +12,7 @@ uniform mat4 inverseProjView;
 uniform vec4 lightColour;
 const vec3 pointLightConstantLinearQuad = vec3(1.0f, 0.35f, 0.44);
 
-out vec4 fragColour;
+out vec4 fragColour[2];
 
 const float PI = 3.14159265359;
 
@@ -115,8 +115,8 @@ void main()
     vec3 specularBRDF = numerator / denominator;
 
     //add to outgoing radiance lOut
-    float NdotL = max(dot(normal, wi), 0.0);  
-    //return (diffuseBRDF + specularBRDF) * radiance * NdotL;
-    fragColour = vec4(diffuseBRDF * radiance * NdotL, 1.0f);
-    //SpecularPart = specularBRDF * radiance * NdotL;
+    float NdotL = max(dot(normal, wi), 0.0);
+    vec3 ambient = vec3(0.33) * albedo * ao;
+    fragColour[0] = vec4((diffuseBRDF * radiance * NdotL), 1.0f);
+    fragColour[1] = vec4((specularBRDF * radiance * NdotL), 1.0f);
 }

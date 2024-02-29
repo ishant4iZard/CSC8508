@@ -8,6 +8,7 @@
 #include "OglHdrFbo.h"
 #include "OglPostProcessingFbo.h"
 #include "OGLGBuffer.h"
+#include "OGLDefferedLightFbo.h"
 
 using namespace NCL;
 using namespace Rendering;
@@ -28,6 +29,7 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 	gammaCorrectionShader = new OGLShader("basic.vert", "gammaCorrection.frag");
 	gBufferShader = new OGLShader("pbr.vert", "gbuffer.frag");
 	pbrLighting = new OGLShader("pbr.vert", "lightingCalculation.frag");
+	defferedCombineShader = new OGLShader("DefferedRendering/ScreenQuad.vert", "DefferedRendering/CombineBuffer.frag");
 
 	glGenTextures(1, &shadowTex);
 	glBindTexture(GL_TEXTURE_2D, shadowTex);
@@ -104,6 +106,8 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 	pbrFbo = new OglHdrFbo(windowSize.x, windowSize.y);
 	toneMappingFbo = new OglPostProcessingFbo(windowSize.x, windowSize.y);
 	gBufferFbo = new OGLGBuffer(windowSize.x, windowSize.y);
+	defferedLightFbo = new OGLDefferedLightFbo(windowSize.x, windowSize.y);
+
 #ifdef _WIN32
 	ui = UIWindows::GetInstance();
 #else //_ORBIS
@@ -130,6 +134,8 @@ GameTechRenderer::~GameTechRenderer()	{
 	SAFE_DELETE(gBufferFbo);
 	SAFE_DELETE(gBufferShader);
 	SAFE_DELETE(pbrLighting);
+	SAFE_DELETE(defferedLightFbo);
+	SAFE_DELETE(defferedCombineShader);
 }
 
 void GameTechRenderer::LoadSkybox() {
@@ -179,8 +185,10 @@ void GameTechRenderer::RenderFrame() {
 	SortObjectList();
 	//RenderShadowMap();
 	//RenderSkybox();
+
 	RenderCamera();
-	LightScene();
+	DeferredPointLightScene();
+	CombineDefferedLight();
 	ApplyToneMapping();
 	ApplyFrostingPostProcessing();
 	RenderProcessedScene();
@@ -289,9 +297,9 @@ void NCL::CSC8503::GameTechRenderer::ApplyFrostingPostProcessing()
 {
 }
 
-void NCL::CSC8503::GameTechRenderer::LightScene()
+void NCL::CSC8503::GameTechRenderer::DeferredPointLightScene()
 {
-	glBindFramebuffer(GL_FRAMEBUFFER, pbrFbo->GetFbo());
+	glBindFramebuffer(GL_FRAMEBUFFER, defferedLightFbo->GetFbo());
 
 	glClearColor(0, 0, 0, 1);
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -386,6 +394,44 @@ void NCL::CSC8503::GameTechRenderer::LightScene()
 	glDepthFunc(GL_LEQUAL);
 	glDepthMask(GL_TRUE);
 	glClearColor(0.2, 0.2, 0.2, 1);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void NCL::CSC8503::GameTechRenderer::CombineDefferedLight()
+{
+	glBindFramebuffer(GL_FRAMEBUFFER, pbrFbo->GetFbo());
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_CULL_FACE);
+	glDisable(GL_BLEND);
+	this->activeShader = defferedCombineShader;
+
+	BindShader(*this->activeShader);
+
+	int diffuseMettalicTexLocation = glGetUniformLocation(this->activeShader->GetProgramID(), "diffuseMettalicTex");
+	int diffuseLightTexLocation = glGetUniformLocation(this->activeShader->GetProgramID(), "diffuseLightTex");
+	int specularLightTexLocation = glGetUniformLocation(this->activeShader->GetProgramID(), "specularLightTex");
+
+	glUniform1i(diffuseMettalicTexLocation, 0);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, gBufferFbo->GetDiffuseMettalic());
+
+	glUniform1i(diffuseLightTexLocation, 1);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, defferedLightFbo->GetdiffuseLightTex());
+
+	glUniform1i(specularLightTexLocation, 2);
+	glActiveTexture(GL_TEXTURE2);
+	glBindTexture(GL_TEXTURE_2D, defferedLightFbo->GetSpecularLightTex());
+
+	BindMesh(*screenQuad);
+	DrawBoundMesh();
+
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_BLEND);
+
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 

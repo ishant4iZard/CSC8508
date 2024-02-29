@@ -77,7 +77,8 @@ set(OGL_Rendering_Files
     "OglPostProcessingFbo.h"
     "OGLGBuffer.h"
     "OGLGBuffer.cpp"
-
+    "OGLDefferedLightFbo.h"
+    "OGLDefferedLightFbo.cpp"
 )
 source_group("OGL Rendering Files" FILES ${OGL_Rendering_Files})
 
