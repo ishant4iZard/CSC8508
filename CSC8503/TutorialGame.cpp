@@ -52,7 +52,6 @@ TutorialGame::TutorialGame() : controller(*Window::GetWindow()->GetKeyboard(), *
 	InitialiseAssets();
 	//GameObject* test = AddAABBCubeToWorld(Vector3(0, 1, 0), Vector3(100, 1, 100), 1 / 100, 0.1f);
 	//test->settag("walls");
-	InitAI();
 
 #ifdef _WIN32
 	ui = UIWindows::GetInstance();
@@ -257,9 +256,11 @@ void TutorialGame::InitWorld() {
 
 	InitTeleporters();
 	//TestAddStaticObjectsToWorld();
-	InitAI();
+	//InitAI();
 	
 	physics->createStaticTree();//this needs to be at the end of all initiations
+
+	//InitAI();
 }
 
 /*
@@ -578,67 +579,27 @@ GameObject* NCL::CSC8503::TutorialGame::AddTeleporterToWorld(const Vector3& posi
 	return teleporter1;
 }
 
-
-GameObject* TutorialGame::AddtestcubeToWorld(const Vector3& position1, const Vector3& position2, const Vector3& size) {
-	testCube1 = new GameObject();
-
-	Vector3 floorSize = size;
-	AABBVolume* volume = new AABBVolume(floorSize, false, true);
-	testCube1->SetBoundingVolume((CollisionVolume*)volume);
-	testCube1->GetTransform()
-		.SetScale(floorSize * 2)
-		.SetPosition(position1);
-
-	testCube1->SetRenderObject(new RenderObject(&testCube1->GetTransform(), cubeMesh, basicTex, basicShader));
-	testCube1->SetPhysicsObject(new PhysicsObject(&testCube1->GetTransform(), testCube1->GetBoundingVolume()));
-
-	testCube1->GetPhysicsObject()->SetInverseMass(1);
-	testCube1->GetPhysicsObject()->InitCubeInertia();
-
-
-	testCube2 = new GameObject();
-	testCube2->SetBoundingVolume((CollisionVolume*)volume);
-	testCube2->GetTransform()
-		.SetScale(floorSize * 2)
-		.SetPosition(position2);
-
-	testCube2->SetRenderObject(new RenderObject(&testCube2->GetTransform(), cubeMesh, basicTex, basicShader));
-	testCube2->SetPhysicsObject(new PhysicsObject(&testCube2->GetTransform(), testCube2->GetBoundingVolume()));
-
-	testCube2->GetPhysicsObject()->SetInverseMass(1);
-	testCube2->GetPhysicsObject()->InitCubeInertia();
-
-	world->AddGameObject(testCube1);
-	world->AddGameObject(testCube2);
-
-	testGameObjects.push_back(testCube1);
-	testGameObjects.push_back(testCube2);
-
-
-	return testCube1;
-}
-
-AiTreeObject* TutorialGame::AddAiToWorld(const Vector3& position, Vector3 dimensions, float inverseMass, float elasticity) {
-	aitreetest = new AiTreeObject("Aitreeobject");
-
-	OBBVolume* volume = new OBBVolume(dimensions);
-	aitreetest->SetBoundingVolume((CollisionVolume*)volume);
-
-	//aitreetest->GetTransform().RandomPosition(position, true).SetScale(dimensions * 2);
-		//.SetPosition(position).SetScale(dimensions * 2);
-
-	aitreetest->SetRenderObject(new RenderObject(&aitreetest->GetTransform(), cubeMesh, basicTex, basicShader));
-	aitreetest->SetPhysicsObject(new PhysicsObject(&aitreetest->GetTransform(), aitreetest->GetBoundingVolume()));
-
-	aitreetest->GetPhysicsObject()->SetInverseMass(inverseMass);
-	aitreetest->GetPhysicsObject()->InitCubeInertia();
-	aitreetest->GetPhysicsObject()->SetElasticity(elasticity);
-	aitreetest->BehaviorTree();
-
-	world->AddGameObject(aitreetest);
-	return aitreetest;
-
-}
+//AiTreeObject* TutorialGame::AddAiToWorld(const Vector3& position, Vector3 dimensions, float inverseMass, float elasticity) {
+//	aitreetest = new AiTreeObject("Aitreeobject");
+//
+//	OBBVolume* volume = new OBBVolume(dimensions);
+//	aitreetest->SetBoundingVolume((CollisionVolume*)volume);
+//
+//	//aitreetest->GetTransform().RandomPosition(position, true).SetScale(dimensions * 2);
+//		//.SetPosition(position).SetScale(dimensions * 2);
+//
+//	aitreetest->SetRenderObject(new RenderObject(&aitreetest->GetTransform(), cubeMesh, basicTex, basicShader));
+//	aitreetest->SetPhysicsObject(new PhysicsObject(&aitreetest->GetTransform(), aitreetest->GetBoundingVolume()));
+//
+//	aitreetest->GetPhysicsObject()->SetInverseMass(inverseMass);
+//	aitreetest->GetPhysicsObject()->InitCubeInertia();
+//	aitreetest->GetPhysicsObject()->SetElasticity(elasticity);
+//	aitreetest->BehaviorTree();
+//
+//	world->AddGameObject(aitreetest);
+//	return aitreetest;
+//
+//}
 
 AiStatemachineObject* TutorialGame::AddAiStateObjectToWorld(const Vector3& position) {
 	NavigationGrid* navGrid = new NavigationGrid(world);
@@ -741,20 +702,20 @@ void TutorialGame::TestAddStaticObjectsToWorld() {
 }
 
 
-void TutorialGame::ObjectRay(GameObject* gameObject, GameObject* gameObject2) {
-
-	Vector3 objectPosition = gameObject->GetTransform().GetPosition() + Vector3(0, 0, 10);
-	Vector3 objectForward = gameObject->GetTransform().GetOrientation() * Vector3(0, 0, 1);
-	Ray ray(objectPosition, objectForward);
-
-	RayCollision closestCollision;
-	closestCollision.rayDistance = 100.0f;
-
-	if (world->Raycast(ray, closestCollision, true, gameObject)) {
-		if (closestCollision.node == gameObject2) {
-			Debug::DrawLine(objectPosition, objectForward * 100, Debug::BLACK);
-			gameObject2->GetPhysicsObject()->AddForceAtPosition(ray.GetDirection() * 100, closestCollision.collidedAt);
-		}
-		Debug::DrawLine(objectPosition, objectForward * 100, Debug::RED);
-	}
-}
+//void TutorialGame::ObjectRay(GameObject* gameObject, GameObject* gameObject2) {
+//
+//	Vector3 objectPosition = gameObject->GetTransform().GetPosition() + Vector3(0, 0, 10);
+//	Vector3 objectForward = gameObject->GetTransform().GetOrientation() * Vector3(0, 0, 1);
+//	Ray ray(objectPosition, objectForward);
+//
+//	RayCollision closestCollision;
+//	closestCollision.rayDistance = 100.0f;
+//
+//	if (world->Raycast(ray, closestCollision, true, gameObject)) {
+//		if (closestCollision.node == gameObject2) {
+//			Debug::DrawLine(objectPosition, objectForward * 100, Debug::BLACK);
+//			gameObject2->GetPhysicsObject()->AddForceAtPosition(ray.GetDirection() * 100, closestCollision.collidedAt);
+//		}
+//		Debug::DrawLine(objectPosition, objectForward * 100, Debug::RED);
+//	}
+//}

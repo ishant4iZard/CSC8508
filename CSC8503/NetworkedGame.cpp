@@ -150,8 +150,8 @@ void NetworkedGame::UpdateGame(float dt) {
 	//AI part:
 	//DetectProjectiles(testStateObject);
 
-
-
+	if(AIStateObject)
+		AIStateObject->Update(dt);
 
 	audioEngine->Update();
 	TutorialGame::UpdateGame(dt);
@@ -527,6 +527,7 @@ void NetworkedGame::OnRep_DeactiveProjectile(int objectID)
 
 void NetworkedGame::StartLevel() {
 	CheckPlayerListAndSpawnPlayers();
+	SpawnAI();
 }
 
 void NetworkedGame::ReceivePacket(int type, GamePacket* payload, int source) {
@@ -667,6 +668,34 @@ bool NetworkedGame::clientProcessDeltaPacket(DeltaPacket* dp)
 	}
 	itr->second->ReadPacket(*dp);
 	return true;
+}
+
+AiStatemachineObject* NetworkedGame::AddAiStateObjectToWorld(const Vector3& position) {
+	NavigationGrid* navGrid = new NavigationGrid(world);
+	AIStateObject = new AiStatemachineObject(world, navGrid);
+
+	float radius = 4.0f;
+	SphereVolume* volume = new SphereVolume(radius);
+	AIStateObject->SetBoundingVolume((CollisionVolume*)volume);
+	AIStateObject->GetTransform()
+		.SetScale(Vector3(radius, radius, radius))
+		.SetPosition(Vector3(position.x, 5.6, position.z));
+
+	AIStateObject->SetRenderObject(new RenderObject(&AIStateObject->GetTransform(), sphereMesh, nullptr, basicShader));
+	AIStateObject->SetPhysicsObject(new PhysicsObject(&AIStateObject->GetTransform(), AIStateObject->GetBoundingVolume()));
+
+	AIStateObject->GetPhysicsObject()->SetInverseMass(1 / 10000000.0f);
+	AIStateObject->GetPhysicsObject()->SetElasticity(0.002);
+	AIStateObject->GetPhysicsObject()->InitSphereInertia();
+
+	world->AddGameObject(AIStateObject);
+
+	return AIStateObject;
+}
+
+void NetworkedGame::SpawnAI() {
+	// TODO : Read from csv and load ais
+	AddAiStateObjectToWorld(Vector3(90, 5.6, 90));
 }
 
 //void NetworkedGame::DetectProjectiles(GameObject* gameObject) {

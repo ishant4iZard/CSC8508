@@ -1,6 +1,7 @@
 #include "NavigationGrid.h"
 #include "Assets.h"
 #include "PhysicsSystem.h"
+#include "PhysicsObject.h"
 
 #include <fstream>
 
@@ -60,7 +61,7 @@ NavigationGrid::NavigationGrid(GameWorld* world)	{
 
 				if (!ObjectDetected) continue;
 
-				if (ObjectDetected->gettag() == "walls" || ObjectDetected->gettag() == "bouncePads") {//use isKinematic
+				if (ObjectDetected->GetBoundingVolume()->isKinematic && ObjectDetected->gettag() !=  "floor1") {
 					n.type = 'x';
 					n.position = Vector3(startpos.x + (float)(x * nodeSize), startpos.y, startpos.z + (float)(y * nodeSize));
 				}
