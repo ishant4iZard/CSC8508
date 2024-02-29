@@ -67,7 +67,7 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 	CreateScreenQuadMesh();
 
 	LoadSkybox();
-	frostTexture = this->LoadTexture("/frost.png");
+	frostTexture = this->LoadTexture("frost.png");
 	glGenVertexArrays(1, &lineVAO);
 	glGenVertexArrays(1, &textVAO);
 
@@ -158,7 +158,11 @@ void GameTechRenderer::RenderFrame() {
 	//RenderSkybox();
 	RenderCamera();
 	ApplyToneMapping();
-	
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	ApplyFrostingPostProcessing();	
+
 	RenderProcessedScene();
 	glDisable(GL_CULL_FACE); //Todo - text indices are going the wrong way...
 	glDisable(GL_BLEND);
@@ -169,7 +173,10 @@ void GameTechRenderer::RenderFrame() {
 	glDisable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	ApplyFrostingPostProcessing();
+
+
+
+
 	ui->RenderUI();
 }
 
@@ -294,11 +301,12 @@ void NCL::CSC8503::GameTechRenderer::ApplyFrostingPostProcessing()
 
 	
 	BindShader(*frostPostProcessing);
-	int texLocation = glGetUniformLocation(frostPostProcessing->GetProgramID(), "cccTexture");
-	glUniform1i(texLocation, 0);
-	glActiveTexture(GL_TEXTURE0);
+	//int texLocation = glGetUniformLocation(frostPostProcessing->GetProgramID(), "cccTexture");
+	//glUniform1i(texLocation, 0);
+	//glActiveTexture(GL_TEXTURE0);
 	//glBindTexture(GL_TEXTURE_2D, frostTexture->GetAssetID());
 
+	BindTextureToShader(*(OGLTexture*)frostTexture, "cccTexture", 0);
 	//screenShader.use();
 	glBindVertexArray(quadVAO);
 	//glBindTexture(GL_TEXTURE_2D, frostTexture);	// use the color attachment texture as the texture of the quad plane
