@@ -26,7 +26,7 @@ namespace NCL {
             StateMachine* stateMachine;
             NavigationGrid* navGrid;
             const float DETECTION_RADIUS = 50.0f;
-            const int SPEED = 40;
+            const int SPEED = 35;
             const float DEACTIVATION_DISTANCE = 1.0f;
             Vector3 randomMovementDirection;
             GameWorld* world;
@@ -41,6 +41,8 @@ namespace NCL {
             void FindPathFromAIToProjectile(float dt);
             void DisplayPathfinding();
             bool CanSeeProjectile();
+            float timer = 0;
+            const int TIME_TO_NEXT_UPDATE = 10;
         };
     }
 }

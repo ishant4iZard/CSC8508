@@ -25,10 +25,10 @@ NavigationGrid::NavigationGrid() {
 
 //Create a Grid that can detect there are obstacles or not.
 NavigationGrid::NavigationGrid(GameWorld* world)	{
-	nodeSize	= 2;
+	nodeSize	= 5;
 
 	// NOTE : width and height do NOT refer to length but the number of cells
-	gridWidth	= 200 / nodeSize;
+	gridWidth	= 200 / nodeSize; // TODO : Remove hardcoded length and width
 	gridHeight	= 200 / nodeSize;
 
 	allNodes	= new GridNode[gridWidth * gridHeight];

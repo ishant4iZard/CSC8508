@@ -35,7 +35,8 @@ TutorialGame::TutorialGame() : controller(*Window::GetWindow()->GetKeyboard(), *
 	levelFileLoader = new WindowsLevelLoader();
 #endif // _WIN32
 
-	useGravity		= false;
+	//useGravity		= false;
+	physics->UseGravity(false);
 
 	world->GetMainCamera().SetController(controller);
 

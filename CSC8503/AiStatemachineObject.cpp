@@ -47,8 +47,13 @@ AiStatemachineObject::AiStatemachineObject(GameWorld* world, NavigationGrid* nav
 	State* ChaseState = new State([&](float dt) -> void
 		{
 			this->GetRenderObject()->SetColour(Debug::RED);
-			currentState = CHASE;
+			if (currentState == PATROL || timer < TIME_TO_NEXT_UPDATE) {
+				DetectProjectiles(this, dt); // timer is being used to delay detection, otherwise the ai will spasm trying to pick between multiple targets
+				timer = 0;
+			}
+			
 			DetectProjectiles(this, dt);
+			currentState = CHASE;
 			ChaseClosestProjectile(dt);
 		}
 	);
@@ -66,7 +71,9 @@ AiStatemachineObject::AiStatemachineObject(GameWorld* world, NavigationGrid* nav
 	stateMachine->AddTransition(new StateTransition(ChaseState, PatrolState,
 		[&]() -> bool
 		{
-			return (distanceToNearestProj >= DETECTION_RADIUS + 300);
+			return (
+				distanceToNearestProj >= DETECTION_RADIUS + 300 && 
+				projectileToChase->GetPhysicsObject()->GetLinearVelocity().Length() > 5);
 		}
 	));
 
@@ -80,11 +87,12 @@ AiStatemachineObject::~AiStatemachineObject() {
 
 void AiStatemachineObject::Update(float dt) {
 	stateMachine->Update(dt);
-	//if(navGrid) navGrid->PrintGrid();
+	timer += dt;
+	if(navGrid) navGrid->PrintGrid();
 }
 
 void AiStatemachineObject::MoveRandomly(float dt) {
-	this->GetPhysicsObject()->SetLinearVelocity(randomMovementDirection * SPEED / 5);
+	this->GetPhysicsObject()->SetLinearVelocity(randomMovementDirection * SPEED);
 }
 
 void AiStatemachineObject::DetectProjectiles(GameObject* gameObject,float dt) {
@@ -135,6 +143,7 @@ void AiStatemachineObject::ChaseClosestProjectile(float dt) {
 		movementDirection.y = 0;
 		this->GetPhysicsObject()->SetLinearVelocity(movementDirection * SPEED);
 
+		randomMovementDirection = movementDirection; // The ai should not rapidly change directions after state change
 		return;
 	}
 
@@ -176,7 +185,7 @@ bool AiStatemachineObject::CanSeeProjectile() {
 	Ray ray = Ray(transform.GetPosition(), dir);
 
 	RayCollision  closestCollision;
-	if (world->Raycast(ray, closestCollision, true, this) && ((GameObject*)(closestCollision.node))->gettag() == "Projectile") return true;
+	if (world->Raycast(ray, closestCollision, true, this) && (GameObject*)(closestCollision.node) == projectileToChase) return true;
 
 	return false;
 }
