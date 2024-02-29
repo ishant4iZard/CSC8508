@@ -72,6 +72,8 @@ for this module, even in the coursework, but you can add it if you like!
 */
 void TutorialGame::InitialiseAssets() {
 	cubeMesh	= renderer->LoadMesh("cube.msh");
+	wallMesh = renderer->LoadMesh("cube.msh");
+	bouncePlatformMesh = renderer->LoadMesh("cube.msh");
 	sphereMesh	= renderer->LoadMesh("sphere.msh");
 	charMesh	= renderer->LoadMesh("goat.msh");
 	enemyMesh	= renderer->LoadMesh("Keeper.msh");
@@ -106,13 +108,17 @@ void TutorialGame::InitialiseAssets() {
 #endif // USE_SHADOW
 
 	pbrShader = renderer->LoadShader("pbr.vert", "pbr.frag");
-	
+	instancePbrShader = renderer->LoadShader("pbrInstanced.vert", "pbr.frag");
+
 	InitCamera();
 	InitWorld();
+
 }
 
 TutorialGame::~TutorialGame()	{
 	delete cubeMesh;
+	delete wallMesh;
+	delete bouncePlatformMesh;
 	delete sphereMesh;
 	delete charMesh;
 	delete enemyMesh;
@@ -237,14 +243,23 @@ void TutorialGame::InitWorld() {
 	physics->UseGravity(false);
 	physics->SetBroadphase(true);
 	timer = 0;
+	AddCapsuleToWorld(Vector3(-75, 10, -75), 2.0f, 5.0f);
+	/*AddCapsuleToWorld(Vector3(-40, 10, -75), 2.0f, 5.0f);
+	AddCapsuleToWorld(Vector3(-35, 10, -75), 2.0f, 5.0f);
+	AddCapsuleToWorld(Vector3(-15, 10, -75), 2.0f, 5.0f);
+	AddCapsuleToWorld(Vector3(-75, 10, -75), 2.0f, 5.0f);
+	AddCapsuleToWorld(Vector3(-70, 10, -70), 2.0f, 5.0f);
+	AddCapsuleToWorld(Vector3(-65, 10, -65), 2.0f, 5.0f);*/
+	capsule = AddCapsuleToWorld(Vector3(-80, 5.6, -80), 1.0f, 2.0f);
 
 	SpawnDataDrivenLevel(GameLevelNumber::LEVEL_1);
-	capsule = AddCapsuleToWorld(Vector3(-80, 7, -80), 2.0f, 5.0f);
-	AddCapsuleToWorld(Vector3(-75, 7, -75), 2.0f, 5.0f);
+	//capsule->GetTransform().SetOrientation(Quaternion::EulerAnglesToQuaternion(0, 0, 90));
 
 	InitTeleporters();
-	physics->createStaticTree();
+	//TestAddStaticObjectsToWorld();
+	InitAI();
 	
+	physics->createStaticTree();//this needs to be at the end of all initiations
 }
 
 /*
@@ -306,13 +321,21 @@ void TutorialGame::SpawnDataDrivenLevel(GameLevelNumber inGameLevelNumber)
 
 void NCL::CSC8503::TutorialGame::SpawnWall(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling)
 {
+	Matrix4 tempTransform = Matrix4();
+	tempTransform.SetPositionVector(inPosition);
+	tempTransform.SetDiagonal(inScale * 2);
+
+	wallMesh->AddInstanceModelMatrices(tempTransform);
+
 	GameObject* tempWall = AddAABBCubeToWorld(
 		inPosition,
 		inScale,
 		0, 0.5f);
-	tempWall->GetRenderObject()->SetShader(pbrShader);
+	tempWall->GetRenderObject()->SetShader(instancePbrShader);
 	tempWall->GetRenderObject()->SetTiling(inTiling);
-	tempWall->settag("walls");
+	tempWall->setName("wall");
+	tempWall->GetRenderObject()->SetMesh(wallMesh);
+
 	for (size_t i = 0; i < (uint8_t)TextureType::MAX_TYPE; i++)
 	{
 		tempWall->GetRenderObject()->SetTexture((TextureType)i, wallTextureList[i]);
@@ -335,10 +358,7 @@ void NCL::CSC8503::TutorialGame::SpawnFloor(const Vector3& inPosition, const Vec
 
 void NCL::CSC8503::TutorialGame::SpawnBouncingPad(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling)
 {
-	BouncePad* tempBouncePad = new BouncePad(cubeMesh, basicTex, pbrShader);
-	//GameObject* tempBouncePad = AddAABBCubeToWorld(inPosition, inScale * 2, 0, 1.05);
-
-	tempBouncePad->settag("walls");
+	BouncePad* tempBouncePad = new BouncePad(bouncePlatformMesh, basicTex, instancePbrShader);
 	for (size_t i = 0; i < (uint8_t)TextureType::MAX_TYPE; i++)
 	{
 		tempBouncePad->GetRenderObject()->SetTexture((TextureType)i, groundTextureList[i]);
@@ -347,6 +367,8 @@ void NCL::CSC8503::TutorialGame::SpawnBouncingPad(const Vector3& inPosition, con
 	world->AddGameObject(tempBouncePad);
 
 	tempBouncePad->GetTransform().SetPosition(inPosition);
+
+	bouncePlatformMesh->AddInstanceModelMatrices(tempBouncePad->GetTransform().GetMatrix());
 }
 
 void NCL::CSC8503::TutorialGame::SpawnTarget(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling)
@@ -400,7 +422,7 @@ physics worlds. You'll probably need another function for the creation of OBB cu
 GameObject* TutorialGame::AddCapsuleToWorld(const Vector3& position, float radius, float halfHeight, float inverseMass, float elasticity) {
 	GameObject* capsule = new GameObject("capsule");
 
-	CapsuleVolume* volume = new CapsuleVolume(halfHeight, radius, false, false);
+	CapsuleVolume* volume = new CapsuleVolume(halfHeight, radius, false, true);
 	capsule->SetBoundingVolume((CollisionVolume*)volume);
 	Vector3 capsuleSize = Vector3(2 * radius, 2 * halfHeight, 2 * radius);
 
@@ -411,7 +433,7 @@ GameObject* TutorialGame::AddCapsuleToWorld(const Vector3& position, float radiu
 	capsule->SetRenderObject(new RenderObject(&capsule->GetTransform(), capsuleMesh, basicTex, basicShader));
 	capsule->SetPhysicsObject(new PhysicsObject(&capsule->GetTransform(), capsule->GetBoundingVolume()));
 
-	capsule->GetPhysicsObject()->SetInverseMass(0.001);
+	capsule->GetPhysicsObject()->SetInverseMass(0);
 	capsule->GetPhysicsObject()->InitCubeInertia();
 	capsule->GetPhysicsObject()->SetElasticity(elasticity);
 
@@ -707,30 +729,32 @@ void TutorialGame::ProcessFrameAddresses() {
 	//frameAddresses.clear();
 }
 
-//void TutorialGame::ObjectRay(GameObject* gameObject, const std::vector<GameObject*>& gameObjects) {
-//
-//	Vector3 objectPosition = gameObject->GetTransform().GetPosition();
-//	Vector3 objectForward = gameObject->GetTransform().GetOrientation() * Vector3(0, 0, 1);
-//
-//	Ray ray1(objectPosition, objectForward);
-//
-//	RayCollision closestCollision;
-//	closestCollision.rayDistance = 0.01f;
-//
-//	if (world->Raycast(ray1, closestCollision, true, gameObject))//)&& world->Raycast(ray2, closestCollision, true, gameObject)&& world->Raycast(ray3, closestCollision, true, gameObject)) {
-//	{
-//		if (closestCollision.rayDistance < 15.0f)
-//		{
-//		for (auto testGameObjects : gameObjects) {
-//			if (closestCollision.node == testGameObjects)
-//			{
-//				Debug::DrawLine(objectPosition, objectForward * 100, Debug::BLACK);
-//				testGameObjects->GetPhysicsObject()->AddForceAtPosition(ray1.GetDirection() * 10, closestCollision.collidedAt);
-//			}
-//			Debug::DrawLine(objectPosition, objectForward * 100, Debug::RED);
-//		}
-//		}
-//
-//
-//	}
-//}
+void TutorialGame::TestAddStaticObjectsToWorld() {
+	for (int x = 0; x < 25; x++) {
+		for (int y = 0; y < 2; y++) {
+			for (int z = 0; z < 25; z++) {
+				Vector3 position = Vector3(-50 + (x * 4), 5 +(y*4), -50 + z * 4);
+				AddAABBCubeToWorld(position, Vector3(0.99,0.99,0.99), 0.0f, 0);
+			}
+		}
+	}
+}
+
+
+void TutorialGame::ObjectRay(GameObject* gameObject, GameObject* gameObject2) {
+
+	Vector3 objectPosition = gameObject->GetTransform().GetPosition() + Vector3(0, 0, 10);
+	Vector3 objectForward = gameObject->GetTransform().GetOrientation() * Vector3(0, 0, 1);
+	Ray ray(objectPosition, objectForward);
+
+	RayCollision closestCollision;
+	closestCollision.rayDistance = 100.0f;
+
+	if (world->Raycast(ray, closestCollision, true, gameObject)) {
+		if (closestCollision.node == gameObject2) {
+			Debug::DrawLine(objectPosition, objectForward * 100, Debug::BLACK);
+			gameObject2->GetPhysicsObject()->AddForceAtPosition(ray.GetDirection() * 100, closestCollision.collidedAt);
+		}
+		Debug::DrawLine(objectPosition, objectForward * 100, Debug::RED);
+	}
+}

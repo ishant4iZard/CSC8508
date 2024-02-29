@@ -71,9 +71,6 @@ namespace NCL {
 			GameObject* AddCapsuleToWorld(const Vector3& position, float radius, float halfHeight, float inverseMass = 0.01f, float elasticity = 0.81f);
 			GameObject* AddTeleporterToWorld(const Vector3& position1, const Vector3& position2, const Vector3& rotation1, const Vector3& rotation2, Vector3 dimensions, float inverseMass = 0.0f, float elasticity = 0.0f);
 			
-			GameObject* AddtestcubeToWorld(const Vector3& position1, const Vector3& position2, const Vector3& size);
-			GameObject* testCube1;
-			GameObject* testCube2;
 
 
 			void InitHole();
@@ -81,6 +78,7 @@ namespace NCL {
 			void InitBouncePad();
 			void InitLevelWall();
 			void InitTeleporters();
+			void TestAddStaticObjectsToWorld();
 
 			void InitDefaultFloor();
 			GameObject* AddFloorToWorld(const Vector3& position, const Vector3& size = Vector3(128,2,128));
@@ -124,12 +122,15 @@ namespace NCL {
 
 			Mesh*	capsuleMesh = nullptr;
 			Mesh*	cubeMesh	= nullptr;
+			Mesh* wallMesh = nullptr;
+			Mesh* bouncePlatformMesh = nullptr;
 			Mesh*	sphereMesh	= nullptr;
 
 			Texture*	basicTex	= nullptr;
 			Texture*	sandTex		= nullptr;
 			Shader*		basicShader = nullptr;
 			Shader* pbrShader = nullptr;
+			Shader* instancePbrShader = nullptr;
 
 			Texture* groundTextureList[(uint8_t)TextureType::MAX_TYPE];
 			Texture* wallTextureList[(uint8_t)TextureType::MAX_TYPE];
@@ -150,10 +151,7 @@ namespace NCL {
 			AiStatemachineObject* AIStateObject;
 
 			GameObject* cube;
-			GameObject* floor1;
-
-			vector<GameObject*> testGameObjects;
-
+			GameObject* floor;
 			level currentlevel;
 			int score = 0;
 			float v = 0, h = 0;

@@ -1,5 +1,6 @@
 #pragma once
 #include "GameWorld.h"
+#include "QuadTree.h"
 
 namespace NCL {
 	namespace CSC8503 {
@@ -61,6 +62,9 @@ namespace NCL {
 			std::vector<CollisionDetection::CollisionInfo> broadphaseCollisionsVec;
 			bool useBroadPhase		= true;
 			int numCollisionFrames	= 5;
+
+			//QuadTree <GameObject*>* staticTree = new QuadTree<GameObject*>(Vector2(256.0f, 256.0f), 8, 10);
+
 
 		};
 	}
