@@ -96,7 +96,6 @@ namespace NCL {
 			GameObject* capsule;
 
 
-			void InitAI();
 			//void InitDefaultFloor();
 			void ProcessFrameAddresses();
 			void ObjectRay(GameObject* gameObject, const std::vector<GameObject*>& gameObjects);
@@ -146,9 +145,6 @@ namespace NCL {
 
 			float timer;
 			float finaltimer;
-
-			AiStatemachineObject * AddAiStateObjectToWorld(const Vector3& position);
-			AiStatemachineObject* AIStateObject;
 
 			GameObject* cube;
 			GameObject* floor;

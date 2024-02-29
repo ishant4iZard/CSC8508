@@ -1,8 +1,6 @@
 #pragma once
 #include "GameObject.h"
-#include "NavigationGrid.h"
-#include "NavigationMesh.h"
-#include "PhysicsSystem.h"
+#include "GameWorld.h"
 #include <vector>
 
 enum AIState {
@@ -12,15 +10,22 @@ enum AIState {
 
 namespace NCL {
     namespace CSC8503 {
+        class NavigationGrid;
+        class NavigationMesh;
+        class PhysicsSystem;
+        class Projectile;
         class StateMachine;
+
         class AiStatemachineObject : public GameObject {
         public:
             AiStatemachineObject(GameWorld* world, NavigationGrid* navGrid);
             ~AiStatemachineObject();
 
             void OnCollisionBegin(GameObject* otherObject) override;
+            void OnCollisionEnd(GameObject* otherObject) override;
 
             virtual void Update(float dt);
+            void DetectProjectiles(std::vector<Projectile*> ProjectileList);
 
         protected:
             StateMachine* stateMachine;
@@ -31,11 +36,12 @@ namespace NCL {
             Vector3 randomMovementDirection;
             GameWorld* world;
             float distanceToNearestProj = INT_MAX;
-            GameObject* projectileToChase;
+            Projectile* projectileToChase;
             std::vector<Vector3> pathFromAIToPlayer;
             AIState currentState = PATROL;
+            bool isCollidingWithProj;
 
-            void DetectProjectiles(GameObject* gameObject,float dt);
+            //void DetectProjectiles(GameObject* gameObject,float dt);
             void MoveRandomly(float dt);
             void ChaseClosestProjectile(float dt);
             void FindPathFromAIToProjectile(float dt);

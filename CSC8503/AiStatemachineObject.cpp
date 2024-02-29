@@ -7,6 +7,7 @@
 #include "NavigationMesh.h"
 #include "TutorialGame.h"
 #include "Projectile.h"
+#include "PhysicsSystem.h"
 #include "NetworkPlayer.h"
 #include "NetworkObject.h"
 #include "Debug.h"
@@ -15,7 +16,7 @@ using namespace NCL;
 using namespace CSC8503;
 
 Vector3 PredictInterceptionPoint(Vector3 p1, Vector3 v1, Vector3 p2, float s2) {
-	return p1; // TODO : Make this stop jittering
+	//return p1; // TODO : Make this stop jittering
 
 	// This makes the game lag for some reason
 	Vector3 relativePositions = p1 - p2;
@@ -35,24 +36,18 @@ AiStatemachineObject::AiStatemachineObject(GameWorld* world, NavigationGrid* nav
 	stateMachine = new StateMachine();
 	this->world = world;
 	this->navGrid = navGrid;
+	this->settag("AI");
 
 	State* PatrolState = new State([&](float dt) -> void
 		{
 			this->GetRenderObject()->SetColour(Debug::BLUE);
 			currentState = PATROL;
-			DetectProjectiles(this, dt);
 			MoveRandomly(dt);
 		}
 	);
 	State* ChaseState = new State([&](float dt) -> void
 		{
 			this->GetRenderObject()->SetColour(Debug::RED);
-			if (currentState == PATROL || timer < TIME_TO_NEXT_UPDATE) {
-				DetectProjectiles(this, dt); // timer is being used to delay detection, otherwise the ai will spasm trying to pick between multiple targets
-				timer = 0;
-			}
-			
-			DetectProjectiles(this, dt);
 			currentState = CHASE;
 			ChaseClosestProjectile(dt);
 		}
@@ -87,92 +82,120 @@ AiStatemachineObject::~AiStatemachineObject() {
 
 void AiStatemachineObject::Update(float dt) {
 	stateMachine->Update(dt);
-	timer += dt;
-	if(navGrid) navGrid->PrintGrid();
+	//if(navGrid) navGrid->PrintGrid();
+	if (isCollidingWithProj && projectileToChase)
+		projectileToChase->ReduceTimeLeft(dt * 5);
+
+	//std::cout << transform.GetPosition().y << "\n";
 }
 
 void AiStatemachineObject::MoveRandomly(float dt) {
-	this->GetPhysicsObject()->SetLinearVelocity(randomMovementDirection * SPEED);
+	randomMovementDirection.y = 0;
+	Vector3 newVelocity = Vector3::Lerp(this->GetPhysicsObject()->GetLinearVelocity(), randomMovementDirection * SPEED, dt);
+	newVelocity.y = 0;
+	this->GetPhysicsObject()->SetLinearVelocity(newVelocity);
+
 }
 
-void AiStatemachineObject::DetectProjectiles(GameObject* gameObject,float dt) {
-	Vector3 objectPosition = gameObject->GetTransform().GetPosition();
-	Vector3 objectForward = gameObject->GetTransform().GetOrientation() * Vector3(0, 0, 1);
+//void AiStatemachineObject::DetectProjectiles(GameObject* gameObject,float dt) {
+//	Vector3 objectPosition = gameObject->GetTransform().GetPosition();
+//	Vector3 objectForward = gameObject->GetTransform().GetOrientation() * Vector3(0, 0, 1);
+//
+//	const int numRays = 50;
+//	const float angleIncrement = 2 * 3.14 / numRays;
+//	vector<Ray> rays;
+//	for (int i = 0; i < numRays; i++) {
+//		float angle = angleIncrement * i;
+//		float x = cos(angle);
+//		float z = sin(angle);
+//
+//		Vector3 dir = Vector3(x, 0, z);
+//		rays.push_back(Ray(objectPosition, dir));
+//		//Debug::DrawLine(objectPosition, dir * 100, Debug::RED);
+//	}
+//
+//	float shortestDistance = INT_MAX;
+//	bool projFound = false;
+//	RayCollision  closestCollision;
+//	for (auto ray : rays) {
+//		if (world->FindObjectByRaycast(ray, closestCollision, "Projectile", gameObject)) {
+//			GameObject* ObjectHit = (GameObject*)closestCollision.node;
+//			float distance = (ObjectHit->GetTransform().GetPosition() - objectPosition).Length();
+//
+//			if (distance < shortestDistance) {
+//				projectileToChase = ObjectHit;
+//				shortestDistance = distance;
+//				distanceToNearestProj = distance;
+//				projFound = true;
+//			}
+//		}
+//	}
+//
+//	if (!projFound) distanceToNearestProj = INT_MAX;
+//}
 
-	const int numRays = 50;
-	const float angleIncrement = 2 * 3.14 / numRays;
-	vector<Ray> rays;
-	for (int i = 0; i < numRays; i++) {
-		float angle = angleIncrement * i;
-		float x = cos(angle);
-		float z = sin(angle);
-
-		Vector3 dir = Vector3(x, 0, z);
-		rays.push_back(Ray(objectPosition, dir));
-		//Debug::DrawLine(objectPosition, dir * 100, Debug::RED);
-	}
-
-	float shortestDistance = INT_MAX;
+void AiStatemachineObject::DetectProjectiles(std::vector<Projectile*> ProjectileList) {
+	Vector3 objectPosition = this->GetTransform().GetPosition();
+	Vector3 objectForward = this->GetTransform().GetOrientation() * Vector3(0, 0, 1);
 	bool projFound = false;
-	RayCollision  closestCollision;
-	for (auto ray : rays) {
-		if (world->FindObjectByRaycast(ray, closestCollision, "Projectile", gameObject)) {
-			GameObject* ObjectHit = (GameObject*)closestCollision.node;
-			float distance = (ObjectHit->GetTransform().GetPosition() - objectPosition).Length();
+	float shortestDistance = INT_MAX;
 
-			if (distance < shortestDistance) {
-				projectileToChase = ObjectHit;
-				shortestDistance = distance;
-				distanceToNearestProj = distance;
-				projFound = true;
-			}
+	for (auto proj : ProjectileList) {
+		if (!proj->IsActive()) continue;
+
+		Vector3 projPos = proj->GetTransform().GetPosition();
+		float distance = (projPos - objectPosition).Length();
+
+		if (distance < DETECTION_RADIUS && distance < shortestDistance) {
+			projectileToChase = proj;
+			shortestDistance = distance;
+			distanceToNearestProj = distance;
+			projFound = true;
 		}
 	}
-
+	
 	if (!projFound) distanceToNearestProj = INT_MAX;
 }
 
 void AiStatemachineObject::ChaseClosestProjectile(float dt) {
-
+	Vector3 movementDirection;
 	if (CanSeeProjectile()) {
 		Vector3 targetPosition = projectileToChase->GetTransform().GetPosition();
 		targetPosition = PredictInterceptionPoint(targetPosition, projectileToChase->GetPhysicsObject()->GetLinearVelocity(), transform.GetPosition(), SPEED);
 
-		targetPosition.y = 5.6f;
-		Vector3 movementDirection = (targetPosition - this->GetTransform().GetPosition()).Normalised();
-		movementDirection.y = 0;
-		this->GetPhysicsObject()->SetLinearVelocity(movementDirection * SPEED);
-
-		randomMovementDirection = movementDirection; // The ai should not rapidly change directions after state change
-		return;
+		movementDirection = (targetPosition - this->GetTransform().GetPosition()).Normalised();
 	}
 
 	// Only use path finding if the projectile is not directly acccessible
+	else {
+		FindPathFromAIToProjectile(dt);
+		DisplayPathfinding();
+		const static float bufferDistance = 0.2f;
 
-	FindPathFromAIToProjectile(dt);
-	DisplayPathfinding();
-	const static float bufferDistance = 0.2f;
-	
-	if (projectileToChase == nullptr || pathFromAIToPlayer.empty()) return;
+		if (projectileToChase == nullptr || pathFromAIToPlayer.empty()) return;
 
-	Vector3 targetPosition = pathFromAIToPlayer[0];
-	Vector3 currentPosition = pathFromAIToPlayer[0];
+		Vector3 targetPosition = pathFromAIToPlayer[0];
+		Vector3 currentPosition = pathFromAIToPlayer[0];
 
-	int index = 0;
-	while   ((index < pathFromAIToPlayer.size() - 1) && 
+		int index = 0;
+		while ((index < pathFromAIToPlayer.size() - 1) &&
 			((currentPosition - targetPosition).Length() < bufferDistance))
-	{
-		index++;
-		targetPosition = pathFromAIToPlayer[index];
+		{
+			index++;
+			targetPosition = pathFromAIToPlayer[index];
+		}
+
+		if (index == pathFromAIToPlayer.size() - 1)
+			targetPosition = projectileToChase->GetTransform().GetPosition();
+
+
+		movementDirection = (targetPosition - this->GetTransform().GetPosition()).Normalised();
 	}
-	
-	if (index == pathFromAIToPlayer.size() - 1 )
-		targetPosition = projectileToChase->GetTransform().GetPosition();
+	movementDirection.y = 0;
+	Vector3 newVelocity = Vector3::Lerp(this->GetPhysicsObject()->GetLinearVelocity(), randomMovementDirection * SPEED, dt);
+	newVelocity.y = 0;
 
-	targetPosition.y = 5.6f;
-
-	Vector3 movementDirection = (targetPosition - this->GetTransform().GetPosition()).Normalised();
-	this->GetPhysicsObject()->SetLinearVelocity(movementDirection * SPEED);
+	this->GetPhysicsObject()->SetLinearVelocity(Vector3::Lerp(this->GetPhysicsObject()->GetLinearVelocity(), movementDirection * SPEED, dt));
 
 	randomMovementDirection = movementDirection; // The ai should not rapidly change directions after state change
 }
@@ -192,11 +215,12 @@ bool AiStatemachineObject::CanSeeProjectile() {
 
 void AiStatemachineObject::OnCollisionBegin(GameObject* otherObject) {
 	if (otherObject->gettag() == "Projectile") {
-		// Nothing to do here :-)
+		isCollidingWithProj = true;
 	}
 	else if (otherObject->GetPhysicsObject()->GetInverseMass() == 0 && currentState == PATROL) {
 		randomMovementDirection = Vector3(rand() % 200, 5.6, rand() % 200) - transform.GetPosition();
 		randomMovementDirection = randomMovementDirection.Normalised();
+		randomMovementDirection.y = 0;
 
 		// The random direction should not lead to another collision with a static object
 		// Therfore the ai fires a ray and calculates the distance to the nearest static object along the movement direction and checks if the distance is acceptable
@@ -211,7 +235,15 @@ void AiStatemachineObject::OnCollisionBegin(GameObject* otherObject) {
 
 			randomMovementDirection = Vector3(rand() % 200, 5.6, rand() % 200) - transform.GetPosition();
 			randomMovementDirection = randomMovementDirection.Normalised();
+			randomMovementDirection.y = 0;
 		}
+	}
+}
+
+void AiStatemachineObject::OnCollisionEnd(GameObject* otherObject)
+{
+	if (otherObject->gettag() == "Projectile") {
+		isCollidingWithProj = false;
 	}
 }
 

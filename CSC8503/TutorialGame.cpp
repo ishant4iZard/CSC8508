@@ -177,10 +177,6 @@ void TutorialGame::UpdateGame(float dt) {
 		timer += dt;
 
 		world->GetMainCamera().UpdateCamera(dt);
-		if (AIStateObject) {
-			AIStateObject->Update(dt);
-		}
-
 		if (timer > TIME_LIMIT) {
 			appState->SetIsGameOver(true);
 		}
@@ -259,8 +255,6 @@ void TutorialGame::InitWorld() {
 	//InitAI();
 	
 	physics->createStaticTree();//this needs to be at the end of all initiations
-
-	//InitAI();
 }
 
 /*
@@ -601,29 +595,6 @@ GameObject* NCL::CSC8503::TutorialGame::AddTeleporterToWorld(const Vector3& posi
 //
 //}
 
-AiStatemachineObject* TutorialGame::AddAiStateObjectToWorld(const Vector3& position) {
-	NavigationGrid* navGrid = new NavigationGrid(world);
-	AIStateObject = new AiStatemachineObject(world, navGrid);
-
-	float radius = 4.0f;
-	SphereVolume* volume = new SphereVolume(radius);
-	AIStateObject->SetBoundingVolume((CollisionVolume*)volume);
-	AIStateObject->GetTransform()
-		.SetScale(Vector3(radius, radius, radius))
-		.SetPosition(Vector3(position.x, 5.6, position.z));
-
-	AIStateObject->SetRenderObject(new RenderObject(&AIStateObject->GetTransform(), sphereMesh, nullptr, basicShader));
-	AIStateObject->SetPhysicsObject(new PhysicsObject(&AIStateObject->GetTransform(), AIStateObject->GetBoundingVolume()));
-
-	AIStateObject->GetPhysicsObject()->SetInverseMass(1/10000000.0f);
-	AIStateObject->GetPhysicsObject()->SetElasticity(0.002);
-	AIStateObject->GetPhysicsObject()->InitSphereInertia();
-
-	world->AddGameObject(AIStateObject);
-
-	return AIStateObject;
-}
-
 void TutorialGame::InitBouncePad()
 {
 	/*
@@ -674,11 +645,6 @@ void TutorialGame::InitPlaceholderAIs() {
 		placeHolderAIs[i]->GetRenderObject()->SetColour(Debug::RED);
 		placeHolderAIs[i]->settag("walls");
 	}
-}
-
-void TutorialGame::InitAI()
-{
-	AddAiStateObjectToWorld(Vector3(10, 5.6, -10))->GetRenderObject()->SetColour(Debug::BLUE);
 }
 
 void TutorialGame::ProcessFrameAddresses() {

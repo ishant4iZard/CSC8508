@@ -12,6 +12,7 @@
 #include "Projectile.h"
 #include "Hole.h"
 #include "GravityWell.h"
+#include "NavigationGrid.h"
 #include <cmath>
 
 #define COLLISION_MSG 30
@@ -150,9 +151,10 @@ void NetworkedGame::UpdateGame(float dt) {
 	//AI part:
 	//DetectProjectiles(testStateObject);
 
-	if(AIStateObject)
+	if (AIStateObject) {
+		AIStateObject->DetectProjectiles(ProjectileList);
 		AIStateObject->Update(dt);
-
+	}
 	audioEngine->Update();
 	TutorialGame::UpdateGame(dt);
 	Debug::UpdateRenderables(dt);
@@ -685,7 +687,7 @@ AiStatemachineObject* NetworkedGame::AddAiStateObjectToWorld(const Vector3& posi
 	AIStateObject->SetPhysicsObject(new PhysicsObject(&AIStateObject->GetTransform(), AIStateObject->GetBoundingVolume()));
 
 	AIStateObject->GetPhysicsObject()->SetInverseMass(1 / 10000000.0f);
-	AIStateObject->GetPhysicsObject()->SetElasticity(0.002);
+	AIStateObject->GetPhysicsObject()->SetElasticity(0.000002);
 	AIStateObject->GetPhysicsObject()->InitSphereInertia();
 
 	world->AddGameObject(AIStateObject);
