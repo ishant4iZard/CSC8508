@@ -54,6 +54,9 @@ namespace NCL {
 			void RenderSkybox();
 			void ApplyFrostingPostProcessing();
 			void DeferredPointLightScene();
+			void EndDefferedLightPass();
+			void BeginDefferedLightPass();
+			void DeferredDirectionalLightScene();
 			void CombineDefferedLight();
 			void ApplyToneMapping();
 			void RenderProcessedScene();
@@ -78,6 +81,7 @@ namespace NCL {
 			OGLMesh* screenQuad;
 			Mesh* tempSphereMesh;
 			Shader* tempPointLightShader;
+			Shader* directionalDefferedLightShader;
 			RenderObject* tempInstancedRenderObject;
 
 			GLuint		skyboxTex;

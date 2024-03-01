@@ -72,6 +72,7 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 	/////////---------------D Rendereing-----------------------//////////////////////
 	tempSphereMesh = this->LoadMesh("Sphere.msh");
 	tempPointLightShader = this->LoadShader("DefferedRendering/PointLight.vert", "DefferedRendering/PointLight.frag");
+	directionalDefferedLightShader = this->LoadShader("DefferedRendering/ScreenQuad.vert", "DefferedRendering/DirectionalLight.frag");
 	Texture* tempTex = nullptr;
 
 	Transform tempRTransform;
@@ -80,7 +81,7 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 		for (int j = -100; j <= 100; j += 28)
 		{
 			Transform tempTransform;
-			tempTransform.SetPosition(Vector3(i, 10, j));
+			tempTransform.SetPosition(Vector3(i, 20, j));
 			tempTransform.SetScale(Vector3(13, 13, 13));
 			tempSphereMesh->AddInstanceModelMatrices(tempTransform.GetMatrix());
 		}
@@ -136,6 +137,7 @@ GameTechRenderer::~GameTechRenderer()	{
 	SAFE_DELETE(pbrLighting);
 	SAFE_DELETE(defferedLightFbo);
 	SAFE_DELETE(defferedCombineShader);
+	SAFE_DELETE(directionalDefferedLightShader);
 }
 
 void GameTechRenderer::LoadSkybox() {
@@ -185,9 +187,13 @@ void GameTechRenderer::RenderFrame() {
 	SortObjectList();
 	//RenderShadowMap();
 	//RenderSkybox();
-
 	RenderCamera();
+
+	BeginDefferedLightPass();
 	DeferredPointLightScene();
+	DeferredDirectionalLightScene();
+	EndDefferedLightPass();
+
 	CombineDefferedLight();
 	ApplyToneMapping();
 	ApplyFrostingPostProcessing();
@@ -299,15 +305,6 @@ void NCL::CSC8503::GameTechRenderer::ApplyFrostingPostProcessing()
 
 void NCL::CSC8503::GameTechRenderer::DeferredPointLightScene()
 {
-	glBindFramebuffer(GL_FRAMEBUFFER, defferedLightFbo->GetFbo());
-
-	glClearColor(0, 0, 0, 1);
-	glClear(GL_COLOR_BUFFER_BIT);
-	glBlendFunc(GL_ONE, GL_ONE);
-	glCullFace(GL_FRONT);
-	glDepthFunc(GL_ALWAYS);
-	glDepthMask(GL_FALSE);
-
 	OGLShader* activeShader = nullptr;
 
 	Matrix4 viewMatrix = gameWorld.GetMainCamera().BuildViewMatrix();
@@ -346,7 +343,7 @@ void NCL::CSC8503::GameTechRenderer::DeferredPointLightScene()
 		inverseProjViewLocation = glGetUniformLocation(shader->GetProgramID(), "inverseProjView");
 		lightColourLocation = glGetUniformLocation(shader->GetProgramID(), "lightColour");
 
-		lightColour = Vector4(242, 200, 58, 95);
+		lightColour = Vector4(77, 77, 255, 255);
 		glUniform4fv(lightColourLocation, 1, (float*)&lightColour);
 
 		glUniformMatrix4fv(projLocation, 1, false, (float*)&projMatrix);
@@ -388,13 +385,96 @@ void NCL::CSC8503::GameTechRenderer::DeferredPointLightScene()
 	for (size_t i = 0; i < layerCount; ++i) {
 		DrawBoundMesh((uint32_t)i, (*tempInstancedRenderObject).GetMesh()->GetInstanceCount());
 	}
+}
 
+void NCL::CSC8503::GameTechRenderer::EndDefferedLightPass()
+{
+	glDisable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glCullFace(GL_BACK);
 	glDepthFunc(GL_LEQUAL);
 	glDepthMask(GL_TRUE);
 	glClearColor(0.2, 0.2, 0.2, 1);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void NCL::CSC8503::GameTechRenderer::BeginDefferedLightPass()
+{
+	glBindFramebuffer(GL_FRAMEBUFFER, defferedLightFbo->GetFbo());
+
+	glClearColor(0, 0, 0, 1);
+	glClear(GL_COLOR_BUFFER_BIT);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_ONE, GL_ONE);
+	glCullFace(GL_FRONT);
+	glDepthFunc(GL_ALWAYS);
+	glDepthMask(GL_FALSE);
+}
+
+void NCL::CSC8503::GameTechRenderer::DeferredDirectionalLightScene()
+{
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_CULL_FACE);
+
+	OGLShader* activeShader = nullptr;
+
+	int pixelSizeLocation = 0;
+	int lightColourLocation = 0;
+	int cameraLocation = 0;
+	int inverseProjViewLocation = 0;
+
+	int diffuseMettalicTexLocation = 0;
+	int normalRoughnessTexLocation = 0;
+	int baseReflectivityAmbiantOccTexLocation = 0;
+	int depthStencilTexLocation = 0;
+
+	OGLShader* shader = (OGLShader*)(directionalDefferedLightShader);
+	BindShader(*shader);
+
+	if (activeShader != shader) {
+		diffuseMettalicTexLocation = glGetUniformLocation(shader->GetProgramID(), "diffuseMettalicTex");
+		normalRoughnessTexLocation = glGetUniformLocation(shader->GetProgramID(), "normalRoughnessTex");
+		baseReflectivityAmbiantOccTexLocation = glGetUniformLocation(shader->GetProgramID(), "baseReflectivityAmbiantOccTex");
+		depthStencilTexLocation = glGetUniformLocation(shader->GetProgramID(), "depthStencilTex");
+
+		cameraLocation = glGetUniformLocation(shader->GetProgramID(), "cameraPos");
+		pixelSizeLocation = glGetUniformLocation(shader->GetProgramID(), "pixelSize");
+
+		lightColourLocation = glGetUniformLocation(shader->GetProgramID(), "lightColour");
+		int lightDirectionLocation = glGetUniformLocation(shader->GetProgramID(), "globalLightDirection");
+		int lightIntensityLocation = glGetUniformLocation(shader->GetProgramID(), "globalIntensity");
+
+		glUniform1i(diffuseMettalicTexLocation, 0);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, gBufferFbo->GetDiffuseMettalic());
+
+		glUniform1i(normalRoughnessTexLocation, 1);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, gBufferFbo->GetNormalRoughness());
+
+		glUniform1i(baseReflectivityAmbiantOccTexLocation, 2);
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, gBufferFbo->GetBaseRefectivityAO());
+
+		glUniform1i(depthStencilTexLocation, 3);
+		glActiveTexture(GL_TEXTURE3);
+		glBindTexture(GL_TEXTURE_2D, gBufferFbo->GetDepth());
+
+
+		Vector3 camPos = gameWorld.GetMainCamera().GetPosition();
+		glUniform3fv(cameraLocation, 1, (float*)&camPos);
+		glUniform2f(pixelSizeLocation, 1.0f / windowSize.x, 1.0f / windowSize.y);
+		glUniform4fv(lightColourLocation, 1, (float*)&directionalLight->GetColor());
+		glUniform3fv(lightDirectionLocation, 1, (float*)&directionalLight->GetDirection());
+		glUniform1f(lightIntensityLocation, directionalLight->GetIntensity());
+		
+		activeShader = shader;
+	}
+
+	BindMesh(*screenQuad);
+	DrawBoundMesh();
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
 }
 
 void NCL::CSC8503::GameTechRenderer::CombineDefferedLight()
