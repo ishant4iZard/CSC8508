@@ -188,6 +188,14 @@ namespace NCL::Maths {
 				current.z + toVector_z / dist * maxDistanceDelta);
 		}
 
+		static Vector3 Lerp(const Vector3& start, const Vector3& end, float t) {
+			t = t < 0.0 ? 0.0 : t > 1.0 ? 1.0 : t;
 
+			float lerpedX = start.x + t * (end.x - start.x);
+			float lerpedY = start.y + t * (end.y - start.y);
+			float lerpedZ = start.z + t * (end.z - start.z);
+
+			return Vector3(lerpedX, lerpedY, lerpedZ);
+		}
 	};
 }

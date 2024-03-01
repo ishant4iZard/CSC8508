@@ -207,7 +207,7 @@ new BehaviourSequence("SequenceLevel2");
 SequenceLevel2->AddChild(Trytoattack);
 SequenceLevel2->AddChild(SelectorLevel2);
 
- SelectorLevel1 =
+SelectorLevel1 =
 new BehaviourSelector("SelectorLevel1");
 SelectorLevel2->AddChild(SequenceLevel2);
 SelectorLevel2->AddChild(Patrol);

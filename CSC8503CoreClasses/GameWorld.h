@@ -41,6 +41,7 @@ namespace NCL {
 			}
 
 			bool Raycast(Ray& r, RayCollision& closestCollision, bool closestObject = false, GameObject* ignore = nullptr) const;
+			bool FindObjectByRaycast(Ray& r, RayCollision& closestCollision, std::string tag, GameObject* ignore = nullptr) const;
 
 			virtual void UpdateWorld(float dt);
 
