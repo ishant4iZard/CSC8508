@@ -116,7 +116,8 @@ void main()
 
     //add to outgoing radiance lOut
     float NdotL = max(dot(normal, wi), 0.0);
-    vec3 ambient = vec3(0.33) * albedo * ao;
-    fragColour[0] = vec4((diffuseBRDF * radiance * NdotL), 1.0f);
+
+    fragColour[0].rgb = vec3((diffuseBRDF * radiance * NdotL));
+    fragColour[0].a = ao;
     fragColour[1] = vec4((specularBRDF * radiance * NdotL), 1.0f);
 }
