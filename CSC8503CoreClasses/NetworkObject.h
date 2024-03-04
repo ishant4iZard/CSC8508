@@ -6,6 +6,16 @@
 namespace NCL::CSC8503 {
 	class GameObject;
 
+	struct ClientHelloPacket : public GamePacket {
+		char PlayerListIndex;
+		char PeerID;
+
+		ClientHelloPacket() {
+			type = Client_Hello;
+			size = sizeof(ClientHelloPacket);
+		}
+	};
+
 	struct DeactivateProjectilePacket : public GamePacket {
 		int   NetObjectID;
 

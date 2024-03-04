@@ -174,7 +174,8 @@ PushdownState::PushdownResult MultiPlayerLobby::OnUpdate(float dt, PushdownState
 		ui->DrawStringText("______________________________________________________________________________________________", Vector2(5, 30), UIBase::BLACK);
 		ui->DrawStringText("______________________________________________________________________________________________", Vector2(5, 65), UIBase::BLACK);
 
-		CheckAndDisplayLobbyMembersList(Subsystem);
+		CheckAndDisplayLobbyMembersList(Subsystem, Game);
+		Game->SetLocalPlayerIndex(Subsystem->GetCurrentUserLobbyIndex());
 		if (Subsystem->GetCurrentUserLobbyIndex() == 0)
 		{
 			appState->SetIsLobbyHolder(true);
@@ -259,12 +260,14 @@ void MultiPlayerLobby::ReceiveEvent(const EventType eventType) {
 	}
 }
 
-void MultiPlayerLobby::CheckAndDisplayLobbyMembersList(OnlineSubsystemBase* Subsystem)
+void MultiPlayerLobby::CheckAndDisplayLobbyMembersList(OnlineSubsystemBase* Subsystem, NetworkedGame* Game)
 {
 	for (int i = 0; i < Subsystem->GetNumCurrentLobbyMembers(); ++i)
 	{
 		if (i == 0) { ui->DrawStringText(("Holder"), Vector2(5, 37), UIBase::WHITE); }
 		ui->DrawStringText(DisplayMemberLineByIndex(Subsystem, i), Vector2(15, 37 + i * 7), UIBase::WHITE);
+
+		Game->SetPlayerNameByIndexInList(Subsystem->GetLobbyMemberNameByIndex(i), i);
 	}
 }
 
@@ -279,8 +282,10 @@ std::string MultiPlayerLobby::DisplayMemberLineByIndex(OnlineSubsystemBase* Subs
 
 char MultiPlayerLobby::GetIPnumByIndex(int index)
 {
+	// this need to be modified
 	NetSystem_Steam* Steam = (NetSystem_Steam*)OnlineSubsystem;
 	string IP = Steam->GetLobbyHolderIPv4Address();
+
 	int PointAccml = 0;
 	int IPnum = 0;
 	for (auto i : IP)

@@ -58,6 +58,7 @@ namespace NCL {
 			int GetLocalPlayerNumber() const;
 			int GetPlayerNumberFromNetID(const int NetID) const;
 			int GetClientState();
+			void SetPlayerNameByIndexInList(const std::string& Name, int Index);
 
 		protected:
 			void UpdateAsServer(float dt);
@@ -104,6 +105,8 @@ namespace NCL {
 			/** List for Networking Players*/
 			std::vector<int> PlayersList;
 			std::vector<NetworkPlayer*> ControledPlayersList;
+			std::vector<std::string> PlayersNameList;
+			int localPlayerIndex;
 
 			void SpawnAI();
 			AiStatemachineObject* AddAiStateObjectToWorld(const Vector3& position);
@@ -126,6 +129,8 @@ namespace NCL {
 			inline GameServer* GetServer() const { return thisServer; }
 			inline GameClient* GetClient() const { return thisClient; } 
 			inline MenuSystem* GetMenuSystem() const { return Menu; }
+			inline int GetLocalPlayerIndex() const { return localPlayerIndex; }
+			inline void SetLocalPlayerIndex(int val) { localPlayerIndex = val; }
 		};
 
 

@@ -124,7 +124,7 @@ namespace NCL {
 			void ReceiveEvent(const EventType eventType) override;
 
 		protected:
-			void CheckAndDisplayLobbyMembersList(OnlineSubsystemBase* Subsystem);
+			void CheckAndDisplayLobbyMembersList(OnlineSubsystemBase* Subsystem, NetworkedGame* Game);
 			std::string DisplayMemberLineByIndex(OnlineSubsystemBase* Subsystem, int Index);
 
 			char GetIPnumByIndex(int index);

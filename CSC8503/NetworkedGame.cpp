@@ -41,10 +41,12 @@ NetworkedGame::NetworkedGame()	{
 
 	PlayersList.clear();
 	ControledPlayersList.clear();
+	PlayersNameList.clear();
 	for (int i = 0; i < 4; ++i)
 	{
 		PlayersList.push_back(-1);
 		ControledPlayersList.push_back(nullptr);
+		PlayersNameList.push_back(std::string(" "));
 	}
 
 	audioEngine = new AudioEngine();
@@ -84,6 +86,7 @@ bool NetworkedGame::StartAsServer() {
 	}
 
 	thisServer->RegisterPacketHandler(Received_State, this);
+	thisServer->RegisterPacketHandler(Client_Hello, this);
 
 	appState->SetIsServer(true);
 
@@ -99,6 +102,7 @@ bool NetworkedGame::StartAsClient(char a, char b, char c, char d) {
 	}
 
 	thisClient = new GameClient();
+	thisClient->SetLocalPlayerIndex(localPlayerIndex);
 	if (!thisClient->Connect(a, b, c, d, NetworkBase::GetDefaultPort()))
 	{
 		return false;
@@ -559,6 +563,14 @@ void NetworkedGame::ReceivePacket(int type, GamePacket* payload, int source) {
 		serverProcessClientPacket(realPacket, source);
 		break;
 	}
+	case BasicNetworkMessages::Client_Hello: {
+		if (thisServer)
+		{
+			ClientHelloPacket* realPacket = (ClientHelloPacket*)payload;
+			thisServer->SetClientList(realPacket->PlayerListIndex, realPacket->PeerID);
+		}
+		break;
+	}
 	case BasicNetworkMessages::Message: {
 		PLayersListPacket* realPacket = (PLayersListPacket*)payload;
 		realPacket->GetPlayerList(PlayersList);
@@ -648,6 +660,13 @@ int NetworkedGame::GetClientState()
 		return thisClient->GetClientState();
 	}
 	return -1;
+}
+
+void NetworkedGame::SetPlayerNameByIndexInList(const std::string& Name, int Index)
+{
+	if (Index > 3) return;
+
+	PlayersNameList[Index] = Name;
 }
 
 bool NetworkedGame::serverProcessClientPacket(ClientPacket* cp, int source)

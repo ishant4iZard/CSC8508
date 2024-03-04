@@ -1,5 +1,8 @@
 #include "GameClient.h"
 #include "./enet/enet.h"
+#include "NetworkObject.h"
+
+
 using namespace NCL;
 using namespace CSC8503;
 
@@ -42,6 +45,11 @@ void GameClient::UpdateClient(float dt) {
 			CurrentConnetNetID = netPeer->outgoingPeerID;
 			clientState = EClientState::CLIENT_STATE_CONNECTED;
 			std::cout << "Connected to server !" << std::endl;
+
+			ClientHelloPacket newPacket;
+			newPacket.PlayerListIndex = PlayerIndex;
+			newPacket.PeerID = CurrentConnetNetID;
+			SendPacket(newPacket);
 		}
 		else if (event.type == ENET_EVENT_TYPE_DISCONNECT)
 		{	

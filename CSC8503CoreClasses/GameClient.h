@@ -31,6 +31,8 @@ namespace NCL {
 		protected:	
 			_ENetPeer*	netPeer;
 			int CurrentConnetNetID;
+				
+			int PlayerIndex;
 
 			EClientState clientState;
 
@@ -39,6 +41,7 @@ namespace NCL {
 		public:
 			inline int GetClientNetID() const { return CurrentConnetNetID; }
 			inline EClientState GetClientState() const { return clientState; }
+			void SetLocalPlayerIndex(int val) { PlayerIndex = val; }
 		};
 	}
 }
