@@ -57,3 +57,15 @@ void GameObject::UpdateBroadphaseAABB() {
 		broadphaseAABB = mat * halfSizes;
 	}
 }
+
+void GameObject::UpdateSweptVolume(float dt)
+{
+	if (boundingVolume->type == VolumeType::Sphere) {
+		float r = ((SphereVolume&)*boundingVolume).GetRadius();
+		float height = GetPhysicsObject()->GetLinearVelocity().Length() * dt / 2;
+		SweptVolume = new CapsuleVolume(height, r);	
+	}
+	else {
+		SweptVolume = boundingVolume;
+	}
+}

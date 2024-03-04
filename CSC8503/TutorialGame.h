@@ -13,6 +13,7 @@
 #include <vector>
 #include "LevelEnum.h"
 #include "LevelObjectEnum.h"
+#include "TutorialGame.h"
 
 #ifdef _WIN32
 #include "WindowsLevelLoader.h"
@@ -51,7 +52,6 @@ namespace NCL {
 
 			GravityWell* gravitywell;
 
-
 		protected:
 			void InitialiseAssets();
 
@@ -70,12 +70,15 @@ namespace NCL {
 			GameObject* AddAABBCubeToWorld(const Vector3& position, Vector3 dimensions, float inverseMass = 10.0f, float elasticity = 0.81f);
 			GameObject* AddCapsuleToWorld(const Vector3& position, float radius, float halfHeight, float inverseMass = 0.01f, float elasticity = 0.81f);
 			GameObject* AddTeleporterToWorld(const Vector3& position1, const Vector3& position2, const Vector3& rotation1, const Vector3& rotation2, Vector3 dimensions, float inverseMass = 0.0f, float elasticity = 0.0f);
+			
+
 
 			void InitHole();
 			void InitGravityWell();
 			void InitBouncePad();
 			void InitLevelWall();
 			void InitTeleporters();
+			void TestAddStaticObjectsToWorld();
 
 			void InitDefaultFloor();
 			GameObject* AddFloorToWorld(const Vector3& position, const Vector3& size = Vector3(128,2,128));
@@ -88,13 +91,14 @@ namespace NCL {
 			void SpawnTarget(const Vector3 & inPosition, const Vector3 & inRotation, const Vector3 & inScale, const Vector2& inTiling);
 			void SpawnBlackHole(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling);
 
+
+
 			GameObject* capsule;
 
 
-			void InitAI();
 			//void InitDefaultFloor();
 			void ProcessFrameAddresses();
-			void ObjectRay(GameObject* gameObject, GameObject* gameObject2);
+			void ObjectRay(GameObject* gameObject, const std::vector<GameObject*>& gameObjects);
 
 			//GameObject* AddFloorToWorld(const Vector3& position, const Vector3& size = Vector3(128,2,128));
 
@@ -141,9 +145,6 @@ namespace NCL {
 
 			float timer;
 			float finaltimer;
-
-			AiStatemachineObject * AddAiStateObjectToWorld(const Vector3& position);
-			AiStatemachineObject* testStateObject;
 
 			GameObject* cube;
 			GameObject* floor;

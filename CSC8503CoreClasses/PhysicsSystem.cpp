@@ -13,7 +13,7 @@
 using namespace NCL;
 using namespace CSC8503;
 
-QuadTree <GameObject*> staticTree(Vector2(256, 256), 10, 15);
+QuadTree <GameObject*> staticTree(Vector2(200, 200), 10, 100);
 
 PhysicsSystem::PhysicsSystem(GameWorld& g) : gameWorld(g)	{
 	applyGravity	= false;
@@ -56,7 +56,7 @@ bool useSimpleContainer = false;
 int constraintIterationCount = 10;
 
 //This is the fixed timestep we'd LIKE to have
-const int   idealHZ = 120;
+const int   idealHZ = 60;
 const float idealDT = 1.0f / idealHZ;
 
 /*
@@ -290,7 +290,7 @@ void PhysicsSystem::ImpulseResolveCollision(GameObject& a, GameObject& b, Collis
 	float angularEffect = Vector3::Dot(inertiaA + inertiaB, p.normal);
 	float elasticityA = physA->GetElasticity();
 	float elasticityB = physB->GetElasticity();
-	float cRestitution = (elasticityA + elasticityB)/2; 
+	float cRestitution = sqrtf(elasticityA * elasticityB); 
 
 	float j = (-(1.0f + cRestitution) * impulseForce) /
 		(totalMass + angularEffect);
@@ -349,6 +349,7 @@ bool broadPhaseHelper(GameObject* a, GameObject* b) {
 //}
 
 void PhysicsSystem::createStaticTree() {
+	UpdateObjectAABBs();
 	int numberStatic = 0;
 	int numberObjects = 0;
 	std::vector <GameObject*>::const_iterator first;
@@ -372,7 +373,7 @@ void PhysicsSystem::createStaticTree() {
 
 void PhysicsSystem::BroadPhase() {
 	broadphaseCollisions.clear();
-	QuadTree <GameObject*> tree(Vector2(128,128), 7, 4);
+	QuadTree <GameObject*> tree(Vector2(200,200), 7, 4);
 	
 	//tree = staticTree;
 
@@ -388,30 +389,17 @@ void PhysicsSystem::BroadPhase() {
 				}
 				Vector3 pos = (*i)->GetTransform().GetPosition();
 				tree.Insert(*i, pos, halfSizes);
-				staticTree.OperateOnContents(
-					[&](std::list <QuadTreeEntry <GameObject*>>& data) {
-						CollisionDetection::CollisionInfo info;
-						for (auto j = data.begin(); j != data.end(); ++j) {
-							if (broadPhaseHelper(*i, (*j).object)) {
-								info.a = std::min((*i), (*j).object);
-								info.b = std::max((*i), (*j).object);
-								broadphaseCollisions.insert(info);
-							}
-						}
+				std::list< QuadTreeEntry<GameObject*>> possiblelist = staticTree.CheckBroadwithstatic(*i, pos, halfSizes);
+				for (auto j : possiblelist) {
+					CollisionDetection::CollisionInfo info;
+					if (broadPhaseHelper(*i, (j).object)) {
+						info.a = std::min((*i), (j).object);
+						info.b = std::max((*i), (j).object);
+						broadphaseCollisions.insert(info);
 					}
-				);
+				}
 			}
 		}
-		//}
-		/*else
-		{
-			Vector3 halfSizes;
-			if (!(*i)->GetBroadphaseAABB(halfSizes)) {
-				continue;
-			}
-			Vector3 pos = (*i)->GetTransform().GetPosition();
-			staticTree.CheckBroadwithstatic(*i, pos, halfSizes);
-		}*/
 	}
 	tree.OperateOnContents(
 		[&](std::list <QuadTreeEntry <GameObject*>>& data) {
@@ -420,15 +408,15 @@ void PhysicsSystem::BroadPhase() {
 				for (auto j = std::next(i); j != data.end(); ++j) {
 					// is this pair of items already in the collision set -
 					// if the same pair is in another quadtree node together etc
-					info.a = std::min((*i).object, (*j).object);
-					info.b = std::max((*i).object, (*j).object);
-					broadphaseCollisions.insert(info);
+					if (broadPhaseHelper((*i).object, (*j).object)) {
+						info.a = std::min((*i).object, (*j).object);
+						info.b = std::max((*i).object, (*j).object);
+						broadphaseCollisions.insert(info);
+					}
 				}
 			}
 		}
 	);
-
-
 }
 
 /*
