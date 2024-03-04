@@ -66,6 +66,8 @@ namespace NCL {
 			bool isLobbyCreated = false;
 			bool isSearchLobbyBtnPressed = false;
 			bool isJoiningLobby = false;
+			bool isDevSASPressed = false;
+			bool isDevSACPressed = false;
 		};
 
 		class MultiplayerSearchMenu : public PushdownState, public EventListener

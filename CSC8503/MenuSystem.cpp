@@ -74,6 +74,18 @@ PushdownState::PushdownResult MainMenu::OnUpdate(float dt, PushdownState** newSt
 			*newState = new MultiplayerSearchMenu();
 			return Push;
 		}
+		if (isDevSASPressed)
+		{
+			isDevSASPressed = false;
+			*newState = new PlayingHUD();
+			return Push;
+		}
+		if (isDevSACPressed)
+		{
+			isDevSACPressed = false;
+			*newState = new PlayingHUD();
+			return Push;
+		}
 
 		ui->DrawButton(
 			"Create Lobby",

@@ -61,7 +61,7 @@ namespace NCL {
 			}
 
 			void SetShader(Shader* inShader) { this->shader = inShader; }
-
+			void SetMesh(Mesh* inMesh) { this->mesh = inMesh; }
 			void SetColour(const Vector4& c) {
 				colour = c;
 			}

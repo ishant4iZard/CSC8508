@@ -48,7 +48,9 @@ namespace NCL {
 			void UpdatePBRUniforms(const NCL::CSC8503::RenderObject* const& i);
 			void UpdateGlobalLightUniform(const OGLShader* inShader);
 			void RenderCamera();
+			void RenderInstancedRenderObject();
 			void RenderSkybox();
+			void ApplyFrostingPostProcessing();
 			void ApplyToneMapping();
 			void RenderProcessedScene();
 			void LoadSkybox();
@@ -57,6 +59,7 @@ namespace NCL {
 			void SetDebugLineBufferSizes(size_t newVertCount);
 
 			vector<const RenderObject*> activeObjects;
+			vector<const RenderObject*> instancedRenderObjectList;
 
 			OGLShader*  debugShader;
 			OGLShader*  skyboxShader;
