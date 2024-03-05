@@ -608,7 +608,10 @@ void NetworkedGame::ReceivePacket(int type, GamePacket* payload, int source) {
 	}
 	case BasicNetworkMessages::Round_Over: {
 		ServerRoundOverPacket* realPacket = (ServerRoundOverPacket*)payload;
-		if (realPacket->isRoundOver) { EventEmitter::EmitEvent(EventType::ROUND_OVER); }
+		if (realPacket->isRoundOver) { 
+			EventEmitter::EmitEvent(EventType::ROUND_OVER); 
+			std::cout << "Client Round over msg Received!\n";
+		}
 		break;
 	}
 	}
