@@ -356,6 +356,8 @@ void PhysicsSystem::createStaticTree() {
 	gameWorld.GetObjectIterators(first, last);
 	for (auto i = first; i != last; ++i) {
 		numberObjects++;
+		if (!(*i)->GetBoundingVolume()) continue;
+
 		if ((*i)->GetBoundingVolume()->isKinematic) {
 			Vector3 halfSizes;
 			numberStatic++;
@@ -380,6 +382,8 @@ void PhysicsSystem::BroadPhase() {
 	std::vector <GameObject*>::const_iterator last;
 	gameWorld.GetObjectIterators(first, last);
 	for (auto i = first; i != last; ++i) {
+		if (!(*i)->GetBoundingVolume()) continue;
+
 		if (!(*i)->GetBoundingVolume()->isKinematic) {
 			if ((*i)->IsActive()) {
 				Vector3 halfSizes;
@@ -576,6 +580,7 @@ ones in the next 'game' frame.
 void PhysicsSystem::ClearForces() {
 	gameWorld.OperateOnContents(
 		[](GameObject* o) {
+			if (!o->GetPhysicsObject()) return;
 			o->GetPhysicsObject()->ClearForces();
 		}
 	);

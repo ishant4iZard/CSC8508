@@ -102,7 +102,7 @@ void TutorialGame::InitialiseAssets() {
 #endif // USE_SHADOW
 
 	pbrShader = renderer->LoadShader("pbr.vert", "pbr.frag");
-	portalShader = renderer->LoadShader("portal.vert", "portal.frag");
+	portalShader = renderer->LoadShader("scene.vert", "portal.frag");
 
 	InitCamera();
 	InitWorld();
@@ -242,12 +242,6 @@ void TutorialGame::InitWorld() {
 	physics->createStaticTree();
 	
 	InitAI();
-
-	// Only for testing
-	// Will remove later
-	GameObject* test = AddObbCubeToWorld(Vector3(10, 0, 10), Vector3(100, 100, 100), 0, 0);
-	test->GetRenderObject()->SetShader(portalShader);
-	test->GetRenderObject()->SetDefaultTexture(portalTex);
 }
 
 /*
@@ -508,55 +502,58 @@ GameObject* TutorialGame::AddAABBCubeToWorld(const Vector3& position, Vector3 di
 GameObject* NCL::CSC8503::TutorialGame::AddTeleporterToWorld(const Vector3& position1,const Vector3& position2,const Vector3& rotation1 , const Vector3& rotation2, Vector3 dimensions, float inverseMass, float elasticity)
 {
 	Teleporter* teleporter1 = new Teleporter();
-
 	OBBVolume* volume1 = new OBBVolume(dimensions, true, true);
 	teleporter1->SetBoundingVolume((CollisionVolume*)volume1);
-
-
 	teleporter1->GetTransform()
 		.SetPosition(position1)
 		.SetScale(dimensions * 2)
 		.SetOrientation(Quaternion::EulerAnglesToQuaternion(rotation1.x,rotation1.y,rotation1.z));
-
-	teleporter1->SetRenderObject(new RenderObject(&teleporter1->GetTransform(), cubeMesh, basicTex, portalShader));
-	teleporter1->GetRenderObject()->SetColour(Vector4(0.2f, 0.2f, 0.2f, 0.5f));
+	teleporter1->setOutNormal(teleporter1->GetTransform().GetOrientation().ToEuler());
+	//teleporter1->SetRenderObject(new RenderObject(&teleporter1->GetTransform(), cubeMesh, basicTex, basicShader));
+	//teleporter1->GetRenderObject()->SetColour(Vector4(0.2f, 0.2f, 0.2f, 0.5f));
 	teleporter1->SetPhysicsObject(new PhysicsObject(&teleporter1->GetTransform(), teleporter1->GetBoundingVolume()));
-
 	teleporter1->GetPhysicsObject()->SetInverseMass(inverseMass);
 	teleporter1->GetPhysicsObject()->InitCubeInertia();
 	teleporter1->GetPhysicsObject()->SetElasticity(elasticity);
 
+	float maxLength = std::max(dimensions.x, dimensions.z);
+	GameObject* teleporter1Display = new GameObject();
+	teleporter1Display->GetTransform()
+		.SetPosition(position1)
+		.SetScale(Vector3(maxLength * 2, 0.01, maxLength * 2))
+		.SetOrientation(Quaternion::EulerAnglesToQuaternion(rotation1.x, rotation1.y, rotation1.z));
+	teleporter1Display->SetRenderObject(new RenderObject(&teleporter1Display->GetTransform(), cubeMesh, basicTex, portalShader));
+
 
 	Teleporter* teleporter2 = new Teleporter(teleporter1);
-
 	OBBVolume* volume2 = new OBBVolume(dimensions, true, true);
 	teleporter2->SetBoundingVolume((CollisionVolume*)volume2);
-
 	teleporter2->GetTransform()
 		.SetPosition(position2)
 		.SetScale(dimensions * 2)
 		.SetOrientation(Quaternion::EulerAnglesToQuaternion(rotation2.x, rotation2.y, rotation2.z));
-
-	teleporter1->setOutNormal(teleporter1->GetTransform().GetOrientation().ToEuler());
 	teleporter2->setOutNormal(teleporter2->GetTransform().GetOrientation().ToEuler());
-
-	teleporter2->SetRenderObject(new RenderObject(&teleporter2->GetTransform(), cubeMesh, basicTex, portalShader));
 	teleporter2->SetPhysicsObject(new PhysicsObject(&teleporter2->GetTransform(), teleporter2->GetBoundingVolume()));
-	teleporter2->GetRenderObject()->SetColour(Vector4(0.2f, 0.2f, 0.2f, 0.5f));
-
 	teleporter2->GetPhysicsObject()->SetInverseMass(inverseMass);
 	teleporter2->GetPhysicsObject()->InitCubeInertia();
 	teleporter2->GetPhysicsObject()->SetElasticity(elasticity);
 
+	GameObject* teleporter2Display = new GameObject();
+	teleporter2Display->GetTransform()
+		.SetPosition(position2)
+		.SetScale(Vector3(maxLength * 2, 0.01, maxLength * 2))
+		.SetOrientation(Quaternion::EulerAnglesToQuaternion(rotation2.x, rotation2.y, rotation2.z));
+	teleporter2Display->SetRenderObject(new RenderObject(&teleporter2Display->GetTransform(), cubeMesh, basicTex, portalShader));
+
 	//teleporter1->setConnectedTeleporter(teleporter2);
 
 	world->AddGameObject(teleporter1);
+	world->AddGameObject(teleporter1Display);
 	world->AddGameObject(teleporter2);
+	world->AddGameObject(teleporter2Display);
 
 	return teleporter1;
 }
-
-
 
 AiTreeObject* TutorialGame::AddAiToWorld(const Vector3& position, Vector3 dimensions, float inverseMass, float elasticity) {
 	aitreetest = new AiTreeObject("Aitreeobject");
@@ -629,11 +626,9 @@ void TutorialGame::InitLevelWall()
 	AddAABBCubeToWorld(Vector3(0, 0, -96), Vector3(100, 20, 10), 0, 0.5f);
 }
 
-
-
 void NCL::CSC8503::TutorialGame::InitTeleporters()
 {
-	AddTeleporterToWorld((Vector3(48, 5.6f, 0)), (Vector3(-48, 5.6f, 45)), Vector3(0, -45, 0), Vector3(0, 90, 0) , Vector3(7, 10, 2));
+	AddTeleporterToWorld((Vector3(48, 5.6f, 0)), (Vector3(-48, 5.6f, 45)), Vector3(0, -45, 0), Vector3(0, 90, 0) , Vector3(10, 10, 3.5));
 }
 
 void TutorialGame::InitPlaceholderAIs() {
@@ -669,7 +664,6 @@ void TutorialGame::ProcessFrameAddresses() {
 	}
 	//frameAddresses.clear();
 }
-
 
 void TutorialGame::ObjectRay(GameObject* gameObject, GameObject* gameObject2) {
 
