@@ -8,6 +8,16 @@ uniform sampler2D mainTex;
 
 out vec4 fragColour;
 
+in Vertex
+{
+	vec4 colour;
+	vec2 texCoord;
+	vec4 shadowProj;
+	vec3 normal;
+	vec3 worldPos;
+    vec4 center;
+} IN;
+
 const vec2  NE                  = vec2(0.05,0.0);
 const vec2  Resolution          = vec2(1280, 720); // To Do : Replace with uniform
 const vec4  Colour1             = vec4(0.62, 0.85, 0.29, 1.0);
@@ -29,13 +39,13 @@ vec3 normal(in vec2 uv) {
 }
 
 void main() {
-	vec2 uv = gl_FragCoord.xy/Resolution.xy-vec2(.5);
-    uv.y *= Resolution.y/Resolution.x;
+    vec2 uv = IN.texCoord - vec2(0.5);
     
     float dist = length(uv);
     float angle = atan(uv.y,uv.x);
     
     vec2 ruv = uv;
+    //uv = vec2(cos(angle + dist * 3.0), dist + (IN.texCoord.y - 0.5) * 2.0 + (time * Speed));
     uv = vec2(cos(angle + dist * 3.0), dist + (time * Speed));
 
     float h = height(uv);

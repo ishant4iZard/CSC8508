@@ -102,7 +102,7 @@ void TutorialGame::InitialiseAssets() {
 #endif // USE_SHADOW
 
 	pbrShader = renderer->LoadShader("pbr.vert", "pbr.frag");
-	portalShader = renderer->LoadShader("scene.vert", "portal.frag");
+	portalShader = renderer->LoadShader("portal.vert", "portal.frag");
 
 	InitCamera();
 	InitWorld();
@@ -245,7 +245,7 @@ void TutorialGame::InitWorld() {
 
 	// Only for testing
 	// Will remove later
-	GameObject* test = AddObbCubeToWorld(Vector3(0, 0, 0), Vector3(100, 100, 100), 0, 0);
+	GameObject* test = AddObbCubeToWorld(Vector3(10, 0, 10), Vector3(100, 100, 100), 0, 0);
 	test->GetRenderObject()->SetShader(portalShader);
 	test->GetRenderObject()->SetDefaultTexture(portalTex);
 }
