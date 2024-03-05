@@ -101,6 +101,7 @@ namespace NCL {
 			bool isCanJoinSelectLobby = false;
 			bool isJoiningLobby = false;
 			bool isLobbyJoined = false;
+			bool isMainMenuPressed = false;
 		};
 
 		class MultiPlayerLobby : public PushdownState, public EventListener

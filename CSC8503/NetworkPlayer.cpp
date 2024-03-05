@@ -6,16 +6,6 @@
 using namespace NCL;
 using namespace CSC8503;
 
-Vector3 Lerp(const Vector3& start, const Vector3& end, float t) {
-	t = std::clamp(t, 0.0f, 1.0f);
-
-	float lerpedX = start.x + t * (end.x - start.x);
-	float lerpedY = start.y + t * (end.y - start.y);
-	float lerpedZ = start.z + t * (end.z - start.z);
-
-	return Vector3(lerpedX, lerpedY, lerpedZ);
-}
-
 NetworkPlayer::NetworkPlayer(NetworkedGame* game, int num)	{
 	this->game = game;
 	playerNum  = num;
@@ -144,12 +134,16 @@ void NetworkPlayer::MovePlayerInSquarePattern(float dt) {
 }
 
 void NetworkPlayer::MovePlayerTowardsCursor(float dt){
+	Vector3 playerPos = transform.GetPosition();
+	playerPos.y = 5.6;
+	transform.SetPosition(playerPos);
+
 	Vector3 movementDirection = (pointPos - transform.GetPosition()).Normalised();
 	movementDirection.y = 0;
 
 	Vector3 currentVelocity = this->GetPhysicsObject()->GetLinearVelocity();
 	Vector3 targetVelocity = movementDirection * movementSpeed;
-	Vector3 velocity = Lerp(currentVelocity, targetVelocity, dt);
+	Vector3 velocity = Vector3::Lerp(currentVelocity, targetVelocity, dt);
 
 	this->GetPhysicsObject()->SetLinearVelocity(velocity);
 }
@@ -173,7 +167,7 @@ void NetworkPlayer::Fire()
 
 	Vector3 fireDir = GetPlayerForwardVector().Normalised();
 	Vector3 firePos = transform.GetPosition() + fireDir * 3;
-	std::cout << firePos.y;
+	//std::cout << firePos.y;
 
 	game->SpawnProjectile(this, firePos, fireDir);
 	//std::cout << "player " << playerNum << " fired!" << std::endl;

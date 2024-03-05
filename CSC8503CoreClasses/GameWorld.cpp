@@ -112,6 +112,29 @@ bool GameWorld::Raycast(Ray& r, RayCollision& closestCollision, bool closestObje
 	return false;
 }
 
+bool GameWorld::FindObjectByRaycast(Ray& r, RayCollision& closestCollision, std::string tag, GameObject* ignoreThis) const {
+	RayCollision collision;
+
+	for (auto& i : gameObjects) {
+		if ( i->gettag() != tag || !i->GetBoundingVolume() || i == ignoreThis) {
+			continue;
+		}
+
+		RayCollision thisCollision;
+		if (CollisionDetection::RayIntersection(r, *i, thisCollision)) {
+			if (thisCollision.rayDistance < collision.rayDistance) {
+				thisCollision.node = i;
+				collision = thisCollision;
+			}
+		}
+	}
+	if (collision.node) {
+		closestCollision = collision;
+		closestCollision.node = collision.node;
+		return true;
+	}
+	return false;
+}
 
 /*
 Constraint Tutorial Stuff

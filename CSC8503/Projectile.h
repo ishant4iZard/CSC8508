@@ -16,6 +16,7 @@ namespace NCL {
 			static int CurrentAvailableProjectileID;
 
 			Projectile(NetworkPlayer* Owner, NetworkedGame* Game);
+			Projectile(Vector3* proPositions);
 			~Projectile();
 
 			void OnCollisionBegin(GameObject* otherObject) override;
@@ -40,6 +41,7 @@ namespace NCL {
 			float timeLeft;
 			bool canTeleport = true;
 			const int LIFE_TIME_AMOUNT = 15;
+			GameObject* projectileToChase;
 		};
 
 	}
