@@ -79,6 +79,8 @@ void TutorialGame::InitialiseAssets() {
 	bonusMesh	= renderer->LoadMesh("sphere.msh");
 	gooseMesh	= renderer->LoadMesh("goose.msh");
 	capsuleMesh = renderer->LoadMesh("capsule.msh");
+	
+	blackholeTex = renderer->LoadTexture("blackhole.png");
 	basicTex	= renderer->LoadTexture("checkerboard.png");
 	sandTex		= renderer->LoadTexture("sand.jpg");
 
@@ -108,6 +110,7 @@ void TutorialGame::InitialiseAssets() {
 
 	pbrShader = renderer->LoadShader("pbr.vert", "pbr.frag");
 	instancePbrShader = renderer->LoadShader("pbrInstanced.vert", "pbr.frag");
+	blackholeShader = renderer->LoadShader("blackhole.vert", "blackhole.frag");
 
 	InitCamera();
 	InitWorld();
@@ -125,6 +128,7 @@ TutorialGame::~TutorialGame()	{
 	delete basicTex;
 	delete basicShader;
 	delete pbrShader;
+	delete blackholeTex;
 
 	delete physics;
 	delete renderer;
@@ -253,7 +257,9 @@ void TutorialGame::InitWorld() {
 	InitTeleporters();
 	//TestAddStaticObjectsToWorld();
 	//InitAI();
-	
+
+	GameObject* test = AddCapsuleToWorld(Vector3(-25, 5.6, 25), 1.0f, 2.0f);
+	//test->SetRenderObject();
 	physics->createStaticTree();//this needs to be at the end of all initiations
 }
 
@@ -395,15 +401,24 @@ void NCL::CSC8503::TutorialGame::SpawnBlackHole(const Vector3& inPosition, const
 	SphereVolume* volume = new SphereVolume(radius);
 	gravityWell->SetBoundingVolume((CollisionVolume*)volume);
 	gravityWell->GetTransform().SetScale(sphereSize).SetPosition(inPosition);
-	gravityWell->SetRenderObject(new RenderObject(&gravityWell->GetTransform(), sphereMesh, basicTex, basicShader));
+	//gravityWell->SetRenderObject(new RenderObject(&gravityWell->GetTransform(), sphereMesh, basicTex, basicShader));
 	gravityWell->SetPhysicsObject(new PhysicsObject(&gravityWell->GetTransform(), gravityWell->GetBoundingVolume()));
 	gravityWell->GetPhysicsObject()->SetInverseMass(0);
-	gravityWell->GetPhysicsObject()->InitSphereInertia();
+	gravityWell->GetPhysicsObject()->InitSphereInertia(); 
 
-	gravityWell->GetRenderObject()->SetColour(Vector4(0, 0.4, 0.4, 1));
-	gravityWell->GetRenderObject()->SetTiling(inTiling);
+	GameObject* blackholeDisplay = new GameObject();
+	blackholeDisplay->GetTransform()
+		.SetPosition(inPosition)
+		.SetScale(inScale)
+		.SetOrientation(Quaternion::EulerAnglesToQuaternion(inRotation.x, inRotation.y, inRotation.z));
+	blackholeDisplay->SetRenderObject(new RenderObject(&blackholeDisplay->GetTransform(), sphereMesh, blackholeTex, blackholeShader));
+	//gravityWell->GetRenderObject()->SetColour(Vector4(0, 0.4, 0.4, 1));
+	//gravityWell->GetRenderObject()->SetTiling(inTiling);
+	
+
 	gravitywell = gravityWell;
 	world->AddGameObject(gravityWell);
+	world->AddGameObject(blackholeDisplay);
 }
 /*
 

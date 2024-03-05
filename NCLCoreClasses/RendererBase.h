@@ -49,5 +49,7 @@ namespace NCL::Rendering {
 		Window& hostWindow;
 
 		Vector2i windowSize;
+
+		float time = 0;
 	};
 }
