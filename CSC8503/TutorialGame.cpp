@@ -650,7 +650,8 @@ void TutorialGame::ObjectRay(GameObject* gameObject, GameObject* gameObject2) {
 
 void TutorialGame::InitMaleGuard() {
 	maleGuardMesh		= renderer->LoadMesh("Male_Guard.msh");
-	anmShader			= renderer->LoadShader("skeletalAnimationSkinning.vert", "skeletalAnimationTexture.frag");
+	//anmShader			= renderer->LoadShader("skeletalAnimationSkinning.vert", "skeletalAnimationTexture.frag");
+	anmShader = renderer->LoadShader("skeletalAnimationSkinning_pbr.vert", "skeletalAnimationTexture_pbr.frag");
 	maleGuardDefultTex	= renderer->LoadTexture("MB_BodyNone_Guard_Albedo.TGA");
 
 
@@ -674,7 +675,7 @@ MaleGuard* TutorialGame::SpawnMaleGuard(const Vector3& position, Vector3 dimensi
 	maleGuardRenderObject->SetAnimation(maleGuard->GetAnimation());
 	maleGuardRenderObject->SetMaleGuardPosition(Vector3(0, 0, 0));
 	maleGuardRenderObject->SetMaleGuardScale(Vector3(30, 30, 30));
-	maleGuardRenderObject->SetMaleGuardRotation(Vector4(90, 0, 1, 0));
+	maleGuardRenderObject->SetMaleGuardRotation(Vector4(45, 0, 1, 0));
 
 	world->AddGameObject(maleGuard);
 	return maleGuard;

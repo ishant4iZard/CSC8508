@@ -121,6 +121,11 @@ namespace NCL {
 			GLuint currentShaderID;
 			bool hasLoadedTextureToSubmesh = false;
 
+			OGLTexture* albedo = nullptr;
+			OGLTexture* normal = nullptr;
+			OGLTexture* metallic = nullptr;
+			OGLTexture* roughness = nullptr;
+			OGLTexture* ao = nullptr;
 			//Skeletal Animation
 
 

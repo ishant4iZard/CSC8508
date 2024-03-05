@@ -548,6 +548,23 @@ void GameTechRenderer::LoadCurrentAnimationAssets(OGLShader* currentShader, Mesh
 		//reset the currentFrame
 		currentFrame = 0;
 	}
+
+
+	if (albedo == nullptr) {
+		albedo = (OGLTexture*)LoadTexture("albedo.png");
+	}
+	if (normal == nullptr) {
+		normal = (OGLTexture*)LoadTexture("normal.png");
+	}
+	if (metallic == nullptr) {
+		metallic = (OGLTexture*)LoadTexture("metallic.png");
+	}
+	if (roughness == nullptr) {
+		roughness = (OGLTexture*)LoadTexture("roughness.png");
+	}
+	if (ao == nullptr) {
+		ao = (OGLTexture*)LoadTexture("ao.png");
+	}
 }
 
 
@@ -588,10 +605,25 @@ void GameTechRenderer::RenderAnimation(Vector3 inPos, Vector3 inScale, Vector4 i
 	//avoid transparency
 	glDisable(GL_BLEND);
 
+	/*BindShader(*anmShader);
+	glUniform1i(glGetUniformLocation(anmShader->GetProgramID(), "diffuseTex"), 0);
+	glUniform1i(glGetUniformLocation(anmShader->GetProgramID(), "bumpTex"), 1);*/
 	BindShader(*anmShader);
 	glUniform1i(glGetUniformLocation(anmShader->GetProgramID(), "diffuseTex"), 0);
 	glUniform1i(glGetUniformLocation(anmShader->GetProgramID(), "bumpTex"), 1);
-	
+	glUniform1i(glGetUniformLocation(anmShader->GetProgramID(), "normalTex"), 2);
+	glUniform1i(glGetUniformLocation(anmShader->GetProgramID(), "albedoTex"), 3);
+	glUniform1i(glGetUniformLocation(anmShader->GetProgramID(), "metallicTex"), 4);
+	glUniform1i(glGetUniformLocation(anmShader->GetProgramID(), "roughnessTex"), 5);
+	glUniform1i(glGetUniformLocation(anmShader->GetProgramID(), "ambiantOccTex"), 6);
+
+	glUniform3fv(glGetUniformLocation(anmShader->GetProgramID(), "lightPos"), 1, (float*)&lightPosition);
+	glUniform4fv(glGetUniformLocation(anmShader->GetProgramID(), "lightColour"), 1, (float*)&lightColour);
+	glUniform1f(glGetUniformLocation(anmShader->GetProgramID(), "lightRadius"), lightRadius);
+
+	Vector3 camPos = gameWorld.GetMainCamera().GetPosition();
+	glUniform3fv(glGetUniformLocation(anmShader->GetProgramID(), "cameraPos"), 1, (float*)&camPos.x);
+
 	Matrix4 modelMatrix;
 	Matrix4ToIdentity(&modelMatrix);
 	modelMatrix = 
@@ -617,6 +649,17 @@ void GameTechRenderer::RenderAnimation(Vector3 inPos, Vector3 inScale, Vector4 i
 
 	int	shaderLocation = glGetUniformLocation(anmShader->GetProgramID(), "joints");
 	glUniformMatrix4fv(shaderLocation, frameMatrices.size(), false, (float*)frameMatrices.data());
+
+	/*glActiveTexture(GL_TEXTURE3);
+	glBindTexture(GL_TEXTURE_2D, albedo->GetObjectID());*/
+	glActiveTexture(GL_TEXTURE2);
+	glBindTexture(GL_TEXTURE_2D, normal->GetObjectID());
+	glActiveTexture(GL_TEXTURE4);
+	glBindTexture(GL_TEXTURE_2D, metallic->GetObjectID());
+	glActiveTexture(GL_TEXTURE5);
+	glBindTexture(GL_TEXTURE_2D, roughness->GetObjectID());
+	glActiveTexture(GL_TEXTURE6);
+	glBindTexture(GL_TEXTURE_2D, ao->GetObjectID());
 
 	for (int i = 0; i < maleGuardMesh->GetSubMeshCount(); i++) {
 		
