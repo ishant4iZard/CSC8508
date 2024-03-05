@@ -14,6 +14,7 @@
 #include "LevelEnum.h"
 #include "LevelObjectEnum.h"
 #include "TutorialGame.h"
+#include "PowerUp.h"
 
 #ifdef _WIN32
 #include "WindowsLevelLoader.h"
@@ -36,7 +37,7 @@ enum class level {
 
 namespace NCL {
 	namespace CSC8503 {
-		class Powerup;
+		class PowerUp;
 		class Player;
 		class Goose;
 		class Voxels;
@@ -51,6 +52,13 @@ namespace NCL {
 			virtual void UpdateGame(float dt);
 
 			GravityWell* gravitywell;
+
+			powerUpType getActivePowerup() {
+				return activePowerUp;
+			}
+			void setActivePowerup(powerUpType inPowerup) {
+				activePowerUp = inPowerup;
+			}
 
 		protected:
 			void InitialiseAssets();
@@ -79,6 +87,7 @@ namespace NCL {
 			void InitLevelWall();
 			void InitTeleporters();
 			void TestAddStaticObjectsToWorld();
+			void InitPowerup();
 
 			void InitDefaultFloor();
 			GameObject* AddFloorToWorld(const Vector3& position, const Vector3& size = Vector3(128,2,128));
@@ -151,6 +160,8 @@ namespace NCL {
 			level currentlevel;
 			int score = 0;
 			float v = 0, h = 0;
+
+			powerUpType activePowerUp = powerUpType::none;
 
 
 #pragma region BouncePad
