@@ -8,15 +8,6 @@ uniform sampler2D metallicTex;
 uniform sampler2D roughnessTex;
 uniform sampler2D ambiantOccTex;
 
-//uniform vec3 albedo;
-//uniform float metallic;
-//uniform float roughness;
-//uniform float ao;
-//
-//uniform bool hasAlbedoTexture = true;
-//uniform bool hasMetallicTexture = true;
-//uniform bool hasRoughnessTexture = true;
-//uniform bool hasAoTexture = true;
 
 uniform vec3	lightPos;
 uniform float	lightRadius;
@@ -52,7 +43,6 @@ vec3 fresnelSchlick(float cosTheta, vec3 F0)
     return F0 + (1.0 - F0) * pow(clamp(1.0 - cosTheta, 0.0, 1.0), 5.0);
 }
 
-//Based on observations by Disney and adopted by Epic Games, the lighting looks more correct squaring the roughness in both the geometry and normal distribution function.
 float DistributionGGX(vec3 N, vec3 H, float roughness)
 {
     float a      = roughness * roughness;
@@ -92,10 +82,7 @@ vec3 BaseReflectivity(const vec3 inAlbedo, const float inMetallicFactor)
 }
 
 void main(void){
-	//vec4 col = texture(diffuseTex , IN.texCoord);
-
 	const float gamma = 2.2;
-    //vec3 albedo = pow(texture(albedoTex, IN.texCoord).rgb, vec3(gamma));
     vec3 albedo = pow(texture(diffuseTex, IN.texCoord).rgb, vec3(gamma));
     vec3 normal = GetNormalFromTexture();
     float metallic = texture(metallicTex, IN.texCoord).r;
@@ -113,21 +100,20 @@ void main(void){
 
     vec3 halfVector = normalize(wo + wi);
 
-    //Attenuation
     float distance = length(lightPos - IN.worldPos);
+
+    //Attenuation
+    //The other attenuation methods would make the characters appear very dim.
+
     //float attenuation = 1.0f / (distance * distance);
     //float attenuation = 1.0f / distance;
     //float attenuation = 1.0f / (1.0f + (0.22f * distance));
     //float attenuation = 1.0f / (1.0f + (0.22f * distance) + 0.20f * distance * distance);
     float attenuation = 1.0f - clamp(distance/lightRadius , 0.0f, 1.0f);
 
-    //multiply by 100 to make the light looks more bright
     vec3 radiance = vec3(lightColour) * attenuation;
 
     // cook-torrance brdf
-
-//	float NDF = DistributionGGX(normal, halfVector, roughness);
-//	float G = GeometrySmith(normal, wo, wi, roughness);
     float NDF = DistributionGGX(IN.normal, halfVector, roughness);
     float G = GeometrySmith(IN.normal, wo, wi, roughness);
 
@@ -135,7 +121,6 @@ void main(void){
 
     vec3 nominator = NDF * G * F;
 
-    //float denominator = 4.0f * max(dot(normal, wo), 0.0f) * max(dot(normal, wi), 0.0f) +0.001f;
     float denominator = 4.0f * max(dot(IN.normal, wo), 0.0f) * max(dot(IN.normal, wi), 0.0f) +0.001f;
 
     vec3 specular = nominator / denominator;
@@ -144,9 +129,7 @@ void main(void){
 	vec3 kD = vec3(1.0f) - kS;
 	kD *= 1.0 - metallic;
 	
-	
     // add to outgoing radiance Lo
-	//float NdotL = max(dot(normal, wi), 0.0f);
     float NdotL = max(dot(IN.normal, wi), 0.0f);
     Lo += (kD * albedo / PI + specular) * radiance * NdotL;
     
@@ -159,11 +142,9 @@ void main(void){
     // gamma correct
     color = pow(color, vec3(1.0/2.2)); 
 
-    //fragColour = vec4(color, 1.0) + col;
     fragColour = vec4(color, 1.0);
 
-
-    //start to deal with bump
+    //start to mix with bump
     mat3 bumpTBN = mat3( normalize(IN.tangent),normalize(IN.binormal), normalize(IN.normal));
     vec4 diffuse = texture(diffuseTex , IN.texCoord);
     vec3 bumpNormal = texture(bumpTex, IN.texCoord).rgb;
@@ -178,10 +159,6 @@ void main(void){
     bumpColor+=surface * ambient;
 
     fragColour.rgb +=bumpColor;
-    
-
-//    fragColour.rgb =bumpColor;
-//    fragColour.a = diffuse.a;
 
     //fragColour = vec4(IN.tangent,1);
 }

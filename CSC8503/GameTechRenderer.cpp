@@ -550,9 +550,6 @@ void GameTechRenderer::LoadCurrentAnimationAssets(OGLShader* currentShader, Mesh
 	}
 
 
-	if (albedo == nullptr) {
-		albedo = (OGLTexture*)LoadTexture("albedo.png");
-	}
 	if (normal == nullptr) {
 		normal = (OGLTexture*)LoadTexture("normal.png");
 	}
@@ -605,14 +602,11 @@ void GameTechRenderer::RenderAnimation(Vector3 inPos, Vector3 inScale, Vector4 i
 	//avoid transparency
 	glDisable(GL_BLEND);
 
-	/*BindShader(*anmShader);
-	glUniform1i(glGetUniformLocation(anmShader->GetProgramID(), "diffuseTex"), 0);
-	glUniform1i(glGetUniformLocation(anmShader->GetProgramID(), "bumpTex"), 1);*/
 	BindShader(*anmShader);
 	glUniform1i(glGetUniformLocation(anmShader->GetProgramID(), "diffuseTex"), 0);
 	glUniform1i(glGetUniformLocation(anmShader->GetProgramID(), "bumpTex"), 1);
 	glUniform1i(glGetUniformLocation(anmShader->GetProgramID(), "normalTex"), 2);
-	glUniform1i(glGetUniformLocation(anmShader->GetProgramID(), "albedoTex"), 3);
+	//glUniform1i(glGetUniformLocation(anmShader->GetProgramID(), "albedoTex"), 3);
 	glUniform1i(glGetUniformLocation(anmShader->GetProgramID(), "metallicTex"), 4);
 	glUniform1i(glGetUniformLocation(anmShader->GetProgramID(), "roughnessTex"), 5);
 	glUniform1i(glGetUniformLocation(anmShader->GetProgramID(), "ambiantOccTex"), 6);
@@ -650,6 +644,7 @@ void GameTechRenderer::RenderAnimation(Vector3 inPos, Vector3 inScale, Vector4 i
 	int	shaderLocation = glGetUniformLocation(anmShader->GetProgramID(), "joints");
 	glUniformMatrix4fv(shaderLocation, frameMatrices.size(), false, (float*)frameMatrices.data());
 
+	//use diffuseTex as albedo
 	/*glActiveTexture(GL_TEXTURE3);
 	glBindTexture(GL_TEXTURE_2D, albedo->GetObjectID());*/
 	glActiveTexture(GL_TEXTURE2);
@@ -666,7 +661,6 @@ void GameTechRenderer::RenderAnimation(Vector3 inPos, Vector3 inScale, Vector4 i
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, maleGuardMatDiffuseTextures[i]);
 
-		//To do, render another texture
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, maleGuardMatBumpTextures[i]);
 
