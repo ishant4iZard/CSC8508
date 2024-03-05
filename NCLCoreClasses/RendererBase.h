@@ -24,7 +24,7 @@ namespace NCL::Rendering {
 
 		virtual bool HasInitialised() const {return true;}
 
-		virtual void Update(float dt) {}
+		virtual void Update(float dt) { time += dt; }
 
 		void Render() {
 			//assert(HasInitialised());
