@@ -3,7 +3,7 @@
 #include "OGLShader.h"
 #include "OGLTexture.h"
 #include "OGLMesh.h"
-
+#include "Event.h"
 #include "GameWorld.h"
 
 #include "../CSC8503/UIBase.h"
@@ -22,7 +22,7 @@ namespace NCL {
 		class OglHdrFbo;
 		class OglPostProcessingFbo;
 
-		class GameTechRenderer : public OGLRenderer	{
+		class GameTechRenderer : public OGLRenderer, public EventListener {
 		public:
 			GameTechRenderer(GameWorld& world);
 			void CreateScreenQuadMesh();
@@ -31,6 +31,8 @@ namespace NCL {
 			Mesh*		LoadMesh(const std::string& name);
 			Texture*	LoadTexture(const std::string& name);
 			Shader*		LoadShader(const std::string& vertex, const std::string& fragment);
+
+			void ReceiveEvent(EventType eventType) override;
 
 		protected:
 			void NewRenderLines();
@@ -96,19 +98,16 @@ namespace NCL {
 			GLuint textColourVBO;
 			GLuint textTexVBO;
 			size_t textCount;
-#pragma region UI
 			UIBase* ui;
-#pragma endregion
 
-#pragma region Lights
 			DirectionalLight* directionalLight;
-#pragma endregion
 
-#pragma region FrameBuffers
 			OglHdrFbo* pbrFbo;
 			OglPostProcessingFbo* toneMappingFbo;
-#pragma endregion
 
+			float timeOfPortalCollision = 0;
+			bool wasPortalCollided;
+			const float PORTAL_BLINK_TIME = 0.5;
 		};
 	}
 }
