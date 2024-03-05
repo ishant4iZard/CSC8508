@@ -6,6 +6,15 @@
 namespace NCL::CSC8503 {
 	class GameObject;
 
+	struct ServerRoundOverPacket : public GamePacket {
+		bool isRoundOver = true;
+
+		ServerRoundOverPacket() {
+			type = Round_Over;
+			size = sizeof(ServerRoundOverPacket);
+		}
+	};
+
 	struct ClientHelloPacket : public GamePacket {
 		char PlayerListIndex;
 		char PeerID;

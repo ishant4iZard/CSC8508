@@ -62,6 +62,7 @@ PushdownState::PushdownResult MainMenu::OnUpdate(float dt, PushdownState** newSt
 
 		if (isLobbyCreated)
 		{
+			Game->isDevMode = false;
 			*newState = new MultiPlayerLobby();
 			isCreatingLobby = false;
 			isLobbyCreated = false;
@@ -70,13 +71,15 @@ PushdownState::PushdownResult MainMenu::OnUpdate(float dt, PushdownState** newSt
 		}
 		if (isSearchLobbyBtnPressed)
 		{
+			Game->isDevMode = false;
 			isSearchLobbyBtnPressed = false;
 			*newState = new MultiplayerSearchMenu();
 			return Push;
 		}
-		if (isDevSASPressed)
+		/*if (isDevSASPressed)
 		{
 			isDevSASPressed = false;
+			Game->isDevMode = true;
 			*newState = new PlayingHUD();
 			return Push;
 		}
@@ -85,7 +88,7 @@ PushdownState::PushdownResult MainMenu::OnUpdate(float dt, PushdownState** newSt
 			isDevSACPressed = false;
 			*newState = new PlayingHUD();
 			return Push;
-		}
+		}*/
 
 		ui->DrawButton(
 			"Create Lobby",
@@ -129,6 +132,7 @@ PushdownState::PushdownResult MainMenu::OnUpdate(float dt, PushdownState** newSt
 			Vector2(5, 43),
 			[&, Game]() {
 				appState->SetIsServer(true);
+				Game->isDevMode = true;
 			},
 			UIBase::WHITE,
 			KeyCodes::NUM1 // Only for PS
@@ -500,9 +504,23 @@ PushdownState::PushdownResult PlayingHUD::OnUpdate(float dt, PushdownState** new
 				appState->SetIsClient(false);
 				Game->DestroyClient();
 			}
+			EventEmitter::RemoveListner(this);
 			return  PushdownResult::Pop;
 		}
 
+		if (appState->GetIsServer())
+		{
+			ui->DrawButton(
+				"Round Over",
+				Vector2(75, 5),
+				[&, Game]() {
+					Game->ServerSendRoundOverMsg();
+					EventEmitter::EmitEvent(EventType::ROUND_OVER);
+				},
+				UIBase::WHITE,
+				KeyCodes::S // Only for PS
+			);
+		}
 	}
 	return PushdownResult::NoChange;
 }

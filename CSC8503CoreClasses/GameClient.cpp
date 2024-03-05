@@ -66,10 +66,10 @@ void GameClient::UpdateClient(float dt) {
 	}
 
 	// Check the server State
-	/*if (timeGap > 2.0f)
+	if (timeGap > 2.0f)
 	{
 		clientState = EClientState::CLIENT_STATE_DISCONNECTED;
-	}*/
+	}
 }
 
 void GameClient::SendPacket(GamePacket&  payload) {

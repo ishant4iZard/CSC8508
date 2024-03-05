@@ -115,6 +115,7 @@ bool NetworkedGame::StartAsClient(char a, char b, char c, char d) {
 	thisClient->RegisterPacketHandler(Player_Disconnected, this);
 	thisClient->RegisterPacketHandler(Player_Fire, this);
 	thisClient->RegisterPacketHandler(Projectile_Deactivate, this);
+	thisClient->RegisterPacketHandler(Round_Over, this);
 
 	//StartLevel();
 }
@@ -127,6 +128,7 @@ void NetworkedGame::DestroyServer()
 
 void NetworkedGame::DestroyClient()
 {
+	if (!thisClient) return;
 	delete thisClient;
 	thisClient = nullptr;
 }
@@ -547,6 +549,7 @@ void NetworkedGame::OnRep_SpawnProjectile(int PlayerNum, int NetObjectID)
 
 void NetworkedGame::OnRep_DeactiveProjectile(int objectID)
 {
+	if (networkObjects.find(objectID) == networkObjects.cend()) return;
 	networkObjects[objectID]->GetGameObject()->deactivate();
 }
 
@@ -567,7 +570,14 @@ void NetworkedGame::ReceivePacket(int type, GamePacket* payload, int source) {
 		if (thisServer)
 		{
 			ClientHelloPacket* realPacket = (ClientHelloPacket*)payload;
-			thisServer->SetClientList(realPacket->PlayerListIndex, realPacket->PeerID);
+			if (isDevMode)
+			{
+				thisServer->AddConnectClient(realPacket->PeerID);
+			}
+			else
+			{
+				thisServer->SetClientList(realPacket->PlayerListIndex, realPacket->PeerID);
+			}
 		}
 		break;
 	}
@@ -596,6 +606,11 @@ void NetworkedGame::ReceivePacket(int type, GamePacket* payload, int source) {
 		OnRep_DeactiveProjectile(realPacket->NetObjectID);
 		break;
 	}
+	case BasicNetworkMessages::Round_Over: {
+		ServerRoundOverPacket* realPacket = (ServerRoundOverPacket*)payload;
+		if (realPacket->isRoundOver) { EventEmitter::EmitEvent(EventType::ROUND_OVER); }
+		break;
+	}
 	}
 }
 
@@ -605,10 +620,10 @@ void NetworkedGame::OnPlayerCollision(NetworkPlayer* a, NetworkPlayer* b) {
 		newPacket.messageID = COLLISION_MSG;
 		newPacket.playerID  = a->GetPlayerNum();
 
-		thisClient->SendPacket(newPacket);
+		//thisClient->SendPacket(newPacket);
 
 		newPacket.playerID = b->GetPlayerNum();
-		thisClient->SendPacket(newPacket);
+		//thisClient->SendPacket(newPacket);
 	}
 }
 
@@ -667,6 +682,16 @@ void NetworkedGame::SetPlayerNameByIndexInList(const std::string& Name, int Inde
 	if (Index > 3) return;
 
 	PlayersNameList[Index] = Name;
+}
+
+void NetworkedGame::ServerSendRoundOverMsg()
+{
+	if (thisServer)
+	{
+		ServerRoundOverPacket newPacket;
+		newPacket.isRoundOver = true;
+		thisServer->SendGlobalPacket(newPacket);
+	}
 }
 
 bool NetworkedGame::serverProcessClientPacket(ClientPacket* cp, int source)

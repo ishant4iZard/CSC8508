@@ -20,9 +20,9 @@ namespace NCL {
 			virtual void UpdateServer();
 
 			void SetClientList(int index, int ID);
+			void AddConnectClient(int peerID);
 
 		protected:
-			void AddConnectClient(int peerID);
 			void DeleteClient(int peerID);
 			void ClearClientsArray();
 

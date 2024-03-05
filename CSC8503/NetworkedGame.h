@@ -59,6 +59,9 @@ namespace NCL {
 			int GetPlayerNumberFromNetID(const int NetID) const;
 			int GetClientState();
 			void SetPlayerNameByIndexInList(const std::string& Name, int Index);
+			void ServerSendRoundOverMsg();
+			// for develop mode
+			bool isDevMode = false;
 
 		protected:
 			void UpdateAsServer(float dt);
