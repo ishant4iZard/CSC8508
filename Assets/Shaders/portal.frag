@@ -3,6 +3,7 @@
 
 #version 330 core
 
+uniform int wasPortalCollided;
 uniform float time;
 uniform sampler2D mainTex;
 
@@ -19,10 +20,11 @@ in Vertex
 
 const vec2  NE                  = vec2(0.05,0.0);
 const vec2  Resolution          = vec2(1280, 720); // To Do : Replace with uniform
-const vec4  Colour1             = vec4(0.62, 0.85, 0.29, 1.0);
-const vec4  Colour2             = vec4(0.62, 0.8, 0.5, 1.0);
+const vec4  Colour1             = vec4(1, 1.5, 1.5, 0.5);
+const vec4  Colour2             = vec4(1, 2.3, 0.7, 0.5);
+const vec4  Colour3             = vec4(1, 2, 2.5, 0.6);
 const float TransitionDuration  = 5.0; 
-const float Intensity           = 0.45; 
+const float Intensity           = 0.25; 
 const float Radius              = 0.55;
 const float Speed               = 0.1;
 
@@ -50,7 +52,12 @@ void main() {
     vec3 norm = normal(uv);
 
     float t = cos((time / TransitionDuration) * 2) * 0.5 + 0.5;
-    vec4 Colour = mix(Colour1, Colour2, t);
+    vec4 Colour;
+    if(wasPortalCollided > 0)
+        Colour = Colour3;
+    else
+        Colour = mix(Colour1, Colour2, t);
+    
     float alphaEdge = 1.0 - smoothstep(0.0, Radius, length(ruv)); // Transparent around edges
     float alphaCenter = smoothstep(0.0, (Radius - Radius * 0.5), length(ruv)); // Transparent in the center
 
@@ -73,5 +80,5 @@ void main() {
                            alphaCenter);
 
     fragColour = mix(colourEdge, colourCenter, alphaEdge);
-    fragColour.a = fragColour.a + fragColour.a * 3;
+    fragColour.a = fragColour.a + fragColour.a * 2;
 }

@@ -547,7 +547,7 @@ GameObject* NCL::CSC8503::TutorialGame::AddTeleporterToWorld(const Vector3& posi
 		.SetPosition(position1)
 		.SetScale(Vector3(maxLength * 2, 0.01, maxLength * 2))
 		.SetOrientation(Quaternion::EulerAnglesToQuaternion(rotation1.x, rotation1.y, rotation1.z));
-	teleporter1Display->SetRenderObject(new RenderObject(&teleporter1Display->GetTransform(), cubeMesh, basicTex, portalShader));
+	teleporter1Display->SetRenderObject(new RenderObject(&teleporter1Display->GetTransform(), cubeMesh, portalTex, portalShader));
 
 
 	Teleporter* teleporter2 = new Teleporter(teleporter1);
@@ -568,7 +568,7 @@ GameObject* NCL::CSC8503::TutorialGame::AddTeleporterToWorld(const Vector3& posi
 		.SetPosition(position2)
 		.SetScale(Vector3(maxLength * 2, 0.01, maxLength * 2))
 		.SetOrientation(Quaternion::EulerAnglesToQuaternion(rotation2.x, rotation2.y, rotation2.z));
-	teleporter2Display->SetRenderObject(new RenderObject(&teleporter2Display->GetTransform(), cubeMesh, basicTex, portalShader));
+	teleporter2Display->SetRenderObject(new RenderObject(&teleporter2Display->GetTransform(), cubeMesh, portalTex, portalShader));
 
 	//teleporter1->setConnectedTeleporter(teleporter2);
 
