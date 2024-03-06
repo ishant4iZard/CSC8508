@@ -13,10 +13,12 @@
 
 #include <fstream>
 #include <sstream>
-
+#include <Helper.h>
 
 using namespace NCL;
 using namespace CSC8503;
+#define POWER_UP_SPAWN_TIME 30.0f
+#define MAX_POWER_UP_COUNT 3
 
 TutorialGame::TutorialGame() : controller(*Window::GetWindow()->GetKeyboard(), *Window::GetWindow()->GetMouse()) {
 	aitreetest = new AiTreeObject("aitree");
@@ -60,7 +62,32 @@ TutorialGame::TutorialGame() : controller(*Window::GetWindow()->GetKeyboard(), *
 #endif
 	appState = ApplicationState::GetInstance();
 	bm = new OGLTextureManager();
-	
+	BindEvents();
+}
+
+void NCL::CSC8503::TutorialGame::BindEvents()
+{
+	EventEmitter::RegisterForEvent(ACTIVATE_ICE_POWER_UP, this);
+	EventEmitter::RegisterForEvent(ACTIVATE_WIND_POWER_UP, this);
+	EventEmitter::RegisterForEvent(ACTIVATE_SAND_POWER_UP, this);
+}
+
+void NCL::CSC8503::TutorialGame::ReceiveEvent(EventType T)
+{
+	switch (T)
+	{
+	case ACTIVATE_ICE_POWER_UP:
+		activePowerUpCount = Helper::Clamp(--activePowerUpCount, static_cast<unsigned int>(0), static_cast<unsigned int>(MAX_POWER_UP_COUNT));
+		break;
+	case ACTIVATE_SAND_POWER_UP:
+		activePowerUpCount = Helper::Clamp(--activePowerUpCount, static_cast<unsigned int>(0), static_cast<unsigned int>(MAX_POWER_UP_COUNT));
+		break;
+	case ACTIVATE_WIND_POWER_UP:
+		activePowerUpCount = Helper::Clamp(--activePowerUpCount, static_cast<unsigned int>(0), static_cast<unsigned int>(MAX_POWER_UP_COUNT));
+		break;
+	default:
+		break;
+	}
 }
 
 /*
@@ -224,6 +251,17 @@ void TutorialGame::UpdateGame(float dt) {
 		frameCounter = 0; 
 	}
 
+	UpdatePowerUpSpawnTimer(dt);
+}
+
+void NCL::CSC8503::TutorialGame::UpdatePowerUpSpawnTimer(float dt)
+{
+	powerUpSpawnTimer += dt;
+	if (powerUpSpawnTimer >= POWER_UP_SPAWN_TIME && activePowerUpCount <= MAX_POWER_UP_COUNT)
+	{
+		powerUpSpawnTimer = 0.0f;
+		InitPowerup();
+	}
 }
 
 void TutorialGame::InitCamera() {
@@ -408,6 +446,48 @@ void NCL::CSC8503::TutorialGame::SpawnBlackHole(const Vector3& inPosition, const
 	gravityWell->GetRenderObject()->SetTiling(inTiling);
 	gravitywell = gravityWell;
 	world->AddGameObject(gravityWell);
+}
+void NCL::CSC8503::TutorialGame::AddPowerUpSpawnPoint(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling)
+{
+	powerUpSpawnPointList.emplace_back(inPosition);
+}
+
+void NCL::CSC8503::TutorialGame::InitNonePowerup(PowerUp* inPowerup, Shader* inShader)
+{
+}
+
+void NCL::CSC8503::TutorialGame::InitIcePowerup(PowerUp* inPowerup, Shader* inShader)
+{
+	inPowerup->SetRenderObject(new RenderObject(&inPowerup->GetTransform(), sphereMesh, basicTex, inShader));
+	inPowerup->setPowerup(powerUpType::ice);
+	activePowerUpCount = Helper::Clamp(++activePowerUpCount, static_cast<unsigned int>(0), static_cast<unsigned int>(MAX_POWER_UP_COUNT));
+	for (size_t i = 0; i < (uint8_t)TextureType::MAX_TYPE; i++)
+	{
+		inPowerup->GetRenderObject()->SetTexture((TextureType)i, groundTextureList[i]);
+	}
+}
+
+void NCL::CSC8503::TutorialGame::InitSandPowerup(PowerUp* inPowerup, Shader* inShader)
+{
+	inPowerup->SetRenderObject(new RenderObject(&inPowerup->GetTransform(), sphereMesh, basicTex, inShader));
+	inPowerup->setPowerup(powerUpType::sand);
+	activePowerUpCount = Helper::Clamp(++activePowerUpCount, static_cast<unsigned int>(0), static_cast<unsigned int>(MAX_POWER_UP_COUNT));
+	for (size_t i = 0; i < (uint8_t)TextureType::MAX_TYPE; i++)
+	{
+		inPowerup->GetRenderObject()->SetTexture((TextureType)i, groundTextureList[i]);
+	}
+
+}
+
+void NCL::CSC8503::TutorialGame::InitWindPowerup(PowerUp* inPowerup, Shader* inShader)
+{
+	inPowerup->SetRenderObject(new RenderObject(&inPowerup->GetTransform(), sphereMesh, basicTex, inShader));
+	inPowerup->setPowerup(powerUpType::wind);
+	activePowerUpCount = Helper::Clamp(++activePowerUpCount, static_cast<unsigned int>(0), static_cast<unsigned int>(MAX_POWER_UP_COUNT));
+	for (size_t i = 0; i < (uint8_t)TextureType::MAX_TYPE; i++)
+	{
+		inPowerup->GetRenderObject()->SetTexture((TextureType)i, groundTextureList[i]);
+	}
 }
 /*
 
@@ -678,26 +758,23 @@ void TutorialGame::TestAddStaticObjectsToWorld() {
 
 void TutorialGame::InitPowerup()
 {
-	PowerUp* cube = new PowerUp();
+	PowerUp* tempPowerup = new PowerUp();
 
-	AABBVolume* volume = new AABBVolume(Vector3(5, 5, 5), true , true);
-	cube->SetBoundingVolume((CollisionVolume*)volume);
+	SphereVolume* tempSphereVolume = new SphereVolume(1.5, true , false);
+	tempPowerup->SetBoundingVolume((CollisionVolume*)tempSphereVolume);
 
-	cube->GetTransform()
-		.SetPosition(Vector3(80, 5.6, -80))
-		.SetScale(Vector3(5, 5, 5) * 2);
+	tempPowerup->GetTransform()
+		.SetPosition(Helper::GetRandomDataFromVector(powerUpSpawnPointList))
+		.SetScale(Vector3(tempSphereVolume->GetRadius(), tempSphereVolume->GetRadius(), tempSphereVolume->GetRadius()) * 2);
 
-	cube->SetRenderObject(new RenderObject(&cube->GetTransform(), cubeMesh, basicTex, basicShader));
-	cube->SetPhysicsObject(new PhysicsObject(&cube->GetTransform(), cube->GetBoundingVolume()));
+	tempPowerup->SetPhysicsObject(new PhysicsObject(&tempPowerup->GetTransform(), tempPowerup->GetBoundingVolume()));
 
-	cube->GetPhysicsObject()->SetInverseMass(0);
-	cube->GetPhysicsObject()->InitCubeInertia();
-	cube->GetPhysicsObject()->SetElasticity(0.5);
+	tempPowerup->GetPhysicsObject()->SetInverseMass(0);
+	tempPowerup->GetPhysicsObject()->InitSphereInertia();
+	tempPowerup->GetPhysicsObject()->SetElasticity(0.5);
 
-	cube->setPowerup(powerUpType::wind);
-
-	world->AddGameObject(cube);
-
+	(this->*powerupInitFunctionList[Helper::GetRandomEnumValue(powerUpType::MAX_POWERUP)])(tempPowerup, pbrShader);
+	world->AddGameObject(tempPowerup);
 }
 
 

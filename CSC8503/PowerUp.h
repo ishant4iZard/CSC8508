@@ -4,10 +4,11 @@
 namespace NCL {
 	namespace  CSC8503 {
 		enum powerUpType {
-			none,
+			none = 0,
 			ice,
 			sand,
-			wind
+			wind,
+			MAX_POWERUP
 		};
 		class PowerUp : public GameObject
 		{

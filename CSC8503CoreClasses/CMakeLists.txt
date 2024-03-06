@@ -125,6 +125,12 @@ set(enet_Files
 )
 source_group("eNet" FILES ${enet_Files})
 
+set(Helper_Files
+"Helper.h"
+"Helper.cpp"
+)
+source_group("Helper" FILES ${Helper_Files})
+
 set(ALL_FILES
     ${Header_Files}
     ${Source_Files}
@@ -135,7 +141,8 @@ set(ALL_FILES
     ${Collision_Detection}
     ${Networking}
     ${Physics}
-    ${enet_Files}   
+    ${enet_Files} 
+    ${Helper_Files}
 )
 
 set_source_files_properties(${ALL_FILES} PROPERTIES LANGUAGE CXX)

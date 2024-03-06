@@ -48,8 +48,7 @@ void NetworkPlayer::OnCollisionBegin(GameObject* otherObject) {
 			default:
 				break;
 			}
-
-			
+			powerup->deactivate();
 		}
 		
 	}
