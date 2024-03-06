@@ -419,6 +419,8 @@ void GameTechRenderer::RenderCamera() {
 			lightRadiusLocation = glGetUniformLocation(shader->GetProgramID(), "lightRadius");
 
 			GLint timeLocation = glGetUniformLocation(shader->GetProgramID(), "time");
+
+			GLint blackholeTexLocation = glGetUniformLocation(shader->GetProgramID(), "blackholeTex");
 			GLint wasPortalCollidedLoc = glGetUniformLocation(shader->GetProgramID(), "wasPortalCollided");
 
 			glUniform1f(timeLocation, time);
