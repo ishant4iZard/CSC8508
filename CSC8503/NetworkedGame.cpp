@@ -139,14 +139,16 @@ void NetworkedGame::UpdateGame(float dt) {
 			UpdateProjectiles(dt);
 			
 			gravitywell->PullProjectilesWithinField(ProjectileList);
-			physics->Update(dt);
+			//physics->Update(dt);
+			UpdatePhysics = true;
 		}
 		if (thisClient) { 
 			thisClient->UpdateClient(); 
 			HandleInputAsClient();
 		}
-
 	}
+
+	std::thread t1(&NetworkedGame::PhysicsUpdate, this,dt);
 
 	//AI part:
 	//DetectProjectiles(testStateObject);
@@ -155,10 +157,12 @@ void NetworkedGame::UpdateGame(float dt) {
 		AIStateObject->DetectProjectiles(ProjectileList);
 		AIStateObject->Update(dt);
 	}
+
 	audioEngine->Update();
 	TutorialGame::UpdateGame(dt);
 	Debug::UpdateRenderables(dt);
 
+	t1.join();
 }
 
 void NetworkedGame::UpdatePlayerState(float dt) {
@@ -693,6 +697,14 @@ AiStatemachineObject* NetworkedGame::AddAiStateObjectToWorld(const Vector3& posi
 	world->AddGameObject(AIStateObject);
 
 	return AIStateObject;
+}
+
+void NetworkedGame::PhysicsUpdate(float dt)
+{
+	if (UpdatePhysics) {
+		physics->Update(dt);
+		UpdatePhysics = false;
+	}
 }
 
 void NetworkedGame::SpawnAI() {

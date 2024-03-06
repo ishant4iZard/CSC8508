@@ -427,10 +427,23 @@ void PhysicsSystem::BroadPhase() {
 				std::list< QuadTreeEntry<GameObject*>> possiblelist = staticTree.CheckBroadwithstatic(*i, pos, halfSizes);
 				for (auto j : possiblelist) {
 					CollisionDetection::CollisionInfo info;
-					if (broadPhaseHelper(*i, (j).object)) {
+					//if (broadPhaseHelper(*i, (j).object)) {
 						info.a = std::min((*i), (j).object);
 						info.b = std::max((*i), (j).object);
 						broadphaseCollisions.insert(info);
+					//}
+				}
+				if ((*i)->gettag() == "Projectile") {
+					Vector3 Predictpos = (*i)->GetTransform().GetPosition() + (*i)->GetPhysicsObject()->GetLinearVelocity() * idealDT *1.3f;
+					//tree.Insert(*i, pos, halfSizes);
+					std::list< QuadTreeEntry<GameObject*>> possiblelist = staticTree.CheckBroadwithstatic(*i, Predictpos, halfSizes);
+					for (auto j : possiblelist) {
+						CollisionDetection::CollisionInfo info;
+						if (broadPhaseHelper(*i, (j).object)) {
+							info.a = std::min((*i), (j).object);
+							info.b = std::max((*i), (j).object);
+							broadphaseCollisions.insert(info);
+						}
 					}
 				}
 			}
