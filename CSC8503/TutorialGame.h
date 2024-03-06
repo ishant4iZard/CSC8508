@@ -44,12 +44,15 @@ namespace NCL {
 		class BouncePad;
 		class GravityWell;
 
-		class TutorialGame		{
+		class TutorialGame : public EventListener		{
 		public:
 			TutorialGame();
+			void BindEvents();
 			~TutorialGame();
 
 			virtual void UpdateGame(float dt);
+
+			void UpdatePowerUpSpawnTimer(float dt);
 
 			GravityWell* gravitywell;
 
@@ -60,6 +63,7 @@ namespace NCL {
 				activePowerUp = inPowerup;
 			}
 
+			void ReceiveEvent(EventType T) override;
 		protected:
 			void InitialiseAssets();
 
@@ -100,8 +104,12 @@ namespace NCL {
 			void SpawnBouncingPad(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling);
 			void SpawnTarget(const Vector3 & inPosition, const Vector3 & inRotation, const Vector3 & inScale, const Vector2& inTiling);
 			void SpawnBlackHole(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling);
+			void AddPowerUpSpawnPoint(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling);
 
-
+			void InitNonePowerup(PowerUp* inPowerup, Shader* inShader);
+			void InitIcePowerup(PowerUp* inPowerup, Shader* inShader);
+			void InitSandPowerup(PowerUp* inPowerup, Shader* inShader);
+			void InitWindPowerup(PowerUp* inPowerup, Shader* inShader);
 
 			GameObject* capsule;
 
@@ -166,6 +174,8 @@ namespace NCL {
 			int score = 0;
 			float v = 0, h = 0;
 
+			float powerUpSpawnTimer = 0.0f;
+			unsigned int activePowerUpCount = 0;
 			powerUpType activePowerUp = powerUpType::none;
 
 
@@ -187,7 +197,10 @@ namespace NCL {
 
 #pragma region Function Pointers
 			typedef void (TutorialGame::*dataSpawnFunction) (const Vector3&, const Vector3&, const Vector3&, const Vector2&);
-			dataSpawnFunction levelObjectSpawnFunctionList[static_cast<int>(LevelObjectEnum::MAX_OBJECT_TYPE)] = { &TutorialGame::SpawnWall , &TutorialGame::SpawnFloor , &TutorialGame::SpawnBouncingPad, &TutorialGame::SpawnTarget , &TutorialGame::SpawnBlackHole };
+			dataSpawnFunction levelObjectSpawnFunctionList[static_cast<int>(LevelObjectEnum::MAX_OBJECT_TYPE)] = { &TutorialGame::SpawnWall , &TutorialGame::SpawnFloor , &TutorialGame::SpawnBouncingPad, &TutorialGame::SpawnTarget , &TutorialGame::SpawnBlackHole, &TutorialGame::AddPowerUpSpawnPoint };
+
+			typedef void (TutorialGame::* powerupInitFunction) (PowerUp* inPowerup, Shader* inShader);
+			powerupInitFunction powerupInitFunctionList[powerUpType::MAX_POWERUP] = { &TutorialGame::InitNonePowerup, &TutorialGame::InitIcePowerup , &TutorialGame::InitSandPowerup, &TutorialGame::InitWindPowerup };
 #pragma endregion
 
 #pragma region UI
@@ -196,6 +209,7 @@ namespace NCL {
 
 			ApplicationState* appState;
 			OGLTextureManager* bm;
+			std::vector<Vector3> powerUpSpawnPointList;
 		};
 	}
 }
