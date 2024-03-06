@@ -49,7 +49,7 @@ void main(void) {
 	float idistUVPC = 1.0 - distUVPC;
 
 	float ft = step(0.06f, distUVPC);
-	ft *= smoothstep(0.065f, 0.08f, distUVPC);
+	ft *= smoothstep(0.030f, 0.05f, distUVPC);
 	ft = ft * (1.0 - distUVPC * 1.6) * 4.0f;
 	float front = ft;
 
