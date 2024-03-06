@@ -257,6 +257,7 @@ void TutorialGame::InitWorld() {
 	//capsule->GetTransform().SetOrientation(Quaternion::EulerAnglesToQuaternion(0, 0, 90));
 
 	InitTeleporters();
+	InitBlackhole();
 	//TestAddStaticObjectsToWorld();
 	//InitAI();
 
@@ -402,25 +403,14 @@ void NCL::CSC8503::TutorialGame::SpawnBlackHole(const Vector3& inPosition, const
 	Vector3 sphereSize = Vector3(radius, radius, radius);
 	SphereVolume* volume = new SphereVolume(radius);
 	gravityWell->SetBoundingVolume((CollisionVolume*)volume);
-	gravityWell->GetTransform().SetScale(sphereSize).SetPosition(inPosition);
-	//gravityWell->SetRenderObject(new RenderObject(&gravityWell->GetTransform(), sphereMesh, basicTex, basicShader));
+	gravityWell->GetTransform().SetScale(inScale).SetPosition(inPosition).SetOrientation(Quaternion::EulerAnglesToQuaternion(inRotation.x, inRotation.y, inRotation.z));
+	gravityWell->SetRenderObject(new RenderObject(&gravityWell->GetTransform(), sphereMesh, blackholeTex, blackholeShader));
 	gravityWell->SetPhysicsObject(new PhysicsObject(&gravityWell->GetTransform(), gravityWell->GetBoundingVolume()));
 	gravityWell->GetPhysicsObject()->SetInverseMass(0);
 	gravityWell->GetPhysicsObject()->InitSphereInertia(); 
-
-	GameObject* blackholeDisplay = new GameObject();
-	blackholeDisplay->GetTransform()
-		.SetPosition(inPosition)
-		.SetScale(inScale)
-		.SetOrientation(Quaternion::EulerAnglesToQuaternion(inRotation.x, inRotation.y, inRotation.z));
-	blackholeDisplay->SetRenderObject(new RenderObject(&blackholeDisplay->GetTransform(), sphereMesh, blackholeTex, blackholeShader));
-	//gravityWell->GetRenderObject()->SetColour(Vector4(0, 0.4, 0.4, 1));
-	//gravityWell->GetRenderObject()->SetTiling(inTiling);
 	
-
 	gravitywell = gravityWell;
 	world->AddGameObject(gravityWell);
-	world->AddGameObject(blackholeDisplay);
 }
 /*
 
@@ -647,6 +637,11 @@ void TutorialGame::InitLevelWall()
 void NCL::CSC8503::TutorialGame::InitTeleporters()
 {
 	AddTeleporterToWorld((Vector3(48, 5.6f, 0)), (Vector3(-48, 5.6f, 45)), Vector3(0, -45, 0), Vector3(0, 90, 0) , Vector3(10, 10, 3.5));
+}
+
+void NCL::CSC8503::TutorialGame::InitBlackhole()
+{
+	//SpawnBlackHole(Vector3(-25, 5.6f, 25), (Vector3(-90, 180, 40)), Vector3(50.0f, 50.0f, 50.0f), Vector2(1, 1));
 }
 
 void TutorialGame::InitPlaceholderAIs() {

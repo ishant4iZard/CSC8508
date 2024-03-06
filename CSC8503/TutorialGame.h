@@ -78,6 +78,7 @@ namespace NCL {
 			void InitBouncePad();
 			void InitLevelWall();
 			void InitTeleporters();
+			void InitBlackhole();
 			void TestAddStaticObjectsToWorld();
 
 			void InitDefaultFloor();

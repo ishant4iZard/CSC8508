@@ -6,8 +6,14 @@
 uniform sampler2D blackholeTex;
 uniform float time;
 
+const vec2 iResolution = vec2(1280, 720);
+
 in Vertex{
+	vec4 colour;
 	vec2 texCoord;
+	vec4 shadowProj;
+	vec3 normal;
+	vec3 worldPos;
 } IN;
 
 out vec4 fragColor;
@@ -21,10 +27,15 @@ mat2 rotateBlackhole(float speed, float radius) {
 }
 
 void main(void) {
+	//vec2 uv = gl_FragCoord.xy / iResolution.xy;
 	vec2 uv = IN.texCoord;
-	vec2 center = vec2(0.5f);
+	vec2 center = (iResolution.xy * 0.5f) / iResolution.xy;
+	//vec2 center = vec2(0.5f);
 	vec2 dir = normalize(uv - center);
-	vec3 blackholeColor = vec3(1.0f, 0.5f, 0.0f);
+	vec3 blackholeColor = vec3(0.8f, 0.4f, 0.2f);
+
+	uv.y *= (iResolution.y / iResolution.x);
+	center.y *= (iResolution.y / iResolution.x);
 
 	float distUC = distance(uv, center);
 	float _s = 0.15f;
@@ -39,7 +50,7 @@ void main(void) {
 
 	float ft = step(0.06f, distUVPC);
 	ft *= smoothstep(0.065f, 0.08f, distUVPC);
-	ft = ft * (1.0 - distUVPC * 1.6) * 2.0f;
+	ft = ft * (1.0 - distUVPC * 1.6) * 4.0f;
 	float front = ft;
 
 	float speed = -0.06f;
@@ -65,7 +76,7 @@ void main(void) {
 
 	vec3 finalSampler = sp;
 	vec3 col = blackholeColor * pow(1.0 - distUVPC, 7.0f);
-	float ring = pow(smoothstep(0.32f, 0.08f, distUVPC * 1.5f) * 3.5f, 2.8f) + 1.0f;
+	float ring = pow(smoothstep(0.32f, 0.08f, distUVPC * 1.5f) * 4.0f, 2.8f) + 1.0f;
 
 	fragColor = vec4(finalSampler * front + 1.2f * ring * front * finalSampler * col, 1.0f);
 }
