@@ -3,9 +3,8 @@
 #include "GameObject.h"
 #include "CollisionDetection.h"
 #include "Quaternion.h"
-
+#include "../CSC8503/PowerUp.h"
 #include "Constraint.h"
-
 #include "Debug.h"
 #include "Window.h"
 #include <functional>
@@ -22,9 +21,13 @@ PhysicsSystem::PhysicsSystem(GameWorld& g) : gameWorld(g)	{
 	globalDamping	= 0.995f;
 	//SetGravity(Vector3(0.0f, -9.8f, 0.0f));
 	linearDamping = 0.4f;
+	EventEmitter::RegisterForEvent(ACTIVATE_ICE_POWER_UP, this);
+	EventEmitter::RegisterForEvent(ACTIVATE_WIND_POWER_UP, this);
+	EventEmitter::RegisterForEvent(ACTIVATE_SAND_POWER_UP, this);
 }
 
 PhysicsSystem::~PhysicsSystem()	{
+	EventEmitter::RemoveListner(this);
 }
 
 void PhysicsSystem::SetGravity(const Vector3& g) {
@@ -87,6 +90,11 @@ void PhysicsSystem::Update(float dt) {
 	}*/
 
 	dTOffset += dt; //We accumulate time delta here - there might be remainders from previous frame!
+
+	powerUptime -= dt;
+	if (powerUptime <= 0) {
+		activePowerup = powerUpType::none;
+	}
 
 	GameTimer t;
 	t.GetTimeDeltaSeconds();
@@ -198,6 +206,29 @@ a particular pair will only be added once, so objects colliding for
 multiple frames won't flood the set with duplicates.
 */
 
+
+void PhysicsSystem::ReceiveEvent(EventType T)
+{
+	powerUptime = powerUpLifetime;
+	float theta = rand() % 360;
+	switch (T)
+	{
+	case ACTIVATE_ICE_POWER_UP:
+		activePowerup = powerUpType::ice;
+		break;
+	case ACTIVATE_SAND_POWER_UP:
+		activePowerup = powerUpType::sand;
+		break;
+	case ACTIVATE_WIND_POWER_UP:
+		activePowerup = powerUpType::wind;
+		//float theta = rand() % 360;
+		wind.x = 30 * cos(theta);
+		wind.z = 30 * sin(theta);
+		break;
+	default:
+		break;
+	}
+}
 
 void PhysicsSystem::BasicCollisionDetection() {
 	std::vector <GameObject*>::const_iterator first;
@@ -481,7 +512,15 @@ void PhysicsSystem::IntegrateAccel(float dt) {
 		float inverseMass = object -> GetInverseMass();	
 		Vector3 linearVel = object -> GetLinearVelocity();
 		float CoeefFriction = object->GetFriction();
+		if (activePowerup == powerUpType::ice && (*i)->gettag() == "Projectile") {
+			CoeefFriction *= 0.1f;
+		}
+		else if (activePowerup == powerUpType::sand && (*i)->gettag() == "Projectile") {
+			CoeefFriction *= 4.0f;
+		}
+		
 		Vector3 force = object -> GetForce();
+
 
 		Vector3 HorVelocity = Vector3(linearVel.x, 0, linearVel.z);
 
@@ -497,6 +536,9 @@ void PhysicsSystem::IntegrateAccel(float dt) {
 
 		if (applyGravity && inverseMass > 0) {
 			accel += gravity; // don ’t move infinitely heavy things
+		}
+		if (activePowerup == powerUpType::wind && (*i)->gettag()=="Projectile") {
+			accel += wind;
 		}
 
 		linearVel += accel * dt; // integrate accel !

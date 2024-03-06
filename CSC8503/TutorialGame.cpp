@@ -60,6 +60,7 @@ TutorialGame::TutorialGame() : controller(*Window::GetWindow()->GetKeyboard(), *
 #endif
 	appState = ApplicationState::GetInstance();
 	bm = new OGLTextureManager();
+	
 }
 
 /*
@@ -258,6 +259,7 @@ void TutorialGame::InitWorld() {
 
 	InitTeleporters();
 	InitBlackhole();
+	InitPowerup();
 	//TestAddStaticObjectsToWorld();
 	//InitAI();
 
@@ -682,6 +684,30 @@ void TutorialGame::TestAddStaticObjectsToWorld() {
 			}
 		}
 	}
+}
+
+void TutorialGame::InitPowerup()
+{
+	PowerUp* cube = new PowerUp();
+
+	AABBVolume* volume = new AABBVolume(Vector3(5, 5, 5), true , true);
+	cube->SetBoundingVolume((CollisionVolume*)volume);
+
+	cube->GetTransform()
+		.SetPosition(Vector3(80, 5.6, -80))
+		.SetScale(Vector3(5, 5, 5) * 2);
+
+	cube->SetRenderObject(new RenderObject(&cube->GetTransform(), cubeMesh, basicTex, basicShader));
+	cube->SetPhysicsObject(new PhysicsObject(&cube->GetTransform(), cube->GetBoundingVolume()));
+
+	cube->GetPhysicsObject()->SetInverseMass(0);
+	cube->GetPhysicsObject()->InitCubeInertia();
+	cube->GetPhysicsObject()->SetElasticity(0.5);
+
+	cube->setPowerup(powerUpType::wind);
+
+	world->AddGameObject(cube);
+
 }
 
 
