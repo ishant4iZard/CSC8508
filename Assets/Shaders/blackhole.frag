@@ -1,6 +1,6 @@
-/*
-	Blackhole calculation inspired by #crocidb from https://www.shadertoy.com/view/Xtcczs
-*/
+// Blackhole calculation inspired by "Yet Another Black Hole " from https://www.shadertoy.com/view/Xtcczs
+// Modified by Qixu Feng
+
 #version 330 core
 
 uniform sampler2D blackholeTex;
