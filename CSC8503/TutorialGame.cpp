@@ -13,10 +13,12 @@
 
 #include <fstream>
 #include <sstream>
-
+#include <Helper.h>
 
 using namespace NCL;
 using namespace CSC8503;
+#define POWER_UP_SPAWN_TIME 30.0f
+#define MAX_POWER_UP_COUNT 3
 
 TutorialGame::TutorialGame() : controller(*Window::GetWindow()->GetKeyboard(), *Window::GetWindow()->GetMouse()) {
 	world		= new GameWorld();
@@ -57,6 +59,32 @@ TutorialGame::TutorialGame() : controller(*Window::GetWindow()->GetKeyboard(), *
 #endif
 	appState = ApplicationState::GetInstance();
 	bm = new OGLTextureManager();
+	BindEvents();
+}
+
+void NCL::CSC8503::TutorialGame::BindEvents()
+{
+	EventEmitter::RegisterForEvent(ACTIVATE_ICE_POWER_UP, this);
+	EventEmitter::RegisterForEvent(ACTIVATE_WIND_POWER_UP, this);
+	EventEmitter::RegisterForEvent(ACTIVATE_SAND_POWER_UP, this);
+}
+
+void NCL::CSC8503::TutorialGame::ReceiveEvent(EventType T)
+{
+	switch (T)
+	{
+	case ACTIVATE_ICE_POWER_UP:
+		activePowerUpCount = Helper::Clamp(--activePowerUpCount, static_cast<unsigned int>(0), static_cast<unsigned int>(MAX_POWER_UP_COUNT));
+		break;
+	case ACTIVATE_SAND_POWER_UP:
+		activePowerUpCount = Helper::Clamp(--activePowerUpCount, static_cast<unsigned int>(0), static_cast<unsigned int>(MAX_POWER_UP_COUNT));
+		break;
+	case ACTIVATE_WIND_POWER_UP:
+		activePowerUpCount = Helper::Clamp(--activePowerUpCount, static_cast<unsigned int>(0), static_cast<unsigned int>(MAX_POWER_UP_COUNT));
+		break;
+	default:
+		break;
+	}
 }
 
 /*
@@ -76,7 +104,10 @@ void TutorialGame::InitialiseAssets() {
 	bonusMesh	= renderer->LoadMesh("sphere.msh");
 	gooseMesh	= renderer->LoadMesh("goose.msh");
 	capsuleMesh = renderer->LoadMesh("capsule.msh");
+	
+	blackholeTex = renderer->LoadTexture("blackhole.png");
 	basicTex	= renderer->LoadTexture("checkerboard.png");
+	portalTex	= renderer->LoadTexture("PortalTex.jpg");
 	sandTex		= renderer->LoadTexture("sand.jpg");
 
 	groundTextureList[(uint8_t)TextureType::ALBEDO] = renderer->LoadTexture("GrassWithRock01/albedo.png");
@@ -104,7 +135,9 @@ void TutorialGame::InitialiseAssets() {
 #endif // USE_SHADOW
 
 	pbrShader = renderer->LoadShader("pbr.vert", "pbr.frag");
+	portalShader = renderer->LoadShader("scene.vert", "portal.frag");
 	instancePbrShader = renderer->LoadShader("pbrInstanced.vert", "pbr.frag");
+	blackholeShader = renderer->LoadShader("blackhole.vert", "blackhole.frag");
 
 	InitCamera();
 	InitWorld();
@@ -122,6 +155,7 @@ TutorialGame::~TutorialGame()	{
 	delete basicTex;
 	delete basicShader;
 	delete pbrShader;
+	delete blackholeTex;
 
 	delete physics;
 	delete renderer;
@@ -135,49 +169,21 @@ TutorialGame::~TutorialGame()	{
 }
 
 void TutorialGame::UpdateGame(float dt) {
-	
-	//ObjectRay(testStateObject, testGameObjects);
-
-	//if (appState->GetIsGameOver()) {
-	//	world->ClearAndErase();
-	//	physics->Clear();
-	//	InitCamera();
-
-	//	ui->DrawStringText("GameOver", Vector2(40, 10), UIBase::RED);
-	//	ui->DrawStringText("Final Score:" + std::to_string((int)(score)), Vector2(40, 30));
-	//	ui->DrawStringText("Press 'ESC' to exit", Vector2(40, 50), UIBase::WHITE);
-
-	//}
-	//else if (appState->GetHasWonGame())
-	//{
-	//	world->ClearAndErase();
-	//	physics->Clear();
-	//	InitCamera();
-
-	//	ui->DrawStringText("You Won!!!", Vector2(40, 10), UIBase::GREEN);
-	//	ui->DrawStringText("You saved the world from goats!!!", Vector2(40, 20), UIBase::GREEN);
-	//	ui->DrawStringText("Final Score:" + std::to_string((int)(score + (300 - finaltimer) / 10)), Vector2(40, 30), UIBase::YELLOW);
-	//	ui->DrawStringText("Finish Time:" + std::to_string((int)(finaltimer)), Vector2(40, 40), UIBase::YELLOW);
-	//	ui->DrawStringText("Press 'ESC' to exit", Vector2(40, 50), UIBase::YELLOW);
-	//}
-
-	//else if(appState->GetIsServer()) {
-	//	timer += dt;
-
-	//	world->GetMainCamera().UpdateCamera(dt);
-	//	if (timer > TIME_LIMIT) {
-	//		appState->SetIsGameOver(true);
-	//	}
-
-	//	//Debug::UpdateRenderables(dt);
-
-	//	std::string timeText = "Time left : " + std::to_string((int)(TIME_LIMIT - timer));
-	//	ui->DrawStringText(timeText, Vector2(5, 10));
-	//}
-
 	world->UpdateWorld(dt);
 	renderer->Render();
 	renderer->Update(dt);
+	
+	UpdatePowerUpSpawnTimer(dt);
+}
+
+void NCL::CSC8503::TutorialGame::UpdatePowerUpSpawnTimer(float dt)
+{
+	powerUpSpawnTimer += dt;
+	if (powerUpSpawnTimer >= POWER_UP_SPAWN_TIME && activePowerUpCount <= MAX_POWER_UP_COUNT)
+	{
+		powerUpSpawnTimer = 0.0f;
+		InitPowerup();
+	}
 }
 
 void TutorialGame::InitCamera() {
@@ -202,9 +208,13 @@ void TutorialGame::InitWorld() {
 	//capsule->GetTransform().SetOrientation(Quaternion::EulerAnglesToQuaternion(0, 0, 90));
 	InitTeleporters();
 
+	InitBlackhole();
+	InitPowerup();
 	//TestAddStaticObjectsToWorld();
 	//InitAI();
-	
+
+	GameObject* test = AddCapsuleToWorld(Vector3(-25, 5.6, 25), 1.0f, 2.0f);
+	//test->SetRenderObject();
 	physics->createStaticTree();//this needs to be at the end of all initiations
 }
 
@@ -345,16 +355,56 @@ void NCL::CSC8503::TutorialGame::SpawnBlackHole(const Vector3& inPosition, const
 	Vector3 sphereSize = Vector3(radius, radius, radius);
 	SphereVolume* volume = new SphereVolume(radius);
 	gravityWell->SetBoundingVolume((CollisionVolume*)volume);
-	gravityWell->GetTransform().SetScale(sphereSize).SetPosition(inPosition);
-	gravityWell->SetRenderObject(new RenderObject(&gravityWell->GetTransform(), sphereMesh, basicTex, basicShader));
+	gravityWell->GetTransform().SetScale(inScale).SetPosition(inPosition).SetOrientation(Quaternion::EulerAnglesToQuaternion(inRotation.x, inRotation.y, inRotation.z));
+	gravityWell->SetRenderObject(new RenderObject(&gravityWell->GetTransform(), sphereMesh, blackholeTex, blackholeShader));
 	gravityWell->SetPhysicsObject(new PhysicsObject(&gravityWell->GetTransform(), gravityWell->GetBoundingVolume()));
 	gravityWell->GetPhysicsObject()->SetInverseMass(0);
-	gravityWell->GetPhysicsObject()->InitSphereInertia();
-
-	gravityWell->GetRenderObject()->SetColour(Vector4(0, 0.4, 0.4, 1));
-	gravityWell->GetRenderObject()->SetTiling(inTiling);
+	gravityWell->GetPhysicsObject()->InitSphereInertia(); 
+	
 	gravitywell = gravityWell;
 	world->AddGameObject(gravityWell);
+}
+void NCL::CSC8503::TutorialGame::AddPowerUpSpawnPoint(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling)
+{
+	powerUpSpawnPointList.emplace_back(inPosition);
+}
+
+void NCL::CSC8503::TutorialGame::InitNonePowerup(PowerUp* inPowerup, Shader* inShader)
+{
+}
+
+void NCL::CSC8503::TutorialGame::InitIcePowerup(PowerUp* inPowerup, Shader* inShader)
+{
+	inPowerup->SetRenderObject(new RenderObject(&inPowerup->GetTransform(), sphereMesh, basicTex, inShader));
+	inPowerup->setPowerup(powerUpType::ice);
+	activePowerUpCount = Helper::Clamp(++activePowerUpCount, static_cast<unsigned int>(0), static_cast<unsigned int>(MAX_POWER_UP_COUNT));
+	for (size_t i = 0; i < (uint8_t)TextureType::MAX_TYPE; i++)
+	{
+		inPowerup->GetRenderObject()->SetTexture((TextureType)i, groundTextureList[i]);
+	}
+}
+
+void NCL::CSC8503::TutorialGame::InitSandPowerup(PowerUp* inPowerup, Shader* inShader)
+{
+	inPowerup->SetRenderObject(new RenderObject(&inPowerup->GetTransform(), sphereMesh, basicTex, inShader));
+	inPowerup->setPowerup(powerUpType::sand);
+	activePowerUpCount = Helper::Clamp(++activePowerUpCount, static_cast<unsigned int>(0), static_cast<unsigned int>(MAX_POWER_UP_COUNT));
+	for (size_t i = 0; i < (uint8_t)TextureType::MAX_TYPE; i++)
+	{
+		inPowerup->GetRenderObject()->SetTexture((TextureType)i, groundTextureList[i]);
+	}
+
+}
+
+void NCL::CSC8503::TutorialGame::InitWindPowerup(PowerUp* inPowerup, Shader* inShader)
+{
+	inPowerup->SetRenderObject(new RenderObject(&inPowerup->GetTransform(), sphereMesh, basicTex, inShader));
+	inPowerup->setPowerup(powerUpType::wind);
+	activePowerUpCount = Helper::Clamp(++activePowerUpCount, static_cast<unsigned int>(0), static_cast<unsigned int>(MAX_POWER_UP_COUNT));
+	for (size_t i = 0; i < (uint8_t)TextureType::MAX_TYPE; i++)
+	{
+		inPowerup->GetRenderObject()->SetTexture((TextureType)i, groundTextureList[i]);
+	}
 }
 /*
 
@@ -434,60 +484,63 @@ GameObject* TutorialGame::AddAABBCubeToWorld(const Vector3& position, Vector3 di
 GameObject* NCL::CSC8503::TutorialGame::AddTeleporterToWorld(const Vector3& position1,const Vector3& position2,const Vector3& rotation1 , const Vector3& rotation2, Vector3 dimensions, float inverseMass, float elasticity)
 {
 	Teleporter* teleporter1 = new Teleporter();
-
 	OBBVolume* volume1 = new OBBVolume(dimensions, true, true);
 	teleporter1->SetBoundingVolume((CollisionVolume*)volume1);
-
-
 	teleporter1->GetTransform()
 		.SetPosition(position1)
 		.SetScale(dimensions * 2)
 		.SetOrientation(Quaternion::EulerAnglesToQuaternion(rotation1.x,rotation1.y,rotation1.z));
-
-	teleporter1->SetRenderObject(new RenderObject(&teleporter1->GetTransform(), cubeMesh, basicTex, basicShader));
-	teleporter1->GetRenderObject()->SetColour(Vector4(0.2f, 0.2f, 0.2f, 0.5f));
+	teleporter1->setOutNormal(teleporter1->GetTransform().GetOrientation().ToEuler());
+	//teleporter1->SetRenderObject(new RenderObject(&teleporter1->GetTransform(), cubeMesh, basicTex, basicShader));
+	//teleporter1->GetRenderObject()->SetColour(Vector4(0.2f, 0.2f, 0.2f, 0.5f));
 	teleporter1->SetPhysicsObject(new PhysicsObject(&teleporter1->GetTransform(), teleporter1->GetBoundingVolume()));
-
 	teleporter1->GetPhysicsObject()->SetInverseMass(inverseMass);
 	teleporter1->GetPhysicsObject()->InitCubeInertia();
 	teleporter1->GetPhysicsObject()->SetElasticity(elasticity);
 
+	float maxLength = std::max(dimensions.x, dimensions.z);
+	GameObject* teleporter1Display = new GameObject();
+	teleporter1Display->GetTransform()
+		.SetPosition(position1)
+		.SetScale(Vector3(maxLength * 2, 0.01, maxLength * 2))
+		.SetOrientation(Quaternion::EulerAnglesToQuaternion(rotation1.x, rotation1.y, rotation1.z));
+	teleporter1Display->SetRenderObject(new RenderObject(&teleporter1Display->GetTransform(), cubeMesh, portalTex, portalShader));
+
 
 	Teleporter* teleporter2 = new Teleporter(teleporter1);
-
 	OBBVolume* volume2 = new OBBVolume(dimensions, true, true);
 	teleporter2->SetBoundingVolume((CollisionVolume*)volume2);
-
 	teleporter2->GetTransform()
 		.SetPosition(position2)
 		.SetScale(dimensions * 2)
 		.SetOrientation(Quaternion::EulerAnglesToQuaternion(rotation2.x, rotation2.y, rotation2.z));
-
-	teleporter1->setOutNormal(teleporter1->GetTransform().GetOrientation().ToEuler());
 	teleporter2->setOutNormal(teleporter2->GetTransform().GetOrientation().ToEuler());
-
-	teleporter2->SetRenderObject(new RenderObject(&teleporter2->GetTransform(), cubeMesh, basicTex, basicShader));
 	teleporter2->SetPhysicsObject(new PhysicsObject(&teleporter2->GetTransform(), teleporter2->GetBoundingVolume()));
-	teleporter2->GetRenderObject()->SetColour(Vector4(0.2f, 0.2f, 0.2f, 0.5f));
-
 	teleporter2->GetPhysicsObject()->SetInverseMass(inverseMass);
 	teleporter2->GetPhysicsObject()->InitCubeInertia();
 	teleporter2->GetPhysicsObject()->SetElasticity(elasticity);
 
+	GameObject* teleporter2Display = new GameObject();
+	teleporter2Display->GetTransform()
+		.SetPosition(position2)
+		.SetScale(Vector3(maxLength * 2, 0.01, maxLength * 2))
+		.SetOrientation(Quaternion::EulerAnglesToQuaternion(rotation2.x, rotation2.y, rotation2.z));
+	teleporter2Display->SetRenderObject(new RenderObject(&teleporter2Display->GetTransform(), cubeMesh, portalTex, portalShader));
+
 	//teleporter1->setConnectedTeleporter(teleporter2);
 
 	world->AddGameObject(teleporter1);
+	world->AddGameObject(teleporter1Display);
 	world->AddGameObject(teleporter2);
+	world->AddGameObject(teleporter2Display);
 
 	return teleporter1;
 }
 
 void NCL::CSC8503::TutorialGame::InitTeleporters()
 {
-	AddTeleporterToWorld((Vector3(48, 5.6f, 0)), (Vector3(-48, 5.6f, 45)), Vector3(0, -45, 0), Vector3(0, 90, 0) , Vector3(7, 10, 2));
+	AddTeleporterToWorld((Vector3(48, 5.6f, 0)), (Vector3(-48, 5.6f, 45)), Vector3(0, -45, 0), Vector3(0, 90, 0) , Vector3(10, 10, 3.5));
 }
-
-
 
 void TutorialGame::TestAddStaticObjectsToWorld() {
 	for (int x = 0; x < 25; x++) {
@@ -499,3 +552,27 @@ void TutorialGame::TestAddStaticObjectsToWorld() {
 		}
 	}
 }
+
+void TutorialGame::InitPowerup()
+{
+	PowerUp* tempPowerup = new PowerUp();
+
+	SphereVolume* tempSphereVolume = new SphereVolume(1.5, true , false);
+	tempPowerup->SetBoundingVolume((CollisionVolume*)tempSphereVolume);
+
+	tempPowerup->GetTransform()
+		.SetPosition(Helper::GetRandomDataFromVector(powerUpSpawnPointList))
+		.SetScale(Vector3(tempSphereVolume->GetRadius(), tempSphereVolume->GetRadius(), tempSphereVolume->GetRadius()) * 2);
+
+	tempPowerup->SetPhysicsObject(new PhysicsObject(&tempPowerup->GetTransform(), tempPowerup->GetBoundingVolume()));
+
+	tempPowerup->GetPhysicsObject()->SetInverseMass(0);
+	tempPowerup->GetPhysicsObject()->InitSphereInertia();
+	tempPowerup->GetPhysicsObject()->SetElasticity(0.5);
+
+	(this->*powerupInitFunctionList[Helper::GetRandomEnumValue(powerUpType::MAX_POWERUP)])(tempPowerup, pbrShader);
+	world->AddGameObject(tempPowerup);
+}
+
+
+

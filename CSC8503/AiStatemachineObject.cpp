@@ -264,7 +264,6 @@ void AiStatemachineObject::FindPathFromAIToProjectile(float dt)
 	bool found = navGrid->FindPath(AIPos, targetPos, outPath);
 
 	if (!found) {
-		std::cout << "Path not found\n";
 		return;
 	}
 

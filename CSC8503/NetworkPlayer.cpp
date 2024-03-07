@@ -1,6 +1,9 @@
 #include "NetworkPlayer.h"
 #include "NetworkedGame.h"
 #include "PhysicsObject.h"
+#include "PowerUp.h"
+#include "Event.h"
+
 # define  SQUARE(x) (x * x) 
 
 using namespace NCL;
@@ -26,6 +29,28 @@ void NetworkPlayer::OnCollisionBegin(GameObject* otherObject) {
 		{
 			game->OnPlayerCollision(this, (NetworkPlayer*)otherObject);
 		}
+		
+		if (otherObject->gettag() == "PowerUp") {
+			PowerUp* powerup = dynamic_cast<PowerUp*>(otherObject);
+			powerUpType ActivatePowerUp = powerup->getPowerUp();
+			//game->setActivePowerup(ActivatePowerUp);
+			switch (ActivatePowerUp)
+			{
+			case NCL::CSC8503::ice:
+				EventEmitter::EmitEvent(ACTIVATE_ICE_POWER_UP);
+				break;
+			case NCL::CSC8503::sand:
+				EventEmitter::EmitEvent(ACTIVATE_SAND_POWER_UP);
+				break;
+			case NCL::CSC8503::wind:
+				EventEmitter::EmitEvent(ACTIVATE_WIND_POWER_UP);
+				break;
+			default:
+				break;
+			}
+			powerup->deactivate();
+		}
+		
 	}
 }
 

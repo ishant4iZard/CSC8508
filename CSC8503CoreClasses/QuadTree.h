@@ -106,7 +106,8 @@ namespace NCL {
 				if (children) { // not a leaf node , just descend the tree
 					for (int i = 0; i < 4; ++i) {
 						temp = children[i].CheckBroadwithstatic(object, objectPos, objectSize,depthLeft - 1, maxSize);
-						info.insert(info.end(), temp.begin(), temp.end());
+						if(temp.size()!=0)
+							info.insert(info.end(), temp.begin(), temp.end());
 					}
 					return info;
 				}
