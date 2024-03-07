@@ -45,6 +45,7 @@ namespace NCL {
 			void OnRep_DeactiveProjectile(int objectID);
 
 			void StartLevel();
+			void EndLevel();
 
 			void ReceivePacket(int type, GamePacket* payload, int source) override;
 

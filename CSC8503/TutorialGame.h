@@ -39,7 +39,6 @@ namespace NCL {
 		class Powerup;
 		class Player;
 		class Goose;
-		class Voxels;
 		class BouncePad;
 		class GravityWell;
 
@@ -73,14 +72,9 @@ namespace NCL {
 			
 
 
-			void InitHole();
-			void InitGravityWell();
-			void InitBouncePad();
-			void InitLevelWall();
 			void InitTeleporters();
 			void TestAddStaticObjectsToWorld();
 
-			void InitDefaultFloor();
 			GameObject* AddFloorToWorld(const Vector3& position, const Vector3& size = Vector3(128,2,128));
 
 			void SpawnDataDrivenLevel(GameLevelNumber inGameLevelNumber);
@@ -95,14 +89,6 @@ namespace NCL {
 
 			GameObject* capsule;
 
-
-			//void InitDefaultFloor();
-			void ProcessFrameAddresses();
-			void ObjectRay(GameObject* gameObject, const std::vector<GameObject*>& gameObjects);
-
-			//GameObject* AddFloorToWorld(const Vector3& position, const Vector3& size = Vector3(128,2,128));
-
-			AiTreeObject* AddAiToWorld(const Vector3& position, Vector3 dimensions, float inverseMass, float elasticity);
 #ifdef USEVULKAN
 			GameTechVulkanRenderer*	renderer;
 #else
@@ -110,9 +96,8 @@ namespace NCL {
 #endif
 			PhysicsSystem*		physics;
 			GameWorld*			world;
-			AiTreeObject*		 aitreetest;
-			vector<Vector3> frameAddresses;
-			Vector3 aichaseposition;
+
+
 
 			KeyboardMouseController controller;
 
@@ -153,14 +138,6 @@ namespace NCL {
 			float v = 0, h = 0;
 
 
-#pragma region BouncePad
-			BouncePad* bouncePadList[5];
-#pragma endregion
-
-#pragma region PlaceholderAI
-			std::vector<GameObject*> placeHolderAIs;
-			void InitPlaceholderAIs();
-#pragma endregion
 
 #ifdef _WIN32
 			WindowsLevelLoader* levelFileLoader;

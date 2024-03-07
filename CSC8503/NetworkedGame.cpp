@@ -122,6 +122,8 @@ bool NetworkedGame::StartAsClient(char a, char b, char c, char d) {
 
 void NetworkedGame::DestroyServer()
 {
+	if (!thisServer) return;
+	EndLevel();
 	delete thisServer;
 	thisServer = nullptr;
 }
@@ -129,6 +131,7 @@ void NetworkedGame::DestroyServer()
 void NetworkedGame::DestroyClient()
 {
 	if (!thisClient) return;
+	EndLevel();
 	delete thisClient;
 	thisClient = nullptr;
 }
@@ -137,7 +140,7 @@ void NetworkedGame::UpdateGame(float dt) {
 	Debug::UpdateRenderables(dt);
 	Menu->Update(dt);
 
-	if (!appState->GetIsGameOver()) {
+	if (/*!appState->GetIsGameOver()*/true) {
 		timeToNextPacket -= dt;
 		if (timeToNextPacket < 0) {
 			if (thisServer) {
@@ -166,13 +169,6 @@ void NetworkedGame::UpdateGame(float dt) {
 
 	}
 
-	//AI part:
-	//DetectProjectiles(testStateObject);
-
-	if (AIStateObject) {
-		AIStateObject->DetectProjectiles(ProjectileList);
-		AIStateObject->Update(dt);
-	}
 	audioEngine->Update();
 	TutorialGame::UpdateGame(dt);
 	Debug::UpdateRenderables(dt);
@@ -554,8 +550,28 @@ void NetworkedGame::OnRep_DeactiveProjectile(int objectID)
 }
 
 void NetworkedGame::StartLevel() {
+	InitWorld(); 
+	PlayersList.clear();
+	ControledPlayersList.clear();
+	PlayersNameList.clear();
+	for (int i = 0; i < 4; ++i)
+	{
+		PlayersList.push_back(-1);
+		ControledPlayersList.push_back(nullptr);
+		PlayersNameList.push_back(std::string(" "));
+	}
+	ProjectileList.clear();
 	CheckPlayerListAndSpawnPlayers();
 	SpawnAI();
+	
+}
+
+void NetworkedGame::EndLevel()
+{
+	world->ClearAndErase();
+	physics->Clear();
+	networkObjects.clear();
+	InitCamera();
 }
 
 void NetworkedGame::ReceivePacket(int type, GamePacket* payload, int source) {

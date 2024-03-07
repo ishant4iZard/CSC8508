@@ -155,8 +155,6 @@ namespace NCL {
 		protected:
 			UIBase* ui;
 			ApplicationState* appState;
-
-			bool isRoundGoingOn = true;
 		};
 	}
 }

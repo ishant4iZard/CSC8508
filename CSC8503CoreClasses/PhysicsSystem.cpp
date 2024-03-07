@@ -431,6 +431,10 @@ void PhysicsSystem::NarrowPhase() {
 		i != broadphaseCollisions.end(); ++i) {
 
 		CollisionDetection::CollisionInfo info = *i;
+		if (!info.a->GetBoundingVolume()|| !info.b->GetBoundingVolume())
+		{
+			continue;
+		}
 		if (info.a->GetBoundingVolume()->isKinematic && info.b->GetBoundingVolume()->isKinematic) {
 			continue;
 		}

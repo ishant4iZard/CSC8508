@@ -117,12 +117,14 @@ PushdownState::PushdownResult MainMenu::OnUpdate(float dt, PushdownState** newSt
 		/** for devlop only */
 		if (appState->GetIsServer())
 		{
+			appState->SetIsGameOver(false);
 			Game->StartAsServer();
 			*newState = new PlayingHUD();
 			return PushdownResult::Push;
 		}
 		if (appState->GetIsClient())
 		{
+			appState->SetIsGameOver(false);
 			Game->StartAsClient(127, 0, 0, 1);
 			*newState = new PlayingHUD();
 			return PushdownResult::Push;
@@ -206,6 +208,7 @@ PushdownState::PushdownResult MultiPlayerLobby::OnUpdate(float dt, PushdownState
 		{
 			if (appState->GetIsServer())
 			{
+				appState->SetIsGameOver(false);
 				Game->StartAsServer();
 				*newState = new PlayingHUD();
 				return PushdownResult::Push;
@@ -236,6 +239,7 @@ PushdownState::PushdownResult MultiPlayerLobby::OnUpdate(float dt, PushdownState
 			//);
 			if (appState->GetIsClient())
 			{
+				appState->SetIsGameOver(false);
 				Game->StartAsClient(GetIPnumByIndex(0), GetIPnumByIndex(1), GetIPnumByIndex(2), GetIPnumByIndex(3));
 				*newState = new PlayingHUD();
 				return PushdownResult::Push;
@@ -492,7 +496,7 @@ PushdownState::PushdownResult PlayingHUD::OnUpdate(float dt, PushdownState** new
 		OnlineSubsystemBase* Subsystem = (OnlineSubsystemBase*)OnlineSubsystem;
 		NetworkedGame* Game = (NetworkedGame*)game;
 
-		if (!isRoundGoingOn)
+		if (appState->GetIsGameOver())
 		{
 			if (appState->GetIsServer())
 			{
@@ -529,7 +533,7 @@ void PlayingHUD::ReceiveEvent(const EventType eventType)
 {
 	switch (eventType) {
 	case ROUND_OVER:
-		isRoundGoingOn = false;
+		appState->SetIsGameOver(true);
 		break;
 
 	default: break;
