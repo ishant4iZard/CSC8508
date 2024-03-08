@@ -48,8 +48,9 @@ TutorialGame::TutorialGame() : controller(*Window::GetWindow()->GetKeyboard(), *
 	controller.MapAxis(4, "YLook");
 	currentlevel = level::level1;
 
+	animatedObject = new GameAnimation();
 	InitialiseAssets();
-
+	
 #ifdef _WIN32
 	ui = UIWindows::GetInstance();
 #else //_ORBIS
@@ -165,6 +166,15 @@ void TutorialGame::UpdateGame(float dt) {
 		}
 		
 	}
+	if (Window::GetKeyboard()->KeyPressed(KeyCodes::N)) {
+		anmIndex++;
+		maleGuard2nd->SetAnimation(anmIndex);
+		std::cout << "current animation : " << maleGuard->GetAnimationName(anmIndex) << std::endl;
+		if (anmIndex >= 3) {
+			anmIndex -= 4;
+		}
+
+	}
 
 	//if (aitreetest) {
 	//	aitreetest-> Update(dt);
@@ -223,7 +233,8 @@ void TutorialGame::InitWorld() {
 	InitAI();
 
 	InitMaleGuard();
-	maleGuard = SpawnMaleGuard(Vector3(20, 10, 20), Vector3(20.0f,20.0f,20.0f), 5.0f);
+	maleGuard = SpawnMaleGuard(Vector3(20, 10, 20), Vector3(40.0f,40.0f,40.0f), 5.0f);
+	maleGuard2nd = SpawnMaleGuard(Vector3(-20, 10, -20), Vector3(20.0f, 20.0f, 20.0f), 5.0f);
 }
 
 /*
@@ -673,10 +684,11 @@ MaleGuard* TutorialGame::SpawnMaleGuard(const Vector3& position, Vector3 dimensi
 	RenderObject* currentRenderObject = maleGuard->GetRenderObject();
 	RenderObjectMaleGuard* maleGuardRenderObject = static_cast<RenderObjectMaleGuard*>(currentRenderObject);
 	maleGuardRenderObject->SetAnimation(maleGuard->GetAnimation());
-	maleGuardRenderObject->SetMaleGuardPosition(Vector3(0, 0, 0));
-	maleGuardRenderObject->SetMaleGuardScale(Vector3(30, 30, 30));
+	maleGuardRenderObject->SetMaleGuardPosition(position);
+	maleGuardRenderObject->SetMaleGuardScale(dimensions);
 	maleGuardRenderObject->SetMaleGuardRotation(Vector4(45, 0, 1, 0));
 
 	world->AddGameObject(maleGuard);
+	animatedObject->AddAnimatedObject(maleGuard);
 	return maleGuard;
 }

@@ -156,7 +156,7 @@ void main(void){
     vec3 surface = (diffuse.rgb * lightColour.rgb);
     vec3 bumpColor = surface * lambert * attenuation;
     bumpColor+=(lightColour.rgb * specFactor) * attenuation * 0.33f;
-    bumpColor+=surface * ambient;
+    //bumpColor+=surface * ambient;
 
     fragColour.rgb +=bumpColor;
 

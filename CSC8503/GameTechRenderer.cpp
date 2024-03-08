@@ -69,6 +69,10 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 	SetDebugStringBufferSizes(10000);
 	SetDebugLineBufferSizes(1000);
 
+	for (int i = 0; i < 4; i++) {
+		activeAnimation[i] = nullptr;
+	}
+
 #ifdef _WIN32
 	ui = UIWindows::GetInstance();
 #else //_ORBIS
@@ -130,6 +134,7 @@ void GameTechRenderer::RenderFrame() {
 	RenderShadowMap();
 	RenderSkybox();
 	RenderCamera();
+	RenderAnimatedObject();
 	glDisable(GL_CULL_FACE); //Todo - text indices are going the wrong way...
 	glDisable(GL_BLEND);
 	glDisable(GL_DEPTH_TEST);
@@ -145,10 +150,13 @@ void GameTechRenderer::RenderFrame() {
 
 void GameTechRenderer::BuildObjectList() {
 	activeObjects.clear();
+	activeAnimatedObjects.clear();
 
 	gameWorld.OperateOnContents(
 		[&](GameObject* o) {
 			if (o->IsActive()) {
+
+				const RenderObject* g = o->GetRenderObject();
 
 				//find MaleGuard and load assets, especially the animation in current frame
 				if (o->GetName() == "MaleGuard") {
@@ -156,10 +164,13 @@ void GameTechRenderer::BuildObjectList() {
 					currentShaderID = currentShader->GetProgramID();
 
 					MaleGuard* maleGuard = dynamic_cast<MaleGuard*>(o);
-					LoadCurrentAnimationAssets(currentShader, maleGuard->GetMaterial(), maleGuard->GetAnimation());
+					//maleGuard->GetAnimatedObjectID();
+					LoadCurrentAnimationAssets(currentShader, maleGuard->GetMaterial(), maleGuard->GetAnimation(), maleGuard->GetAnimatedObjectID());
+					
+					MaleGuard* newObject = (MaleGuard*)o;
+					activeAnimatedObjects.emplace_back(newObject);
 				}
 
-				const RenderObject* g = o->GetRenderObject();
 				if (g) {
 					activeObjects.emplace_back(g);
 				}
@@ -268,12 +279,12 @@ void GameTechRenderer::RenderCamera() {
 		//need to be rendered separately
 		if (shader->GetProgramID() == currentShaderID) {
 
-			RenderObjectMaleGuard* maleGuardRenderObject = static_cast<RenderObjectMaleGuard*>(const_cast<RenderObject*>(i));
+			/*RenderObjectMaleGuard* maleGuardRenderObject = static_cast<RenderObjectMaleGuard*>(const_cast<RenderObject*>(i));
 			Vector3 position = maleGuardRenderObject->GetMaleGuardPosition();
 			Vector3 scale = maleGuardRenderObject->GetMaleGuardScale();
 			Vector4 rotation = maleGuardRenderObject->GetMaleGuardRotation();
 
-			RenderAnimation(position, scale, rotation);
+			RenderAnimation(position, scale, rotation);*/
 			continue;
 		}
 
@@ -340,6 +351,22 @@ Mesh* GameTechRenderer::LoadMesh(const std::string& name) {
 	mesh->SetPrimitiveType(GeometryPrimitive::Triangles);
 	mesh->UploadToGPU();
 	return mesh;
+}
+
+void GameTechRenderer::RenderAnimatedObject() {
+	for (const auto& i : activeAnimatedObjects) {
+		RenderObject* currentRenderObject = i->GetRenderObject();
+		OGLShader* shader = (OGLShader*)currentRenderObject->GetShader();
+		BindShader(*shader);
+
+		RenderObjectMaleGuard* maleGuardRenderObject = static_cast<RenderObjectMaleGuard*>(const_cast<RenderObject*>(currentRenderObject));
+		Vector3 position = maleGuardRenderObject->GetMaleGuardPosition();
+		Vector3 scale = maleGuardRenderObject->GetMaleGuardScale();
+		Vector4 rotation = maleGuardRenderObject->GetMaleGuardRotation();
+
+		MaleGuard* currentObject = (MaleGuard*)i;
+		RenderAnimation(position, scale, rotation , currentObject->GetAnimatedObjectID());
+	}
 }
 
 void GameTechRenderer::NewRenderLines() {
@@ -525,11 +552,15 @@ void GameTechRenderer::LoadAnimationAssets() {
 
 	LoadTextureToMesh();
 
-	currentFrame = 0;
-	frameTime = 0.0f;
+	/*currentFrame = 0;
+	frameTime = 0.0f;*/\
+	for (int i = 0; i < 4; i++) {
+		currentFrame[i] = 0;
+		frameTime[i] = 0;
+	}
 }
 
-void GameTechRenderer::LoadCurrentAnimationAssets(OGLShader* currentShader, MeshMaterial* currentMaterial, MeshAnimation* currentAnimation) {
+void GameTechRenderer::LoadCurrentAnimationAssets(OGLShader* currentShader, MeshMaterial* currentMaterial, MeshAnimation* currentAnimation, int animatedObjectID) {
 	anmShader = currentShader;
 	
 	maleGuardMaterial = currentMaterial;
@@ -542,11 +573,11 @@ void GameTechRenderer::LoadCurrentAnimationAssets(OGLShader* currentShader, Mesh
 		LoadTextureToMesh();
 	}
 	
-	if (activeAnimation != currentAnimation) {
-		activeAnimation = currentAnimation;
+	if (activeAnimation[animatedObjectID] != currentAnimation) {
+		activeAnimation[animatedObjectID] = currentAnimation;
 
 		//reset the currentFrame
-		currentFrame = 0;
+		currentFrame[animatedObjectID] = 0;
 	}
 
 
@@ -598,7 +629,7 @@ void GameTechRenderer::Matrix4ToIdentity(Matrix4* mat4) {
 	mat4->array[3][3] = 1.0f;
 }
 
-void GameTechRenderer::RenderAnimation(Vector3 inPos, Vector3 inScale, Vector4 inRotation) {
+void GameTechRenderer::RenderAnimation(Vector3 inPos, Vector3 inScale, Vector4 inRotation, int animatedObjectID) {
 	//avoid transparency
 	glDisable(GL_BLEND);
 
@@ -635,7 +666,7 @@ void GameTechRenderer::RenderAnimation(Vector3 inPos, Vector3 inScale, Vector4 i
 	maleGuardMesh->CalculateInverseBindPose();
 	const vector<Matrix4> invBindPose = maleGuardMesh->GetInverseBindPose();
 
-	const Matrix4* frameDataAnm = activeAnimation->GetJointData(currentFrame);
+	const Matrix4* frameDataAnm = activeAnimation[animatedObjectID]->GetJointData(currentFrame[animatedObjectID]);
 
 	for (GLuint i = 0; i < maleGuardMesh->GetJointCount(); i++) {
 		frameMatrices.emplace_back(frameDataAnm[i] * invBindPose[i]);
@@ -673,9 +704,18 @@ void GameTechRenderer::RenderAnimation(Vector3 inPos, Vector3 inScale, Vector4 i
 }
 
 void GameTechRenderer::Update(float dt) {
-	frameTime -= dt;
+
+	for (int i = 0; i < activeAnimatedObjects.size(); i++) {
+		frameTime[i] -= dt;
+		while (frameTime[i] < 0.0f) {
+			currentFrame[i] = (currentFrame[i] + 1) % activeAnimation[i]->GetFrameCount();
+			frameTime[i] += 1.0f / activeAnimation[i]->GetFrameTime();
+		}
+	}
+
+	/*frameTime -= dt;
 	while (frameTime < 0.0f) {
 		currentFrame = (currentFrame + 1) % activeAnimation->GetFrameCount();
 		frameTime += 1.0f / activeAnimation->GetFrameTime();
-	}
+	}*/
 }

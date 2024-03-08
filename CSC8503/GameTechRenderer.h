@@ -9,6 +9,7 @@
 #include "MeshMaterial.h"
 #include "MeshAnimation.h"
 #include "Assets.h"
+#include "GameAnimation.h"
 
 #include "../CSC8503/UIBase.h"
 #ifdef _WIN32
@@ -92,8 +93,8 @@ namespace NCL {
 			//Skeletal Animation
 			void LoadAnimationAssets();
 			void LoadTextureToMesh();
-			void RenderAnimation(Vector3 inPos,Vector3 inScale, Vector4 inRotation);
-			void LoadCurrentAnimationAssets(OGLShader* currentShader, MeshMaterial* currentMaterial, MeshAnimation* currentAnimation);
+			void RenderAnimation(Vector3 inPos, Vector3 inScale, Vector4 inRotation, int animatedObjectID);
+			void LoadCurrentAnimationAssets(OGLShader* currentShader, MeshMaterial* currentMaterial, MeshAnimation* currentAnimation, int animatedObjectID);
 
 			void Matrix4ToIdentity(Matrix4* mat4);
 
@@ -113,10 +114,10 @@ namespace NCL {
 
 			MeshAnimation* maleGuardAnimationGunfire1;//Gunfire1.anm
 			MeshAnimation* maleGuardAnimationHappy;//Happy.anm
-			MeshAnimation* activeAnimation = nullptr;
+			MeshAnimation* activeAnimation[4];
 
-			int currentFrame = 0;
-			float frameTime = 0.0f;
+			int currentFrame[4] = { 0 };
+			float frameTime[4] = { 0.0f };
 
 			GLuint currentShaderID;
 			bool hasLoadedTextureToSubmesh = false;
@@ -126,6 +127,11 @@ namespace NCL {
 			OGLTexture* metallic = nullptr;
 			OGLTexture* roughness = nullptr;
 			OGLTexture* ao = nullptr;
+
+			vector<const MaleGuard*> activeAnimatedObjects;
+			GameAnimation* animatedObjects;
+
+			void RenderAnimatedObject();
 			//Skeletal Animation
 
 

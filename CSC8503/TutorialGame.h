@@ -14,6 +14,7 @@
 #include "LevelEnum.h"
 #include "LevelObjectEnum.h"
 #include "MaleGuard.h"
+#include "GameAnimation.h"
 
 #ifdef _WIN32
 #include "WindowsLevelLoader.h"
@@ -154,8 +155,10 @@ namespace NCL {
 			Shader* anmShader;
 			Texture* maleGuardDefultTex;
 			MaleGuard* maleGuard;
+			MaleGuard* maleGuard2nd;
 			int anmIndex = 0;
 
+			GameAnimation* animatedObject;
 
 #pragma region BouncePad
 			BouncePad* bouncePadList[5];

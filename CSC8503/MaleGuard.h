@@ -39,6 +39,14 @@ namespace NCL {
 			
 			string GetName() { return maleGuardName; }
 
+			void SetAnimatedObjectID(int newID) {
+				animatedObjectID = newID;
+			}
+
+			int GetAnimatedObjectID() {
+				return animatedObjectID;
+			}
+
 		protected:
 			Mesh* maleGuardMesh;
 			MeshMaterial* maleGuardMaterial;
@@ -48,6 +56,8 @@ namespace NCL {
 			std::string anmNames[4];
 
 			string maleGuardName;
+
+			int animatedObjectID;
 		};
 	}
 }

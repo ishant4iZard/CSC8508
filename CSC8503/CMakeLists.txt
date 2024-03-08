@@ -38,6 +38,7 @@ set(Header_Files
     "EventType.h"
     "MaleGuard.h"
     "RenderObjectMaleGuard.h"
+    "GameAnimation.h"
 )
 source_group("Header Files" FILES ${Header_Files})
 
@@ -59,6 +60,7 @@ set(Source_Files
     "MenuSystem.cpp"
     "MaleGuard.cpp"
     "RenderObjectMaleGuard.cpp"
+    "GameAnimation.cpp"
 )
 
 set(AI_Files
