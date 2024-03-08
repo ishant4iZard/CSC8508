@@ -157,6 +157,8 @@ namespace NCL {
 			ApplicationState* appState;
 
 			void ShowScoreTable(NetworkedGame* Game);
+			void ShowTimeLeft(NetworkedGame* Game);
+			void CheckRoundTime(NetworkedGame* Game);
 		};
 	}
 }

@@ -143,6 +143,8 @@ namespace NCL {
 			inline void SetLocalPlayerIndex(int val) { localPlayerIndex = val; }
 			inline std::string GetPlayerNameByIndex(int index) { return PlayersNameList[index]; }
 			inline int GetPlayerScoreByIndex(int index) { return PlayersScoreList[index]; }
+			inline float GetRoundTimer() const { return timer; }
+			inline int GetRoundTimeLimit() const { return TIME_LIMIT; }
 		};
 
 

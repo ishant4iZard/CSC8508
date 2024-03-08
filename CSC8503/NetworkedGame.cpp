@@ -144,7 +144,7 @@ void NetworkedGame::UpdateGame(float dt) {
 	if (thisServer) {
 		UpdatePhysics = true;
 		//PhysicsUpdate(dt);
-
+		timer += dt;
 	}
 
 	//std::thread t1(&NetworkedGame::PhysicsUpdate, this,dt);
@@ -335,6 +335,7 @@ void NetworkedGame::ServerUpdatePlayersList()
 		PlayersList[i + 1] = thisServer->GetClientNetID(i);
 	}
 	PLayersListPacket plPacket(PlayersList);
+	plPacket.timer = this->timer;
 	thisServer->SendGlobalPacket(plPacket);
 }
 
@@ -609,6 +610,7 @@ void NetworkedGame::ReceivePacket(int type, GamePacket* payload, int source) {
 	case BasicNetworkMessages::Message: {
 		PLayersListPacket* realPacket = (PLayersListPacket*)payload;
 		realPacket->GetPlayerList(PlayersList);
+		this->timer = realPacket->timer;
 		break;
 	}
 	case BasicNetworkMessages::Player_Score: {
@@ -800,7 +802,7 @@ void NetworkedGame::PhysicsUpdate(float dt)
 	}
 }
 
-void NCL::CSC8503::NetworkedGame::NonPhysicsUpdate(float dt)
+void NetworkedGame::NonPhysicsUpdate(float dt)
 {
 	Debug::UpdateRenderables(dt);
 	Menu->Update(dt);

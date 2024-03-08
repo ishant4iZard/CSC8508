@@ -58,6 +58,7 @@ namespace NCL::CSC8503 {
 	struct PLayersListPacket : public GamePacket
 	{
 		char playerList[4];
+		float timer;
 		PLayersListPacket(std::vector<int>& serverPlayerList)
 		{
 			type = Message;

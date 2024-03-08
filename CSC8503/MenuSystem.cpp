@@ -496,6 +496,8 @@ PushdownState::PushdownResult PlayingHUD::OnUpdate(float dt, PushdownState** new
 		OnlineSubsystemBase* Subsystem = (OnlineSubsystemBase*)OnlineSubsystem;
 		NetworkedGame* Game = (NetworkedGame*)game;
 
+		CheckRoundTime(Game);
+
 		/** Round Over Event */
 		if (appState->GetIsGameOver())
 		{
@@ -516,8 +518,9 @@ PushdownState::PushdownResult PlayingHUD::OnUpdate(float dt, PushdownState** new
 		/** Game going HUD */
 		if (!appState->GetIsGameOver())
 		{
-			ui->DrawStringText("Player    " + Game->GetPlayerNameByIndex(Game->GetLocalPlayerIndex()), Vector2(83, 5), UIBase::WHITE);
-			ui->DrawStringText("Score     " + std::to_string(Game->GetPlayerScoreByIndex(Game->GetLocalPlayerIndex())), Vector2(83, 10), UIBase::WHITE);
+			ShowTimeLeft(Game);
+			ui->DrawStringText("Player    " + Game->GetPlayerNameByIndex(Game->GetLocalPlayerIndex()), Vector2(83, 30), UIBase::WHITE);
+			ui->DrawStringText("Score     " + std::to_string(Game->GetPlayerScoreByIndex(Game->GetLocalPlayerIndex())), Vector2(83, 40), UIBase::WHITE);
 
 			if (Window::GetKeyboard()->KeyHeld(KeyCodes::Type::TAB))
 			{
@@ -529,13 +532,14 @@ PushdownState::PushdownResult PlayingHUD::OnUpdate(float dt, PushdownState** new
 		{
 			ui->DrawButton(
 				"Round Over",
-				Vector2(75, 85),
+				Vector2(85, 85),
 				[&, Game]() {
 					Game->ServerSendRoundOverMsg();
 					EventEmitter::EmitEvent(EventType::ROUND_OVER);
 				},
 				UIBase::WHITE,
-				KeyCodes::S // Only for PS
+				KeyCodes::S, // Only for PS
+				Vector2(150, 50)
 			);
 		}
 	}
@@ -561,7 +565,25 @@ void PlayingHUD::ShowScoreTable(NetworkedGame* Game)
 		{
 			ui->DrawStringText("Player " + std::to_string(i + 1), Vector2(25, 30 + i * 7), UIBase::BLUE);
 			ui->DrawStringText(Game->GetPlayerNameByIndex(i), Vector2(45, 30 + i * 7), UIBase::BLUE);
-			ui->DrawStringText("Score: " + std::to_string(Game->GetPlayerScoreByIndex(i)), Vector2(65, 30 + i * 7), UIBase::BLUE);
+			ui->DrawStringText("Your Score: " + std::to_string(Game->GetPlayerScoreByIndex(i)), Vector2(65, 30 + i * 7), UIBase::BLUE);
 		}
+	}
+}
+
+void PlayingHUD::ShowTimeLeft(NetworkedGame* Game)
+{
+	ui->DrawStringText("Timeleft:", Vector2(83, 15), UIBase::WHITE);
+
+	float timeLeft = Game->GetRoundTimeLimit() - Game->GetRoundTimer();
+	int time = (int)timeLeft + 1;
+	
+	ui->DrawStringText(std::to_string(time), Vector2(90, 15), UIBase::WHITE);
+}
+
+void PlayingHUD::CheckRoundTime(NetworkedGame* Game)
+{
+	if (Game->GetRoundTimer() > Game->GetRoundTimeLimit())
+	{
+		EventEmitter::EmitEvent(EventType::ROUND_OVER);
 	}
 }
