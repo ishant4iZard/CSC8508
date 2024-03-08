@@ -155,6 +155,10 @@ namespace NCL {
 		protected:
 			UIBase* ui;
 			ApplicationState* appState;
+
+			void ShowScoreTable(NetworkedGame* Game);
+			void ShowTimeLeft(NetworkedGame* Game);
+			void CheckRoundTime(NetworkedGame* Game);
 		};
 	}
 }

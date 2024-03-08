@@ -58,6 +58,7 @@ namespace NCL::CSC8503 {
 	struct PLayersListPacket : public GamePacket
 	{
 		char playerList[4];
+		float timer;
 		PLayersListPacket(std::vector<int>& serverPlayerList)
 		{
 			type = Message;
@@ -74,6 +75,29 @@ namespace NCL::CSC8503 {
 			for (int i = 0; i < 4; ++i)
 			{
 				clientPlayerList[i] = playerList[i] - 48;
+			}
+		}
+	};
+
+	struct PlayersScorePacket : public GamePacket
+	{
+		int ScoreList[4];
+		PlayersScorePacket(std::vector<int>& ServerScoreList)
+		{
+			type = Player_Score;
+			size = sizeof(PlayersScorePacket);
+
+			for (int i = 0; i < 4; ++i)
+			{
+				ScoreList[i] = ServerScoreList[i];
+			}
+		}
+
+		void GetPlayerScore(std::vector<int>& ClientScoreList)
+		{
+			for (int i = 0; i < 4; ++i)
+			{
+				ClientScoreList[i] = ScoreList[i];
 			}
 		}
 	};
