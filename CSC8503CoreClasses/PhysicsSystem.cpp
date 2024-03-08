@@ -12,7 +12,7 @@
 using namespace NCL;
 using namespace CSC8503;
 
-QuadTree <GameObject*> staticTree(Vector2(200, 200), 10, 100);
+QuadTree <GameObject*> staticTree(Vector2(200, 200), 10, 10);
 
 PhysicsSystem::PhysicsSystem(GameWorld& g) : gameWorld(g)	{
 	applyGravity	= false;
@@ -104,6 +104,7 @@ void PhysicsSystem::Update(float dt) {
 	t.GetTimeDeltaSeconds();
 
 	if (useBroadPhase) {
+		//UpdateObjectSwept(dt);
 		UpdateObjectAABBs();
 	}
 	int iteratorCount = 0;
@@ -197,6 +198,15 @@ void PhysicsSystem::UpdateObjectAABBs() {
 		}
 	);
 }
+
+void PhysicsSystem::UpdateObjectSwept(float dt) {
+	gameWorld.OperateOnContents(
+		[&](GameObject* g) {
+			g->UpdateSweptVolume(dt);
+		}
+	);
+}
+
 
 
 
@@ -426,17 +436,24 @@ void PhysicsSystem::BroadPhase() {
 				if (!(*i)->GetBroadphaseAABB(halfSizes)) {
 					continue;
 				}
-				Vector3 pos = (*i)->GetTransform().GetPosition();
+				Vector3 pos;
+				/*if ((*i)->getSweptVolume()->type == VolumeType::Capsule) {
+					pos = (*i)->GetSweptTransform().GetPosition();
+				}*/
+				pos = (*i)->GetTransform().GetPosition();
+				/*else {
+				}*/			
 				tree.Insert(*i, pos, halfSizes);
 				std::list< QuadTreeEntry<GameObject*>> possiblelist = staticTree.CheckBroadwithstatic(*i, pos, halfSizes);
 				for (auto j : possiblelist) {
 					CollisionDetection::CollisionInfo info;
-					//if (broadPhaseHelper(*i, (j).object)) {
+					if (broadPhaseHelper(*i, (j).object)) {
 						info.a = std::min((*i), (j).object);
 						info.b = std::max((*i), (j).object);
 						broadphaseCollisions.insert(info);
-					//}
+					}
 				}
+				possiblelist.clear();
 				//if ((*i)->gettag() == "Projectile") {
 				//	Vector3 Predictpos = (*i)->GetTransform().GetPosition() + (*i)->GetPhysicsObject()->GetLinearVelocity() * idealDT *1.3f;
 				//	//tree.Insert(*i, pos, halfSizes);
@@ -494,8 +511,7 @@ void PhysicsSystem::NarrowPhase() {
 			info.framesLeft = numCollisionFrames;
 			if (!(info.a)->GetBoundingVolume()->isTrigger && !(info.b)->GetBoundingVolume()->isTrigger) {
 				ImpulseResolveCollision(*info.a, *info.b, info.point);
-				//std::cout << " Collision between " << (info.a)->GetName()
-					//<< " and " << (info.b)->GetName() << std::endl; 
+
 				info.framesLeft = numCollisionFrames;
 				allCollisions.insert(info);
 			}
