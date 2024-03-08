@@ -496,6 +496,7 @@ PushdownState::PushdownResult PlayingHUD::OnUpdate(float dt, PushdownState** new
 		OnlineSubsystemBase* Subsystem = (OnlineSubsystemBase*)OnlineSubsystem;
 		NetworkedGame* Game = (NetworkedGame*)game;
 
+		/** Round Over Event */
 		if (appState->GetIsGameOver())
 		{
 			if (appState->GetIsServer())
@@ -512,11 +513,18 @@ PushdownState::PushdownResult PlayingHUD::OnUpdate(float dt, PushdownState** new
 			return  PushdownResult::Pop;
 		}
 
+		/** Game going HUD */
+		if (!appState->GetIsGameOver())
+		{
+			ui->DrawStringText("Player    " + Game->GetPlayerNameByIndex(Game->GetLocalPlayerIndex()), Vector2(83, 5), UIBase::WHITE);
+			ui->DrawStringText("Score     " + std::to_string(Game->GetPlayerScoreByIndex(Game->GetLocalPlayerIndex())), Vector2(83, 10), UIBase::WHITE);
+		}
+
 		if (appState->GetIsServer())
 		{
 			ui->DrawButton(
 				"Round Over",
-				Vector2(75, 5),
+				Vector2(75, 85),
 				[&, Game]() {
 					Game->ServerSendRoundOverMsg();
 					EventEmitter::EmitEvent(EventType::ROUND_OVER);

@@ -42,11 +42,13 @@ NetworkedGame::NetworkedGame()	{
 	PlayersList.clear();
 	ControledPlayersList.clear();
 	PlayersNameList.clear();
+	PlayersScoreList.clear();
 	for (int i = 0; i < 4; ++i)
 	{
 		PlayersList.push_back(-1);
 		ControledPlayersList.push_back(nullptr);
 		PlayersNameList.push_back(std::string(" "));
+		PlayersScoreList.push_back(-1);
 	}
 
 	audioEngine = new AudioEngine();
@@ -116,6 +118,7 @@ bool NetworkedGame::StartAsClient(char a, char b, char c, char d) {
 	thisClient->RegisterPacketHandler(Player_Fire, this);
 	thisClient->RegisterPacketHandler(Projectile_Deactivate, this);
 	thisClient->RegisterPacketHandler(Round_Over, this);
+	thisClient->RegisterPacketHandler(Player_Score, this);
 
 	//StartLevel();
 }
@@ -204,6 +207,7 @@ void NetworkedGame::UpdateAsServer(float dt) {
 	UpdateMinimumState();
 
 	ServerUpdatePlayersList();
+	ServerUpdateScoreList();
 	CheckPlayerListAndSpawnPlayers();
 
 	if (LocalPlayer)
@@ -332,6 +336,19 @@ void NetworkedGame::ServerUpdatePlayersList()
 	}
 	PLayersListPacket plPacket(PlayersList);
 	thisServer->SendGlobalPacket(plPacket);
+}
+
+void NetworkedGame::ServerUpdateScoreList()
+{
+	for (int i = 0; i < 4; ++i)
+	{
+		if (ControledPlayersList[i] != nullptr)
+		{
+			PlayersScoreList[i] = ControledPlayersList[i]->GetScore();
+		}
+	}
+	PlayersScorePacket psPacket(PlayersScoreList);
+	thisServer->SendGlobalPacket(psPacket);
 }
 
 void NetworkedGame::CheckPlayerListAndSpawnPlayers()
@@ -541,12 +558,14 @@ void NetworkedGame::StartLevel() {
 	InitWorld();
 	PlayersList.clear();
 	ControledPlayersList.clear();
-	PlayersNameList.clear();
+	//PlayersNameList.clear();
+	PlayersScoreList.clear();
 	for (int i = 0; i < 4; ++i)
 	{
 		PlayersList.push_back(-1);
 		ControledPlayersList.push_back(nullptr);
-		PlayersNameList.push_back(std::string(" "));
+		//PlayersNameList.push_back(std::string(" "));
+		PlayersScoreList.push_back(-1);
 	}
 	ProjectileList.clear();
 	CheckPlayerListAndSpawnPlayers();
@@ -590,6 +609,11 @@ void NetworkedGame::ReceivePacket(int type, GamePacket* payload, int source) {
 	case BasicNetworkMessages::Message: {
 		PLayersListPacket* realPacket = (PLayersListPacket*)payload;
 		realPacket->GetPlayerList(PlayersList);
+		break;
+	}
+	case BasicNetworkMessages::Player_Score: {
+		PlayersScorePacket* realPacket = (PlayersScorePacket*)payload;
+		realPacket->GetPlayerScore(PlayersScoreList);
 		break;
 	}
 	case BasicNetworkMessages::Full_State: {
