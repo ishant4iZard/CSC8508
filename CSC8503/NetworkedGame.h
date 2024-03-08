@@ -78,6 +78,7 @@ namespace NCL {
 			void UpdateMinimumState();
 
 			void ServerUpdatePlayersList();
+			void ServerUpdateScoreList();
 			void CheckPlayerListAndSpawnPlayers();
 
 			NetworkPlayer* AddNetworkPlayerToWorld(const Vector3& position, int playerNum);
@@ -110,6 +111,7 @@ namespace NCL {
 			std::vector<int> PlayersList;
 			std::vector<NetworkPlayer*> ControledPlayersList;
 			std::vector<std::string> PlayersNameList;
+			std::vector<int> PlayersScoreList;
 			int localPlayerIndex;
 
 			void SpawnAI();
@@ -139,6 +141,10 @@ namespace NCL {
 			inline MenuSystem* GetMenuSystem() const { return Menu; }
 			inline int GetLocalPlayerIndex() const { return localPlayerIndex; }
 			inline void SetLocalPlayerIndex(int val) { localPlayerIndex = val; }
+			inline std::string GetPlayerNameByIndex(int index) { return PlayersNameList[index]; }
+			inline int GetPlayerScoreByIndex(int index) { return PlayersScoreList[index]; }
+			inline float GetRoundTimer() const { return timer; }
+			inline int GetRoundTimeLimit() const { return TIME_LIMIT; }
 		};
 
 

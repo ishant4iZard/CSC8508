@@ -50,6 +50,7 @@ namespace NCL {
 
 			void UpdateCollisionList();
 			void UpdateObjectAABBs();
+			void UpdateObjectSwept(float dt);
 
 			void ImpulseResolveCollision(GameObject& a , GameObject&b, CollisionDetection::ContactPoint& p) const;
 

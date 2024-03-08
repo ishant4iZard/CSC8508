@@ -154,7 +154,7 @@ namespace NCL {
 					}
 				}
 				contents.clear();
-				delete[] children;
+				children= nullptr;
 			}
 
 		protected:

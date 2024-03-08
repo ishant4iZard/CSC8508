@@ -16,7 +16,7 @@ NetworkPlayer::NetworkPlayer(NetworkedGame* game, int num)	{
 	timeElapsed = 0.0f;
 	timeElapsed = projectileReplenishTimer = 0.0f;
 	numProjectilesAccumulated = MAX_PROJECTILE_CAPACITY;
-	movementSpeed = 10;
+	movementSpeed = 35;
 }
 
 NetworkPlayer::~NetworkPlayer()	{
@@ -168,7 +168,7 @@ void NetworkPlayer::MovePlayerTowardsCursor(float dt){
 
 	Vector3 currentVelocity = this->GetPhysicsObject()->GetLinearVelocity();
 	Vector3 targetVelocity = movementDirection * movementSpeed;
-	Vector3 velocity = Vector3::Lerp(currentVelocity, targetVelocity, dt);
+	Vector3 velocity = Vector3::Lerp(currentVelocity, targetVelocity, dt * 0.5);
 
 	this->GetPhysicsObject()->SetLinearVelocity(velocity);
 }
