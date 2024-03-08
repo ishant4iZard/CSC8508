@@ -518,6 +518,11 @@ PushdownState::PushdownResult PlayingHUD::OnUpdate(float dt, PushdownState** new
 		{
 			ui->DrawStringText("Player    " + Game->GetPlayerNameByIndex(Game->GetLocalPlayerIndex()), Vector2(83, 5), UIBase::WHITE);
 			ui->DrawStringText("Score     " + std::to_string(Game->GetPlayerScoreByIndex(Game->GetLocalPlayerIndex())), Vector2(83, 10), UIBase::WHITE);
+
+			if (Window::GetKeyboard()->KeyHeld(KeyCodes::Type::TAB))
+			{
+				ShowScoreTable(Game);
+			}
 		}
 
 		if (appState->GetIsServer())
@@ -545,5 +550,18 @@ void PlayingHUD::ReceiveEvent(const EventType eventType)
 		break;
 
 	default: break;
+	}
+}
+
+void PlayingHUD::ShowScoreTable(NetworkedGame* Game)
+{
+	for (int i = 0; i < 4; ++i)
+	{
+		if (Game->GetPlayerScoreByIndex(i) != -1)
+		{
+			ui->DrawStringText("Player " + std::to_string(i + 1), Vector2(25, 30 + i * 7), UIBase::BLUE);
+			ui->DrawStringText(Game->GetPlayerNameByIndex(i), Vector2(45, 30 + i * 7), UIBase::BLUE);
+			ui->DrawStringText("Score: " + std::to_string(Game->GetPlayerScoreByIndex(i)), Vector2(65, 30 + i * 7), UIBase::BLUE);
+		}
 	}
 }
