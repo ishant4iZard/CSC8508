@@ -512,6 +512,8 @@ PushdownState::PushdownResult PlayingHUD::OnUpdate(float dt, PushdownState** new
 			return  PushdownResult::Pop;
 		}
 
+		ui->DrawStringText("Score : ", Vector2(10, 10));
+		
 		if (appState->GetIsServer())
 		{
 			ui->DrawButton(
