@@ -129,6 +129,7 @@ namespace NCL {
 			bool UpdatePhysics = false;
 
 			void PhysicsUpdate(float dt);
+			void NonPhysicsUpdate(float dt);
 
 		public:
 			inline bool IsServer() { return thisServer != nullptr ? true : false; }

@@ -138,54 +138,30 @@ void NetworkedGame::DestroyClient()
 
 void NetworkedGame::UpdateGame(float dt) {
 	Debug::UpdateRenderables(dt);
-	Menu->Update(dt);
+	if (thisServer) {
+		UpdatePhysics = true;
+		//PhysicsUpdate(dt);
 
-	if (/*!appState->GetIsGameOver()*/true) {
-		timeToNextPacket -= dt;
-		if (timeToNextPacket < 0) {
-			if (thisServer) {
-				UpdateAsServer(dt);
-			}
-			else if (thisClient) {
-				UpdateAsClient(dt);
-			}
-			timeToNextPacket += 1.0f / 60.0f; //60hz server/client update
-		}
-
-		// Server and Client Receive and process there packet
-		if (thisServer) { 
-			thisServer->UpdateServer();
-			HandleInputAsServer();
-			UpdatePlayerState(dt);
-			UpdateProjectiles(dt);
-			
-			gravitywell->PullProjectilesWithinField(ProjectileList);
-			//physics->Update(dt);
-			UpdatePhysics = true;
-		}
-		if (thisClient) { 
-			thisClient->UpdateClient(dt); 
-			HandleInputAsClient();
-		}
 	}
 
+	//std::thread t1(&NetworkedGame::PhysicsUpdate, this,dt);
+	//std::thread t2(&NetworkedGame::NonPhysicsUpdate, this, dt);
+	NonPhysicsUpdate(dt);
+	PhysicsUpdate(dt);
 
-	std::thread t1(&NetworkedGame::PhysicsUpdate, this,dt);
+	//t2.join();
+	//t1.join();
 
-	//AI part:
-	//DetectProjectiles(testStateObject);
+	TutorialGame::UpdateGame(dt);
 
 	if (AIStateObject) {
 		AIStateObject->DetectProjectiles(ProjectileList);
 		AIStateObject->Update(dt);
 	}
 
-	audioEngine->Update();
-	TutorialGame::UpdateGame(dt);
-	Debug::UpdateRenderables(dt);
-
-	t1.join();
 }
+
+
 
 void NetworkedGame::UpdatePlayerState(float dt) {
 	for (auto i : ControledPlayersList)
@@ -562,7 +538,7 @@ void NetworkedGame::OnRep_DeactiveProjectile(int objectID)
 }
 
 void NetworkedGame::StartLevel() {
-	InitWorld(); 
+	InitWorld();
 	PlayersList.clear();
 	ControledPlayersList.clear();
 	PlayersNameList.clear();
@@ -575,7 +551,7 @@ void NetworkedGame::StartLevel() {
 	ProjectileList.clear();
 	CheckPlayerListAndSpawnPlayers();
 	SpawnAI();
-	
+	physics->createStaticTree();//this needs to be at the end of all initiations
 }
 
 void NetworkedGame::EndLevel()
@@ -583,6 +559,8 @@ void NetworkedGame::EndLevel()
 	world->ClearAndErase();
 	physics->Clear();
 	networkObjects.clear();
+	if(AIStateObject)
+		AIStateObject = NULL;
 	InitCamera();
 }
 
@@ -796,6 +774,46 @@ void NetworkedGame::PhysicsUpdate(float dt)
 		physics->Update(dt);
 		UpdatePhysics = false;
 	}
+}
+
+void NCL::CSC8503::NetworkedGame::NonPhysicsUpdate(float dt)
+{
+	Debug::UpdateRenderables(dt);
+	Menu->Update(dt);
+
+	if (/*!appState->GetIsGameOver()*/true) {
+		timeToNextPacket -= dt;
+		if (timeToNextPacket < 0) {
+			if (thisServer) {
+				UpdateAsServer(dt);
+			}
+			else if (thisClient) {
+				UpdateAsClient(dt);
+			}
+			timeToNextPacket += 1.0f / 60.0f; //60hz server/client update
+		}
+
+		// Server and Client Receive and process there packet
+		if (thisServer) {
+			thisServer->UpdateServer();
+			HandleInputAsServer();
+			UpdatePlayerState(dt);
+			UpdateProjectiles(dt);
+
+			gravitywell->PullProjectilesWithinField(ProjectileList);
+			//physics->Update(dt);
+			//UpdatePhysics = true;
+		}
+		if (thisClient) {
+			thisClient->UpdateClient(dt);
+			HandleInputAsClient();
+		}
+	}
+
+	
+
+
+	audioEngine->Update();
 }
 
 void NetworkedGame::SpawnAI() {

@@ -85,7 +85,6 @@ namespace NCL {
 
 
 			void InitTeleporters();
-			void InitBlackhole();
 			void TestAddStaticObjectsToWorld();
 			void InitPowerup();
 

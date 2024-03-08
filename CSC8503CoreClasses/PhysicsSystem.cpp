@@ -28,6 +28,7 @@ PhysicsSystem::PhysicsSystem(GameWorld& g) : gameWorld(g)	{
 
 PhysicsSystem::~PhysicsSystem()	{
 	EventEmitter::RemoveListner(this);
+	//staticTree = nullptr;
 }
 
 void PhysicsSystem::SetGravity(const Vector3& g) {
@@ -45,7 +46,10 @@ any collisions they are in.
 
 */
 void PhysicsSystem::Clear() {
+	broadphaseCollisions.clear();
+	broadphaseCollisionsVec.clear();
 	allCollisions.clear();
+	staticTree.Clear();
 }
 
 /*
@@ -433,19 +437,19 @@ void PhysicsSystem::BroadPhase() {
 						broadphaseCollisions.insert(info);
 					//}
 				}
-				if ((*i)->gettag() == "Projectile") {
-					Vector3 Predictpos = (*i)->GetTransform().GetPosition() + (*i)->GetPhysicsObject()->GetLinearVelocity() * idealDT *1.3f;
-					//tree.Insert(*i, pos, halfSizes);
-					std::list< QuadTreeEntry<GameObject*>> possiblelist = staticTree.CheckBroadwithstatic(*i, Predictpos, halfSizes);
-					for (auto j : possiblelist) {
-						CollisionDetection::CollisionInfo info;
-						if (broadPhaseHelper(*i, (j).object)) {
-							info.a = std::min((*i), (j).object);
-							info.b = std::max((*i), (j).object);
-							broadphaseCollisions.insert(info);
-						}
-					}
-				}
+				//if ((*i)->gettag() == "Projectile") {
+				//	Vector3 Predictpos = (*i)->GetTransform().GetPosition() + (*i)->GetPhysicsObject()->GetLinearVelocity() * idealDT *1.3f;
+				//	//tree.Insert(*i, pos, halfSizes);
+				//	std::list< QuadTreeEntry<GameObject*>> possiblelist = staticTree.CheckBroadwithstatic(*i, Predictpos, halfSizes);
+				//	for (auto j : possiblelist) {
+				//		CollisionDetection::CollisionInfo info;
+				//		if (broadPhaseHelper(*i, (j).object)) {
+				//			info.a = std::min((*i), (j).object);
+				//			info.b = std::max((*i), (j).object);
+				//			broadphaseCollisions.insert(info);
+				//		}
+				//	}
+				//}
 			}
 		}
 	}
@@ -479,7 +483,7 @@ void PhysicsSystem::NarrowPhase() {
 		i != broadphaseCollisions.end(); ++i) {
 
 		CollisionDetection::CollisionInfo info = *i;
-		if (!info.a->GetBoundingVolume()|| !info.b->GetBoundingVolume())
+		if (info.a->GetBoundingVolume() == NULL|| info.b->GetBoundingVolume() == NULL)
 		{
 			continue;
 		}

@@ -205,17 +205,11 @@ void TutorialGame::InitWorld() {
 	capsule = AddCapsuleToWorld(Vector3(-80, 5.6, -80), 1.0f, 2.0f);
 
 	SpawnDataDrivenLevel(GameLevelNumber::LEVEL_1);
-	//capsule->GetTransform().SetOrientation(Quaternion::EulerAnglesToQuaternion(0, 0, 90));
 	InitTeleporters();
 
-	InitBlackhole();
 	InitPowerup();
-	//TestAddStaticObjectsToWorld();
-	//InitAI();
 
 	GameObject* test = AddCapsuleToWorld(Vector3(-25, 5.6, 25), 1.0f, 2.0f);
-	//test->SetRenderObject();
-	physics->createStaticTree();//this needs to be at the end of all initiations
 }
 
 /*

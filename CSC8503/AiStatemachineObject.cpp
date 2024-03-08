@@ -77,7 +77,10 @@ AiStatemachineObject::AiStatemachineObject(GameWorld* world, NavigationGrid* nav
 }
 
 AiStatemachineObject::~AiStatemachineObject() {
-	delete stateMachine;
+	if (stateMachine) {
+		delete stateMachine;
+		stateMachine = NULL;
+	}
 }
 
 void AiStatemachineObject::Update(float dt) {

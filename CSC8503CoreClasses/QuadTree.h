@@ -147,6 +147,15 @@ namespace NCL {
 
 				}
 			}
+			void Clear() {
+				if (children) {
+					for (int i = 0; i < 4; ++i) {
+						children[i].Clear();
+					}
+				}
+				contents.clear();
+				delete[] children;
+			}
 
 		protected:
 			std::list< QuadTreeEntry<T> >	contents;
@@ -173,7 +182,7 @@ namespace NCL {
 				this->maxSize	= maxSize;
 			}
 			~QuadTree() {
-				//delete root;
+
 			}
 
 			void Insert(T object, const Vector3& pos, const Vector3& size) {
@@ -190,6 +199,9 @@ namespace NCL {
 
 			void OperateOnContents(typename QuadTreeNode<T>::QuadTreeFunc  func) {
 				root.OperateOnContents(func);
+			}
+			void Clear() {
+				root.Clear();
 			}
 
 		protected:
