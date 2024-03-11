@@ -560,32 +560,40 @@ void PlayingHUD::ReceiveEvent(const EventType eventType)
 	}
 }
 
-void PlayingHUD::ShowScoreTable(NetworkedGame* Game)
+void PlayingHUD::ShowScoreTable(TutorialGame* Game)
 {
+	//TODO dynamic cast game
+	NetworkedGame* tempGame = dynamic_cast<NetworkedGame*> (Game);
 	for (int i = 0; i < 4; ++i)
 	{
-		if (Game->GetPlayerScoreByIndex(i) != -1)
+		if (tempGame->GetPlayerScoreByIndex(i) != -1)
 		{
 			ui->DrawStringText("Player " + std::to_string(i + 1), Vector2(25, 30 + i * 7), UIBase::BLUE);
-			ui->DrawStringText(Game->GetPlayerNameByIndex(i), Vector2(45, 30 + i * 7), UIBase::BLUE);
-			ui->DrawStringText("Your Score: " + std::to_string(Game->GetPlayerScoreByIndex(i)), Vector2(65, 30 + i * 7), UIBase::BLUE);
+			ui->DrawStringText(tempGame->GetPlayerNameByIndex(i), Vector2(45, 30 + i * 7), UIBase::BLUE);
+			ui->DrawStringText("Your Score: " + std::to_string(tempGame->GetPlayerScoreByIndex(i)), Vector2(65, 30 + i * 7), UIBase::BLUE);
 		}
 	}
 }
 
-void PlayingHUD::ShowTimeLeft(NetworkedGame* Game)
+void PlayingHUD::ShowTimeLeft(TutorialGame* Game)
 {
+	//TODO dynamic cast game
+	NetworkedGame* tempGame = dynamic_cast<NetworkedGame*> (Game);
+
 	ui->DrawStringText("Timeleft:", Vector2(83, 15), UIBase::WHITE);
 
-	float timeLeft = Game->GetRoundTimeLimit() - Game->GetRoundTimer();
+	float timeLeft = tempGame->GetRoundTimeLimit() - tempGame->GetRoundTimer();
 	int time = (int)timeLeft + 1;
 	
 	ui->DrawStringText(std::to_string(time), Vector2(90, 15), UIBase::WHITE);
 }
 
-void PlayingHUD::CheckRoundTime(NetworkedGame* Game)
+void PlayingHUD::CheckRoundTime(TutorialGame* Game)
 {
-	if (Game->GetRoundTimer() > Game->GetRoundTimeLimit())
+	//TODO dynamic cast game
+	NetworkedGame* tempGame = dynamic_cast<NetworkedGame*> (Game);
+
+	if (tempGame->GetRoundTimer() > tempGame->GetRoundTimeLimit())
 	{
 		EventEmitter::EmitEvent(EventType::ROUND_OVER);
 	}
