@@ -4,33 +4,32 @@
     <PreferredToolArchitecture>x64</PreferredToolArchitecture>
   </PropertyGroup>
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="Debug|x64">
+    <ProjectConfiguration Include="Debug|Prospero">
       <Configuration>Debug</Configuration>
-      <Platform>x64</Platform>
+      <Platform>Prospero</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Release|x64">
+    <ProjectConfiguration Include="Release|Prospero">
       <Configuration>Release</Configuration>
-      <Platform>x64</Platform>
+      <Platform>Prospero</Platform>
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{8949F62C-195C-3272-B90F-B32EC6602028}</ProjectGuid>
+    <ProjectGuid>{6AF0101A-ED33-3B8C-AE4F-507E1CB79684}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <WindowsTargetPlatformVersion>10.0.22621.0</WindowsTargetPlatformVersion>
-    <Platform>x64</Platform>
+    <Platform>Prospero</Platform>
     <ProjectName>CSC8503</ProjectName>
     <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>PS5Clang</PlatformToolset>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>PS5Clang</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -42,46 +41,47 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\x64\Debug\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CSC8503.dir\Debug\</IntDir>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CSC8503</TargetName>
-    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.exe</TargetExt>
-    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
-    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</GenerateManifest>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\x64\Release\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CSC8503.dir\Release\</IntDir>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CSC8503</TargetName>
-    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.exe</TargetExt>
-    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:\Users\c3012094\source\repos\CSC8508\CSC8503\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CSC8503.dir\Debug\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CSC8503</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">.elf</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">true</GenerateManifest>
+    <LocalDebuggerWorkingDirectory Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">$(SolutionDir)</LocalDebuggerWorkingDirectory>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:\Users\c3012094\source\repos\CSC8508\CSC8503\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CSC8503.dir\Release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CSC8503</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">.elf</TargetExt>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">true</GenerateManifest>
+    <LocalDebuggerWorkingDirectory Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">$(SolutionDir)</LocalDebuggerWorkingDirectory>
   </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503\..\OpenGLRendering;C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503\..\NCLCoreClasses;C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503\..\CSC8503CoreClasses;C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\NCLCoreClasses;C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\OpenGLRendering;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\c3012094\source\repos\CSC8508\CSC8503\..\NCLCoreClasses;C:\Users\c3012094\source\repos\CSC8508\CSC8503\..\CSC8503CoreClasses;C:\Users\c3012094\source\repos\CSC8508\CSC8503\..\PS5Core;C:\Users\c3012094\source\repos\CSC8508\CSC8503\..\GLTFLoader;C:\Users\c3012094\source\repos\CSC8508\Assets;C:\Users\c3012094\source\repos\CSC8508\NCLCoreClasses;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) -std=gnu++20 -std=c++20</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
-      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <ConformanceMode>true</ConformanceMode>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <ExceptionHandling>Sync</ExceptionHandling>
-      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
-      <LanguageStandard>stdcpplatest</LanguageStandard>
-      <Optimization>Disabled</Optimization>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile>C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503/CMakeFiles/CSC8503.dir/Debug/cmake_pch.hxx</PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile>C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503/CSC8503.dir/Debug/cmake_pch.pch</PrecompiledHeaderOutputFile>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <DisableSpecificWarnings>pragma-once-outside-header</DisableSpecificWarnings>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <OptimizationLevel>Level0</OptimizationLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>C:/Users/c3012094/source/repos/CSC8508/CSC8503/CMakeFiles/CSC8503.dir/Debug/cmake_pch.hxx</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>C:/Users/c3012094/source/repos/CSC8508/CSC8503/CMakeFiles/CSC8503.dir/Debug/cmake_pch.hxx.pch</PrecompiledHeaderOutputFile>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
-      <SDLCheck>true</SDLCheck>
       <UseFullPaths>false</UseFullPaths>
-      <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;UNICODE;_UNICODE;WIN32_LEAN_AND_MEAN;_WINSOCKAPI_;_WINSOCK2API_;_WINSOCK_DEPRECATED_NO_WARNINGS;ASSETROOTLOCATION="C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/Assets/";NOMINMAX;CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);_DEBUG;ASSETROOTLOCATION="/app0/Assets/";USEAGC;CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;UNICODE;_UNICODE;WIN32_LEAN_AND_MEAN;_WINSOCKAPI_;_WINSOCK2API_;_WINSOCK_DEPRECATED_NO_WARNINGS;ASSETROOTLOCATION=\"C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/Assets/\";NOMINMAX;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503\..\OpenGLRendering;C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503\..\NCLCoreClasses;C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503\..\CSC8503CoreClasses;C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\NCLCoreClasses;C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\OpenGLRendering;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);_DEBUG;ASSETROOTLOCATION=\"/app0/Assets/\";USEAGC;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\c3012094\source\repos\CSC8508\CSC8503\..\NCLCoreClasses;C:\Users\c3012094\source\repos\CSC8508\CSC8503\..\CSC8503CoreClasses;C:\Users\c3012094\source\repos\CSC8508\CSC8503\..\PS5Core;C:\Users\c3012094\source\repos\CSC8508\CSC8503\..\GLTFLoader;C:\Users\c3012094\source\repos\CSC8508\Assets;C:\Users\c3012094\source\repos\CSC8508\NCLCoreClasses;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503\..\OpenGLRendering;C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503\..\NCLCoreClasses;C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503\..\CSC8503CoreClasses;C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\NCLCoreClasses;C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\OpenGLRendering;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\c3012094\source\repos\CSC8508\CSC8503\..\NCLCoreClasses;C:\Users\c3012094\source\repos\CSC8508\CSC8503\..\CSC8503CoreClasses;C:\Users\c3012094\source\repos\CSC8508\CSC8503\..\PS5Core;C:\Users\c3012094\source\repos\CSC8508\CSC8503\..\GLTFLoader;C:\Users\c3012094\source\repos\CSC8508\Assets;C:\Users\c3012094\source\repos\CSC8508\NCLCoreClasses;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -89,48 +89,44 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>Winmm.lib;..\NCLCoreClasses\Debug\NCLCoreClasses.lib;..\x64\Debug\CSC8503CoreClasses.lib;..\OpenGLRendering\Debug\OpenGLRendering.lib;ws2_32.lib;..\NCLCoreClasses\Debug\NCLCoreClasses.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>..\NCLCoreClasses\Debug\libNCLCoreClasses.a;..\CSC8503CoreClasses\Debug\libCSC8503CoreClasses.a;..\PS5Core\Debug\libPS5Core.a;..\GLTFLoader\Debug\libGLTFLoader.a;-lSceAgcDriver_stub_weak;-lSceAgc_stub_weak;-lSceVideoOut_stub_weak;-lSceAgc_debug_nosubmission;-lSceAgcCore_debug_nosubmission;-lSceAgcGpuAddress_debug_nosubmission;-lScePad_stub_weak;-lSceUserService_stub_weak</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/SCE/Prospero SDKs/8.000/target/lib;C:/Program Files (x86)/SCE/Prospero SDKs/8.000/target/lib/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <ImportLibrary>C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/x64/Debug/CSC8503.lib</ImportLibrary>
-      <ProgramDataBaseFile>C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/x64/Debug/CSC8503.pdb</ProgramDataBaseFile>
+      <ImportLibrary>C:/Users/c3012094/source/repos/CSC8508/CSC8503/Debug/CSC8503_stub_weak.a</ImportLibrary>
+      <ProgramDataBaseFile>C:/Users/c3012094/source/repos/CSC8508/CSC8503/Debug/CSC8503.pdb</ProgramDataBaseFile>
       <SubSystem>Console</SubSystem>
     </Link>
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
     </ProjectReference>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503\..\OpenGLRendering;C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503\..\NCLCoreClasses;C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503\..\CSC8503CoreClasses;C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\NCLCoreClasses;C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\OpenGLRendering;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\c3012094\source\repos\CSC8508\CSC8503\..\NCLCoreClasses;C:\Users\c3012094\source\repos\CSC8508\CSC8503\..\CSC8503CoreClasses;C:\Users\c3012094\source\repos\CSC8508\CSC8503\..\PS5Core;C:\Users\c3012094\source\repos\CSC8508\CSC8503\..\GLTFLoader;C:\Users\c3012094\source\repos\CSC8508\Assets;C:\Users\c3012094\source\repos\CSC8508\NCLCoreClasses;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) -std=gnu++20 -std=c++20</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
-      <ConformanceMode>true</ConformanceMode>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <ExceptionHandling>Sync</ExceptionHandling>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <LanguageStandard>stdcpplatest</LanguageStandard>
-      <Optimization>MaxSpeed</Optimization>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile>C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503/CMakeFiles/CSC8503.dir/Release/cmake_pch.hxx</PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile>C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503/CSC8503.dir/Release/cmake_pch.pch</PrecompiledHeaderOutputFile>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <DisableSpecificWarnings>pragma-once-outside-header</DisableSpecificWarnings>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <OptimizationLevel>Level3</OptimizationLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>C:/Users/c3012094/source/repos/CSC8508/CSC8503/CMakeFiles/CSC8503.dir/Release/cmake_pch.hxx</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>C:/Users/c3012094/source/repos/CSC8508/CSC8503/CMakeFiles/CSC8503.dir/Release/cmake_pch.hxx.pch</PrecompiledHeaderOutputFile>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
-      <SDLCheck>true</SDLCheck>
       <UseFullPaths>false</UseFullPaths>
-      <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;UNICODE;_UNICODE;WIN32_LEAN_AND_MEAN;_WINSOCKAPI_;_WINSOCK2API_;_WINSOCK_DEPRECATED_NO_WARNINGS;ASSETROOTLOCATION="C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/Assets/";NOMINMAX;CMAKE_INTDIR="Release"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);NDEBUG;ASSETROOTLOCATION="/app0/Assets/";USEAGC;CMAKE_INTDIR="Release"</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;UNICODE;_UNICODE;WIN32_LEAN_AND_MEAN;_WINSOCKAPI_;_WINSOCK2API_;_WINSOCK_DEPRECATED_NO_WARNINGS;ASSETROOTLOCATION=\"C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/Assets/\";NOMINMAX;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503\..\OpenGLRendering;C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503\..\NCLCoreClasses;C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503\..\CSC8503CoreClasses;C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\NCLCoreClasses;C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\OpenGLRendering;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);NDEBUG;ASSETROOTLOCATION=\"/app0/Assets/\";USEAGC;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\c3012094\source\repos\CSC8508\CSC8503\..\NCLCoreClasses;C:\Users\c3012094\source\repos\CSC8508\CSC8503\..\CSC8503CoreClasses;C:\Users\c3012094\source\repos\CSC8508\CSC8503\..\PS5Core;C:\Users\c3012094\source\repos\CSC8508\CSC8503\..\GLTFLoader;C:\Users\c3012094\source\repos\CSC8508\Assets;C:\Users\c3012094\source\repos\CSC8508\NCLCoreClasses;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503\..\OpenGLRendering;C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503\..\NCLCoreClasses;C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503\..\CSC8503CoreClasses;C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\NCLCoreClasses;C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\OpenGLRendering;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\c3012094\source\repos\CSC8508\CSC8503\..\NCLCoreClasses;C:\Users\c3012094\source\repos\CSC8508\CSC8503\..\CSC8503CoreClasses;C:\Users\c3012094\source\repos\CSC8508\CSC8503\..\PS5Core;C:\Users\c3012094\source\repos\CSC8508\CSC8503\..\GLTFLoader;C:\Users\c3012094\source\repos\CSC8508\Assets;C:\Users\c3012094\source\repos\CSC8508\NCLCoreClasses;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -138,15 +134,12 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>Winmm.lib;..\NCLCoreClasses\Release\NCLCoreClasses.lib;..\x64\Release\CSC8503CoreClasses.lib;..\OpenGLRendering\Release\OpenGLRendering.lib;ws2_32.lib;..\NCLCoreClasses\Release\NCLCoreClasses.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <AdditionalDependencies>..\NCLCoreClasses\Release\libNCLCoreClasses.a;..\CSC8503CoreClasses\Release\libCSC8503CoreClasses.a;..\PS5Core\Release\libPS5Core.a;..\GLTFLoader\Release\libGLTFLoader.a;-lSceAgcDriver_stub_weak;-lSceAgc_stub_weak;-lSceVideoOut_stub_weak;-lSceAgc_debug_nosubmission;-lSceAgcCore_debug_nosubmission;-lSceAgcGpuAddress_debug_nosubmission;-lScePad_stub_weak;-lSceUserService_stub_weak</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/SCE/Prospero SDKs/8.000/target/lib;C:/Program Files (x86)/SCE/Prospero SDKs/8.000/target/lib/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <ImportLibrary>C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/x64/Release/CSC8503.lib</ImportLibrary>
-      <OptimizeReferences>true</OptimizeReferences>
-      <ProgramDataBaseFile>C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/x64/Release/CSC8503.pdb</ProgramDataBaseFile>
+      <ImportLibrary>C:/Users/c3012094/source/repos/CSC8508/CSC8503/Release/CSC8503_stub_weak.a</ImportLibrary>
+      <ProgramDataBaseFile>C:/Users/c3012094/source/repos/CSC8508/CSC8503/Release/CSC8503.pdb</ProgramDataBaseFile>
       <SubSystem>Console</SubSystem>
     </Link>
     <ProjectReference>
@@ -154,11 +147,11 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503\CMakeLists.txt">
+    <CustomBuild Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\CMakeLists.txt">
       <UseUtf8Encoding>Always</UseUtf8Encoding>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503/CMakeLists.txt</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
-"C:\Program Files\CMake\bin\cmake.exe" "-SC:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023" "-BC:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023" --check-stamp-file "C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503/CMakeFiles/generate.stamp"
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">Building Custom Rule C:/Users/c3012094/source/repos/CSC8508/CSC8503/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/c3012094/source/repos/CSC8508 -BC:/Users/c3012094/source/repos/CSC8508 --check-stamp-file C:/Users/c3012094/source/repos/CSC8508/CSC8503/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -166,12 +159,12 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CMake\Default.cmake;C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CMake\DefaultCXX.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503\CMakeFiles\generate.stamp</Outputs>
-      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503/CMakeLists.txt</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
-"C:\Program Files\CMake\bin\cmake.exe" "-SC:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023" "-BC:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023" --check-stamp-file "C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503/CMakeFiles/generate.stamp"
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:\Users\c3012094\source\repos\CSC8508\CMakeFiles\cmake.verify_globs;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:\Users\c3012094\source\repos\CSC8508\CSC8503\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">Building Custom Rule C:/Users/c3012094/source/repos/CSC8508/CSC8503/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/c3012094/source/repos/CSC8508 -BC:/Users/c3012094/source/repos/CSC8508 --check-stamp-file C:/Users/c3012094/source/repos/CSC8508/CSC8503/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -179,116 +172,95 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CMake\Default.cmake;C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CMake\DefaultCXX.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503\CMakeFiles\generate.stamp</Outputs>
-      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:\Users\c3012094\source\repos\CSC8508\CMakeFiles\cmake.verify_globs;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:\Users\c3012094\source\repos\CSC8508\CSC8503\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">false</LinkObjects>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503\CMakeFiles\CSC8503.dir\cmake_pch.cxx">
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503/CMakeFiles/CSC8503.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503/CMakeFiles/CSC8503.dir/Debug/cmake_pch.hxx</PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503/CSC8503.dir/Debug/cmake_pch.pch</PrecompiledHeaderOutputFile>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503/CMakeFiles/CSC8503.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503/CMakeFiles/CSC8503.dir/Release/cmake_pch.hxx</PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503/CSC8503.dir/Release/cmake_pch.pch</PrecompiledHeaderOutputFile>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\CMakeFiles\CSC8503.dir\cmake_pch.hxx.cxx">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503/CMakeFiles/CSC8503.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503/CMakeFiles/CSC8503.dir/Debug/cmake_pch.hxx</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503/CMakeFiles/CSC8503.dir/Debug/cmake_pch.hxx.pch</PrecompiledHeaderOutputFile>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503/CMakeFiles/CSC8503.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503/CMakeFiles/CSC8503.dir/Release/cmake_pch.hxx</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503/CMakeFiles/CSC8503.dir/Release/cmake_pch.hxx.pch</PrecompiledHeaderOutputFile>
     </ClCompile>
-    <ClCompile Include="Projectile.cpp" />
-    <ClInclude Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503\GameTechRenderer.h" />
-    <ClInclude Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503\NetworkedGame.h" />
-    <ClInclude Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503\NetworkPlayer.h" />
-    <ClInclude Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503\StateGameObject.h" />
-    <ClInclude Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503\TutorialGame.h" />
-    <ClInclude Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503\Voxels.h" />
-    <ClInclude Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503\PowerUp.h" />
-    <ClInclude Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503\Player.h" />
-    <ClInclude Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503\Goose.h" />
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503\GameTechRenderer.cpp">
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503/CMakeFiles/CSC8503.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503/CMakeFiles/CSC8503.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
+    <ClInclude Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\PS5_Game.h" />
+    <ClInclude Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\LevelFileLoaderBase.h" />
+    <ClInclude Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\WindowsLevelLoader.h" />
+    <ClInclude Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\LevelEnum.h" />
+    <ClInclude Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\LevelObjectEnum.h" />
+    <ClInclude Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\ApplicationState.h" />
+    <ClInclude Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\Event.h" />
+    <ClInclude Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\EventType.h" />
+    <ClInclude Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\Singleton.h" />
+    <ClInclude Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\BaseTextureManager.h" />
+    <ClInclude Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\Light.h" />
+    <ClInclude Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\DirectionalLight.h" />
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\Main.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503/CMakeFiles/CSC8503.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503/CMakeFiles/CSC8503.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503\Main.cpp">
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503/CMakeFiles/CSC8503.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503/CMakeFiles/CSC8503.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\PS5_Game.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503/CMakeFiles/CSC8503.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503/CMakeFiles/CSC8503.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503\NetworkedGame.cpp">
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503/CMakeFiles/CSC8503.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503/CMakeFiles/CSC8503.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\WindowsLevelLoader.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503/CMakeFiles/CSC8503.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503/CMakeFiles/CSC8503.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503\NetworkPlayer.cpp">
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503/CMakeFiles/CSC8503.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503/CMakeFiles/CSC8503.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\ApplicationState.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503/CMakeFiles/CSC8503.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503/CMakeFiles/CSC8503.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503\StateGameObject.cpp">
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503/CMakeFiles/CSC8503.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503/CMakeFiles/CSC8503.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\Singleton.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503/CMakeFiles/CSC8503.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503/CMakeFiles/CSC8503.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503\TutorialGame.cpp">
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503/CMakeFiles/CSC8503.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503/CMakeFiles/CSC8503.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\BaseTextureManager.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503/CMakeFiles/CSC8503.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503/CMakeFiles/CSC8503.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503\Voxels.cpp">
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503/CMakeFiles/CSC8503.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503/CMakeFiles/CSC8503.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
+    <ClInclude Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\UIBase.h" />
+    <ClInclude Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\UIPlaystation.h" />
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\UIPlaystation.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503/CMakeFiles/CSC8503.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503/CMakeFiles/CSC8503.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503\PowerUp.cpp">
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503/CMakeFiles/CSC8503.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503/CMakeFiles/CSC8503.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
+    <ClInclude Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\GameTechRendererInterface.h" />
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\GameTechAGCRenderer.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503/CMakeFiles/CSC8503.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503/CMakeFiles/CSC8503.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503\Player.cpp">
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503/CMakeFiles/CSC8503.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503/CMakeFiles/CSC8503.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503\Goose.cpp">
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503/CMakeFiles/CSC8503.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503/CMakeFiles/CSC8503.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClInclude Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503\CMakeFiles\CSC8503.dir\Debug\cmake_pch.hxx" />
-    <ClInclude Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503\CMakeFiles\CSC8503.dir\Release\cmake_pch.hxx" />
-    <ClInclude Include="Projectile.h" />
+    <ClInclude Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\GameTechAGCRenderer.h" />
+    <ClInclude Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\CMakeFiles\CSC8503.dir\Debug\cmake_pch.hxx" />
+    <ClInclude Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\CMakeFiles\CSC8503.dir\Release\cmake_pch.hxx" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\ZERO_CHECK.vcxproj">
-      <Project>{B61AB8DD-B9D3-3627-8F25-285683B1E7FB}</Project>
+    <ProjectReference Include="C:\Users\c3012094\source\repos\CSC8508\ZERO_CHECK.vcxproj">
+      <Project>{ACBDC04B-D08A-3000-98C6-2B724A2D4650}</Project>
       <Name>ZERO_CHECK</Name>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </ProjectReference>
-    <ProjectReference Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\CSC8503CoreClasses.vcxproj">
-      <Project>{9903624B-4D22-3FE2-9939-1B497A766346}</Project>
+    <ProjectReference Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\CSC8503CoreClasses.vcxproj">
+      <Project>{509E0865-FA37-3077-921B-56A7EFE0F774}</Project>
       <Name>CSC8503CoreClasses</Name>
     </ProjectReference>
-    <ProjectReference Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\NCLCoreClasses\NCLCoreClasses.vcxproj">
-      <Project>{C46929A6-35CF-3DF8-B199-501012C23723}</Project>
+    <ProjectReference Include="C:\Users\c3012094\source\repos\CSC8508\GLTFLoader\GLTFLoader.vcxproj">
+      <Project>{B7597867-D014-3DB0-BAD8-CC8669B456FC}</Project>
+      <Name>GLTFLoader</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\Users\c3012094\source\repos\CSC8508\NCLCoreClasses\NCLCoreClasses.vcxproj">
+      <Project>{800A0F91-70FC-39BF-8E11-B46CFA5DF2EA}</Project>
       <Name>NCLCoreClasses</Name>
     </ProjectReference>
-    <ProjectReference Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\OpenGLRendering\OpenGLRendering.vcxproj">
-      <Project>{D8BD9B0A-2FE0-3DDA-A0E9-ABDE9AD5FDB7}</Project>
-      <Name>OpenGLRendering</Name>
+    <ProjectReference Include="C:\Users\c3012094\source\repos\CSC8508\PS5Core\PS5Core.vcxproj">
+      <Project>{21213CB6-C896-352A-A632-AE60B46FCE06}</Project>
+      <Name>PS5Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

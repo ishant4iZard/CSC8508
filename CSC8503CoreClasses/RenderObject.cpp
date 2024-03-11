@@ -8,6 +8,7 @@ RenderObject::RenderObject(Transform* parentTransform, Mesh* mesh, Texture* tex,
 	if (!tex) {
 		bool a = true;
 	}
+	this->buffer = nullptr;
 	this->transform	= parentTransform;
 	this->mesh		= mesh;
 	this->texture	= tex;

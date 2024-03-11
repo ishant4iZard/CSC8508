@@ -19,7 +19,6 @@ using namespace NCL;
 using namespace CSC8503;
 
 TutorialGame::TutorialGame() : controller(*Window::GetWindow()->GetKeyboard(), *Window::GetWindow()->GetMouse()) {
-	aitreetest = new AiTreeObject("aitree");
 	world		= new GameWorld();
 #ifdef USEVULKAN
 	renderer	= new GameTechVulkanRenderer(*world);
@@ -137,7 +136,6 @@ TutorialGame::~TutorialGame()	{
 	delete[] groundTextureList;
 	delete[] wallTextureList;
 	delete[] sandTextureList;
-	delete aitreetest;
 }
 
 void TutorialGame::UpdateGame(float dt) {
@@ -178,7 +176,7 @@ void TutorialGame::UpdateGame(float dt) {
 	else if(appState->GetIsServer()) {
 		timer += dt;
 
-		world->GetMainCamera().UpdateCamera(dt);
+		//world->GetMainCamera().UpdateCamera(dt);
 		if (timer > TIME_LIMIT) {
 			appState->SetIsGameOver(true);
 		}
@@ -191,8 +189,6 @@ void TutorialGame::UpdateGame(float dt) {
 
 	if (Window::GetKeyboard()->KeyDown(KeyCodes::C)) {
 		//claptrap->OnAwake(2);
-		aitreetest->ResetBehaviourTree();
-		aitreetest->OnBehaviour();
 	}
 
 	//if (aitreetest) {
@@ -213,16 +209,6 @@ void TutorialGame::UpdateGame(float dt) {
 	renderer->Render();
 	renderer->Update(dt);
 	//std::cout << "capsule" << capsule->GetTransform().GetPosition().y<<"\n";
-
-
-	if (frameCounter >= 100) {
-		aitreetest->GetTransform().RandomPosition(aitreetest->GetTransform().GetPosition(), true);
-		Vector3 aichaseposition = aitreetest->GetTransform().GetPosition();
-		frameAddresses.push_back(aichaseposition);
-		//ProcessFrameAddresses();
-		frameCounter = 0; 
-	}
-
 }
 
 void TutorialGame::InitCamera() {

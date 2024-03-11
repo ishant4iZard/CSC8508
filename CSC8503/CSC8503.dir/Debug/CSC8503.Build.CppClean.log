@@ -1,27 +1,31 @@
-c:\users\ishan\source\repos\csc8503 2023\csc8503\csc8503.dir\debug\cmake_pch.pch
-c:\users\ishan\source\repos\csc8503 2023\csc8503\csc8503.dir\debug\vc143.pdb
-c:\users\ishan\source\repos\csc8503 2023\csc8503\csc8503.dir\debug\cmake_pch.obj
-c:\users\ishan\source\repos\csc8503 2023\csc8503\csc8503.dir\debug\goose.obj
-c:\users\ishan\source\repos\csc8503 2023\csc8503\csc8503.dir\debug\player.obj
-c:\users\ishan\source\repos\csc8503 2023\csc8503\csc8503.dir\debug\powerup.obj
-c:\users\ishan\source\repos\csc8503 2023\csc8503\csc8503.dir\debug\voxels.obj
-c:\users\ishan\source\repos\csc8503 2023\csc8503\csc8503.dir\debug\tutorialgame.obj
-c:\users\ishan\source\repos\csc8503 2023\csc8503\csc8503.dir\debug\stategameobject.obj
-c:\users\ishan\source\repos\csc8503 2023\csc8503\csc8503.dir\debug\networkplayer.obj
-c:\users\ishan\source\repos\csc8503 2023\csc8503\csc8503.dir\debug\networkedgame.obj
-c:\users\ishan\source\repos\csc8503 2023\csc8503\csc8503.dir\debug\main.obj
-c:\users\ishan\source\repos\csc8503 2023\csc8503\csc8503.dir\debug\gametechrenderer.obj
-c:\users\ishan\source\repos\csc8503 2023\csc8503\cmakefiles\generate.stamp
-c:\users\ishan\source\repos\csc8503 2023\x64\debug\csc8503.exe
-c:\users\ishan\source\repos\csc8503 2023\csc8503\csc8503.dir\debug\csc8503.ilk
-c:\users\ishan\source\repos\csc8503 2023\x64\debug\csc8503.pdb
-c:\users\ishan\source\repos\csc8503 2023\csc8503\csc8503.dir\debug\csc8503.tlog\cl.command.1.tlog
-c:\users\ishan\source\repos\csc8503 2023\csc8503\csc8503.dir\debug\csc8503.tlog\cl.items.tlog
-c:\users\ishan\source\repos\csc8503 2023\csc8503\csc8503.dir\debug\csc8503.tlog\cl.read.1.tlog
-c:\users\ishan\source\repos\csc8503 2023\csc8503\csc8503.dir\debug\csc8503.tlog\cl.write.1.tlog
-c:\users\ishan\source\repos\csc8503 2023\csc8503\csc8503.dir\debug\csc8503.tlog\custombuild.command.1.tlog
-c:\users\ishan\source\repos\csc8503 2023\csc8503\csc8503.dir\debug\csc8503.tlog\custombuild.read.1.tlog
-c:\users\ishan\source\repos\csc8503 2023\csc8503\csc8503.dir\debug\csc8503.tlog\custombuild.write.1.tlog
-c:\users\ishan\source\repos\csc8503 2023\csc8503\csc8503.dir\debug\csc8503.tlog\link.command.1.tlog
-c:\users\ishan\source\repos\csc8503 2023\csc8503\csc8503.dir\debug\csc8503.tlog\link.read.1.tlog
-c:\users\ishan\source\repos\csc8503 2023\csc8503\csc8503.dir\debug\csc8503.tlog\link.write.1.tlog
+c:\users\c3012094\source\repos\csc8508\csc8503\cmakefiles\generate.stamp
+c:\users\c3012094\source\repos\csc8508\csc8503\cmakefiles\csc8503.dir\debug\cmake_pch.hxx.pch
+c:\users\c3012094\source\repos\csc8508\csc8503\csc8503.dir\debug\windowslevelloader.o
+c:\users\c3012094\source\repos\csc8508\csc8503\csc8503.dir\debug\applicationstate.o
+c:\users\c3012094\source\repos\csc8508\csc8503\csc8503.dir\debug\singleton.o
+c:\users\c3012094\source\repos\csc8508\csc8503\csc8503.dir\debug\basetexturemanager.o
+c:\users\c3012094\source\repos\csc8508\csc8503\csc8503.dir\debug\menusystem.o
+c:\users\c3012094\source\repos\csc8508\csc8503\csc8503.dir\debug\networkplayer.o
+c:\users\c3012094\source\repos\csc8508\csc8503\csc8503.dir\debug\networkedgame.o
+c:\users\c3012094\source\repos\csc8508\csc8503\csc8503.dir\debug\tutorialgame.o
+c:\users\c3012094\source\repos\csc8508\csc8503\csc8503.dir\debug\aistatemachineobject.o
+c:\users\c3012094\source\repos\csc8508\csc8503\csc8503.dir\debug\bouncepad.o
+c:\users\c3012094\source\repos\csc8508\csc8503\csc8503.dir\debug\gametechagcrenderer.o
+c:\users\c3012094\source\repos\csc8508\csc8503\csc8503.dir\debug\gravitywell.o
+c:\users\c3012094\source\repos\csc8508\csc8503\csc8503.dir\debug\hole.o
+c:\users\c3012094\source\repos\csc8508\csc8503\csc8503.dir\debug\main.o
+c:\users\c3012094\source\repos\csc8508\csc8503\csc8503.dir\debug\ps5_game.o
+c:\users\c3012094\source\repos\csc8508\csc8503\csc8503.dir\debug\projectile.o
+c:\users\c3012094\source\repos\csc8508\csc8503\csc8503.dir\debug\teleporter.o
+c:\users\c3012094\source\repos\csc8508\csc8503\csc8503.dir\debug\uiplaystation.o
+c:\users\c3012094\source\repos\csc8508\csc8503\debug\csc8503.elf
+c:\users\c3012094\source\repos\csc8508\csc8503\csc8503.dir\debug\csc8503.tlog\custombuild.command.1.tlog
+c:\users\c3012094\source\repos\csc8508\csc8503\csc8503.dir\debug\csc8503.tlog\custombuild.read.1.tlog
+c:\users\c3012094\source\repos\csc8508\csc8503\csc8503.dir\debug\csc8503.tlog\custombuild.write.1.tlog
+c:\users\c3012094\source\repos\csc8508\csc8503\csc8503.dir\debug\csc8503.tlog\prospero-clang-cl.command.1.tlog
+c:\users\c3012094\source\repos\csc8508\csc8503\csc8503.dir\debug\csc8503.tlog\prospero-clang-cl.read.1.tlog
+c:\users\c3012094\source\repos\csc8508\csc8503\csc8503.dir\debug\csc8503.tlog\prospero-clang-cl.write.1.tlog
+c:\users\c3012094\source\repos\csc8508\csc8503\csc8503.dir\debug\csc8503.tlog\prospero-lld.command.1.tlog
+c:\users\c3012094\source\repos\csc8508\csc8503\csc8503.dir\debug\csc8503.tlog\prospero-lld.read.1.tlog
+c:\users\c3012094\source\repos\csc8508\csc8503\csc8503.dir\debug\csc8503.tlog\prospero-lld.write.1.tlog
+c:\users\c3012094\source\repos\csc8508\csc8503\csc8503.dir\debug\csc8503.tlog\cmake_pch.hxx.pch.dep

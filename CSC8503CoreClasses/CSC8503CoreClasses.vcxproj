@@ -4,33 +4,32 @@
     <PreferredToolArchitecture>x64</PreferredToolArchitecture>
   </PropertyGroup>
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="Debug|x64">
+    <ProjectConfiguration Include="Debug|Prospero">
       <Configuration>Debug</Configuration>
-      <Platform>x64</Platform>
+      <Platform>Prospero</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Release|x64">
+    <ProjectConfiguration Include="Release|Prospero">
       <Configuration>Release</Configuration>
-      <Platform>x64</Platform>
+      <Platform>Prospero</Platform>
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{9903624B-4D22-3FE2-9939-1B497A766346}</ProjectGuid>
+    <ProjectGuid>{509E0865-FA37-3077-921B-56A7EFE0F774}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <WindowsTargetPlatformVersion>10.0.22621.0</WindowsTargetPlatformVersion>
-    <Platform>x64</Platform>
+    <Platform>Prospero</Platform>
     <ProjectName>CSC8503CoreClasses</ProjectName>
     <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>PS5Clang</PlatformToolset>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>PS5Clang</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -42,91 +41,88 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\x64\Debug\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CSC8503CoreClasses.dir\Debug\</IntDir>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CSC8503CoreClasses</TargetName>
-    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.lib</TargetExt>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\x64\Release\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CSC8503CoreClasses.dir\Release\</IntDir>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CSC8503CoreClasses</TargetName>
-    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CSC8503CoreClasses.dir\Debug\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">libCSC8503CoreClasses</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">.a</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CSC8503CoreClasses.dir\Release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">libCSC8503CoreClasses</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">.a</TargetExt>
   </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\..\NCLCoreClasses;C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\..\NCLCoreClasses;C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) -std=gnu++20 -std=c++20</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
-      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <ExceptionHandling>Sync</ExceptionHandling>
-      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
-      <LanguageStandard>stdcpp20</LanguageStandard>
-      <Optimization>Disabled</Optimization>
+      <DisableSpecificWarnings>pragma-once-outside-header</DisableSpecificWarnings>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <OptimizationLevel>Level0</OptimizationLevel>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx</PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile>C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CSC8503CoreClasses.dir/Debug/cmake_pch.pch</PrecompiledHeaderOutputFile>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeaderFile>C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx.pch</PrecompiledHeaderOutputFile>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <UseFullPaths>false</UseFullPaths>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;UNICODE;_UNICODE;WIN32_LEAN_AND_MEAN;_WINSOCK_DEPRECATED_NO_WARNINGS;NOMINMAX;ASSETROOTLOCATION="C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/Assets/";CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
-      <ObjectFileName>$(IntDir)</ObjectFileName>
-    </ClCompile>
-    <ResourceCompile>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;UNICODE;_UNICODE;WIN32_LEAN_AND_MEAN;_WINSOCK_DEPRECATED_NO_WARNINGS;NOMINMAX;ASSETROOTLOCATION=\"C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/Assets/\";CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\..\NCLCoreClasses;C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-    </ResourceCompile>
-    <Midl>
-      <AdditionalIncludeDirectories>C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\..\NCLCoreClasses;C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
-      <HeaderFileName>%(Filename).h</HeaderFileName>
-      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
-      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
-      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
-    </Midl>
-    <Lib>
-      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
-    </Lib>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\..\NCLCoreClasses;C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
-      <ExceptionHandling>Sync</ExceptionHandling>
-      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
-      <LanguageStandard>stdcpp20</LanguageStandard>
-      <Optimization>MaxSpeed</Optimization>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx</PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile>C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CSC8503CoreClasses.dir/Release/cmake_pch.pch</PrecompiledHeaderOutputFile>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <RuntimeTypeInfo>true</RuntimeTypeInfo>
-      <UseFullPaths>false</UseFullPaths>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;UNICODE;_UNICODE;WIN32_LEAN_AND_MEAN;_WINSOCK_DEPRECATED_NO_WARNINGS;NOMINMAX;ASSETROOTLOCATION="C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/Assets/";CMAKE_INTDIR="Release"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);_DEBUG;UNICODE;_UNICODE;WIN32_LEAN_AND_MEAN;_WINSOCK_DEPRECATED_NO_WARNINGS;NOMINMAX;ASSETROOTLOCATION="/app0/Assets/";USEAGC;CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
       <DebugInformationFormat>
       </DebugInformationFormat>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;UNICODE;_UNICODE;WIN32_LEAN_AND_MEAN;_WINSOCK_DEPRECATED_NO_WARNINGS;NOMINMAX;ASSETROOTLOCATION=\"C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/Assets/\";CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\..\NCLCoreClasses;C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);_DEBUG;UNICODE;_UNICODE;WIN32_LEAN_AND_MEAN;_WINSOCK_DEPRECATED_NO_WARNINGS;NOMINMAX;ASSETROOTLOCATION=\"/app0/Assets/\";USEAGC;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\..\NCLCoreClasses;C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\..\NCLCoreClasses;C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\..\NCLCoreClasses;C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
       <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
-    <Lib>
-      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
-    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\..\NCLCoreClasses;C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) -std=gnu++20 -std=c++20</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <DisableSpecificWarnings>pragma-once-outside-header</DisableSpecificWarnings>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <OptimizationLevel>Level3</OptimizationLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx.pch</PrecompiledHeaderOutputFile>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);NDEBUG;UNICODE;_UNICODE;WIN32_LEAN_AND_MEAN;_WINSOCK_DEPRECATED_NO_WARNINGS;NOMINMAX;ASSETROOTLOCATION="/app0/Assets/";USEAGC;CMAKE_INTDIR="Release"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);NDEBUG;UNICODE;_UNICODE;WIN32_LEAN_AND_MEAN;_WINSOCK_DEPRECATED_NO_WARNINGS;NOMINMAX;ASSETROOTLOCATION=\"/app0/Assets/\";USEAGC;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\..\NCLCoreClasses;C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\..\NCLCoreClasses;C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\CMakeLists.txt">
+    <CustomBuild Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\CMakeLists.txt">
       <UseUtf8Encoding>Always</UseUtf8Encoding>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeLists.txt</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
-"C:\Program Files\CMake\bin\cmake.exe" "-SC:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023" "-BC:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023" --check-stamp-file "C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/generate.stamp"
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">Building Custom Rule C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/c3012094/source/repos/CSC8508 -BC:/Users/c3012094/source/repos/CSC8508 --check-stamp-file C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -134,12 +130,12 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CMake\Default.cmake;C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CMake\DefaultCXX.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\CMakeFiles\generate.stamp</Outputs>
-      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeLists.txt</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
-"C:\Program Files\CMake\bin\cmake.exe" "-SC:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023" "-BC:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023" --check-stamp-file "C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/generate.stamp"
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:\Users\c3012094\source\repos\CSC8508\CMakeFiles\cmake.verify_globs;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">Building Custom Rule C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/c3012094/source/repos/CSC8508 -BC:/Users/c3012094/source/repos/CSC8508 --check-stamp-file C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -147,644 +143,482 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CMake\Default.cmake;C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CMake\DefaultCXX.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\CMakeFiles\generate.stamp</Outputs>
-      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:\Users\c3012094\source\repos\CSC8508\CMakeFiles\cmake.verify_globs;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">false</LinkObjects>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\CMakeFiles\CSC8503CoreClasses.dir\cmake_pch.cxx">
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx</PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CSC8503CoreClasses.dir/Debug/cmake_pch.pch</PrecompiledHeaderOutputFile>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx</PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CSC8503CoreClasses.dir/Release/cmake_pch.pch</PrecompiledHeaderOutputFile>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\Debug.h">
-      <ObjectFileName>$(IntDir)/Debug.h.obj</ObjectFileName>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\GameObject.h">
-      <ObjectFileName>$(IntDir)/GameObject.h.obj</ObjectFileName>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\GameWorld.h">
-      <ObjectFileName>$(IntDir)/GameWorld.h.obj</ObjectFileName>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\RenderObject.h">
-      <ObjectFileName>$(IntDir)/RenderObject.h.obj</ObjectFileName>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\Transform.h">
-      <ObjectFileName>$(IntDir)/Transform.h.obj</ObjectFileName>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\Debug.cpp">
-      <ObjectFileName>$(IntDir)/Debug.cpp.obj</ObjectFileName>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\GameObject.cpp">
-      <ObjectFileName>$(IntDir)/GameObject.cpp.obj</ObjectFileName>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\GameWorld.cpp">
-      <ObjectFileName>$(IntDir)/GameWorld.cpp.obj</ObjectFileName>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\RenderObject.cpp">
-      <ObjectFileName>$(IntDir)/RenderObject.cpp.obj</ObjectFileName>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\Transform.cpp">
-      <ObjectFileName>$(IntDir)/Transform.cpp.obj</ObjectFileName>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\BehaviourAction.h">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\BehaviourNode.h">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\BehaviourNodeWithChildren.h">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\BehaviourSelector.h">
-      <ObjectFileName>$(IntDir)/BehaviourSelector.h.obj</ObjectFileName>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\BehaviourSelector.cpp">
-      <ObjectFileName>$(IntDir)/BehaviourSelector.cpp.obj</ObjectFileName>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\BehaviourSequence.h">
-      <ObjectFileName>$(IntDir)/BehaviourSequence.h.obj</ObjectFileName>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\BehaviourSequence.cpp">
-      <ObjectFileName>$(IntDir)/BehaviourSequence.cpp.obj</ObjectFileName>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\PushdownMachine.h">
-      <ObjectFileName>$(IntDir)/PushdownMachine.h.obj</ObjectFileName>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\PushdownMachine.cpp">
-      <ObjectFileName>$(IntDir)/PushdownMachine.cpp.obj</ObjectFileName>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\PushdownState.h">
-      <ObjectFileName>$(IntDir)/PushdownState.h.obj</ObjectFileName>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\PushdownState.cpp">
-      <ObjectFileName>$(IntDir)/PushdownState.cpp.obj</ObjectFileName>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\State.h">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\StateMachine.h">
-      <ObjectFileName>$(IntDir)/StateMachine.h.obj</ObjectFileName>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\StateMachine.cpp">
-      <ObjectFileName>$(IntDir)/StateMachine.cpp.obj</ObjectFileName>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\StateTransition.h">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\NavigationGrid.h">
-      <ObjectFileName>$(IntDir)/NavigationGrid.h.obj</ObjectFileName>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\NavigationGrid.cpp">
-      <ObjectFileName>$(IntDir)/NavigationGrid.cpp.obj</ObjectFileName>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\NavigationMesh.cpp">
-      <ObjectFileName>$(IntDir)/NavigationMesh.cpp.obj</ObjectFileName>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\NavigationMesh.h">
-      <ObjectFileName>$(IntDir)/NavigationMesh.h.obj</ObjectFileName>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\NavigationMap.h">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\NavigationPath.h">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\AABBVolume.h">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\CapsuleVolume.h">
-      <ObjectFileName>$(IntDir)/CapsuleVolume.h.obj</ObjectFileName>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\CapsuleVolume.cpp">
-      <ObjectFileName>$(IntDir)/CapsuleVolume.cpp.obj</ObjectFileName>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\CollisionDetection.h">
-      <ObjectFileName>$(IntDir)/CollisionDetection.h.obj</ObjectFileName>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\CollisionDetection.cpp">
-      <ObjectFileName>$(IntDir)/CollisionDetection.cpp.obj</ObjectFileName>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\CollisionVolume.h">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\OBBVolume.h">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\QuadTree.h">
-      <ObjectFileName>$(IntDir)/QuadTree.h.obj</ObjectFileName>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\QuadTree.cpp">
-      <ObjectFileName>$(IntDir)/QuadTree.cpp.obj</ObjectFileName>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\Ray.h">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\SphereVolume.h">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\GameClient.h">
-      <ObjectFileName>$(IntDir)/GameClient.h.obj</ObjectFileName>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\GameClient.cpp">
-      <ObjectFileName>$(IntDir)/GameClient.cpp.obj</ObjectFileName>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\GameServer.h">
-      <ObjectFileName>$(IntDir)/GameServer.h.obj</ObjectFileName>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\GameServer.cpp">
-      <ObjectFileName>$(IntDir)/GameServer.cpp.obj</ObjectFileName>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\NetworkBase.h">
-      <ObjectFileName>$(IntDir)/NetworkBase.h.obj</ObjectFileName>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\NetworkBase.cpp">
-      <ObjectFileName>$(IntDir)/NetworkBase.cpp.obj</ObjectFileName>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\NetworkObject.h">
-      <ObjectFileName>$(IntDir)/NetworkObject.h.obj</ObjectFileName>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\NetworkObject.cpp">
-      <ObjectFileName>$(IntDir)/NetworkObject.cpp.obj</ObjectFileName>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\NetworkState.h">
-      <ObjectFileName>$(IntDir)/NetworkState.h.obj</ObjectFileName>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\NetworkState.cpp">
-      <ObjectFileName>$(IntDir)/NetworkState.cpp.obj</ObjectFileName>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\Constraint.h">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\PositionConstraint.cpp">
-      <ObjectFileName>$(IntDir)/PositionConstraint.cpp.obj</ObjectFileName>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\PositionConstraint.h">
-      <ObjectFileName>$(IntDir)/PositionConstraint.h.obj</ObjectFileName>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\OrientationConstraint.cpp">
-      <ObjectFileName>$(IntDir)/OrientationConstraint.cpp.obj</ObjectFileName>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\OrientationConstraint.h">
-      <ObjectFileName>$(IntDir)/OrientationConstraint.h.obj</ObjectFileName>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\PhysicsObject.cpp">
-      <ObjectFileName>$(IntDir)/PhysicsObject.cpp.obj</ObjectFileName>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\PhysicsObject.h">
-      <ObjectFileName>$(IntDir)/PhysicsObject.h.obj</ObjectFileName>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\PhysicsSystem.cpp">
-      <ObjectFileName>$(IntDir)/PhysicsSystem.cpp.obj</ObjectFileName>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\PhysicsSystem.h">
-      <ObjectFileName>$(IntDir)/PhysicsSystem.h.obj</ObjectFileName>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\enet\callbacks.c">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\enet\list.h">
-      <ObjectFileName>$(IntDir)/enet/list.h.obj</ObjectFileName>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\enet\list.c">
-      <ObjectFileName>$(IntDir)/enet/list.c.obj</ObjectFileName>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\enet\protocol.h">
-      <ObjectFileName>$(IntDir)/enet/protocol.h.obj</ObjectFileName>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\enet\protocol.c">
-      <ObjectFileName>$(IntDir)/enet/protocol.c.obj</ObjectFileName>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\enet\win32.h">
-      <ObjectFileName>$(IntDir)/enet/win32.h.obj</ObjectFileName>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\enet\win32.c">
-      <ObjectFileName>$(IntDir)/enet/win32.c.obj</ObjectFileName>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\enet\enet.h">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\enet\time.h">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\enet\types.h">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\enet\utility.h">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\enet\compress.c">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\enet\host.c">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\enet\packet.c">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\enet\peer.c">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ScanSourceforModuleDependencies>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ScanSourceforModuleDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ScanSourceforModuleDependencies>
-    </ClCompile>
-    <ClInclude Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\CMakeFiles\CSC8503CoreClasses.dir\Debug\cmake_pch.hxx" />
-    <ClInclude Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\CSC8503CoreClasses\CMakeFiles\CSC8503CoreClasses.dir\Release\cmake_pch.hxx" />
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\CMakeFiles\CSC8503CoreClasses.dir\cmake_pch.hxx.cxx">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx.pch</PrecompiledHeaderOutputFile>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx.pch</PrecompiledHeaderOutputFile>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\Debug.h">
+      <ObjectFileName>$(IntDir)/Debug.o</ObjectFileName>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\GameObject.h">
+      <ObjectFileName>$(IntDir)/GameObject.o</ObjectFileName>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\GameWorld.h">
+      <ObjectFileName>$(IntDir)/GameWorld.o</ObjectFileName>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\RenderObject.h">
+      <ObjectFileName>$(IntDir)/RenderObject.o</ObjectFileName>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\Transform.h">
+      <ObjectFileName>$(IntDir)/Transform.o</ObjectFileName>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\Debug.cpp">
+      <ObjectFileName>$(IntDir)/Debug.o</ObjectFileName>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\GameObject.cpp">
+      <ObjectFileName>$(IntDir)/GameObject.o</ObjectFileName>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\GameWorld.cpp">
+      <ObjectFileName>$(IntDir)/GameWorld.o</ObjectFileName>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\RenderObject.cpp">
+      <ObjectFileName>$(IntDir)/RenderObject.o</ObjectFileName>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\Transform.cpp">
+      <ObjectFileName>$(IntDir)/Transform.o</ObjectFileName>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\BehaviourAction.h">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\BehaviourNode.h">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\BehaviourNodeWithChildren.h">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\BehaviourSelector.h">
+      <ObjectFileName>$(IntDir)/BehaviourSelector.o</ObjectFileName>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\BehaviourSelector.cpp">
+      <ObjectFileName>$(IntDir)/BehaviourSelector.o</ObjectFileName>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\BehaviourSequence.h">
+      <ObjectFileName>$(IntDir)/BehaviourSequence.o</ObjectFileName>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\BehaviourSequence.cpp">
+      <ObjectFileName>$(IntDir)/BehaviourSequence.o</ObjectFileName>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\PushdownMachine.h">
+      <ObjectFileName>$(IntDir)/PushdownMachine.o</ObjectFileName>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\PushdownMachine.cpp">
+      <ObjectFileName>$(IntDir)/PushdownMachine.o</ObjectFileName>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\PushdownState.h">
+      <ObjectFileName>$(IntDir)/PushdownState.o</ObjectFileName>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\PushdownState.cpp">
+      <ObjectFileName>$(IntDir)/PushdownState.o</ObjectFileName>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\State.h">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\StateMachine.h">
+      <ObjectFileName>$(IntDir)/StateMachine.o</ObjectFileName>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\StateMachine.cpp">
+      <ObjectFileName>$(IntDir)/StateMachine.o</ObjectFileName>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\StateTransition.h">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\NavigationGrid.h">
+      <ObjectFileName>$(IntDir)/NavigationGrid.o</ObjectFileName>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\NavigationGrid.cpp">
+      <ObjectFileName>$(IntDir)/NavigationGrid.o</ObjectFileName>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\NavigationMesh.cpp">
+      <ObjectFileName>$(IntDir)/NavigationMesh.o</ObjectFileName>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\NavigationMesh.h">
+      <ObjectFileName>$(IntDir)/NavigationMesh.o</ObjectFileName>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\NavigationMap.h">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\NavigationPath.h">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\AABBVolume.h">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\CapsuleVolume.h">
+      <ObjectFileName>$(IntDir)/CapsuleVolume.o</ObjectFileName>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\CapsuleVolume.cpp">
+      <ObjectFileName>$(IntDir)/CapsuleVolume.o</ObjectFileName>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\CollisionDetection.h">
+      <ObjectFileName>$(IntDir)/CollisionDetection.o</ObjectFileName>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\CollisionDetection.cpp">
+      <ObjectFileName>$(IntDir)/CollisionDetection.o</ObjectFileName>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\CollisionVolume.h">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\OBBVolume.h">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\QuadTree.h">
+      <ObjectFileName>$(IntDir)/QuadTree.o</ObjectFileName>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\QuadTree.cpp">
+      <ObjectFileName>$(IntDir)/QuadTree.o</ObjectFileName>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\Ray.h">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\SphereVolume.h">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\GameClient.h">
+      <ObjectFileName>$(IntDir)/GameClient.o</ObjectFileName>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\GameClient.cpp">
+      <ObjectFileName>$(IntDir)/GameClient.o</ObjectFileName>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\GameServer.h">
+      <ObjectFileName>$(IntDir)/GameServer.o</ObjectFileName>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\GameServer.cpp">
+      <ObjectFileName>$(IntDir)/GameServer.o</ObjectFileName>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\NetworkBase.h">
+      <ObjectFileName>$(IntDir)/NetworkBase.o</ObjectFileName>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\NetworkBase.cpp">
+      <ObjectFileName>$(IntDir)/NetworkBase.o</ObjectFileName>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\NetworkObject.h">
+      <ObjectFileName>$(IntDir)/NetworkObject.o</ObjectFileName>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\NetworkObject.cpp">
+      <ObjectFileName>$(IntDir)/NetworkObject.o</ObjectFileName>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\NetworkState.h">
+      <ObjectFileName>$(IntDir)/NetworkState.o</ObjectFileName>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\NetworkState.cpp">
+      <ObjectFileName>$(IntDir)/NetworkState.o</ObjectFileName>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\Constraint.h">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\PositionConstraint.cpp">
+      <ObjectFileName>$(IntDir)/PositionConstraint.o</ObjectFileName>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\PositionConstraint.h">
+      <ObjectFileName>$(IntDir)/PositionConstraint.o</ObjectFileName>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\OrientationConstraint.cpp">
+      <ObjectFileName>$(IntDir)/OrientationConstraint.o</ObjectFileName>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\OrientationConstraint.h">
+      <ObjectFileName>$(IntDir)/OrientationConstraint.o</ObjectFileName>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\PhysicsObject.cpp">
+      <ObjectFileName>$(IntDir)/PhysicsObject.o</ObjectFileName>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\PhysicsObject.h">
+      <ObjectFileName>$(IntDir)/PhysicsObject.o</ObjectFileName>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\PhysicsSystem.cpp">
+      <ObjectFileName>$(IntDir)/PhysicsSystem.o</ObjectFileName>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\PhysicsSystem.h">
+      <ObjectFileName>$(IntDir)/PhysicsSystem.o</ObjectFileName>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\enet\callbacks.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\enet\list.h">
+      <ObjectFileName>$(IntDir)/enet/list.o</ObjectFileName>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\enet\list.c">
+      <ObjectFileName>$(IntDir)/enet/list.o</ObjectFileName>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\enet\protocol.h">
+      <ObjectFileName>$(IntDir)/enet/protocol.o</ObjectFileName>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\enet\protocol.c">
+      <ObjectFileName>$(IntDir)/enet/protocol.o</ObjectFileName>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\enet\enet.h">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\enet\time.h">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\enet\types.h">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\enet\utility.h">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\enet\compress.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\enet\host.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\enet\packet.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\enet\peer.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\enet\unix.h">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClInclude Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\CMakeFiles\CSC8503CoreClasses.dir\Debug\cmake_pch.hxx" />
+    <ClInclude Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\CMakeFiles\CSC8503CoreClasses.dir\Release\cmake_pch.hxx" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="C:\Users\c3002856\source\repos\CSC8503 2023 2\CSC8503 2023\ZERO_CHECK.vcxproj">
-      <Project>{B61AB8DD-B9D3-3627-8F25-285683B1E7FB}</Project>
+    <ProjectReference Include="C:\Users\c3012094\source\repos\CSC8508\ZERO_CHECK.vcxproj">
+      <Project>{ACBDC04B-D08A-3000-98C6-2B724A2D4650}</Project>
       <Name>ZERO_CHECK</Name>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>

@@ -9,9 +9,14 @@ https://research.ncl.ac.uk/game/
 #pragma once
 #include "Maths.h"
 
+#include "Vector3.h"
+#include "Vector4.h"
+//#include "Matrix3.h"
+//#include "Quaternion.h"
+
 namespace NCL::Maths {
-	class Vector3;
-	class Vector4;
+	//class Vector3;
+	//class Vector4;
 	class Matrix3;
 	class Quaternion;
 

@@ -30,14 +30,15 @@
 *.exe
 *.out
 *.app
+*.ags
+*.tlog
 
 *.vsidx
 *.ipch
 *.db
 /.vs/CSC8503/FileContentIndex/read.lock
-/.vs
-/Build
-/out/build/x64-Debug
+
+# CMake
 cmake-build-debug-visual-studio/*
 CMakeLists.txt.user
 CMakeCache.txt
@@ -50,6 +51,35 @@ install_manifest.txt
 compile_commands.json
 CTestTestfile.cmake
 _deps
+
+# PS5
+/sce_module
+/PS5Core
+*.pssl
+*.psslh
+*.gnf
+
+# Builds
+/Build
+**/Prospero
+**/x64
+**/Debug
+**/Release
+/out/build/x64-Debug
+
+# Visual Studio
+.vs/
+.vscode/
+
+# Visual Studio project files
+*.vcxproj.user
+*.vcxproj
+*.filters
+
+# User-specific files
+*.suo
+*.user
+*.sln.docstates
 
 # OPENGL RENDERER
 /OpenGLRendering/OpenGLRendering.dir/Debug

@@ -8,10 +8,12 @@ https://research.ncl.ac.uk/game/
 */
 #pragma once
 #include "Matrix4.h"
+//#include "Matrix3.h"
+//#include "Vector3.h"
 
 namespace NCL::Maths {
 	class Matrix3;
-	class Matrix4;
+	//class Matrix4;
 	class Vector3;
 
 	class Quaternion {
@@ -120,6 +122,35 @@ namespace NCL::Maths {
 		{
 			Matrix4 rotMat = Matrix4::BuildViewMatrix(currentPos, targetPos, axis).Inverse();
 			return Quaternion(rotMat);
+		}
+
+		template <typename T>
+		constexpr static T RotationMatrix(const Quaternion& quat) {
+			T mat;
+
+			float yy = quat.y * quat.y;
+			float zz = quat.z * quat.z;
+			float xy = quat.x * quat.y;
+			float zw = quat.z * quat.w;
+			float xz = quat.x * quat.z;
+			float yw = quat.y * quat.w;
+			float xx = quat.x * quat.x;
+			float yz = quat.y * quat.z;
+			float xw = quat.x * quat.w;
+
+			mat.array[0][0] = 1 - 2 * yy - 2 * zz;
+			mat.array[0][1] = 2 * xy + 2 * zw;
+			mat.array[0][2] = 2 * xz - 2 * yw;
+
+			mat.array[1][0] = 2 * xy - 2 * zw;
+			mat.array[1][1] = 1 - 2 * xx - 2 * zz;
+			mat.array[1][2] = 2 * yz + 2 * xw;
+
+			mat.array[2][0] = 2 * xz + 2 * yw;
+			mat.array[2][1] = 2 * yz - 2 * xw;
+			mat.array[2][2] = 1 - 2 * xx - 2 * yy;
+
+			return mat;
 		}
 	};
 

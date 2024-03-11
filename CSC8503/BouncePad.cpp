@@ -2,6 +2,8 @@
 #include "NetworkedGame.h"
 #include "NetworkPlayer.h"
 #include "PhysicsObject.h"
+#include "Transform.h"
+#include "Vector3.h"
 
 using namespace NCL;
 using namespace CSC8503;

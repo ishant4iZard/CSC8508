@@ -5,17 +5,20 @@
 #include "OGLMesh.h"
 #include "Event.h"
 #include "GameWorld.h"
+#include <Vector3.h>
+#include <Vector4.h>
 
 #include "../CSC8503/UIBase.h"
 #ifdef _WIN32
 #include "../CSC8503/UIWindows.h"
-#else //_ORBIS
-#include "../CSC8503/UIPlaystation.h"
 #endif
 
 namespace NCL {
-	class Maths::Vector3;
-	class Maths::Vector4;
+	//class Maths::Vector3;
+	//class Maths::Vector4;
+
+	using namespace Maths;
+
 	namespace CSC8503 {
 		class RenderObject;
 		class DirectionalLight;
