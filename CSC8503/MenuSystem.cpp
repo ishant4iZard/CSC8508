@@ -1,16 +1,19 @@
 #include "MenuSystem.h"
+#include "TutorialGame.h"
 #include "NetworkedGame.h"
 #include "PushdownMachine.h"
 
 #include "OnlineSubsystemBase.h"
 #include "steam.h"
 
+// TODO sit with T and change everything to tutorial game and non network related
+
 using namespace NCL;
 using namespace CSC8503;
 
 using std::string;
 
-MenuSystem::MenuSystem(NetworkedGame* Game)
+MenuSystem::MenuSystem(TutorialGame* Game)
 {
 #ifdef _WIN32
 	OnlineSubsystem = NetSystem_Steam::GetInstance();

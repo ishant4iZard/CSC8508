@@ -17,7 +17,6 @@ namespace NCL {
 			void OnCollisionBegin(GameObject* otherObject) override;
 
 		protected:
-			NetworkedGame* game;
 		};
 
 	}
