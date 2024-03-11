@@ -10,7 +10,7 @@ namespace NCL {
 		class Projectile : public GameObject
 		{
 		public:
-			static constexpr float FireForce = 80000;
+			static constexpr float FireForce = 1000;
 			static constexpr float inverseMass = 1.0 / 10.0;
 
 			static int CurrentAvailableProjectileID;

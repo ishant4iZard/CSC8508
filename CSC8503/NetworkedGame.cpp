@@ -147,13 +147,14 @@ void NetworkedGame::UpdateGame(float dt) {
 		timer += dt;
 	}
 
-	//std::thread t1(&NetworkedGame::PhysicsUpdate, this,dt);
-	//std::thread t2(&NetworkedGame::NonPhysicsUpdate, this, dt);
-	NonPhysicsUpdate(dt);
-	PhysicsUpdate(dt);
+	/*NonPhysicsUpdate(dt);
+	PhysicsUpdate(dt);*/
 
-	//t2.join();
-	//t1.join();
+	std::thread t1(&NetworkedGame::PhysicsUpdate, this,dt);
+	std::thread t2(&NetworkedGame::NonPhysicsUpdate, this, dt);
+
+	t2.join();
+	t1.join();
 
 	TutorialGame::UpdateGame(dt);
 
@@ -457,6 +458,7 @@ void NetworkedGame::SpawnPlayer() {
 
 void NetworkedGame::SpawnProjectile(NetworkPlayer* owner, Vector3 firePos, Vector3 fireDir)
 {
+	world->gameObjectsMutex.lock();
 	Projectile* newBullet = new Projectile(owner, this);
 
 	float radius = 1.0f;
@@ -500,7 +502,7 @@ void NetworkedGame::SpawnProjectile(NetworkPlayer* owner, Vector3 firePos, Vecto
 
 	Vector3 force = fireDir * Projectile::FireForce;
 	//newBullet->GetPhysicsObject()->SetLinearVelocity(fireDir);
-	newBullet->GetPhysicsObject()->AddForce(force);
+	newBullet->GetPhysicsObject()->ApplyLinearImpulse(force);
 
 	ProjectileList.push_back(newBullet);
 	
@@ -512,6 +514,8 @@ void NetworkedGame::SpawnProjectile(NetworkPlayer* owner, Vector3 firePos, Vecto
 		firePacket.NetObjectID = bulletID;
 		thisServer->SendGlobalPacket(firePacket);
 	}
+	world->gameObjectsMutex.unlock();
+
 }
 
 void NetworkedGame::OnRep_SpawnProjectile(int PlayerNum, int NetObjectID)

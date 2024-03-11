@@ -187,6 +187,7 @@ void NetworkPlayer::ReplenishProjectiles(float dt) {
 
 void NetworkPlayer::Fire()
 {
+	
 	if (numProjectilesAccumulated <= 0) return;
 	numProjectilesAccumulated--;
 
