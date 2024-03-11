@@ -9,6 +9,8 @@
 #include "GameServer.h"
 #include <iostream>
 
+//TODO ifdef can be used here
+
 using namespace NCL;
 using namespace CSC8503;
 

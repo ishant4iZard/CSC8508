@@ -4,8 +4,6 @@
 
 namespace NCL {
 	namespace  CSC8503 {
-		class NetworkPlayer;
-		class NetworkedGame;
 
 		class Teleporter : public GameObject
 		{

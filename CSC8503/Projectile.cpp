@@ -1,7 +1,9 @@
 #include "Projectile.h"
 #include "TutorialGame.h"
-#include "NetworkedGame.h"
+//#include "NetworkedGame.h"
 #include "NetworkPlayer.h"
+
+//TODO can be fixed after player
 
 using namespace NCL;
 using namespace CSC8503;

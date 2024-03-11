@@ -1,11 +1,11 @@
 #pragma once
-
+//TODO player fix required
 #include "GameObject.h"
 
 namespace NCL {
 	namespace  CSC8503 {
 		class NetworkPlayer;
-		class NetworkedGame;
+		//class NetworkedGame;
 		class TutorialGame;
 
 		class Projectile : public GameObject

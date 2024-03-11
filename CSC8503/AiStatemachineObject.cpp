@@ -8,8 +8,6 @@
 #include "TutorialGame.h"
 #include "Projectile.h"
 #include "PhysicsSystem.h"
-#include "NetworkPlayer.h"
-#include "NetworkObject.h"
 #include "Debug.h"
 
 using namespace NCL;

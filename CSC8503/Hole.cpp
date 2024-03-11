@@ -6,6 +6,8 @@
 #include "GameServer.h"
 #include "CollisionDetection.h"
 
+//TODO ifdef can be used here and player required
+
 using namespace NCL;
 using namespace CSC8503;
 
@@ -15,8 +17,8 @@ Hole::Hole() {
 
 void Hole::OnCollisionBegin(GameObject* otherObject) {
 	if (otherObject->gettag() == "Projectile") {
-		CollisionDetection::CollisionInfo info;
-		CollisionDetection::ObjectIntersection(this, otherObject, info);
+		//CollisionDetection::CollisionInfo info;
+		//CollisionDetection::ObjectIntersection(this, otherObject, info);
 		Projectile* Bullet = dynamic_cast<Projectile*>(otherObject);
 		Bullet->GetOwner()->AddScore(1);
 		Bullet->deactivate();
