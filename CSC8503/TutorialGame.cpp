@@ -141,7 +141,6 @@ void TutorialGame::InitialiseAssets() {
 
 	InitCamera();
 	InitWorld();
-
 }
 
 TutorialGame::~TutorialGame()	{
@@ -178,8 +177,12 @@ void TutorialGame::UpdateGame(float dt) {
 
 void NCL::CSC8503::TutorialGame::UpdatePowerUpSpawnTimer(float dt)
 {
+	if (appState->GetIsGameOver() || appState->GetIsGamePaused()) return;
+
 	powerUpSpawnTimer += dt;
-	if (powerUpSpawnTimer >= POWER_UP_SPAWN_TIME && activePowerUpCount <= MAX_POWER_UP_COUNT)
+	if (powerUpSpawnTimer >= POWER_UP_SPAWN_TIME
+		&& activePowerUpCount <= MAX_POWER_UP_COUNT
+		)
 	{
 		powerUpSpawnTimer = 0.0f;
 		InitPowerup();
@@ -207,7 +210,7 @@ void TutorialGame::InitWorld() {
 	SpawnDataDrivenLevel(GameLevelNumber::LEVEL_1);
 	InitTeleporters();
 
-	InitPowerup();
+
 
 	GameObject* test = AddCapsuleToWorld(Vector3(-25, 5.6, 25), 1.0f, 2.0f);
 }

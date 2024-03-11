@@ -9,6 +9,7 @@
 #include "Window.h"
 #include <functional>
 #include <iostream>
+#include <thread>
 using namespace NCL;
 using namespace CSC8503;
 
@@ -76,23 +77,6 @@ int realHZ		= idealHZ;
 float realDT	= idealDT;
 
 void PhysicsSystem::Update(float dt) {	
-	/*if (Window::GetKeyboard()->KeyPressed(KeyCodes::B)) {
-		useBroadPhase = !useBroadPhase;
-		std::cout << "Setting broadphase to " << useBroadPhase << std::endl;
-	}
-	if (Window::GetKeyboard()->KeyPressed(KeyCodes::N)) {
-		useSimpleContainer = !useSimpleContainer;
-		std::cout << "Setting broad container to " << useSimpleContainer << std::endl;
-	}
-	if (Window::GetKeyboard()->KeyPressed(KeyCodes::I)) {
-		constraintIterationCount--;
-		std::cout << "Setting constraint iterations to " << constraintIterationCount << std::endl;
-	}
-	if (Window::GetKeyboard()->KeyPressed(KeyCodes::O)) {
-		constraintIterationCount++;
-		std::cout << "Setting constraint iterations to " << constraintIterationCount << std::endl;
-	}*/
-
 	dTOffset += dt; //We accumulate time delta here - there might be remainders from previous frame!
 
 	powerUptime -= dt;
@@ -103,37 +87,40 @@ void PhysicsSystem::Update(float dt) {
 	GameTimer t;
 	t.GetTimeDeltaSeconds();
 
-	if (useBroadPhase) {
-		//UpdateObjectSwept(dt);
-		UpdateObjectAABBs();
-	}
 	int iteratorCount = 0;
 	while(dTOffset > realDT) {
-		IntegrateAccel(realDT); //Update accelerations from external forces
-		if (useBroadPhase) {
-			BroadPhase();
-			NarrowPhase();
-		}
-		else {
-			BasicCollisionDetection();
-		}
+
+		//std::thread t1(&PhysicsSystem::UpdateObjectAABBs, this);
+		//std::thread t2(&PhysicsSystem::IntegrateAccel, this, realDT); //Update accelerations from external forces
+
+		//t1.join();
+		UpdateObjectAABBs();
+		IntegrateAccel(dt);
+
+		BroadPhase();
+		NarrowPhase();
+		//std::thread t3(&PhysicsSystem::NarrowPhase,this);
 
 		//This is our simple iterative solver - 
 		//we just run things multiple times, slowly moving things forward
 		//and then rechecking that the constraints have been met		
-		float constraintDt = realDT /  (float)constraintIterationCount;
+		/*float constraintDt = realDT /  (float)constraintIterationCount;
 		for (int i = 0; i < constraintIterationCount; ++i) {
 			UpdateConstraints(constraintDt);	
-		}
+		}*/
+
+		/*t2.join();
+		t3.join();*/
 		IntegrateVelocity(realDT); //update positions from new velocity changes
 
 		dTOffset -= realDT;
 		iteratorCount++;
+
+		ClearForces();	//Once we've finished with the forces, reset them to zero
+
+		UpdateCollisionList(); //Remove any old collisions
 	}
 
-	ClearForces();	//Once we've finished with the forces, reset them to zero
-
-	UpdateCollisionList(); //Remove any old collisions
 
 	t.Tick();
 	float updateTime = t.GetTimeDeltaSeconds();
@@ -245,6 +232,8 @@ void PhysicsSystem::ReceiveEvent(EventType T)
 }
 
 void PhysicsSystem::BasicCollisionDetection() {
+	gameWorld.gameObjectsMutex.lock();
+
 	std::vector <GameObject*>::const_iterator first;
 	std::vector <GameObject*>::const_iterator last;
 	gameWorld.GetObjectIterators(first, last);
@@ -285,6 +274,8 @@ void PhysicsSystem::BasicCollisionDetection() {
 
 		}
 	}
+	gameWorld.gameObjectsMutex.unlock();
+
 	//std::cout << NumberCollision << "\n";
 }
 
@@ -419,11 +410,13 @@ void PhysicsSystem::createStaticTree() {
 }
 
 void PhysicsSystem::BroadPhase() {
+
 	broadphaseCollisions.clear();
 	QuadTree <GameObject*> tree(Vector2(200,200), 7, 4);
 	
 	//tree = staticTree;
 
+	gameWorld.gameObjectsMutex.lock();
 	std::vector <GameObject*>::const_iterator first;
 	std::vector <GameObject*>::const_iterator last;
 	gameWorld.GetObjectIterators(first, last);
@@ -486,6 +479,8 @@ void PhysicsSystem::BroadPhase() {
 			}
 		}
 	);
+	gameWorld.gameObjectsMutex.unlock();
+
 }
 
 /*
@@ -537,6 +532,7 @@ based on any forces that have been accumulated in the objects during
 the course of the previous game frame.
 */
 void PhysicsSystem::IntegrateAccel(float dt) {
+	gameWorld.gameObjectsMutex.lock();
 	std::vector <GameObject*>::const_iterator first;
 	std::vector <GameObject*>::const_iterator last;
 	gameWorld.GetObjectIterators(first, last);
@@ -592,6 +588,8 @@ void PhysicsSystem::IntegrateAccel(float dt) {
 		angVel += angAccel * dt; // integrate angular accel !
 		object -> SetAngularVelocity(angVel);
 	}
+	gameWorld.gameObjectsMutex.unlock();
+
 }
 
 /*
@@ -602,6 +600,8 @@ the world, looking for collisions.
 */
 void PhysicsSystem::IntegrateVelocity(float dt) {
 	//universal and object specific damping
+	gameWorld.gameObjectsMutex.lock();
+
 	std::vector <GameObject*>::const_iterator first;
 	std::vector <GameObject*>::const_iterator last;
 	gameWorld.GetObjectIterators(first, last);
@@ -637,6 +637,8 @@ void PhysicsSystem::IntegrateVelocity(float dt) {
 		angVel = angVel * frameAngularDamping;
 		object -> SetAngularVelocity(angVel);
 	}
+	gameWorld.gameObjectsMutex.unlock();
+
 }
 
 /*
@@ -662,6 +664,8 @@ us to model springs and ropes etc.
 
 */
 void PhysicsSystem::UpdateConstraints(float dt) {
+	gameWorld.gameObjectsMutex.lock();
+
 	std::vector<Constraint*>::const_iterator first;
 	std::vector<Constraint*>::const_iterator last;
 	gameWorld.GetConstraintIterators(first, last);
@@ -669,4 +673,6 @@ void PhysicsSystem::UpdateConstraints(float dt) {
 	for (auto i = first; i != last; ++i) {
 		(*i)->UpdateConstraint(dt);
 	}
+	gameWorld.gameObjectsMutex.unlock();
+
 }
