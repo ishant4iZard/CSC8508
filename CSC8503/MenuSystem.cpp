@@ -525,7 +525,7 @@ PushdownState::PushdownResult PlayingHUD::OnUpdate(float dt, PushdownState** new
 			ShowTimeLeft(Game);
 			ui->DrawStringText("Player    " + Game->GetPlayerNameByIndex(Game->GetLocalPlayerIndex()), Vector2(83, 30), UIBase::WHITE);
 			ui->DrawStringText("Your Score     " + std::to_string(Game->GetPlayerScoreByIndex(Game->GetLocalPlayerIndex())), Vector2(83, 40), UIBase::WHITE);
-			ui->DrawStringText("PowerUp State: " + GetRoundPowerUpState(Game), Vector2(83, 50), UIBase::WHITE);		
+			ui->DrawStringText("PowerUp State:  " + GetRoundPowerUpState(Game), Vector2(83, 50), UIBase::WHITE);		
 			ui->DrawStringText("Hold TAB To", Vector2(83, 60), UIBase::WHITE);
 			ui->DrawStringText("Show Score Table", Vector2(83, 65), UIBase::WHITE);
 
