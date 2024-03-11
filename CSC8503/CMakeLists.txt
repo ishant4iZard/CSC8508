@@ -39,6 +39,7 @@ set(Header_Files
     "MaleGuard.h"
     "RenderObjectMaleGuard.h"
     "GameAnimation.h"
+    "MaxGuard.h"
 )
 source_group("Header Files" FILES ${Header_Files})
 
@@ -61,6 +62,7 @@ set(Source_Files
     "MaleGuard.cpp"
     "RenderObjectMaleGuard.cpp"
     "GameAnimation.cpp"
+    "MaxGuard.cpp"
 )
 
 set(AI_Files

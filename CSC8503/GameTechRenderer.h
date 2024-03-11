@@ -93,7 +93,7 @@ namespace NCL {
 			//Skeletal Animation
 			void LoadAnimationAssets();
 			void LoadTextureToMesh();
-			void RenderAnimation(Vector3 inPos, Vector3 inScale, Vector4 inRotation, int animatedObjectID);
+			void RenderAnimation(Vector3 inPos, Vector3 inScale, Vector4 inRotation, int animatedObjectID, string name);
 			void LoadCurrentAnimationAssets(OGLShader* currentShader, MeshMaterial* currentMaterial, MeshAnimation* currentAnimation, int animatedObjectID);
 
 			void Matrix4ToIdentity(Matrix4* mat4);
@@ -101,16 +101,18 @@ namespace NCL {
 			OGLShader* anmShader;
 
 			Mesh* maleGuardMesh = nullptr;
+			Mesh* maxGuardMesh = nullptr;
 			
 			MeshMaterial* maleGuardMaterial;
+			MeshMaterial* maxGuardMaterial;
 
 
 			vector<GLuint> maleGuardMatDiffuseTextures;
 			vector<GLuint> maleGuardMatBumpTextures;
 			vector<GLuint> femaleGuardMatDiffuseTextures;
 			vector<GLuint> femaleGuardMatBumpTextures;
-			vector<GLuint> maxMatDiffuseTextures;
-			vector<GLuint> maxMatBumpTextures;
+			vector<GLuint> maxGuardMatDiffuseTextures;
+			vector<GLuint> maxGuardMatBumpTextures;
 
 			MeshAnimation* maleGuardAnimationGunfire1;//Gunfire1.anm
 			MeshAnimation* maleGuardAnimationHappy;//Happy.anm
@@ -128,10 +130,12 @@ namespace NCL {
 			OGLTexture* roughness = nullptr;
 			OGLTexture* ao = nullptr;
 
-			vector<const MaleGuard*> activeAnimatedObjects;
+			vector<const GameObject*> activeAnimatedObjects;
 			GameAnimation* animatedObjects;
 
 			void RenderAnimatedObject();
+			void RenderMaleGuard(GameObject* maleGuard);
+			void RenderMaxGuard(GameObject* maxGuard);
 			//Skeletal Animation
 
 

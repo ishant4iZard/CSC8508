@@ -50,7 +50,7 @@ TutorialGame::TutorialGame() : controller(*Window::GetWindow()->GetKeyboard(), *
 
 	animatedObject = new GameAnimation();
 	InitialiseAssets();
-	
+
 #ifdef _WIN32
 	ui = UIWindows::GetInstance();
 #else //_ORBIS
@@ -166,10 +166,19 @@ void TutorialGame::UpdateGame(float dt) {
 		}
 		
 	}
-	if (Window::GetKeyboard()->KeyPressed(KeyCodes::N)) {
+	if (Window::GetKeyboard()->KeyPressed(KeyCodes::B)) {
 		anmIndex++;
 		maleGuard2nd->SetAnimation(anmIndex);
-		std::cout << "current animation : " << maleGuard->GetAnimationName(anmIndex) << std::endl;
+		std::cout << "current animation : " << maleGuard2nd->GetAnimationName(anmIndex) << std::endl;
+		if (anmIndex >= 3) {
+			anmIndex -= 4;
+		}
+
+	}
+	if (Window::GetKeyboard()->KeyPressed(KeyCodes::N)) {
+		anmIndex++;
+		maxGuard->SetAnimation(anmIndex);
+		std::cout << "current animation : " << maxGuard->GetAnimationName(anmIndex) << std::endl;
 		if (anmIndex >= 3) {
 			anmIndex -= 4;
 		}
@@ -233,8 +242,9 @@ void TutorialGame::InitWorld() {
 	InitAI();
 
 	InitMaleGuard();
-	maleGuard = SpawnMaleGuard(Vector3(20, 10, 20), Vector3(40.0f,40.0f,40.0f), 5.0f);
-	maleGuard2nd = SpawnMaleGuard(Vector3(-20, 10, -20), Vector3(20.0f, 20.0f, 20.0f), 5.0f);
+	maleGuard = SpawnMaleGuard(Vector3(20, 10, 20), Vector3(40.0f, 40.0f, 40.0f), 5.0f, maleGuardMesh, maleGuardDefultTex);
+	maleGuard2nd = SpawnMaleGuard(Vector3(-20, 10, -20), Vector3(20.0f, 20.0f, 20.0f), 5.0f, maxGuardMesh, maxGuardDefultTex);
+	maxGuard = SpawnMaxGuard(Vector3(-20, 10, 20), Vector3(20.0f, 20.0f, 20.0f), 5.0f, maxGuardMesh, maxGuardDefultTex);
 }
 
 /*
@@ -661,21 +671,22 @@ void TutorialGame::ObjectRay(GameObject* gameObject, GameObject* gameObject2) {
 
 void TutorialGame::InitMaleGuard() {
 	maleGuardMesh		= renderer->LoadMesh("Male_Guard.msh");
+	maxGuardMesh		= renderer->LoadMesh("Rig_Maximilian.msh");
 	//anmShader			= renderer->LoadShader("skeletalAnimationSkinning.vert", "skeletalAnimationTexture.frag");
-	anmShader = renderer->LoadShader("skeletalAnimationSkinning_pbr.vert", "skeletalAnimationTexture_pbr.frag");
+	anmShader			= renderer->LoadShader("skeletalAnimationSkinning_pbr.vert", "skeletalAnimationTexture_pbr.frag");
 	maleGuardDefultTex	= renderer->LoadTexture("MB_BodyNone_Guard_Albedo.TGA");
-
+	maxGuardDefultTex	= renderer->LoadTexture("Maximilian_Monocle_Albedo.TGA");
 
 }
 
-MaleGuard* TutorialGame::SpawnMaleGuard(const Vector3& position, Vector3 dimensions, float inverseMass) {
+MaleGuard* TutorialGame::SpawnMaleGuard(const Vector3& position, Vector3 dimensions, float inverseMass , Mesh* inMesh , Texture* inTexture) {
 	MaleGuard* maleGuard = new MaleGuard("MaleGuard");
 
 	AABBVolume* volume = new AABBVolume(dimensions, false, true);
 	maleGuard->SetBoundingVolume((CollisionVolume*)volume);
 	maleGuard->GetTransform().SetPosition(position).SetScale(dimensions * 2);
 	//maleGuard->SetRenderObject(new RenderObject(&maleGuard->GetTransform(), maleGuardMesh, maleGuardDefultTex, anmShader));
-	maleGuard->SetRenderObject(new RenderObjectMaleGuard(&maleGuard->GetTransform(), maleGuardMesh, maleGuardDefultTex, anmShader, maleGuard->GetMaterial()));
+	maleGuard->SetRenderObject(new RenderObjectMaleGuard(&maleGuard->GetTransform(), inMesh, inTexture, anmShader, maleGuard->GetMaterial()));
 	maleGuard->SetPhysicsObject(new PhysicsObject(&maleGuard->GetTransform(), maleGuard->GetBoundingVolume()));
 	maleGuard->GetPhysicsObject()->SetInverseMass(1.0f);
 	maleGuard->GetPhysicsObject()->InitCubeInertia();
@@ -691,4 +702,28 @@ MaleGuard* TutorialGame::SpawnMaleGuard(const Vector3& position, Vector3 dimensi
 	world->AddGameObject(maleGuard);
 	animatedObject->AddAnimatedObject(maleGuard);
 	return maleGuard;
+}
+
+MaxGuard* TutorialGame::SpawnMaxGuard(const Vector3& position, Vector3 dimensions, float inverseMass, Mesh* inMesh, Texture* inTexture) {
+	MaxGuard* maxGuard = new MaxGuard("MaxGuard");
+
+	AABBVolume* volume = new AABBVolume(dimensions, false, true);
+	maxGuard->SetBoundingVolume((CollisionVolume*)volume);
+	maxGuard->GetTransform().SetPosition(position).SetScale(dimensions * 2);
+	maxGuard->SetRenderObject(new RenderObjectMaleGuard(&maxGuard->GetTransform(), inMesh, inTexture, anmShader, maxGuard->GetMaterial()));
+	maxGuard->SetPhysicsObject(new PhysicsObject(&maxGuard->GetTransform(), maxGuard->GetBoundingVolume()));
+	maxGuard->GetPhysicsObject()->SetInverseMass(1.0f);
+	maxGuard->GetPhysicsObject()->InitCubeInertia();
+
+	//Pass the parameters to RenderObject
+	RenderObject* currentRenderObject = maxGuard->GetRenderObject();
+	RenderObjectMaleGuard* maxGuardRenderObject = static_cast<RenderObjectMaleGuard*>(currentRenderObject);
+	maxGuardRenderObject->SetAnimation(maxGuard->GetAnimation());
+	maxGuardRenderObject->SetMaleGuardPosition(position);
+	maxGuardRenderObject->SetMaleGuardScale(dimensions);
+	maxGuardRenderObject->SetMaleGuardRotation(Vector4(45, 0, 1, 0));
+
+	world->AddGameObject(maxGuard);
+	animatedObject->AddAnimatedObject(maxGuard);
+	return maxGuard;
 }

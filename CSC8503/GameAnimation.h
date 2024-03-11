@@ -5,8 +5,11 @@
 namespace NCL {
 	namespace CSC8503 {
 		class MaleGuard;
+		class MaxGuard;
+		class GameObject;
 
-		typedef std::vector<MaleGuard*>::const_iterator AnimatedObjectIterator;
+		/*typedef std::vector<MaleGuard*>::const_iterator AnimatedObjectIterator;
+		typedef std::vector<MaxGuard*>::const_iterator AnimatedObjectIterator;*/
 
 		class GameAnimation {
 		public:
@@ -14,12 +17,14 @@ namespace NCL {
 			~GameAnimation();
 
 			void AddAnimatedObject(MaleGuard* animatedObject);
+			void AddAnimatedObject(MaxGuard* animatedObject);
 			void RemoveAnimatedObject(MaleGuard* animatedObject, bool andDelete = false);
+			void RemoveAnimatedObject(MaxGuard* animatedObject, bool andDelete = false);
 
 			void Clear();
 
 		protected:
-			std::vector<MaleGuard*> animatedObjects;
+			std::vector<GameObject*> animatedObjects;
 
 			int anmObjectsIDCounter;
 			int anmObjectsStateCounter;

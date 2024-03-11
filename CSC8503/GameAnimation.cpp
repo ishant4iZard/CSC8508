@@ -1,5 +1,7 @@
 #include "GameAnimation.h"
 #include "MaleGuard.h"
+#include "MaxGuard.h"
+#include "GameObject.h"
 
 using namespace NCL;
 using namespace NCL::CSC8503;
@@ -16,6 +18,12 @@ void GameAnimation::Clear() {
 }
 
 void GameAnimation::AddAnimatedObject(MaleGuard* animatedObject) {
+	animatedObjects.emplace_back(animatedObject);
+	animatedObject->SetAnimatedObjectID(anmObjectsIDCounter++);
+	anmObjectsStateCounter++;
+}
+
+void GameAnimation::AddAnimatedObject(MaxGuard* animatedObject) {
 	animatedObjects.emplace_back(animatedObject);
 	animatedObject->SetAnimatedObjectID(anmObjectsIDCounter++);
 	anmObjectsStateCounter++;

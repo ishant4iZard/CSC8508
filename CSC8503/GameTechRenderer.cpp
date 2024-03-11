@@ -7,6 +7,7 @@
 #include "MshLoader.h"
 
 #include "MaleGuard.h"
+#include "MaxGuard.h"
 
 using namespace NCL;
 using namespace Rendering;
@@ -158,17 +159,25 @@ void GameTechRenderer::BuildObjectList() {
 
 				const RenderObject* g = o->GetRenderObject();
 
+				OGLShader* currentShader = (OGLShader*)o->GetRenderObject()->GetShader();
+				currentShaderID = currentShader->GetProgramID();
+
 				//find MaleGuard and load assets, especially the animation in current frame
 				if (o->GetName() == "MaleGuard") {
-					OGLShader* currentShader = (OGLShader*)o->GetRenderObject()->GetShader();
-					currentShaderID = currentShader->GetProgramID();
-
 					MaleGuard* maleGuard = dynamic_cast<MaleGuard*>(o);
 					//maleGuard->GetAnimatedObjectID();
 					LoadCurrentAnimationAssets(currentShader, maleGuard->GetMaterial(), maleGuard->GetAnimation(), maleGuard->GetAnimatedObjectID());
 					
-					MaleGuard* newObject = (MaleGuard*)o;
-					activeAnimatedObjects.emplace_back(newObject);
+					//MaleGuard* newObject = (MaleGuard*)o;
+					activeAnimatedObjects.emplace_back(maleGuard);
+				}
+				if (o->GetName() == "MaxGuard") {
+					//MaxGuard* maxGuard = (MaxGuard*)o;
+					MaxGuard* maxGuard = dynamic_cast<MaxGuard*>(o);
+					
+					LoadCurrentAnimationAssets(currentShader, maxGuard->GetMaterial(), maxGuard->GetAnimation(), maxGuard->GetAnimatedObjectID());
+
+					activeAnimatedObjects.emplace_back(maxGuard);
 				}
 
 				if (g) {
@@ -355,7 +364,7 @@ Mesh* GameTechRenderer::LoadMesh(const std::string& name) {
 
 void GameTechRenderer::RenderAnimatedObject() {
 	for (const auto& i : activeAnimatedObjects) {
-		RenderObject* currentRenderObject = i->GetRenderObject();
+		/*RenderObject* currentRenderObject = i->GetRenderObject();
 		OGLShader* shader = (OGLShader*)currentRenderObject->GetShader();
 		BindShader(*shader);
 
@@ -365,8 +374,45 @@ void GameTechRenderer::RenderAnimatedObject() {
 		Vector4 rotation = maleGuardRenderObject->GetMaleGuardRotation();
 
 		MaleGuard* currentObject = (MaleGuard*)i;
-		RenderAnimation(position, scale, rotation , currentObject->GetAnimatedObjectID());
+		RenderAnimation(position, scale, rotation , currentObject->GetAnimatedObjectID());*/
+
+		if (i->GetName() == "MaleGuard") {
+			MaleGuard* maleGuard = (MaleGuard*)i;
+			RenderMaleGuard(maleGuard);
+		}
+		if (i->GetName() == "MaxGuard") {
+			MaxGuard* maxGuard = (MaxGuard*)i;
+			RenderMaxGuard(maxGuard);
+		}
 	}
+}
+
+void GameTechRenderer::RenderMaleGuard(GameObject* maleGuard) {
+	RenderObject* currentRenderObject = maleGuard->GetRenderObject();
+	OGLShader* shader = (OGLShader*)currentRenderObject->GetShader();
+	BindShader(*shader);
+
+	RenderObjectMaleGuard* maleGuardRenderObject = static_cast<RenderObjectMaleGuard*>(const_cast<RenderObject*>(currentRenderObject));
+	Vector3 position = maleGuardRenderObject->GetMaleGuardPosition();
+	Vector3 scale = maleGuardRenderObject->GetMaleGuardScale();
+	Vector4 rotation = maleGuardRenderObject->GetMaleGuardRotation();
+
+	MaleGuard* currentObject = (MaleGuard*)maleGuard;
+	RenderAnimation(position, scale, rotation, currentObject->GetAnimatedObjectID(), maleGuard->GetName());
+}
+
+void GameTechRenderer::RenderMaxGuard(GameObject* maxGuard) {
+	RenderObject* currentRenderObject = maxGuard->GetRenderObject();
+	OGLShader* shader = (OGLShader*)currentRenderObject->GetShader();
+	BindShader(*shader);
+
+	RenderObjectMaleGuard* maxGuardRenderObject = static_cast<RenderObjectMaleGuard*>(const_cast<RenderObject*>(currentRenderObject));
+	Vector3 position = maxGuardRenderObject->GetMaleGuardPosition();
+	Vector3 scale = maxGuardRenderObject->GetMaleGuardScale();
+	Vector4 rotation = maxGuardRenderObject->GetMaleGuardRotation();
+
+	MaxGuard* currentObject = (MaxGuard*)maxGuard;
+	RenderAnimation(position, scale, rotation, currentObject->GetAnimatedObjectID(), maxGuard->GetName());
 }
 
 void GameTechRenderer::NewRenderLines() {
@@ -563,12 +609,19 @@ void GameTechRenderer::LoadAnimationAssets() {
 void GameTechRenderer::LoadCurrentAnimationAssets(OGLShader* currentShader, MeshMaterial* currentMaterial, MeshAnimation* currentAnimation, int animatedObjectID) {
 	anmShader = currentShader;
 	
-	maleGuardMaterial = currentMaterial;
+	//maleGuardMaterial = currentMaterial;
+	maleGuardMaterial = new MeshMaterial("Male_Guard.mat");
+	maxGuardMaterial = new MeshMaterial("Rig_Maximilian.mat");
 
 	if (maleGuardMesh == nullptr) {
 		maleGuardMesh = LoadMesh("Male_Guard.msh");
 	}
 
+	if (maxGuardMesh == nullptr) {
+		maxGuardMesh = LoadMesh("Rig_Maximilian.msh");
+	}
+
+	
 	if (!hasLoadedTextureToSubmesh) {
 		LoadTextureToMesh();
 	}
@@ -618,6 +671,29 @@ void GameTechRenderer::LoadTextureToMesh() {
 		maleGuardMatBumpTextures.emplace_back(bumpTexID);
 
 	}
+
+	for (int i = 0; i < maxGuardMesh->GetSubMeshCount(); i++) {
+		const MeshMaterialEntry* matEntry = maxGuardMaterial->GetMaterialForLayer(i);
+
+		const string* diffusePath = nullptr;
+		matEntry->GetEntry("Diffuse", &diffusePath);
+		string diffuseName = *diffusePath;
+		diffuseName.erase(0, 1);
+		OGLTexture* diffuseTex = (OGLTexture*)LoadTexture(diffuseName);
+		GLuint diffuseTexID = diffuseTex->GetObjectID();
+		maxGuardMatDiffuseTextures.emplace_back(diffuseTexID);
+
+		//no bump tex
+		/*const string* bumpPath = nullptr;
+		matEntry->GetEntry("Bump", &bumpPath);
+		string bumpName = *bumpPath;
+		bumpName.erase(0, 1);
+		OGLTexture* bumpTex = (OGLTexture*)LoadTexture(bumpName);
+		GLuint bumpTexID = bumpTex->GetObjectID();
+		maxGuardMatBumpTextures.emplace_back(bumpTexID);*/
+
+	}
+
 	hasLoadedTextureToSubmesh = true;
 }
 
@@ -629,7 +705,7 @@ void GameTechRenderer::Matrix4ToIdentity(Matrix4* mat4) {
 	mat4->array[3][3] = 1.0f;
 }
 
-void GameTechRenderer::RenderAnimation(Vector3 inPos, Vector3 inScale, Vector4 inRotation, int animatedObjectID) {
+void GameTechRenderer::RenderAnimation(Vector3 inPos, Vector3 inScale, Vector4 inRotation, int animatedObjectID, string name) {
 	//avoid transparency
 	glDisable(GL_BLEND);
 
@@ -664,13 +740,25 @@ void GameTechRenderer::RenderAnimation(Vector3 inPos, Vector3 inScale, Vector4 i
 	
 	vector<Matrix4> frameMatrices;
 	maleGuardMesh->CalculateInverseBindPose();
-	const vector<Matrix4> invBindPose = maleGuardMesh->GetInverseBindPose();
+	const vector<Matrix4> invBindPoseMaleGuard = maleGuardMesh->GetInverseBindPose();
+	maxGuardMesh->CalculateInverseBindPose();
+	const vector<Matrix4> invBindPoseMaxGuard = maxGuardMesh->GetInverseBindPose();
 
 	const Matrix4* frameDataAnm = activeAnimation[animatedObjectID]->GetJointData(currentFrame[animatedObjectID]);
 
-	for (GLuint i = 0; i < maleGuardMesh->GetJointCount(); i++) {
-		frameMatrices.emplace_back(frameDataAnm[i] * invBindPose[i]);
+	if (name == "MaleGuard") {
+		for (GLuint i = 0; i < maleGuardMesh->GetJointCount(); i++) {
+			frameMatrices.emplace_back(frameDataAnm[i] * invBindPoseMaleGuard[i]);
+		}
 	}
+	if (name == "MaxGuard") {
+		for (GLuint i = 0; i < maxGuardMesh->GetJointCount(); i++) {
+			frameMatrices.emplace_back(frameDataAnm[i] * invBindPoseMaxGuard[i]);
+		}
+	}
+	/*for (GLuint i = 0; i < maleGuardMesh->GetJointCount(); i++) {
+		frameMatrices.emplace_back(frameDataAnm[i] * invBindPose[i]);
+	}*/
 
 	int	shaderLocation = glGetUniformLocation(anmShader->GetProgramID(), "joints");
 	glUniformMatrix4fv(shaderLocation, frameMatrices.size(), false, (float*)frameMatrices.data());
@@ -687,18 +775,32 @@ void GameTechRenderer::RenderAnimation(Vector3 inPos, Vector3 inScale, Vector4 i
 	glActiveTexture(GL_TEXTURE6);
 	glBindTexture(GL_TEXTURE_2D, ao->GetObjectID());
 
-	for (int i = 0; i < maleGuardMesh->GetSubMeshCount(); i++) {
-		
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, maleGuardMatDiffuseTextures[i]);
+	if (name == "MaleGuard") {
+		for (int i = 0; i < maleGuardMesh->GetSubMeshCount(); i++) {
 
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, maleGuardMatBumpTextures[i]);
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, maleGuardMatDiffuseTextures[i]);
 
-		BindMesh((OGLMesh&)*maleGuardMesh);
-		DrawBoundMesh((uint32_t)i);
+			glActiveTexture(GL_TEXTURE1);
+			glBindTexture(GL_TEXTURE_2D, maleGuardMatBumpTextures[i]);
+
+			BindMesh((OGLMesh&)*maleGuardMesh);
+			DrawBoundMesh((uint32_t)i);
+		}
 	}
-	
+	if (name == "MaxGuard") {
+		for (int i = 0; i < maxGuardMesh->GetSubMeshCount(); i++) {
+
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, maxGuardMatDiffuseTextures[i]);
+
+			/*glActiveTexture(GL_TEXTURE1);
+			glBindTexture(GL_TEXTURE_2D, maxGuardMatBumpTextures[i]);*/
+
+			BindMesh((OGLMesh&)*maxGuardMesh);
+			DrawBoundMesh((uint32_t)i);
+		}
+	}
 
 	glEnable(GL_BLEND);
 }

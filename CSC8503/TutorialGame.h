@@ -14,6 +14,7 @@
 #include "LevelEnum.h"
 #include "LevelObjectEnum.h"
 #include "MaleGuard.h"
+#include "MaxGuard.h"
 #include "GameAnimation.h"
 
 #ifdef _WIN32
@@ -93,7 +94,8 @@ namespace NCL {
 
 			//MaleGuard : Skeletal Animation
 			void InitMaleGuard();
-			MaleGuard* SpawnMaleGuard(const Vector3& position, Vector3 dimensions, float inverseMass);
+			MaleGuard* SpawnMaleGuard(const Vector3& position, Vector3 dimensions, float inverseMass, Mesh* inMesh, Texture* inTexture);
+			MaxGuard* SpawnMaxGuard(const Vector3& position, Vector3 dimensions, float inverseMass, Mesh* inMesh, Texture* inTexture);
 
 
 
@@ -152,10 +154,13 @@ namespace NCL {
 
 			//MaleGuard : Skeletal Animation
 			Mesh* maleGuardMesh;
+			Mesh* maxGuardMesh;
 			Shader* anmShader;
 			Texture* maleGuardDefultTex;
+			Texture* maxGuardDefultTex;
 			MaleGuard* maleGuard;
 			MaleGuard* maleGuard2nd;
+			MaxGuard* maxGuard;
 			int anmIndex = 0;
 
 			GameAnimation* animatedObject;
