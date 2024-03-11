@@ -195,7 +195,6 @@ void NetworkPlayer::Fire()
 	Vector3 firePos = transform.GetPosition() + fireDir * 3;
 	//std::cout << firePos.y;
 
-	// TODO : add same logic for ps
 #ifdef _WIN32
 	NetworkedGame* tempGame = dynamic_cast<NetworkedGame*>(game);
 #else
