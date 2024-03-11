@@ -62,7 +62,7 @@ namespace NCL {
 			vector<const RenderObject*> activeObjects;
 			vector<const RenderObject*> instancedRenderObjectList;
 
-			vector<const RenderObject*> activeLights;
+			vector<const Light*> activeLights;
 
 			OGLShader*  debugShader;
 			OGLShader*  skyboxShader;

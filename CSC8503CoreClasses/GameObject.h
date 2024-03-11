@@ -1,6 +1,7 @@
 #pragma once
 #include "Transform.h"
 #include "CollisionVolume.h"
+#include "Light.h"
 
 
 using std::vector;
@@ -9,6 +10,7 @@ namespace NCL::CSC8503 {
 	class NetworkObject;
 	class RenderObject;
 	class PhysicsObject;
+	class Light;
 
 
 	//add enums for layers and its collision flag
@@ -47,6 +49,10 @@ namespace NCL::CSC8503 {
 
 		PhysicsObject* GetPhysicsObject() const {
 			return physicsObject;
+		}
+
+		Light* GetLightComponent() const {
+			return light;
 		}
 
 		NetworkObject* GetNetworkObject() const {
@@ -118,7 +124,7 @@ namespace NCL::CSC8503 {
 		PhysicsObject*		physicsObject;
 		RenderObject*		renderObject;
 		NetworkObject*		networkObject;
-
+		Light* light;
 		
 		
 		bool		isActive;

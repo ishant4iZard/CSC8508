@@ -7,6 +7,7 @@
 #include "DirectionalLight.h"
 #include "OglHdrFbo.h"
 #include "OglPostProcessingFbo.h"
+#include "Light.h"
 
 using namespace NCL;
 using namespace Rendering;
@@ -203,18 +204,18 @@ void GameTechRenderer::BuildObjectList() {
 }
 
 void GameTechRenderer::BuildLightList() {
-	/*activeLights.clear();
+	activeLights.clear();
 
 	gameWorld.OperateOnContents(
 		[&](GameObject* o) {
 			if (o->IsActive()) {
-				const LightCom* light = o->GetLightCom();
+				const Light* light = o->GetLightComponent();
 				if (light) {
 					activeLights.emplace_back(light);
 				}
 			}
 		}
-	);*/
+	);
 }
 
 void GameTechRenderer::SortObjectList() {
