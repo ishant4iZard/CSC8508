@@ -1,5 +1,10 @@
 #include "NetworkPlayer.h"
+#include "TutorialGame.h"
+#ifdef _WIN32
 #include "NetworkedGame.h"
+#else
+#include "PS5_Game.h"
+#endif
 #include "PhysicsObject.h"
 #include "PowerUp.h"
 #include "Event.h"
@@ -9,7 +14,7 @@
 using namespace NCL;
 using namespace CSC8503;
 
-NetworkPlayer::NetworkPlayer(NetworkedGame* game, int num)	{
+NetworkPlayer::NetworkPlayer(TutorialGame* game, int num)	{
 	this->game = game;
 	playerNum  = num;
 	this->settag("Player");
@@ -25,11 +30,6 @@ NetworkPlayer::~NetworkPlayer()	{
 
 void NetworkPlayer::OnCollisionBegin(GameObject* otherObject) {
 	if (game) {
-		if (dynamic_cast<NetworkPlayer*>(otherObject))
-		{
-			game->OnPlayerCollision(this, (NetworkPlayer*)otherObject);
-		}
-		
 		if (otherObject->gettag() == "PowerUp") {
 			PowerUp* powerup = dynamic_cast<PowerUp*>(otherObject);
 			powerUpType ActivatePowerUp = powerup->getPowerUp();
@@ -195,7 +195,14 @@ void NetworkPlayer::Fire()
 	Vector3 firePos = transform.GetPosition() + fireDir * 3;
 	//std::cout << firePos.y;
 
-	game->SpawnProjectile(this, firePos, fireDir);
+	// TODO : add same logic for ps
+#ifdef _WIN32
+	NetworkedGame* tempGame = dynamic_cast<NetworkedGame*>(game);
+#else
+	PS5_Game* tempGame = dynamic_cast<PS5_Game*>(game);
+#endif
+
+	tempGame->SpawnProjectile(this, firePos, fireDir);
 	//std::cout << "player " << playerNum << " fired!" << std::endl;
 }
 
