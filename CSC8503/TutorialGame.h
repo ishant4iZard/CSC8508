@@ -136,6 +136,7 @@ namespace NCL {
 			Shader*		portalShader	= nullptr;
 			Shader* 	instancePbrShader = nullptr;
 			Shader*	blackholeShader = nullptr;
+			Shader* targetholeShader = nullptr;
 
 			Texture* groundTextureList[(uint8_t)TextureType::MAX_TYPE];
 			Texture* wallTextureList[(uint8_t)TextureType::MAX_TYPE];

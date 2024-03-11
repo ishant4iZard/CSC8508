@@ -77,6 +77,7 @@ void main(void) {
 	vec3 finalSampler = sp;
 	vec3 col = blackholeColor * pow(1.0 - distUVPC, 7.0f);
 	float ring = pow(smoothstep(0.32f, 0.08f, distUVPC * 1.5f) * 4.0f, 2.8f) + 1.0f;
+	float alpha = smoothstep(0.72f, 0.95f, idistUVPC);
 
-	fragColor = vec4(finalSampler * front + 1.2f * ring * front * finalSampler * col, 1.0f);
+	fragColor = vec4(finalSampler * front + 1.2f * ring * front * finalSampler * col, alpha);
 }

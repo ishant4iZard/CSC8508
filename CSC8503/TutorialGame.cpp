@@ -138,6 +138,7 @@ void TutorialGame::InitialiseAssets() {
 	portalShader = renderer->LoadShader("scene.vert", "portal.frag");
 	instancePbrShader = renderer->LoadShader("pbrInstanced.vert", "pbr.frag");
 	blackholeShader = renderer->LoadShader("blackhole.vert", "blackhole.frag");
+	targetholeShader = renderer->LoadShader("targethole.vert", "targethole.frag");
 
 	InitCamera();
 	InitWorld();
@@ -332,14 +333,14 @@ void NCL::CSC8503::TutorialGame::SpawnTarget(const Vector3& inPosition, const Ve
 	Vector3 sphereSize = Vector3(radius, radius, radius);
 	SphereVolume* volume = new SphereVolume(radius);
 	hole->SetBoundingVolume((CollisionVolume*)volume);
-	hole->GetTransform().SetScale(sphereSize).SetPosition(inPosition);
-	hole->SetRenderObject(new RenderObject(&hole->GetTransform(), sphereMesh, basicTex, basicShader));
+	hole->GetTransform().SetScale(inScale).SetPosition(inPosition).SetOrientation(Quaternion::EulerAnglesToQuaternion(inRotation.x, inRotation.y, inRotation.z));
+	hole->SetRenderObject(new RenderObject(&hole->GetTransform(), cubeMesh, basicTex, targetholeShader));
 	hole->SetPhysicsObject(new PhysicsObject(&hole->GetTransform(), hole->GetBoundingVolume()));
 	hole->GetPhysicsObject()->SetInverseMass(0);
 	hole->GetPhysicsObject()->InitSphereInertia();
 
-	hole->GetRenderObject()->SetColour(Vector4(0, 0, 0, 1));
-	hole->GetRenderObject()->SetTiling(inTiling);
+	//hole->GetRenderObject()->SetColour(Vector4(0, 0, 0, 1));
+	//hole->GetRenderObject()->SetTiling(inTiling);
 	world->AddGameObject(hole);
 }
 
