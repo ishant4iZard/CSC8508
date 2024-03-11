@@ -51,6 +51,7 @@ void PhysicsSystem::Clear() {
 	broadphaseCollisionsVec.clear();
 	allCollisions.clear();
 	staticTree.Clear();
+	activePowerup = powerUpType::none;
 }
 
 /*
