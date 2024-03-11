@@ -9,6 +9,7 @@
 #include "Window.h"
 #include <functional>
 #include <iostream>
+#include <thread>
 using namespace NCL;
 using namespace CSC8503;
 
@@ -76,23 +77,6 @@ int realHZ		= idealHZ;
 float realDT	= idealDT;
 
 void PhysicsSystem::Update(float dt) {	
-	/*if (Window::GetKeyboard()->KeyPressed(KeyCodes::B)) {
-		useBroadPhase = !useBroadPhase;
-		std::cout << "Setting broadphase to " << useBroadPhase << std::endl;
-	}
-	if (Window::GetKeyboard()->KeyPressed(KeyCodes::N)) {
-		useSimpleContainer = !useSimpleContainer;
-		std::cout << "Setting broad container to " << useSimpleContainer << std::endl;
-	}
-	if (Window::GetKeyboard()->KeyPressed(KeyCodes::I)) {
-		constraintIterationCount--;
-		std::cout << "Setting constraint iterations to " << constraintIterationCount << std::endl;
-	}
-	if (Window::GetKeyboard()->KeyPressed(KeyCodes::O)) {
-		constraintIterationCount++;
-		std::cout << "Setting constraint iterations to " << constraintIterationCount << std::endl;
-	}*/
-
 	dTOffset += dt; //We accumulate time delta here - there might be remainders from previous frame!
 
 	powerUptime -= dt;
@@ -105,18 +89,17 @@ void PhysicsSystem::Update(float dt) {
 
 	int iteratorCount = 0;
 	while(dTOffset > realDT) {
-		if (useBroadPhase) {
-			//UpdateObjectSwept(dt);
-			UpdateObjectAABBs();
-		}
-		IntegrateAccel(realDT); //Update accelerations from external forces
-		if (useBroadPhase) {
-			BroadPhase();
-			NarrowPhase();
-		}
-		else {
-			BasicCollisionDetection();
-		}
+
+		//std::thread t1(&PhysicsSystem::UpdateObjectAABBs, this);
+		//std::thread t2(&PhysicsSystem::IntegrateAccel, this, realDT); //Update accelerations from external forces
+
+		//t1.join();
+		UpdateObjectAABBs();
+		IntegrateAccel(dt);
+
+		BroadPhase();
+		NarrowPhase();
+		//std::thread t3(&PhysicsSystem::NarrowPhase,this);
 
 		//This is our simple iterative solver - 
 		//we just run things multiple times, slowly moving things forward
@@ -125,6 +108,9 @@ void PhysicsSystem::Update(float dt) {
 		for (int i = 0; i < constraintIterationCount; ++i) {
 			UpdateConstraints(constraintDt);	
 		}*/
+
+		/*t2.join();
+		t3.join();*/
 		IntegrateVelocity(realDT); //update positions from new velocity changes
 
 		dTOffset -= realDT;

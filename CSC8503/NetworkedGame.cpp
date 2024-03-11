@@ -150,18 +150,18 @@ void NetworkedGame::UpdateGame(float dt) {
 	/*NonPhysicsUpdate(dt);
 	PhysicsUpdate(dt);*/
 
-	std::thread t1(&NetworkedGame::PhysicsUpdate, this,dt);
-	std::thread t2(&NetworkedGame::NonPhysicsUpdate, this, dt);
-
-	t2.join();
-	t1.join();
-
-	TutorialGame::UpdateGame(dt);
+	std::thread physicsUpdateThread(&NetworkedGame::PhysicsUpdate, this,dt);
+	std::thread nonPhysicsUpdateThread(&NetworkedGame::NonPhysicsUpdate, this, dt);
 
 	if (AIStateObject) {
 		AIStateObject->DetectProjectiles(ProjectileList);
 		AIStateObject->Update(dt);
 	}
+	Menu->Update(dt);
+	TutorialGame::UpdateGame(dt);
+
+	nonPhysicsUpdateThread.join();
+	physicsUpdateThread.join();
 
 }
 
@@ -188,9 +188,9 @@ void NetworkedGame::UpdateProjectiles(float dt) {
 			i->deactivate();
 			DeactivateProjectilePacket newPacket;
 			newPacket.NetObjectID = i->GetNetworkObject()->GetNetworkID();
-			if (i->GetGame()->GetServer())
+			if (this->GetServer())
 			{
-				i->GetGame()->GetServer()->SendGlobalPacket(newPacket);
+				this->GetServer()->SendGlobalPacket(newPacket);
 			}
 		}
 	}
@@ -808,12 +808,11 @@ void NetworkedGame::PhysicsUpdate(float dt)
 
 void NetworkedGame::NonPhysicsUpdate(float dt)
 {
-	Debug::UpdateRenderables(dt);
-	Menu->Update(dt);
+	//Debug::UpdateRenderables(dt);
 
-	if (/*!appState->GetIsGameOver()*/true) {
+	if (!appState->GetIsGameOver()/*true*/) {
 		timeToNextPacket -= dt;
-		if (timeToNextPacket < 0) {
+		if (timeToNextPacket <= 0) {
 			if (thisServer) {
 				UpdateAsServer(dt);
 			}
