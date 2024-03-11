@@ -525,8 +525,9 @@ PushdownState::PushdownResult PlayingHUD::OnUpdate(float dt, PushdownState** new
 			ShowTimeLeft(Game);
 			ui->DrawStringText("Player    " + Game->GetPlayerNameByIndex(Game->GetLocalPlayerIndex()), Vector2(83, 30), UIBase::WHITE);
 			ui->DrawStringText("Your Score     " + std::to_string(Game->GetPlayerScoreByIndex(Game->GetLocalPlayerIndex())), Vector2(83, 40), UIBase::WHITE);
-			ui->DrawStringText("Hold TAB To", Vector2(83, 50), UIBase::WHITE);
-			ui->DrawStringText("Show Score Table", Vector2(83, 55), UIBase::WHITE);
+			ui->DrawStringText("PowerUp State: " + GetRoundPowerUpState(Game), Vector2(83, 50), UIBase::WHITE);		
+			ui->DrawStringText("Hold TAB To", Vector2(83, 60), UIBase::WHITE);
+			ui->DrawStringText("Show Score Table", Vector2(83, 65), UIBase::WHITE);
 
 			if (Window::GetKeyboard()->KeyHeld(KeyCodes::Type::TAB))
 			{
@@ -635,5 +636,32 @@ void PlayingHUD::ShowGameResult(NetworkedGame* Game)
 	}
 	ui->DrawStringText(RoundResult, Vector2(40, 15), UIBase::RED);
 	ui->DrawStringText("Press Enter To Continue!...", Vector2(25, 60), UIBase::YELLOW);
+}
+
+std::string PlayingHUD::GetRoundPowerUpState(NetworkedGame* Game)
+{
+	std::string state;
+	switch (Game->GetCurrentPowerUpType())
+	{
+	case powerUpType::none:
+		state = std::string("No powerup");
+		break;
+
+	case powerUpType::ice:
+		state = std::string("ice");
+		break;
+
+	case powerUpType::sand:
+		state = std::string("sand");
+		break;
+
+	case powerUpType::wind:
+		state = std::string("wind");
+		break;
+
+	default:
+		break;
+	}
+	return state;
 }
 

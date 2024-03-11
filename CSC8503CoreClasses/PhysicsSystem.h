@@ -77,7 +77,8 @@ namespace NCL {
 
 			//QuadTree <GameObject*>* staticTree = new QuadTree<GameObject*>(Vector2(256.0f, 256.0f), 8, 10);
 
-
+		public:
+			inline powerUpType GetCurrentPowerUpState() const {	return activePowerup;}
 		};
 	}
 }

@@ -160,6 +160,7 @@ namespace NCL {
 			void ShowTimeLeft(NetworkedGame* Game);
 			void CheckRoundTime(NetworkedGame* Game);
 			void ShowGameResult(NetworkedGame* Game);
+			std::string GetRoundPowerUpState(NetworkedGame* Game);
 		};
 	}
 }

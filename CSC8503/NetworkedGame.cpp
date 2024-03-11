@@ -350,6 +350,7 @@ void NetworkedGame::ServerUpdateScoreList()
 		}
 	}
 	PlayersScorePacket psPacket(PlayersScoreList);
+	psPacket.PowerUpState = CurrentPowerUpType;
 	thisServer->SendGlobalPacket(psPacket);
 }
 
@@ -620,6 +621,7 @@ void NetworkedGame::ReceivePacket(int type, GamePacket* payload, int source) {
 	case BasicNetworkMessages::Player_Score: {
 		PlayersScorePacket* realPacket = (PlayersScorePacket*)payload;
 		realPacket->GetPlayerScore(PlayersScoreList);
+		CurrentPowerUpType = powerUpType(realPacket->PowerUpState);
 		break;
 	}
 	case BasicNetworkMessages::Full_State: {
@@ -802,6 +804,7 @@ void NetworkedGame::PhysicsUpdate(float dt)
 {
 	if (UpdatePhysics) {
 		physics->Update(dt);
+		CurrentPowerUpType = physics->GetCurrentPowerUpState();
 		UpdatePhysics = false;
 	}
 }

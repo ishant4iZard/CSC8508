@@ -130,6 +130,9 @@ namespace NCL {
 			int fireSFX = -1;
 			bool UpdatePhysics = false;
 
+			/** Round going on state */
+			powerUpType CurrentPowerUpType;
+
 			void PhysicsUpdate(float dt);
 			void NonPhysicsUpdate(float dt);
 
@@ -145,6 +148,7 @@ namespace NCL {
 			inline int GetPlayerScoreByIndex(int index) { return PlayersScoreList[index]; }
 			inline float GetRoundTimer() const { return timer; }
 			inline int GetRoundTimeLimit() const { return TIME_LIMIT; }
+			inline powerUpType GetCurrentPowerUpType() const { return CurrentPowerUpType; }
 		};
 
 
