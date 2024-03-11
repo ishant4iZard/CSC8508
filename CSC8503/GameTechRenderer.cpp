@@ -47,8 +47,8 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 	glClearColor(0.5f,0.5f,0.5f, 1);
 
 	//Set up the light properties
-	lightColour = Vector4(0.8f, 0.8f, 0.5f, 1.0f);
-	lightRadius = 1000.0f;
+	lightColour = Vector4(0.8f, 0.3f, 0.5f, 1.0f);
+	lightRadius = 10.0f;
 	lightPosition = Vector3(-200.0f, 60.0f, -200.0f);
 
 	//Setup directional light
@@ -200,6 +200,21 @@ void GameTechRenderer::BuildObjectList() {
 			}
 		}
 	);
+}
+
+void GameTechRenderer::BuildLightList() {
+	/*activeLights.clear();
+
+	gameWorld.OperateOnContents(
+		[&](GameObject* o) {
+			if (o->IsActive()) {
+				const LightCom* light = o->GetLightCom();
+				if (light) {
+					activeLights.emplace_back(light);
+				}
+			}
+		}
+	);*/
 }
 
 void GameTechRenderer::SortObjectList() {

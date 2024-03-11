@@ -57,8 +57,12 @@ namespace NCL {
 			void SetDebugStringBufferSizes(size_t newVertCount);
 			void SetDebugLineBufferSizes(size_t newVertCount);
 
+			void BuildLightList();
+
 			vector<const RenderObject*> activeObjects;
 			vector<const RenderObject*> instancedRenderObjectList;
+
+			vector<const RenderObject*> activeLights;
 
 			OGLShader*  debugShader;
 			OGLShader*  skyboxShader;
@@ -98,9 +102,9 @@ namespace NCL {
 
 
 			//PBR Lighting*************
-			OGLShader* pbrShader;
 			Vector3 lightPositions[4];
 			Vector3 lightColors[4];
+
 
 			//surface parameters
 			GLuint albedo;

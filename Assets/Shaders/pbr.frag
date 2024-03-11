@@ -255,10 +255,11 @@ void main()
     for(int i = 0; i < 1 ; ++i)
     {
         //lOut += PointLightPbr(lightPosList[i], IN.worldPos, lightColorList[i], normal, roughness, metallic, albedo, pointLightConstantLinearQuadList[i].x, pointLightConstantLinearQuadList[i].y, pointLightConstantLinearQuadList[i].z, cameraPos, F0);
-        lOut += PointLightPbr(vec3(0,60,0), IN.worldPos, vec3(255, 255, 51), normal, roughness, metallic, albedo,
-          1.0f, 0.22f, 0.20f, cameraPos, F0);
+        lOut += PointLightPbr(vec3(0,80,0), IN.worldPos, vec3(255, 255, 51), normal, roughness, metallic, albedo,
+          1.0f, 0.14f, 0.07f, cameraPos, F0);
     }
 
+    // Directional light
     lOut += DirectionalLightPbr(globalLightDirection, IN.worldPos, globalLightColor.xyz, normal, roughness, metallic, albedo, cameraPos);
     
     vec3 ambient = vec3(0.33) * albedo * ao;

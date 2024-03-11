@@ -2,6 +2,7 @@
 #include "Transform.h"
 #include "CollisionVolume.h"
 
+
 using std::vector;
 
 namespace NCL::CSC8503 {
@@ -85,6 +86,7 @@ namespace NCL::CSC8503 {
 			//std::cout << "OnCollisionEnd event occured!\n";
 		}
 
+		
 
 
 		bool GetBroadphaseAABB(Vector3&outsize) const;
@@ -117,6 +119,8 @@ namespace NCL::CSC8503 {
 		RenderObject*		renderObject;
 		NetworkObject*		networkObject;
 
+		
+		
 		bool		isActive;
 		int			worldID;
 		std::string	name;

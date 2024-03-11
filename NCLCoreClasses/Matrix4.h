@@ -29,8 +29,6 @@ namespace NCL::Maths {
 		void	ToZero();
 		void ToIdentity();
 
-		void	ToIdentity();
-
 		//Gets the OpenGL position vector (floats 12,13, and 14)
 		Vector3 GetPositionVector() const;
 		//Sets the OpenGL position vector (floats 12,13, and 14)
