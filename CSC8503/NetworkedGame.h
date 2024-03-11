@@ -34,6 +34,8 @@ namespace NCL {
 
 			bool StartAsServer();
 			bool StartAsClient(char a, char b, char c, char d);
+			void DestroyServer();
+			void DestroyClient();
 
 			void UpdateGame(float dt) override;
 
@@ -43,6 +45,7 @@ namespace NCL {
 			void OnRep_DeactiveProjectile(int objectID);
 
 			void StartLevel();
+			void EndLevel();
 
 			void ReceivePacket(int type, GamePacket* payload, int source) override;
 
@@ -56,6 +59,10 @@ namespace NCL {
 			int GetLocalPlayerNumber() const;
 			int GetPlayerNumberFromNetID(const int NetID) const;
 			int GetClientState();
+			void SetPlayerNameByIndexInList(const std::string& Name, int Index);
+			void ServerSendRoundOverMsg();
+			// for develop mode
+			bool isDevMode = false;
 
 		protected:
 			void UpdateAsServer(float dt);
@@ -71,6 +78,7 @@ namespace NCL {
 			void UpdateMinimumState();
 
 			void ServerUpdatePlayersList();
+			void ServerUpdateScoreList();
 			void CheckPlayerListAndSpawnPlayers();
 
 			NetworkPlayer* AddNetworkPlayerToWorld(const Vector3& position, int playerNum);
@@ -102,6 +110,9 @@ namespace NCL {
 			/** List for Networking Players*/
 			std::vector<int> PlayersList;
 			std::vector<NetworkPlayer*> ControledPlayersList;
+			std::vector<std::string> PlayersNameList;
+			std::vector<int> PlayersScoreList;
+			int localPlayerIndex;
 
 			void SpawnAI();
 			AiStatemachineObject* AddAiStateObjectToWorld(const Vector3& position);
@@ -117,6 +128,10 @@ namespace NCL {
 			AudioEngine* audioEngine;
 			int backGroundMusic = -1;
 			int fireSFX = -1;
+			bool UpdatePhysics = false;
+
+			void PhysicsUpdate(float dt);
+			void NonPhysicsUpdate(float dt);
 
 		public:
 			inline bool IsServer() { return thisServer != nullptr ? true : false; }
@@ -124,6 +139,12 @@ namespace NCL {
 			inline GameServer* GetServer() const { return thisServer; }
 			inline GameClient* GetClient() const { return thisClient; } 
 			inline MenuSystem* GetMenuSystem() const { return Menu; }
+			inline int GetLocalPlayerIndex() const { return localPlayerIndex; }
+			inline void SetLocalPlayerIndex(int val) { localPlayerIndex = val; }
+			inline std::string GetPlayerNameByIndex(int index) { return PlayersNameList[index]; }
+			inline int GetPlayerScoreByIndex(int index) { return PlayersScoreList[index]; }
+			inline float GetRoundTimer() const { return timer; }
+			inline int GetRoundTimeLimit() const { return TIME_LIMIT; }
 		};
 
 

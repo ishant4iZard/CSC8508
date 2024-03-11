@@ -1,10 +1,12 @@
 #pragma once
 #include "GameWorld.h"
 #include "QuadTree.h"
+#include "../CSC8503/Event.h"
+#include "../CSC8503/PowerUp.h"
 
 namespace NCL {
 	namespace CSC8503 {
-		class PhysicsSystem	{
+		class PhysicsSystem:public EventListener{
 		public:
 			PhysicsSystem(GameWorld& g);
 			~PhysicsSystem();
@@ -31,6 +33,9 @@ namespace NCL {
 			void SetBroadphase(bool is) {
 				useBroadPhase = is;
 			}
+
+			void ReceiveEvent(EventType T) override;
+
 		protected:
 			void BasicCollisionDetection();
 			void BroadPhase();
@@ -45,6 +50,7 @@ namespace NCL {
 
 			void UpdateCollisionList();
 			void UpdateObjectAABBs();
+			void UpdateObjectSwept(float dt);
 
 			void ImpulseResolveCollision(GameObject& a , GameObject&b, CollisionDetection::ContactPoint& p) const;
 
@@ -62,6 +68,12 @@ namespace NCL {
 			std::vector<CollisionDetection::CollisionInfo> broadphaseCollisionsVec;
 			bool useBroadPhase		= true;
 			int numCollisionFrames	= 5;
+
+			powerUpType activePowerup;
+			float powerUptime;
+			const float powerUpLifetime = 10;
+
+			Vector3 wind = Vector3();
 
 			//QuadTree <GameObject*>* staticTree = new QuadTree<GameObject*>(Vector2(256.0f, 256.0f), 8, 10);
 

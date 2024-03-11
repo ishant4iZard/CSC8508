@@ -8,8 +8,6 @@
 #include "TutorialGame.h"
 #include "Projectile.h"
 #include "PhysicsSystem.h"
-#include "NetworkPlayer.h"
-#include "NetworkObject.h"
 #include "Debug.h"
 
 using namespace NCL;
@@ -77,7 +75,10 @@ AiStatemachineObject::AiStatemachineObject(GameWorld* world, NavigationGrid* nav
 }
 
 AiStatemachineObject::~AiStatemachineObject() {
-	delete stateMachine;
+	if (stateMachine) {
+		delete stateMachine;
+		stateMachine = NULL;
+	}
 }
 
 void AiStatemachineObject::Update(float dt) {

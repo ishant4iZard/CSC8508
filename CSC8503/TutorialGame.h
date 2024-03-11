@@ -14,6 +14,7 @@
 #include "LevelEnum.h"
 #include "LevelObjectEnum.h"
 #include "TutorialGame.h"
+#include "PowerUp.h"
 
 #ifdef _WIN32
 #include "WindowsLevelLoader.h"
@@ -36,22 +37,32 @@ enum class level {
 
 namespace NCL {
 	namespace CSC8503 {
-		class Powerup;
+		class PowerUp;
 		class Player;
 		class Goose;
-		class Voxels;
 		class BouncePad;
 		class GravityWell;
 
-		class TutorialGame		{
+		class TutorialGame : public EventListener		{
 		public:
 			TutorialGame();
+			void BindEvents();
 			~TutorialGame();
 
 			virtual void UpdateGame(float dt);
 
+			void UpdatePowerUpSpawnTimer(float dt);
+
 			GravityWell* gravitywell;
 
+			powerUpType getActivePowerup() {
+				return activePowerUp;
+			}
+			void setActivePowerup(powerUpType inPowerup) {
+				activePowerUp = inPowerup;
+			}
+
+			void ReceiveEvent(EventType T) override;
 		protected:
 			void InitialiseAssets();
 
@@ -73,14 +84,10 @@ namespace NCL {
 			
 
 
-			void InitHole();
-			void InitGravityWell();
-			void InitBouncePad();
-			void InitLevelWall();
 			void InitTeleporters();
 			void TestAddStaticObjectsToWorld();
+			void InitPowerup();
 
-			void InitDefaultFloor();
 			GameObject* AddFloorToWorld(const Vector3& position, const Vector3& size = Vector3(128,2,128));
 
 			void SpawnDataDrivenLevel(GameLevelNumber inGameLevelNumber);
@@ -90,19 +97,15 @@ namespace NCL {
 			void SpawnBouncingPad(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling);
 			void SpawnTarget(const Vector3 & inPosition, const Vector3 & inRotation, const Vector3 & inScale, const Vector2& inTiling);
 			void SpawnBlackHole(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling);
+			void AddPowerUpSpawnPoint(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling);
 
-
+			void InitNonePowerup(PowerUp* inPowerup, Shader* inShader);
+			void InitIcePowerup(PowerUp* inPowerup, Shader* inShader);
+			void InitSandPowerup(PowerUp* inPowerup, Shader* inShader);
+			void InitWindPowerup(PowerUp* inPowerup, Shader* inShader);
 
 			GameObject* capsule;
 
-
-			//void InitDefaultFloor();
-			void ProcessFrameAddresses();
-			void ObjectRay(GameObject* gameObject, const std::vector<GameObject*>& gameObjects);
-
-			//GameObject* AddFloorToWorld(const Vector3& position, const Vector3& size = Vector3(128,2,128));
-
-			AiTreeObject* AddAiToWorld(const Vector3& position, Vector3 dimensions, float inverseMass, float elasticity);
 #ifdef USEVULKAN
 			GameTechVulkanRenderer*	renderer;
 #else
@@ -110,9 +113,8 @@ namespace NCL {
 #endif
 			PhysicsSystem*		physics;
 			GameWorld*			world;
-			AiTreeObject*		 aitreetest;
-			vector<Vector3> frameAddresses;
-			Vector3 aichaseposition;
+
+
 
 			KeyboardMouseController controller;
 
@@ -124,14 +126,16 @@ namespace NCL {
 			Mesh* wallMesh = nullptr;
 			Mesh* bouncePlatformMesh = nullptr;
 			Mesh*	sphereMesh	= nullptr;
-
+			
 			Texture*	basicTex		= nullptr;
 			Texture*	sandTex			= nullptr;
 			Texture*	portalTex		= nullptr;
+			Texture*	blackholeTex = nullptr;
 			Shader*		basicShader		= nullptr;
 			Shader*		pbrShader		= nullptr;
 			Shader*		portalShader	= nullptr;
 			Shader* 	instancePbrShader = nullptr;
+			Shader*	blackholeShader = nullptr;
 
 			Texture* groundTextureList[(uint8_t)TextureType::MAX_TYPE];
 			Texture* wallTextureList[(uint8_t)TextureType::MAX_TYPE];
@@ -154,15 +158,11 @@ namespace NCL {
 			int score = 0;
 			float v = 0, h = 0;
 
+			float powerUpSpawnTimer = 0.0f;
+			unsigned int activePowerUpCount = 0;
+			powerUpType activePowerUp = powerUpType::none;
 
-#pragma region BouncePad
-			BouncePad* bouncePadList[5];
-#pragma endregion
 
-#pragma region PlaceholderAI
-			std::vector<GameObject*> placeHolderAIs;
-			void InitPlaceholderAIs();
-#pragma endregion
 
 #ifdef _WIN32
 			WindowsLevelLoader* levelFileLoader;
@@ -173,7 +173,10 @@ namespace NCL {
 
 #pragma region Function Pointers
 			typedef void (TutorialGame::*dataSpawnFunction) (const Vector3&, const Vector3&, const Vector3&, const Vector2&);
-			dataSpawnFunction levelObjectSpawnFunctionList[static_cast<int>(LevelObjectEnum::MAX_OBJECT_TYPE)] = { &TutorialGame::SpawnWall , &TutorialGame::SpawnFloor , &TutorialGame::SpawnBouncingPad, &TutorialGame::SpawnTarget , &TutorialGame::SpawnBlackHole };
+			dataSpawnFunction levelObjectSpawnFunctionList[static_cast<int>(LevelObjectEnum::MAX_OBJECT_TYPE)] = { &TutorialGame::SpawnWall , &TutorialGame::SpawnFloor , &TutorialGame::SpawnBouncingPad, &TutorialGame::SpawnTarget , &TutorialGame::SpawnBlackHole, &TutorialGame::AddPowerUpSpawnPoint };
+
+			typedef void (TutorialGame::* powerupInitFunction) (PowerUp* inPowerup, Shader* inShader);
+			powerupInitFunction powerupInitFunctionList[powerUpType::MAX_POWERUP] = { &TutorialGame::InitNonePowerup, &TutorialGame::InitIcePowerup , &TutorialGame::InitSandPowerup, &TutorialGame::InitWindPowerup };
 #pragma endregion
 
 #pragma region UI
@@ -182,6 +185,7 @@ namespace NCL {
 
 			ApplicationState* appState;
 			OGLTextureManager* bm;
+			std::vector<Vector3> powerUpSpawnPointList;
 		};
 	}
 }

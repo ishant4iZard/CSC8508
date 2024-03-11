@@ -1,19 +1,27 @@
 #include "NetworkPlayer.h"
+#include "TutorialGame.h"
+#ifdef _WIN32
 #include "NetworkedGame.h"
+#else
+#include "PS5_Game.h"
+#endif
 #include "PhysicsObject.h"
+#include "PowerUp.h"
+#include "Event.h"
+
 # define  SQUARE(x) (x * x) 
 
 using namespace NCL;
 using namespace CSC8503;
 
-NetworkPlayer::NetworkPlayer(NetworkedGame* game, int num)	{
+NetworkPlayer::NetworkPlayer(TutorialGame* game, int num)	{
 	this->game = game;
 	playerNum  = num;
 	this->settag("Player");
 	timeElapsed = 0.0f;
 	timeElapsed = projectileReplenishTimer = 0.0f;
 	numProjectilesAccumulated = MAX_PROJECTILE_CAPACITY;
-	movementSpeed = 10;
+	movementSpeed = 35;
 }
 
 NetworkPlayer::~NetworkPlayer()	{
@@ -22,10 +30,27 @@ NetworkPlayer::~NetworkPlayer()	{
 
 void NetworkPlayer::OnCollisionBegin(GameObject* otherObject) {
 	if (game) {
-		if (dynamic_cast<NetworkPlayer*>(otherObject))
-		{
-			game->OnPlayerCollision(this, (NetworkPlayer*)otherObject);
+		if (otherObject->gettag() == "PowerUp") {
+			PowerUp* powerup = dynamic_cast<PowerUp*>(otherObject);
+			powerUpType ActivatePowerUp = powerup->getPowerUp();
+			//game->setActivePowerup(ActivatePowerUp);
+			switch (ActivatePowerUp)
+			{
+			case NCL::CSC8503::ice:
+				EventEmitter::EmitEvent(ACTIVATE_ICE_POWER_UP);
+				break;
+			case NCL::CSC8503::sand:
+				EventEmitter::EmitEvent(ACTIVATE_SAND_POWER_UP);
+				break;
+			case NCL::CSC8503::wind:
+				EventEmitter::EmitEvent(ACTIVATE_WIND_POWER_UP);
+				break;
+			default:
+				break;
+			}
+			powerup->deactivate();
 		}
+		
 	}
 }
 
@@ -143,7 +168,7 @@ void NetworkPlayer::MovePlayerTowardsCursor(float dt){
 
 	Vector3 currentVelocity = this->GetPhysicsObject()->GetLinearVelocity();
 	Vector3 targetVelocity = movementDirection * movementSpeed;
-	Vector3 velocity = Vector3::Lerp(currentVelocity, targetVelocity, dt);
+	Vector3 velocity = Vector3::Lerp(currentVelocity, targetVelocity, dt * 0.5);
 
 	this->GetPhysicsObject()->SetLinearVelocity(velocity);
 }
@@ -162,6 +187,7 @@ void NetworkPlayer::ReplenishProjectiles(float dt) {
 
 void NetworkPlayer::Fire()
 {
+	
 	if (numProjectilesAccumulated <= 0) return;
 	numProjectilesAccumulated--;
 
@@ -169,7 +195,13 @@ void NetworkPlayer::Fire()
 	Vector3 firePos = transform.GetPosition() + fireDir * 3;
 	//std::cout << firePos.y;
 
-	game->SpawnProjectile(this, firePos, fireDir);
+#ifdef _WIN32
+	NetworkedGame* tempGame = dynamic_cast<NetworkedGame*>(game);
+#else
+	PS5_Game* tempGame = dynamic_cast<PS5_Game*>(game);
+#endif
+
+	tempGame->SpawnProjectile(this, firePos, fireDir);
 	//std::cout << "player " << playerNum << " fired!" << std::endl;
 }
 

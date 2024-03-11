@@ -4,11 +4,11 @@
 #include <iostream>
 namespace NCL {
 	namespace CSC8503 {
-		class NetworkedGame;
+		class TutorialGame;
 
 		class NetworkPlayer : public GameObject {
 		public:
-			NetworkPlayer(NetworkedGame* game, int num);
+			NetworkPlayer(TutorialGame* game, int num);
 			~NetworkPlayer();
 
 			void OnCollisionBegin(GameObject* otherObject) override;
@@ -38,7 +38,7 @@ namespace NCL {
 			}
 
 		protected:
-			NetworkedGame* game;
+			TutorialGame* game;
 			int playerNum;
 			int Score = 0;
 			float timeElapsed;

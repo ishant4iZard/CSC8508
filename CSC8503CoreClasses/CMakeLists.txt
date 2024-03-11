@@ -146,6 +146,12 @@ set(Windows_enet_Files
 )
 source_group("eNet" FILES ${Windows_enet_Files})
 
+set(Helper_Files
+"Helper.h"
+"Helper.cpp"
+)
+source_group("Helper" FILES ${Helper_Files})
+
 if(NOT("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")) 
     set(ALL_FILES
         ${Header_Files}
@@ -158,6 +164,7 @@ if(NOT("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64"))
         ${Networking}
         ${Physics}
         ${Playstation_enet_Files}   
+        ${Helper_Files}
     )
 else()
     set(ALL_FILES
@@ -171,6 +178,7 @@ else()
         ${Networking}
         ${Physics}
         ${Windows_enet_Files}   
+        ${Helper_Files}
     )
 endif()
 

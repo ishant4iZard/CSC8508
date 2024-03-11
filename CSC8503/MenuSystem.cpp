@@ -1,14 +1,19 @@
 #include "MenuSystem.h"
+#include "TutorialGame.h"
 #include "NetworkedGame.h"
 #include "PushdownMachine.h"
 
 #include "OnlineSubsystemBase.h"
 #include "steam.h"
 
+// TODO sit with T and change everything to tutorial game and non network related
+
 using namespace NCL;
 using namespace CSC8503;
 
-MenuSystem::MenuSystem(NetworkedGame* Game)
+using std::string;
+
+MenuSystem::MenuSystem(TutorialGame* Game)
 {
 #ifdef _WIN32
 	OnlineSubsystem = NetSystem_Steam::GetInstance();
@@ -46,6 +51,7 @@ PushdownState::PushdownResult MainMenu::OnUpdate(float dt, PushdownState** newSt
 	if (game && OnlineSubsystem)
 	{
 		OnlineSubsystemBase* Subsystem = (OnlineSubsystemBase*)OnlineSubsystem;
+		NetworkedGame* Game = (NetworkedGame*)game;
 
 		if (!Subsystem->GetIsOnlineSubsystemInitSuccess())
 		{
@@ -59,6 +65,7 @@ PushdownState::PushdownResult MainMenu::OnUpdate(float dt, PushdownState** newSt
 
 		if (isLobbyCreated)
 		{
+			Game->isDevMode = false;
 			*newState = new MultiPlayerLobby();
 			isCreatingLobby = false;
 			isLobbyCreated = false;
@@ -67,10 +74,24 @@ PushdownState::PushdownResult MainMenu::OnUpdate(float dt, PushdownState** newSt
 		}
 		if (isSearchLobbyBtnPressed)
 		{
+			Game->isDevMode = false;
 			isSearchLobbyBtnPressed = false;
 			*newState = new MultiplayerSearchMenu();
 			return Push;
 		}
+		/*if (isDevSASPressed)
+		{
+			isDevSASPressed = false;
+			Game->isDevMode = true;
+			*newState = new PlayingHUD();
+			return Push;
+		}
+		if (isDevSACPressed)
+		{
+			isDevSACPressed = false;
+			*newState = new PlayingHUD();
+			return Push;
+		}*/
 
 		ui->DrawButton(
 			"Create Lobby",
@@ -97,7 +118,39 @@ PushdownState::PushdownResult MainMenu::OnUpdate(float dt, PushdownState** newSt
 		);
 
 		/** for devlop only */
-
+		if (appState->GetIsServer())
+		{
+			appState->SetIsGameOver(false);
+			Game->StartAsServer();
+			*newState = new PlayingHUD();
+			return PushdownResult::Push;
+		}
+		if (appState->GetIsClient())
+		{
+			appState->SetIsGameOver(false);
+			Game->StartAsClient(127, 0, 0, 1);
+			*newState = new PlayingHUD();
+			return PushdownResult::Push;
+		}
+		ui->DrawButton(
+			"Local: Play As Server",
+			Vector2(5, 43),
+			[&, Game]() {
+				appState->SetIsServer(true);
+				Game->isDevMode = true;
+			},
+			UIBase::WHITE,
+			KeyCodes::NUM1 // Only for PS
+		);
+		ui->DrawButton(
+			"Local: Play As Client",
+			Vector2(5, 53),
+			[&, Game]() {
+				appState->SetIsClient(true);
+			},
+			UIBase::WHITE,
+			KeyCodes::NUM1 // Only for PS
+		);
 	}
 	return PushdownResult::NoChange;
 }
@@ -130,7 +183,8 @@ PushdownState::PushdownResult MultiPlayerLobby::OnUpdate(float dt, PushdownState
 		ui->DrawStringText("______________________________________________________________________________________________", Vector2(5, 30), UIBase::BLACK);
 		ui->DrawStringText("______________________________________________________________________________________________", Vector2(5, 65), UIBase::BLACK);
 
-		CheckAndDisplayLobbyMembersList(Subsystem);
+		CheckAndDisplayLobbyMembersList(Subsystem, Game);
+		Game->SetLocalPlayerIndex(Subsystem->GetCurrentUserLobbyIndex());
 		if (Subsystem->GetCurrentUserLobbyIndex() == 0)
 		{
 			appState->SetIsLobbyHolder(true);
@@ -148,7 +202,7 @@ PushdownState::PushdownResult MultiPlayerLobby::OnUpdate(float dt, PushdownState
 			Vector2(47, 75),
 			[Subsystem]() {
 				Subsystem->LeaveLobby();
-				EventEmitter::EmitEvent(LEAVE_CURRENT_LOBBY);
+				EventEmitter::EmitEvent(LOBBY_LEAVE);
 			},
 			UIBase::WHITE,
 			KeyCodes::L
@@ -157,6 +211,7 @@ PushdownState::PushdownResult MultiPlayerLobby::OnUpdate(float dt, PushdownState
 		{
 			if (appState->GetIsServer())
 			{
+				appState->SetIsGameOver(false);
 				Game->StartAsServer();
 				*newState = new PlayingHUD();
 				return PushdownResult::Push;
@@ -164,8 +219,9 @@ PushdownState::PushdownResult MultiPlayerLobby::OnUpdate(float dt, PushdownState
 			ui->DrawButton(
 				"Start Game",
 				Vector2(5, 75),
-				[]() {
-					EventEmitter::EmitEvent(START_AS_SERVER);
+				[&, Subsystem]() {
+					Subsystem->SendGameRoundStartSignal();
+					appState->SetIsServer(true);
 				},
 				UIBase::WHITE,
 				KeyCodes::S // Only for PS
@@ -174,17 +230,19 @@ PushdownState::PushdownResult MultiPlayerLobby::OnUpdate(float dt, PushdownState
 		else
 		{
 			ui->DrawStringText("You are the joiner!", Vector2(5, 23), UIBase::WHITE);
-			ui->DrawButton(
-				"Start Game",
-				Vector2(5, 75),
-				[]() {
-					EventEmitter::EmitEvent(START_AS_CLIENT);
-				},
-				UIBase::WHITE,
-				KeyCodes::S // Only for PS
-			);
+			ui->DrawStringText("Wait for holder start!", Vector2(5, 75), UIBase::WHITE);
+			//ui->DrawButton(
+			//	"Start Game",
+			//	Vector2(5, 75),
+			//	[]() {
+			//		EventEmitter::EmitEvent(START_AS_CLIENT);
+			//	},
+			//	UIBase::WHITE,
+			//	KeyCodes::S // Only for PS
+			//);
 			if (appState->GetIsClient())
 			{
+				appState->SetIsGameOver(false);
 				Game->StartAsClient(GetIPnumByIndex(0), GetIPnumByIndex(1), GetIPnumByIndex(2), GetIPnumByIndex(3));
 				*newState = new PlayingHUD();
 				return PushdownResult::Push;
@@ -197,15 +255,14 @@ PushdownState::PushdownResult MultiPlayerLobby::OnUpdate(float dt, PushdownState
 
 void MultiPlayerLobby::ReceiveEvent(const EventType eventType) {
 	switch (eventType) {
-	case START_AS_SERVER :
-		appState->SetIsServer(true);
+	case LOBBY_GAMESTART:
+		if (!appState->GetIsLobbyHolder())
+		{
+			appState->SetIsClient(true);
+		}
 		break;
 
-	case START_AS_CLIENT :
-		appState->SetIsClient(true);
-		break;
-
-	case LEAVE_CURRENT_LOBBY:
+	case LOBBY_LEAVE:
 		isLeaveLobbyPressed = true;
 		break;
 
@@ -214,12 +271,14 @@ void MultiPlayerLobby::ReceiveEvent(const EventType eventType) {
 	}
 }
 
-void MultiPlayerLobby::CheckAndDisplayLobbyMembersList(OnlineSubsystemBase* Subsystem)
+void MultiPlayerLobby::CheckAndDisplayLobbyMembersList(OnlineSubsystemBase* Subsystem, NetworkedGame* Game)
 {
 	for (int i = 0; i < Subsystem->GetNumCurrentLobbyMembers(); ++i)
 	{
 		if (i == 0) { ui->DrawStringText(("Holder"), Vector2(5, 37), UIBase::WHITE); }
 		ui->DrawStringText(DisplayMemberLineByIndex(Subsystem, i), Vector2(15, 37 + i * 7), UIBase::WHITE);
+
+		Game->SetPlayerNameByIndexInList(Subsystem->GetLobbyMemberNameByIndex(i), i);
 	}
 }
 
@@ -234,8 +293,10 @@ std::string MultiPlayerLobby::DisplayMemberLineByIndex(OnlineSubsystemBase* Subs
 
 char MultiPlayerLobby::GetIPnumByIndex(int index)
 {
+	// this need to be modified
 	NetSystem_Steam* Steam = (NetSystem_Steam*)OnlineSubsystem;
 	string IP = Steam->GetLobbyHolderIPv4Address();
+
 	int PointAccml = 0;
 	int IPnum = 0;
 	for (auto i : IP)
@@ -433,243 +494,107 @@ void MultiplayerSearchMenu::ChangeCurrentSelectLobbyByAmount(OnlineSubsystemBase
 /** PlaingHUD update */
 PushdownState::PushdownResult PlayingHUD::OnUpdate(float dt, PushdownState** newState)
 {
+	if (game && OnlineSubsystem)
+	{
+		OnlineSubsystemBase* Subsystem = (OnlineSubsystemBase*)OnlineSubsystem;
+		NetworkedGame* Game = (NetworkedGame*)game;
+
+		CheckRoundTime(Game);
+
+		/** Round Over Event */
+		if (appState->GetIsGameOver())
+		{
+			if (appState->GetIsServer())
+			{
+				appState->SetIsServer(false);
+				Game->DestroyServer();
+			}
+			if (appState->GetIsClient())
+			{
+				appState->SetIsClient(false);
+				Game->DestroyClient();
+			}
+			EventEmitter::RemoveListner(this);
+			return  PushdownResult::Pop;
+		}
+
+		/** Game going HUD */
+		if (!appState->GetIsGameOver())
+		{
+			ShowTimeLeft(Game);
+			ui->DrawStringText("Player    " + Game->GetPlayerNameByIndex(Game->GetLocalPlayerIndex()), Vector2(83, 30), UIBase::WHITE);
+			ui->DrawStringText("Score     " + std::to_string(Game->GetPlayerScoreByIndex(Game->GetLocalPlayerIndex())), Vector2(83, 40), UIBase::WHITE);
+
+			if (Window::GetKeyboard()->KeyHeld(KeyCodes::Type::TAB))
+			{
+				ShowScoreTable(Game);
+			}
+		}
+
+		if (appState->GetIsServer())
+		{
+			ui->DrawButton(
+				"Round Over",
+				Vector2(85, 85),
+				[&, Game]() {
+					Game->ServerSendRoundOverMsg();
+					EventEmitter::EmitEvent(EventType::ROUND_OVER);
+				},
+				UIBase::WHITE,
+				KeyCodes::S, // Only for PS
+				Vector2(150, 50)
+			);
+		}
+	}
 	return PushdownResult::NoChange;
 }
 
+void PlayingHUD::ReceiveEvent(const EventType eventType)
+{
+	switch (eventType) {
+	case ROUND_OVER:
+		appState->SetIsGameOver(true);
+		break;
 
-/*#pragma region Menu
-		class PlayerMenu : public PushdownState
+	default: break;
+	}
+}
+
+void PlayingHUD::ShowScoreTable(TutorialGame* Game)
+{
+	//TODO dynamic cast game
+	NetworkedGame* tempGame = dynamic_cast<NetworkedGame*> (Game);
+	for (int i = 0; i < 4; ++i)
+	{
+		if (tempGame->GetPlayerScoreByIndex(i) != -1)
 		{
-		public :
-			PlayerMenu() {
-#ifdef _WIN32
-				ui = UIWindows::GetInstance();
-#else //_ORBIS
-				ui = UIPlaystation::GetInstance();
-#endif
-			}
+			ui->DrawStringText("Player " + std::to_string(i + 1), Vector2(25, 30 + i * 7), UIBase::BLUE);
+			ui->DrawStringText(tempGame->GetPlayerNameByIndex(i), Vector2(45, 30 + i * 7), UIBase::BLUE);
+			ui->DrawStringText("Your Score: " + std::to_string(tempGame->GetPlayerScoreByIndex(i)), Vector2(65, 30 + i * 7), UIBase::BLUE);
+		}
+	}
+}
 
+void PlayingHUD::ShowTimeLeft(TutorialGame* Game)
+{
+	//TODO dynamic cast game
+	NetworkedGame* tempGame = dynamic_cast<NetworkedGame*> (Game);
 
-		protected :
-			PushdownResult OnUpdate(float dt, PushdownState** newState) override
-			{
-				if (game)
-				{
-					NetworkedGame* thisGame = (NetworkedGame*)game;
-					if (thisGame->IsServer())
-					{
-						int ClientsConnectedNum = thisGame->GetConnectedClientsNum();
-						std::string num = std::to_string(ClientsConnectedNum);
-						//Debug::Print("Connected Clients : " + num, Vector2(5, 3), Debug::YELLOW);
-						ui->DrawStringText("Connected Clients : " + num, Vector2(5, 3), UIBase::YELLOW);
-					}
-					if (thisGame->IsClient())
-					{
+	ui->DrawStringText("Timeleft:", Vector2(83, 15), UIBase::WHITE);
 
-					}
-				}
-				return PushdownResult::NoChange;
-			}
-#pragma region UI
-			UIBase* ui;
-#pragma endregion
-		};
+	float timeLeft = tempGame->GetRoundTimeLimit() - tempGame->GetRoundTimer();
+	int time = (int)timeLeft + 1;
+	
+	ui->DrawStringText(std::to_string(time), Vector2(90, 15), UIBase::WHITE);
+}
 
-		class MainMenu : public PushdownState
-		{
-		public :
-			MainMenu() {
-				appState = ApplicationState::GetInstance();
-#ifdef _WIN32
-				ui = UIWindows::GetInstance();
-#else //_ORBIS
-				ui = UIPlaystation::GetInstance();
-#endif
-			}
+void PlayingHUD::CheckRoundTime(TutorialGame* Game)
+{
+	//TODO dynamic cast game
+	NetworkedGame* tempGame = dynamic_cast<NetworkedGame*> (Game);
 
-		protected :
-			PushdownResult OnUpdate(float dt, PushdownState** newState) override
-			{
-				if (game)
-				{
-					//Debug::Print("Press 1 : Start As Server", Vector2(5, 23), Debug::YELLOW);
-					//Debug::Print("Press 2 : Start As Client", Vector2(5, 33), Debug::YELLOW);
-					//Debug::Print("Press Esc : Game Over", Vector2(5, 43), Debug::YELLOW);
-					//ui->DrawStringText("Press 1 : Start As Server", Vector2(5, 23), UIBase::YELLOW);
-					//ui->DrawStringText("Press 2 : Start As Client", Vector2(5, 33), UIBase::YELLOW);
-					//ui->DrawStringText("Press Esc : Game Over", Vector2(5, 43), UIBase::YELLOW);
-
-					if (StartAsServerDisplayTime > 0.0f)
-					{
-						//Debug::Print("Server Existed! Start as Client please!", Vector2(15, 53), Debug::RED);
-						ui->DrawStringText("Server Existed! Start as Client please!", Vector2(15, 53), UIBase::RED);
-						StartAsServerDisplayTime -= dt;
-					}
-
-					NetworkedGame* thisGame = (NetworkedGame*)game;
-					if (thisGame->IsClient())
-					{
-						switch (thisGame->GetClient()->GetClientState())
-						{
-						case EClientState::CLIENT_STATE_CONNECTING:
-							//Debug::Print("Client Is Serching!....", Vector2(15, 53), Debug::RED);
-							ui->DrawStringText("Client Is Searching!....", Vector2(15, 53), UIBase::RED);
-							break;
-						case EClientState::CLIENT_STATE_DISCONNECTED:
-							//Debug::Print("Failed to connect server, please Press 1!", Vector2(10, 53), Debug::RED);
-							ui->DrawStringText("Failed to connect server, please Press 1!", Vector2(10, 53), UIBase::RED);
-							break;
-						case EClientState::CLIENT_STATE_CONNECTED:
-							*newState = new PlayerMenu();
-							return PushdownResult::Push;
-							break;
-						}
-						return PushdownResult::NoChange;
-					}
-
-					// React based on app state_____________________________________________________________
-					if (appState->GetIsServer())
-					{
-						if (thisGame->StartAsServer())
-						{
-							*newState = new PlayerMenu();
-							return PushdownResult::Push;
-						}
-						else
-						{
-							StartAsServerDisplayTime = 3.0f;
-						}
-					}
-					if (appState->GetIsClient())
-					{
-						if (!thisGame->StartAsClient(127, 0, 0, 1))
-						{
-
-						}
-					}
-
-					// UI Menu______________________________________________________________________________
-					// To do : Find center location based on text size
-
-					ui->DrawStringText("Main Menu", Vector2(45, 30), UIBase::YELLOW);
-
-					ui->DrawButton(
-						"Start As Server",
-						Vector2(35, 35),
-						[]() {
-							ApplicationState* appState = ApplicationState::GetInstance();
-							appState->SetIsServer(true);
-						},
-						UIBase::WHITE,
-						KeyCodes::NUM1 // Only for PS
-						);
-
-					ui->DrawButton(
-						"Start As Client",
-						Vector2(35, 45),
-						[]() {
-							ApplicationState* appState = ApplicationState::GetInstance();
-							appState->SetIsClient(true);
-						},
-						UIBase::WHITE,
-						KeyCodes::NUM2 // Only for PS
-						);
-
-				}
-
-				return PushdownResult::NoChange;
-			}
-
-		protected:
-			float StartAsServerDisplayTime = 0.0f;
-#pragma region UI
-			UIBase* ui;
-#pragma endregion
-			ApplicationState* appState;
-		};
-#pragma endregion
-*/
-//#pragma region Menu
-//		class PlayerMenu : public PushdownState
-//		{
-//			PushdownResult OnUpdate(float dt, PushdownState** newState) override
-//			{
-//				if (game)
-//				{
-//					NetworkedGame* thisGame = (NetworkedGame*)game;
-//					if (thisGame->IsServer())
-//					{
-//						int ClientsConnectedNum = thisGame->GetConnectedClientsNum();
-//						std::string num = std::to_string(ClientsConnectedNum);
-//						Debug::Print("Connected Clients : " + num, Vector2(5, 3), Debug::YELLOW);
-//					}
-//					if (thisGame->IsClient())
-//					{
-//
-//					}
-//				}
-//				return PushdownResult::NoChange;
-//			}
-//		};
-//
-//		class MainMenu : public PushdownState
-//		{
-//			PushdownResult OnUpdate(float dt, PushdownState** newState) override
-//			{
-//				if (game)
-//				{
-//					Debug::Print("Press 1 : Start As Server", Vector2(5, 23), Debug::YELLOW);
-//					Debug::Print("Press 2 : Start As Client", Vector2(5, 33), Debug::YELLOW);
-//					Debug::Print("Press Esc : Game Over", Vector2(5, 43), Debug::YELLOW);
-//					if (StartAsServerDisplayTime > 0.0f)
-//					{
-//						Debug::Print("Server Existed! Start as Client please!", Vector2(15, 53), Debug::RED);
-//						StartAsServerDisplayTime -= dt;
-//					}
-//
-//					NetworkedGame* thisGame = (NetworkedGame*)game;
-//					if (thisGame->IsClient())
-//					{
-//						switch (thisGame->GetClient()->GetClientState())
-//						{
-//						case EClientState::CLIENT_STATE_CONNECTING:
-//							Debug::Print("Client Is Serching!....", Vector2(15, 53), Debug::RED);
-//							break;
-//						case EClientState::CLIENT_STATE_DISCONNECTED:
-//							Debug::Print("Failed to connect server, please Press 1!", Vector2(10, 53), Debug::RED);
-//							break;
-//						case EClientState::CLIENT_STATE_CONNECTED:
-//							*newState = new PlayerMenu();
-//							return PushdownResult::Push;
-//							break;
-//						}
-//						return PushdownResult::NoChange;
-//					}
-//					if (Window::GetKeyboard()->KeyPressed(KeyCodes::NUM1))
-//					{
-//						if (thisGame->StartAsServer())
-//						{
-//							*newState = new PlayerMenu();
-//							return PushdownResult::Push;
-//						}
-//						else
-//						{
-//							StartAsServerDisplayTime = 3.0f;
-//						}
-//					}
-//					if (Window::GetKeyboard()->KeyPressed(KeyCodes::NUM2))
-//					{
-//						if (!thisGame->StartAsClient(127, 0, 0, 1))
-//						{
-//
-//						}
-//					}
-//				}
-//
-//				return PushdownResult::NoChange;
-//			}
-//
-//		protected:
-//			float StartAsServerDisplayTime = 0.0f;
-//		};
-//#pragma endregion
+	if (tempGame->GetRoundTimer() > tempGame->GetRoundTimeLimit())
+	{
+		EventEmitter::EmitEvent(EventType::ROUND_OVER);
+	}
+}

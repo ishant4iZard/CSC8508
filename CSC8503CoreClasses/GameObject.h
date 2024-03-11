@@ -39,6 +39,10 @@ namespace NCL::CSC8503 {
 		Transform& GetTransform() {
 			return transform;
 		}
+		
+		Transform& GetSweptTransform() {
+			return SweptTransform;
+		}
 
 		RenderObject* GetRenderObject() const {
 			return renderObject;
@@ -70,7 +74,6 @@ namespace NCL::CSC8503 {
 
 		virtual void OnCollisionBegin(GameObject* otherObject) {
 			//std::cout << "OnCollisionBegin event occured!\n";
-			//todo
 		}
 
 		virtual void OnCollisionEnd(GameObject* otherObject) {
@@ -78,7 +81,6 @@ namespace NCL::CSC8503 {
 		}
 		virtual void OnTriggerBegin(GameObject* otherObject) {
 			//std::cout << "OnCollisionBegin event occured!\n";
-			//todo
 		}
 
 		virtual void OnTriggerEnd(GameObject* otherObject) {
@@ -125,10 +127,12 @@ namespace NCL::CSC8503 {
 		Transform			transform;
 
 		CollisionVolume*	boundingVolume;
-		CollisionVolume*	SweptVolume;
 		PhysicsObject*		physicsObject;
 		RenderObject*		renderObject;
 		NetworkObject*		networkObject;
+
+		CollisionVolume*	SweptVolume;
+		Transform			SweptTransform;
 
 		bool		isActive;
 		int			worldID;

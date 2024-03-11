@@ -10,17 +10,20 @@
 #endif
 #include "Event.h"
 
+//TODO needs to be refactored
+
 namespace NCL {
 	namespace  CSC8503 {
 		class PushdownMachine;
 		class NetworkedGame;
+		class TutorialGame;
 		class OnlineSubsystemBase;
 		class NetSystem_Steam;
 
 		class MenuSystem
 		{
 		public:
-			MenuSystem(NetworkedGame* Game);
+			MenuSystem(TutorialGame* Game);
 			~MenuSystem();
 
 			void Update(float dt);
@@ -66,6 +69,8 @@ namespace NCL {
 			bool isLobbyCreated = false;
 			bool isSearchLobbyBtnPressed = false;
 			bool isJoiningLobby = false;
+			bool isDevSASPressed = false;
+			bool isDevSACPressed = false;
 		};
 
 		class MultiplayerSearchMenu : public PushdownState, public EventListener
@@ -115,15 +120,15 @@ namespace NCL {
 #endif
 				appState = ApplicationState::GetInstance();
 
-				EventEmitter::RegisterForEvent(START_AS_SERVER, this);
-				EventEmitter::RegisterForEvent(START_AS_CLIENT, this);
-				EventEmitter::RegisterForEvent(LEAVE_CURRENT_LOBBY, this);
+				EventEmitter::RegisterForEvent(LOBBY_GAMESTART, this);
+				EventEmitter::RegisterForEvent(LOBBY_LEAVE, this);
 			}
 			PushdownResult OnUpdate(float dt, PushdownState** newState) override;
 			void ReceiveEvent(const EventType eventType) override;
 
 		protected:
-			void CheckAndDisplayLobbyMembersList(OnlineSubsystemBase* Subsystem);
+			//TODO ifdef
+			void CheckAndDisplayLobbyMembersList(OnlineSubsystemBase* Subsystem, NetworkedGame* Game);
 			std::string DisplayMemberLineByIndex(OnlineSubsystemBase* Subsystem, int Index);
 
 			char GetIPnumByIndex(int index);
@@ -134,10 +139,30 @@ namespace NCL {
 			bool isLeaveLobbyPressed = false;
 		};
 
-		class PlayingHUD : public PushdownState
+		class PlayingHUD : public PushdownState, public EventListener
 		{
 		public:
+			PlayingHUD()
+			{
+#ifdef _WIN32
+				ui = UIWindows::GetInstance();
+#else //_ORBIS
+				ui = UIPlaystation::GetInstance();
+#endif
+				appState = ApplicationState::GetInstance();
+
+				EventEmitter::RegisterForEvent(ROUND_OVER, this);
+			}
+
 			PushdownResult OnUpdate(float dt, PushdownState** newState) override;
+			void ReceiveEvent(const EventType eventType) override;
+		protected:
+			UIBase* ui;
+			ApplicationState* appState;
+
+			void ShowScoreTable(TutorialGame* Game);
+			void ShowTimeLeft(TutorialGame* Game);
+			void CheckRoundTime(TutorialGame* Game);
 		};
 	}
 }

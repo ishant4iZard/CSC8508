@@ -13,10 +13,12 @@
 
 #include <fstream>
 #include <sstream>
-
+#include <Helper.h>
 
 using namespace NCL;
 using namespace CSC8503;
+#define POWER_UP_SPAWN_TIME 30.0f
+#define MAX_POWER_UP_COUNT 3
 
 TutorialGame::TutorialGame() : controller(*Window::GetWindow()->GetKeyboard(), *Window::GetWindow()->GetMouse()) {
 	world		= new GameWorld();
@@ -49,8 +51,6 @@ TutorialGame::TutorialGame() : controller(*Window::GetWindow()->GetKeyboard(), *
 
 
 	InitialiseAssets();
-	//GameObject* test = AddAABBCubeToWorld(Vector3(0, 1, 0), Vector3(100, 1, 100), 1 / 100, 0.1f);
-	//test->settag("walls");
 
 #ifdef _WIN32
 	ui = UIWindows::GetInstance();
@@ -59,6 +59,32 @@ TutorialGame::TutorialGame() : controller(*Window::GetWindow()->GetKeyboard(), *
 #endif
 	appState = ApplicationState::GetInstance();
 	bm = new OGLTextureManager();
+	BindEvents();
+}
+
+void NCL::CSC8503::TutorialGame::BindEvents()
+{
+	EventEmitter::RegisterForEvent(ACTIVATE_ICE_POWER_UP, this);
+	EventEmitter::RegisterForEvent(ACTIVATE_WIND_POWER_UP, this);
+	EventEmitter::RegisterForEvent(ACTIVATE_SAND_POWER_UP, this);
+}
+
+void NCL::CSC8503::TutorialGame::ReceiveEvent(EventType T)
+{
+	switch (T)
+	{
+	case ACTIVATE_ICE_POWER_UP:
+		activePowerUpCount = Helper::Clamp(--activePowerUpCount, static_cast<unsigned int>(0), static_cast<unsigned int>(MAX_POWER_UP_COUNT));
+		break;
+	case ACTIVATE_SAND_POWER_UP:
+		activePowerUpCount = Helper::Clamp(--activePowerUpCount, static_cast<unsigned int>(0), static_cast<unsigned int>(MAX_POWER_UP_COUNT));
+		break;
+	case ACTIVATE_WIND_POWER_UP:
+		activePowerUpCount = Helper::Clamp(--activePowerUpCount, static_cast<unsigned int>(0), static_cast<unsigned int>(MAX_POWER_UP_COUNT));
+		break;
+	default:
+		break;
+	}
 }
 
 /*
@@ -78,6 +104,8 @@ void TutorialGame::InitialiseAssets() {
 	bonusMesh	= renderer->LoadMesh("sphere.msh");
 	gooseMesh	= renderer->LoadMesh("goose.msh");
 	capsuleMesh = renderer->LoadMesh("capsule.msh");
+	
+	blackholeTex = renderer->LoadTexture("blackhole.png");
 	basicTex	= renderer->LoadTexture("checkerboard.png");
 	portalTex	= renderer->LoadTexture("PortalTex.jpg");
 	sandTex		= renderer->LoadTexture("sand.jpg");
@@ -109,10 +137,10 @@ void TutorialGame::InitialiseAssets() {
 	pbrShader = renderer->LoadShader("pbr.vert", "pbr.frag");
 	portalShader = renderer->LoadShader("scene.vert", "portal.frag");
 	instancePbrShader = renderer->LoadShader("pbrInstanced.vert", "pbr.frag");
+	blackholeShader = renderer->LoadShader("blackhole.vert", "blackhole.frag");
 
 	InitCamera();
 	InitWorld();
-
 }
 
 TutorialGame::~TutorialGame()	{
@@ -126,6 +154,7 @@ TutorialGame::~TutorialGame()	{
 	delete basicTex;
 	delete basicShader;
 	delete pbrShader;
+	delete blackholeTex;
 
 	delete physics;
 	delete renderer;
@@ -139,76 +168,25 @@ TutorialGame::~TutorialGame()	{
 }
 
 void TutorialGame::UpdateGame(float dt) {
-	
-	//ObjectRay(testStateObject, testGameObjects);
-
-	if (appState->GetIsGameOver()) {
-		world->ClearAndErase();
-		physics->Clear();
-		InitCamera();
-		//Debug::Print("GameOver", Vector2(40, 10), Debug::RED);
-		//Debug::Print("Final Score:" + std::to_string((int)(score)), Vector2(40, 30));
-		//Debug::Print("Press 'ESC' to exit", Vector2(40, 50));
-
-		ui->DrawStringText("GameOver", Vector2(40, 10), UIBase::RED);
-		ui->DrawStringText("Final Score:" + std::to_string((int)(score)), Vector2(40, 30));
-		ui->DrawStringText("Press 'ESC' to exit", Vector2(40, 50), UIBase::WHITE);
-
-	}
-	else if (appState->GetHasWonGame())
-	{
-		world->ClearAndErase();
-		physics->Clear();
-		InitCamera();
-		/*Debug::Print("You Won!!!", Vector2(40, 10), Debug::GREEN);
-		Debug::Print("You saved the world from goats!!!", Vector2(40, 20), Debug::GREEN);
-		Debug::Print("Final Score:" + std::to_string((int)(score + (300 - finaltimer) / 10)), Vector2(40, 30));
-		Debug::Print("Finish Time:" + std::to_string((int)(finaltimer)), Vector2(40, 40));
-		Debug::Print("Press 'ESC' to exit", Vector2(40, 50));*/
-
-		ui->DrawStringText("You Won!!!", Vector2(40, 10), UIBase::GREEN);
-		ui->DrawStringText("You saved the world from goats!!!", Vector2(40, 20), UIBase::GREEN);
-		ui->DrawStringText("Final Score:" + std::to_string((int)(score + (300 - finaltimer) / 10)), Vector2(40, 30), UIBase::YELLOW);
-		ui->DrawStringText("Finish Time:" + std::to_string((int)(finaltimer)), Vector2(40, 40), UIBase::YELLOW);
-		ui->DrawStringText("Press 'ESC' to exit", Vector2(40, 50), UIBase::YELLOW);
-	}
-
-	else if(appState->GetIsServer()) {
-		timer += dt;
-
-		//world->GetMainCamera().UpdateCamera(dt);
-		if (timer > TIME_LIMIT) {
-			appState->SetIsGameOver(true);
-		}
-
-		//Debug::UpdateRenderables(dt);
-
-		std::string timeText = "Time left : " + std::to_string((int)(TIME_LIMIT - timer));
-		ui->DrawStringText(timeText, Vector2(5, 10));
-	}
-
-	if (Window::GetKeyboard()->KeyDown(KeyCodes::C)) {
-		//claptrap->OnAwake(2);
-	}
-
-	//if (aitreetest) {
-	//	aitreetest-> Update(dt);
-	//}
-
-	//testStateObject->getPositionfromobject()
-	//if (testStateObject) {
-	//	testStateObject->Update(dt);
-	//}
-	
-	static int frameCounter = 0;
-	//aitreetest->GetTransform().RandomPosition(aitreetest->GetTransform().GetPosition(), true).SetScale(Vector3(10, 10, 10) * 2);
-	frameCounter++;
-
-
 	world->UpdateWorld(dt);
 	renderer->Render();
 	renderer->Update(dt);
-	//std::cout << "capsule" << capsule->GetTransform().GetPosition().y<<"\n";
+	
+	UpdatePowerUpSpawnTimer(dt);
+}
+
+void NCL::CSC8503::TutorialGame::UpdatePowerUpSpawnTimer(float dt)
+{
+	if (appState->GetIsGameOver() || appState->GetIsGamePaused()) return;
+
+	powerUpSpawnTimer += dt;
+	if (powerUpSpawnTimer >= POWER_UP_SPAWN_TIME
+		&& activePowerUpCount <= MAX_POWER_UP_COUNT
+		)
+	{
+		powerUpSpawnTimer = 0.0f;
+		InitPowerup();
+	}
 }
 
 void TutorialGame::InitCamera() {
@@ -227,22 +205,14 @@ void TutorialGame::InitWorld() {
 	physics->SetBroadphase(true);
 	timer = 0;
 	AddCapsuleToWorld(Vector3(-75, 10, -75), 2.0f, 5.0f);
-	/*AddCapsuleToWorld(Vector3(-40, 10, -75), 2.0f, 5.0f);
-	AddCapsuleToWorld(Vector3(-35, 10, -75), 2.0f, 5.0f);
-	AddCapsuleToWorld(Vector3(-15, 10, -75), 2.0f, 5.0f);
-	AddCapsuleToWorld(Vector3(-75, 10, -75), 2.0f, 5.0f);
-	AddCapsuleToWorld(Vector3(-70, 10, -70), 2.0f, 5.0f);
-	AddCapsuleToWorld(Vector3(-65, 10, -65), 2.0f, 5.0f);*/
 	capsule = AddCapsuleToWorld(Vector3(-80, 5.6, -80), 1.0f, 2.0f);
 
 	SpawnDataDrivenLevel(GameLevelNumber::LEVEL_1);
-	//capsule->GetTransform().SetOrientation(Quaternion::EulerAnglesToQuaternion(0, 0, 90));
-
 	InitTeleporters();
-	//TestAddStaticObjectsToWorld();
-	//InitAI();
-	
-	physics->createStaticTree();//this needs to be at the end of all initiations
+
+
+
+	GameObject* test = AddCapsuleToWorld(Vector3(-25, 5.6, 25), 1.0f, 2.0f);
 }
 
 /*
@@ -382,16 +352,56 @@ void NCL::CSC8503::TutorialGame::SpawnBlackHole(const Vector3& inPosition, const
 	Vector3 sphereSize = Vector3(radius, radius, radius);
 	SphereVolume* volume = new SphereVolume(radius);
 	gravityWell->SetBoundingVolume((CollisionVolume*)volume);
-	gravityWell->GetTransform().SetScale(sphereSize).SetPosition(inPosition);
-	gravityWell->SetRenderObject(new RenderObject(&gravityWell->GetTransform(), sphereMesh, basicTex, basicShader));
+	gravityWell->GetTransform().SetScale(inScale).SetPosition(inPosition).SetOrientation(Quaternion::EulerAnglesToQuaternion(inRotation.x, inRotation.y, inRotation.z));
+	gravityWell->SetRenderObject(new RenderObject(&gravityWell->GetTransform(), sphereMesh, blackholeTex, blackholeShader));
 	gravityWell->SetPhysicsObject(new PhysicsObject(&gravityWell->GetTransform(), gravityWell->GetBoundingVolume()));
 	gravityWell->GetPhysicsObject()->SetInverseMass(0);
-	gravityWell->GetPhysicsObject()->InitSphereInertia();
-
-	gravityWell->GetRenderObject()->SetColour(Vector4(0, 0.4, 0.4, 1));
-	gravityWell->GetRenderObject()->SetTiling(inTiling);
+	gravityWell->GetPhysicsObject()->InitSphereInertia(); 
+	
 	gravitywell = gravityWell;
 	world->AddGameObject(gravityWell);
+}
+void NCL::CSC8503::TutorialGame::AddPowerUpSpawnPoint(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling)
+{
+	powerUpSpawnPointList.emplace_back(inPosition);
+}
+
+void NCL::CSC8503::TutorialGame::InitNonePowerup(PowerUp* inPowerup, Shader* inShader)
+{
+}
+
+void NCL::CSC8503::TutorialGame::InitIcePowerup(PowerUp* inPowerup, Shader* inShader)
+{
+	inPowerup->SetRenderObject(new RenderObject(&inPowerup->GetTransform(), sphereMesh, basicTex, inShader));
+	inPowerup->setPowerup(powerUpType::ice);
+	activePowerUpCount = Helper::Clamp(++activePowerUpCount, static_cast<unsigned int>(0), static_cast<unsigned int>(MAX_POWER_UP_COUNT));
+	for (size_t i = 0; i < (uint8_t)TextureType::MAX_TYPE; i++)
+	{
+		inPowerup->GetRenderObject()->SetTexture((TextureType)i, groundTextureList[i]);
+	}
+}
+
+void NCL::CSC8503::TutorialGame::InitSandPowerup(PowerUp* inPowerup, Shader* inShader)
+{
+	inPowerup->SetRenderObject(new RenderObject(&inPowerup->GetTransform(), sphereMesh, basicTex, inShader));
+	inPowerup->setPowerup(powerUpType::sand);
+	activePowerUpCount = Helper::Clamp(++activePowerUpCount, static_cast<unsigned int>(0), static_cast<unsigned int>(MAX_POWER_UP_COUNT));
+	for (size_t i = 0; i < (uint8_t)TextureType::MAX_TYPE; i++)
+	{
+		inPowerup->GetRenderObject()->SetTexture((TextureType)i, groundTextureList[i]);
+	}
+
+}
+
+void NCL::CSC8503::TutorialGame::InitWindPowerup(PowerUp* inPowerup, Shader* inShader)
+{
+	inPowerup->SetRenderObject(new RenderObject(&inPowerup->GetTransform(), sphereMesh, basicTex, inShader));
+	inPowerup->setPowerup(powerUpType::wind);
+	activePowerUpCount = Helper::Clamp(++activePowerUpCount, static_cast<unsigned int>(0), static_cast<unsigned int>(MAX_POWER_UP_COUNT));
+	for (size_t i = 0; i < (uint8_t)TextureType::MAX_TYPE; i++)
+	{
+		inPowerup->GetRenderObject()->SetTexture((TextureType)i, groundTextureList[i]);
+	}
 }
 /*
 
@@ -425,48 +435,6 @@ GameObject* TutorialGame::AddCapsuleToWorld(const Vector3& position, float radiu
 	return capsule;
 }
 
-void TutorialGame::InitDefaultFloor() {
-	//AddFloorToWorld(Vector3(0, -2, 0), Vector3(100, 2, 100));
-	//AddAiToWorld(Vector3(0, -2, 0), Vector3(10, 10, 10), 1.0, 1.0);
-}
-
-void TutorialGame::InitHole() {
-	Hole* hole = new Hole();
-
-	float radius = 1.5f;
-	Vector3 sphereSize = Vector3(radius, radius, radius);
-	SphereVolume* volume = new SphereVolume(radius ,false ,true);
-	hole->SetBoundingVolume((CollisionVolume*)volume);
-	hole->GetTransform().SetScale(sphereSize).SetPosition(Vector3(0, 3, 0));
-	hole->SetRenderObject(new RenderObject(&hole->GetTransform(), sphereMesh, basicTex, basicShader));
-	hole->SetPhysicsObject(new PhysicsObject(&hole->GetTransform(), hole->GetBoundingVolume()));
-	hole->GetPhysicsObject()->SetInverseMass(0);
-	hole->GetPhysicsObject()->InitSphereInertia();
-
-	hole->GetRenderObject()->SetColour(Vector4(0, 0, 0, 1));
-	
-	world->AddGameObject(hole);
-}
-
-void NCL::CSC8503::TutorialGame::InitGravityWell()
-{
-	GravityWell* gravityWell = new GravityWell();
-
-	float radius = 1.5f;
-	Vector3 sphereSize = Vector3(radius, radius, radius);
-	SphereVolume* volume = new SphereVolume(radius , false, true);
-	gravityWell->SetBoundingVolume((CollisionVolume*)volume);
-	gravityWell->GetTransform().SetScale(sphereSize).SetPosition(Vector3(15, 3, 15));
-	gravityWell->SetRenderObject(new RenderObject(&gravityWell->GetTransform(), sphereMesh, basicTex, basicShader));
-	gravityWell->SetPhysicsObject(new PhysicsObject(&gravityWell->GetTransform(), gravityWell->GetBoundingVolume()));
-	gravityWell->GetPhysicsObject()->SetInverseMass(0);
-	gravityWell->GetPhysicsObject()->InitSphereInertia();
-
-	gravityWell->GetRenderObject()->SetColour(Vector4(0, 0.4, 0.4, 1));
-
-	gravitywell = gravityWell;
-	world->AddGameObject(gravityWell);
-}
 
 GameObject* TutorialGame::AddObbCubeToWorld(const Vector3& position, Vector3 dimensions, float inverseMass, float elasticity) {
 	 cube = new GameObject("cube");
@@ -566,87 +534,9 @@ GameObject* NCL::CSC8503::TutorialGame::AddTeleporterToWorld(const Vector3& posi
 	return teleporter1;
 }
 
-//AiTreeObject* TutorialGame::AddAiToWorld(const Vector3& position, Vector3 dimensions, float inverseMass, float elasticity) {
-//	aitreetest = new AiTreeObject("Aitreeobject");
-//
-//	OBBVolume* volume = new OBBVolume(dimensions);
-//	aitreetest->SetBoundingVolume((CollisionVolume*)volume);
-//
-//	//aitreetest->GetTransform().RandomPosition(position, true).SetScale(dimensions * 2);
-//		//.SetPosition(position).SetScale(dimensions * 2);
-//
-//	aitreetest->SetRenderObject(new RenderObject(&aitreetest->GetTransform(), cubeMesh, basicTex, basicShader));
-//	aitreetest->SetPhysicsObject(new PhysicsObject(&aitreetest->GetTransform(), aitreetest->GetBoundingVolume()));
-//
-//	aitreetest->GetPhysicsObject()->SetInverseMass(inverseMass);
-//	aitreetest->GetPhysicsObject()->InitCubeInertia();
-//	aitreetest->GetPhysicsObject()->SetElasticity(elasticity);
-//	aitreetest->BehaviorTree();
-//
-//	world->AddGameObject(aitreetest);
-//	return aitreetest;
-//
-//}
-
-void TutorialGame::InitBouncePad()
-{
-	/*
-	for (size_t i = 0; i < 5; i++)
-	{
-		BouncePad * tempBouncePad = new BouncePad(cubeMesh, basicTex, basicShader);
-		tempBouncePad->GetRenderObject()->SetColour(Debug::CYAN);
-		bouncePadList[i] = tempBouncePad;
-		world->AddGameObject(bouncePadList[i]);
-	}
-
-	bouncePadList[0]->GetTransform().SetPosition(Vector3(48, 0, 0));
-	bouncePadList[1]->GetTransform().SetPosition(Vector3(-48, 0, 0));
-	bouncePadList[2]->GetTransform().SetPosition(Vector3(48, 0, 48));
-	bouncePadList[3]->GetTransform().SetPosition(Vector3(48, 0, -48));
-	bouncePadList[4]->GetTransform().SetPosition(Vector3(-30, 0, 48));*/
-
-}
-
-void TutorialGame::InitLevelWall()
-{
-	AddAABBCubeToWorld(Vector3(96,0,0), Vector3(10, 20, 100), 0, 0.5f);
-	AddAABBCubeToWorld(Vector3(-96, 0, 0), Vector3(10, 20, 100), 0, 0.5f);
-	AddAABBCubeToWorld(Vector3(0,0, 96), Vector3(100, 20, 10), 0, 0.5f);
-	AddAABBCubeToWorld(Vector3(0, 0, -96), Vector3(100, 20, 10), 0, 0.5f);
-}
-
 void NCL::CSC8503::TutorialGame::InitTeleporters()
 {
 	AddTeleporterToWorld((Vector3(48, 5.6f, 0)), (Vector3(-48, 5.6f, 45)), Vector3(0, -45, 0), Vector3(0, 90, 0) , Vector3(10, 10, 3.5));
-}
-
-void TutorialGame::InitPlaceholderAIs() {
-	const static int NUMBER_OF_AIS = 5;
-	const static Vector3 AI_SCALE = Vector3(3, 3, 3);
-	const static int GAME_ARENA_LENGTH = 65;
-	const static int ENEMY_AI_WEIGHT = 0;
-	const static int ENEMY_AI_ELASTICITY = 0.1;
-
-	for (size_t i = 0; i < NUMBER_OF_AIS; i++)
-	{
-		Vector3 randomPosition = Vector3(
-			(std::rand() % (2 * GAME_ARENA_LENGTH)) - GAME_ARENA_LENGTH, // Random value between -length to length
-			0, 
-			(std::rand() % (2 * GAME_ARENA_LENGTH)) - GAME_ARENA_LENGTH);
-		
-		placeHolderAIs.push_back(AddAABBCubeToWorld(randomPosition, AI_SCALE, ENEMY_AI_WEIGHT, ENEMY_AI_ELASTICITY));
-		placeHolderAIs[i]->GetRenderObject()->SetColour(Debug::RED);
-		placeHolderAIs[i]->settag("walls");
-	}
-}
-
-void TutorialGame::ProcessFrameAddresses() {
-
-	for (auto address : frameAddresses) {
-
-		std::cout << "Address: " << address << std::endl;
-	}
-	//frameAddresses.clear();
 }
 
 void TutorialGame::TestAddStaticObjectsToWorld() {
@@ -660,21 +550,26 @@ void TutorialGame::TestAddStaticObjectsToWorld() {
 	}
 }
 
+void TutorialGame::InitPowerup()
+{
+	PowerUp* tempPowerup = new PowerUp();
 
-//void TutorialGame::ObjectRay(GameObject* gameObject, GameObject* gameObject2) {
-//
-//	Vector3 objectPosition = gameObject->GetTransform().GetPosition() + Vector3(0, 0, 10);
-//	Vector3 objectForward = gameObject->GetTransform().GetOrientation() * Vector3(0, 0, 1);
-//	Ray ray(objectPosition, objectForward);
-//
-//	RayCollision closestCollision;
-//	closestCollision.rayDistance = 100.0f;
-//
-//	if (world->Raycast(ray, closestCollision, true, gameObject)) {
-//		if (closestCollision.node == gameObject2) {
-//			Debug::DrawLine(objectPosition, objectForward * 100, Debug::BLACK);
-//			gameObject2->GetPhysicsObject()->AddForceAtPosition(ray.GetDirection() * 100, closestCollision.collidedAt);
-//		}
-//		Debug::DrawLine(objectPosition, objectForward * 100, Debug::RED);
-//	}
-//}
+	SphereVolume* tempSphereVolume = new SphereVolume(1.5, true , false);
+	tempPowerup->SetBoundingVolume((CollisionVolume*)tempSphereVolume);
+
+	tempPowerup->GetTransform()
+		.SetPosition(Helper::GetRandomDataFromVector(powerUpSpawnPointList))
+		.SetScale(Vector3(tempSphereVolume->GetRadius(), tempSphereVolume->GetRadius(), tempSphereVolume->GetRadius()) * 2);
+
+	tempPowerup->SetPhysicsObject(new PhysicsObject(&tempPowerup->GetTransform(), tempPowerup->GetBoundingVolume()));
+
+	tempPowerup->GetPhysicsObject()->SetInverseMass(0);
+	tempPowerup->GetPhysicsObject()->InitSphereInertia();
+	tempPowerup->GetPhysicsObject()->SetElasticity(0.5);
+
+	(this->*powerupInitFunctionList[Helper::GetRandomEnumValue(powerUpType::MAX_POWERUP)])(tempPowerup, pbrShader);
+	world->AddGameObject(tempPowerup);
+}
+
+
+

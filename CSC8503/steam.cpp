@@ -165,6 +165,11 @@ void NetSystem_Steam::OnJoinLobbyFailed()
 	EventEmitter::EmitEvent(EventType::LOBBY_JOINFAILED);
 }
 
+void NetSystem_Steam::OnReceiveGameRoundStartSignal()
+{
+	EventEmitter::EmitEvent(EventType::LOBBY_GAMESTART);
+}
+
 void NetSystem_Steam::LeaveLobby()
 {
 	if (steamIDLobby == 0) return;
@@ -242,8 +247,29 @@ void NetSystem_Steam::SetCurrentUserName()
 	CurrentUserName = SteamFriends()->GetPersonaName();
 }
 
+bool NetSystem_Steam::SendGameRoundStartSignal()
+{
+	char msg = 1;
+	return SteamMatchmaking()->SendLobbyChatMsg(steamIDLobby, &msg, sizeof(char));
+}
+
+void NetSystem_Steam::On_LobbyChatMsgReceived(LobbyChatMsg_t* pCallback)
+{
+	if (pCallback->m_ulSteamIDLobby != steamIDLobby) return;
+	char msg;
+	CSteamID SenderID;
+	EChatEntryType ChatEntryType;
+	SteamMatchmaking()->GetLobbyChatEntry(pCallback->m_ulSteamIDLobby, pCallback->m_iChatID, &SenderID, &msg, sizeof(char), &ChatEntryType);
+
+	if (msg == 1)
+	{
+		OnReceiveGameRoundStartSignal();
+	}
+}
+
 void NetSystem_Steam::On_LobbyDataUpdate(LobbyDataUpdate_t* pCallback)
 {
 	
 }
+
 
