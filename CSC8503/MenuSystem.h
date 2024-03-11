@@ -159,6 +159,7 @@ namespace NCL {
 			void ShowScoreTable(NetworkedGame* Game);
 			void ShowTimeLeft(NetworkedGame* Game);
 			void CheckRoundTime(NetworkedGame* Game);
+			void ShowGameResult(NetworkedGame* Game);
 		};
 	}
 }
