@@ -109,6 +109,7 @@ void TutorialGame::InitialiseAssets() {
 	basicTex	= renderer->LoadTexture("checkerboard.png");
 	portalTex	= renderer->LoadTexture("PortalTex.jpg");
 	sandTex		= renderer->LoadTexture("sand.jpg");
+	targetTex	= renderer->LoadTexture("blackhole.png");
 
 	groundTextureList[(uint8_t)TextureType::ALBEDO] = renderer->LoadTexture("GrassWithRock01/albedo.png");
 	groundTextureList[(uint8_t)TextureType::NORMAL] = renderer->LoadTexture("GrassWithRock01/normal_gl.png");
@@ -156,6 +157,7 @@ TutorialGame::~TutorialGame()	{
 	delete basicShader;
 	delete pbrShader;
 	delete blackholeTex;
+	delete targetTex;
 
 	delete physics;
 	delete renderer;
@@ -334,7 +336,7 @@ void NCL::CSC8503::TutorialGame::SpawnTarget(const Vector3& inPosition, const Ve
 	SphereVolume* volume = new SphereVolume(radius);
 	hole->SetBoundingVolume((CollisionVolume*)volume);
 	hole->GetTransform().SetScale(inScale).SetPosition(inPosition).SetOrientation(Quaternion::EulerAnglesToQuaternion(inRotation.x, inRotation.y, inRotation.z));
-	hole->SetRenderObject(new RenderObject(&hole->GetTransform(), cubeMesh, basicTex, targetholeShader));
+	hole->SetRenderObject(new RenderObject(&hole->GetTransform(), cubeMesh, targetTex, targetholeShader));
 	hole->SetPhysicsObject(new PhysicsObject(&hole->GetTransform(), hole->GetBoundingVolume()));
 	hole->GetPhysicsObject()->SetInverseMass(0);
 	hole->GetPhysicsObject()->InitSphereInertia();

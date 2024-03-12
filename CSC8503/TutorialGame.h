@@ -130,7 +130,8 @@ namespace NCL {
 			Texture*	basicTex		= nullptr;
 			Texture*	sandTex			= nullptr;
 			Texture*	portalTex		= nullptr;
-			Texture*	blackholeTex = nullptr;
+			Texture*	blackholeTex	= nullptr;
+			Texture*	targetTex		= nullptr;
 			Shader*		basicShader		= nullptr;
 			Shader*		pbrShader		= nullptr;
 			Shader*		portalShader	= nullptr;
