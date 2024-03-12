@@ -10,6 +10,7 @@
 #include "../Assets/Shaders/PSSL/Interop.h"				//Always include this before any PSSL headers
 #include "../Assets/Shaders/PSSL/ShaderConstants.psslh"
 #include "../Assets/Shaders/PSSL/TechObject.psslh"
+#include "GameTechAGCModel.h"
 
 namespace NCL {
 	namespace Rendering {
@@ -40,6 +41,7 @@ namespace NCL {
 		protected:
 			void RenderFrame()	override;
 			void UpdateObjectList();
+			void SetPbrTexture(ObjectState* outState, RenderObject* inRenderObj);
 
 			NCL::PS5::AGCTexture* CreateFrameBufferTextureSlot(const std::string& name);
 
@@ -140,28 +142,7 @@ namespace NCL {
 
 			sce::Agc::Core::Buffer arrayBuffer;
 
-			NCL::PS5::AGCTexture* defaultTexture;
-			NCL::PS5::AGCTexture* skyboxTexture;
-
-			NCL::PS5::AGCShader* skinningCompute;
-
-			NCL::PS5::AGCShader* defaultVertexShader;
-			NCL::PS5::AGCShader* defaultPixelShader;
-
-			NCL::PS5::AGCShader* shadowVertexShader;
-			NCL::PS5::AGCShader* shadowPixelShader;
-
-			NCL::PS5::AGCShader* skyboxVertexShader;
-			NCL::PS5::AGCShader* skyboxPixelShader;
-
-			NCL::PS5::AGCShader* debugLineVertexShader;
-			NCL::PS5::AGCShader* debugLinePixelShader;
-
-			NCL::PS5::AGCShader* debugTextVertexShader;
-			NCL::PS5::AGCShader* debugTextPixelShader;
-
-			NCL::PS5::AGCShader* gammaCompute;
-
+			NCL::GameTechAGCModel* rendererModel;
 			sce::Agc::CxDepthRenderTarget		shadowTarget;
 			NCL::PS5::AGCTexture* shadowMap; //ptr into bindless array
 			sce::Agc::Core::Sampler				shadowSampler;
