@@ -27,26 +27,29 @@ int sceUserMainThreadPriority = SCE_KERNEL_PRIO_FIFO_DEFAULT;
 size_t sceLibcHeapSize = 256 * 1024 * 1024;
 #endif
 
-
-#ifdef _WIN32
-	//using namespace CSC8503;
-#endif
 using namespace NCL;
-
 
 std::multimap<EventType, EventListener*> EventEmitter::listeners;
 
 int main() {
 
+	bool bIsNetSystemInitSuccess = false;
+#ifdef _WIN32
+	Window* w = Window::CreateGameWindow("CSC8503 Game technology!", 1920, 1080, true);
 
-#ifndef _WIN32
-
-	NCL::PS5::PS5Window* w  = new NCL::PS5::PS5Window("Hello!", 1920, 1080);
-
-	if (!w->HasInitialised()) {
-		return -1;
+	/** Check the NetSubsystem work condition */
+	if (SteamAPI_Init())
+	{
+		bIsNetSystemInitSuccess = true;
+		std::cout << "Steam API initialized successfully.\n";
 	}
-
+	else
+	{
+		std::cout << "Steam API failed to initialize.\n";
+		std::cout << "You may need run the steam app.\n";
+	}
+#else // PROSPERO
+	NCL::PS5::PS5Window* w  = new NCL::PS5::PS5Window("Hello!", 1920, 1080);
 	NCL::PS5::PS5Controller* c = w->GetController();
 
 	c->MapAxis(0, "LeftX");
@@ -72,63 +75,32 @@ int main() {
 
 	c->MapButton(0, "Up");
 	c->MapButton(2, "Down");
-
-	//GameWorld* world = new GameWorld();
-	//GameTechAGCRenderer* renderer = new GameTechAGCRenderer(*world);
-	//PhysicsSystem* physics = new PhysicsSystem(*world);
-
-	//PS5_Game* g = new PS5_Game(*world, *renderer, *physics);
-	TutorialGame* g = new TutorialGame();
-
-	while (w->UpdateWindow()) {
-		float dt = w->GetTimer().GetTimeDeltaSeconds();
-		g->UpdateGame(dt);
-		//renderer->Update(dt);
-		//renderer->Render();
-	}
-
-	//delete physics;
-	//delete renderer;
-	//delete world;
-#else
-	/** Check the NetSubsystem work condition */
-	bool bIsNetSystemInitSuccess = false;
-#ifdef _WIN32
-	if (SteamAPI_Init())
-	{
-		bIsNetSystemInitSuccess = true;
-		std::cout << "Steam API initialized successfully.\n";
-	}
-	else
-	{
-		std::cout << "Steam API failed to initialize.\n";
-		std::cout << "You may need run the steam app.\n";
-	}
-#else
-	// Check Playstation subsystem
 #endif
-
-	Window*w = Window::CreateGameWindow("CSC8503 Game technology!", 1920, 1080 , true);
 
 	if (!w->HasInitialised()) {
 		return -1;
 	}	
 	
 
+#ifdef _WIN32
 	w->ShowOSPointer(true);
 	w->LockMouseToWindow(false);
 
 	NetworkedGame* g = new NetworkedGame();
-
+	
 	std::string IPAdd;
 	w->GetLocalIPV4Address(IPAdd);
 	g->GetMenuSystem()->SetIsNetsystemInitSuccess(bIsNetSystemInitSuccess);
 	g->GetMenuSystem()->SetLocalIPv4Address(IPAdd);
+#else
+	TutorialGame* g = new TutorialGame();
+#endif
 
 	w->GetTimer().GetTimeDeltaSeconds(); //Clear the timer so we don't get a larget first dt!
-	while (w->UpdateWindow() && !Window::GetKeyboard()->KeyDown(KeyCodes::ESCAPE)) {
+	while (w->UpdateWindow()) {
 		float dt = w->GetTimer().GetTimeDeltaSeconds();
 
+#ifdef _WIN32
 		if (Window::GetKeyboard()->KeyPressed(KeyCodes::PRIOR)) {
 			w->ShowConsole(true);
 		}
@@ -140,18 +112,15 @@ int main() {
 			w->SetWindowPosition(0, 0);
 		}
 
+		if (!Window::GetKeyboard()->KeyDown(KeyCodes::ESCAPE))
+			break;
+
 		w->SetTitle("Frame Rate : " + std::to_string(1.0f / dt));
 
-/** NetSubsystem Callback Event */
+		/** NetSubsystem Callback Event */
 		if (bIsNetSystemInitSuccess)
-		{
-#ifdef _WIN32
 			SteamAPI_RunCallbacks();
-#else
-
 #endif
-		}
-
 		g->UpdateGame(dt);
 	}
 	
@@ -161,8 +130,7 @@ int main() {
 #else //_ORBIS
 	UIPlaystation::Destroy();
 #endif
+
 	ApplicationState::Destory();
 	Window::DestroyGameWindow();
-#endif
-
 }
