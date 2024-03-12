@@ -120,7 +120,9 @@ set(Playstation_enet_Files
     "./enet/host.c"
     "./enet/packet.c"
     "./enet/peer.c"
+
     "./enet/unix.h"
+    "./enet/unix.c"
 )
 source_group("eNet" FILES ${Playstation_enet_Files})
 
@@ -131,8 +133,6 @@ set(Windows_enet_Files
     "./enet/list.c"
     "./enet/protocol.h"
     "./enet/protocol.c"
-    "./enet/win32.h"
-    "./enet/win32.c"
 
     "./enet/enet.h"
     "./enet/time.h"
@@ -143,6 +143,9 @@ set(Windows_enet_Files
     "./enet/host.c"
     "./enet/packet.c"
     "./enet/peer.c"
+
+    "./enet/win32.h"
+    "./enet/win32.c"
 )
 source_group("eNet" FILES ${Windows_enet_Files})
 
@@ -161,9 +164,9 @@ if(NOT("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64"))
         ${AI_State_Machine}
         ${AI_Pathfinding}
         ${Collision_Detection}
-        ${Networking}
         ${Physics}
-        ${Playstation_enet_Files}   
+        #${Networking}
+        #${Playstation_enet_Files}   
         ${Helper_Files}
     )
 else()

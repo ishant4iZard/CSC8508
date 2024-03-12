@@ -12,6 +12,14 @@
       <Configuration>Release</Configuration>
       <Platform>Prospero</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|Prospero">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>Prospero</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|Prospero">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>Prospero</Platform>
+    </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{509E0865-FA37-3077-921B-56A7EFE0F774}</ProjectGuid>
@@ -32,6 +40,16 @@
     <PlatformToolset>PS5Clang</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>PS5Clang</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>PS5Clang</PlatformToolset>
+  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
@@ -49,6 +67,14 @@
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CSC8503CoreClasses.dir\Release\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">libCSC8503CoreClasses</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">.a</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\MinSizeRel\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">CSC8503CoreClasses.dir\MinSizeRel\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">libCSC8503CoreClasses</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">.a</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\RelWithDebInfo\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">CSC8503CoreClasses.dir\RelWithDebInfo\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">libCSC8503CoreClasses</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">.a</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">
     <ClCompile>
@@ -117,6 +143,73 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\..\NCLCoreClasses;C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) -std=gnu++20 -std=c++20</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <DisableSpecificWarnings>pragma-once-outside-header</DisableSpecificWarnings>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <OptimizationLevel>Levels</OptimizationLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx.pch</PrecompiledHeaderOutputFile>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);NDEBUG;UNICODE;_UNICODE;WIN32_LEAN_AND_MEAN;_WINSOCK_DEPRECATED_NO_WARNINGS;NOMINMAX;ASSETROOTLOCATION="/app0/Assets/";USEAGC;CMAKE_INTDIR="MinSizeRel"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);NDEBUG;UNICODE;_UNICODE;WIN32_LEAN_AND_MEAN;_WINSOCK_DEPRECATED_NO_WARNINGS;NOMINMAX;ASSETROOTLOCATION=\"/app0/Assets/\";USEAGC;CMAKE_INTDIR=\"MinSizeRel\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\..\NCLCoreClasses;C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\..\NCLCoreClasses;C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\..\NCLCoreClasses;C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) -std=gnu++20 -std=c++20</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <DisableSpecificWarnings>pragma-once-outside-header</DisableSpecificWarnings>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <OptimizationLevel>Level3</OptimizationLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx.pch</PrecompiledHeaderOutputFile>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);_DEBUG;UNICODE;_UNICODE;WIN32_LEAN_AND_MEAN;_WINSOCK_DEPRECATED_NO_WARNINGS;NOMINMAX;ASSETROOTLOCATION="/app0/Assets/";USEAGC;CMAKE_INTDIR="RelWithDebInfo"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);_DEBUG;UNICODE;_UNICODE;WIN32_LEAN_AND_MEAN;_WINSOCK_DEPRECATED_NO_WARNINGS;NOMINMAX;ASSETROOTLOCATION=\"/app0/Assets/\";USEAGC;CMAKE_INTDIR=\"RelWithDebInfo\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\..\NCLCoreClasses;C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\..\NCLCoreClasses;C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
   <ItemGroup>
     <CustomBuild Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\CMakeLists.txt">
       <UseUtf8Encoding>Always</UseUtf8Encoding>
@@ -146,6 +239,32 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:\Users\c3012094\source\repos\CSC8508\CMakeFiles\cmake.verify_globs;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">Building Custom Rule C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/c3012094/source/repos/CSC8508 -BC:/Users/c3012094/source/repos/CSC8508 --check-stamp-file C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:\Users\c3012094\source\repos\CSC8508\CMakeFiles\cmake.verify_globs;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">Building Custom Rule C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/c3012094/source/repos/CSC8508 -BC:/Users/c3012094/source/repos/CSC8508 --check-stamp-file C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:\Users\c3012094\source\repos\CSC8508\CMakeFiles\cmake.verify_globs;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">false</LinkObjects>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
@@ -158,6 +277,14 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx.pch</PrecompiledHeaderOutputFile>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx.pch</PrecompiledHeaderOutputFile>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx.pch</PrecompiledHeaderOutputFile>
     </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\Debug.h">
       <ObjectFileName>$(IntDir)/Debug.o</ObjectFileName>
@@ -165,6 +292,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\GameObject.h">
       <ObjectFileName>$(IntDir)/GameObject.o</ObjectFileName>
@@ -172,6 +303,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\GameWorld.h">
       <ObjectFileName>$(IntDir)/GameWorld.o</ObjectFileName>
@@ -179,6 +314,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\RenderObject.h">
       <ObjectFileName>$(IntDir)/RenderObject.o</ObjectFileName>
@@ -186,6 +325,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\Transform.h">
       <ObjectFileName>$(IntDir)/Transform.o</ObjectFileName>
@@ -193,49 +336,75 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\Debug.cpp">
       <ObjectFileName>$(IntDir)/Debug.o</ObjectFileName>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\GameObject.cpp">
       <ObjectFileName>$(IntDir)/GameObject.o</ObjectFileName>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\GameWorld.cpp">
       <ObjectFileName>$(IntDir)/GameWorld.o</ObjectFileName>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\RenderObject.cpp">
       <ObjectFileName>$(IntDir)/RenderObject.o</ObjectFileName>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\Transform.cpp">
       <ObjectFileName>$(IntDir)/Transform.o</ObjectFileName>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\BehaviourAction.h">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\BehaviourNode.h">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\BehaviourNodeWithChildren.h">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\BehaviourSelector.h">
       <ObjectFileName>$(IntDir)/BehaviourSelector.o</ObjectFileName>
@@ -243,11 +412,17 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\BehaviourSelector.cpp">
       <ObjectFileName>$(IntDir)/BehaviourSelector.o</ObjectFileName>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\BehaviourSequence.h">
       <ObjectFileName>$(IntDir)/BehaviourSequence.o</ObjectFileName>
@@ -255,11 +430,17 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\BehaviourSequence.cpp">
       <ObjectFileName>$(IntDir)/BehaviourSequence.o</ObjectFileName>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\PushdownMachine.h">
       <ObjectFileName>$(IntDir)/PushdownMachine.o</ObjectFileName>
@@ -267,11 +448,17 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\PushdownMachine.cpp">
       <ObjectFileName>$(IntDir)/PushdownMachine.o</ObjectFileName>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\PushdownState.h">
       <ObjectFileName>$(IntDir)/PushdownState.o</ObjectFileName>
@@ -279,17 +466,27 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\PushdownState.cpp">
       <ObjectFileName>$(IntDir)/PushdownState.o</ObjectFileName>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\State.h">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\StateMachine.h">
       <ObjectFileName>$(IntDir)/StateMachine.o</ObjectFileName>
@@ -297,17 +494,27 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\StateMachine.cpp">
       <ObjectFileName>$(IntDir)/StateMachine.o</ObjectFileName>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\StateTransition.h">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\NavigationGrid.h">
       <ObjectFileName>$(IntDir)/NavigationGrid.o</ObjectFileName>
@@ -315,16 +522,24 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\NavigationGrid.cpp">
       <ObjectFileName>$(IntDir)/NavigationGrid.o</ObjectFileName>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\NavigationMesh.cpp">
       <ObjectFileName>$(IntDir)/NavigationMesh.o</ObjectFileName>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\NavigationMesh.h">
       <ObjectFileName>$(IntDir)/NavigationMesh.o</ObjectFileName>
@@ -332,24 +547,40 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\NavigationMap.h">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\NavigationPath.h">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\AABBVolume.h">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\CapsuleVolume.h">
       <ObjectFileName>$(IntDir)/CapsuleVolume.o</ObjectFileName>
@@ -357,11 +588,17 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\CapsuleVolume.cpp">
       <ObjectFileName>$(IntDir)/CapsuleVolume.o</ObjectFileName>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\CollisionDetection.h">
       <ObjectFileName>$(IntDir)/CollisionDetection.o</ObjectFileName>
@@ -369,23 +606,37 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\CollisionDetection.cpp">
       <ObjectFileName>$(IntDir)/CollisionDetection.o</ObjectFileName>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\CollisionVolume.h">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\OBBVolume.h">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\QuadTree.h">
       <ObjectFileName>$(IntDir)/QuadTree.o</ObjectFileName>
@@ -393,94 +644,54 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\QuadTree.cpp">
       <ObjectFileName>$(IntDir)/QuadTree.o</ObjectFileName>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\Ray.h">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\SphereVolume.h">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\GameClient.h">
-      <ObjectFileName>$(IntDir)/GameClient.o</ObjectFileName>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\GameClient.cpp">
-      <ObjectFileName>$(IntDir)/GameClient.o</ObjectFileName>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\GameServer.h">
-      <ObjectFileName>$(IntDir)/GameServer.o</ObjectFileName>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\GameServer.cpp">
-      <ObjectFileName>$(IntDir)/GameServer.o</ObjectFileName>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\NetworkBase.h">
-      <ObjectFileName>$(IntDir)/NetworkBase.o</ObjectFileName>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\NetworkBase.cpp">
-      <ObjectFileName>$(IntDir)/NetworkBase.o</ObjectFileName>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\NetworkObject.h">
-      <ObjectFileName>$(IntDir)/NetworkObject.o</ObjectFileName>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\NetworkObject.cpp">
-      <ObjectFileName>$(IntDir)/NetworkObject.o</ObjectFileName>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\NetworkState.h">
-      <ObjectFileName>$(IntDir)/NetworkState.o</ObjectFileName>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\NetworkState.cpp">
-      <ObjectFileName>$(IntDir)/NetworkState.o</ObjectFileName>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\Constraint.h">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\PositionConstraint.cpp">
       <ObjectFileName>$(IntDir)/PositionConstraint.o</ObjectFileName>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\PositionConstraint.h">
       <ObjectFileName>$(IntDir)/PositionConstraint.o</ObjectFileName>
@@ -488,11 +699,17 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\OrientationConstraint.cpp">
       <ObjectFileName>$(IntDir)/OrientationConstraint.o</ObjectFileName>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\OrientationConstraint.h">
       <ObjectFileName>$(IntDir)/OrientationConstraint.o</ObjectFileName>
@@ -500,11 +717,17 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\PhysicsObject.cpp">
       <ObjectFileName>$(IntDir)/PhysicsObject.o</ObjectFileName>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\PhysicsObject.h">
       <ObjectFileName>$(IntDir)/PhysicsObject.o</ObjectFileName>
@@ -512,11 +735,17 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\PhysicsSystem.cpp">
       <ObjectFileName>$(IntDir)/PhysicsSystem.o</ObjectFileName>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\PhysicsSystem.h">
       <ObjectFileName>$(IntDir)/PhysicsSystem.o</ObjectFileName>
@@ -524,97 +753,33 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
-    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\enet\callbacks.c">
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\Helper.h">
+      <ObjectFileName>$(IntDir)/Helper.o</ObjectFileName>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">CompileAsCpp</CompileAs>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
-    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\enet\list.h">
-      <ObjectFileName>$(IntDir)/enet/list.o</ObjectFileName>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\Helper.cpp">
+      <ObjectFileName>$(IntDir)/Helper.o</ObjectFileName>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\enet\list.c">
-      <ObjectFileName>$(IntDir)/enet/list.o</ObjectFileName>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\enet\protocol.h">
-      <ObjectFileName>$(IntDir)/enet/protocol.o</ObjectFileName>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\enet\protocol.c">
-      <ObjectFileName>$(IntDir)/enet/protocol.o</ObjectFileName>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\enet\enet.h">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\enet\time.h">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\enet\types.h">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\enet\utility.h">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\enet\compress.c">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\enet\host.c">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\enet\packet.c">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\enet\peer.c">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\enet\unix.h">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">CompileAsCpp</CompileAs>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Prospero'">C:/Users/c3012094/source/repos/CSC8508/CSC8503CoreClasses/CMakeFiles/CSC8503CoreClasses.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClInclude Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\CMakeFiles\CSC8503CoreClasses.dir\Debug\cmake_pch.hxx" />
     <ClInclude Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\CMakeFiles\CSC8503CoreClasses.dir\Release\cmake_pch.hxx" />
+    <ClInclude Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\CMakeFiles\CSC8503CoreClasses.dir\MinSizeRel\cmake_pch.hxx" />
+    <ClInclude Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\CMakeFiles\CSC8503CoreClasses.dir\RelWithDebInfo\cmake_pch.hxx" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="C:\Users\c3012094\source\repos\CSC8508\ZERO_CHECK.vcxproj">

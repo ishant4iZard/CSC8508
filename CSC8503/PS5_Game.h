@@ -2,6 +2,8 @@
 #include "PhysicsSystem.h"
 #include "MeshAnimation.h"
 #include "GameTechRendererInterface.h"
+#include "NetworkPlayer.h"
+#include "AudioEngine.h"
 
 namespace NCL {
 	namespace CSC8503 {
@@ -11,6 +13,8 @@ namespace NCL {
 			~PS5_Game();
 
 			virtual void UpdateGame(float dt);
+
+			void SpawnProjectile(NetworkPlayer* player, Vector3 firePos, Vector3 fireDir) {};
 
 		protected:
 			void InitialiseAssets();
@@ -81,6 +85,8 @@ namespace NCL {
 			}
 
 			GameObject* objClosest = nullptr;
+
+			AudioEngine* audioEngine;
 		};
 	}
 }

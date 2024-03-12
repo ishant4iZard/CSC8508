@@ -130,36 +130,6 @@
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\SphereVolume.h">
       <Filter>Collision Detection</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\GameClient.h">
-      <Filter>Networking</Filter>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\GameClient.cpp">
-      <Filter>Networking</Filter>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\GameServer.h">
-      <Filter>Networking</Filter>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\GameServer.cpp">
-      <Filter>Networking</Filter>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\NetworkBase.h">
-      <Filter>Networking</Filter>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\NetworkBase.cpp">
-      <Filter>Networking</Filter>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\NetworkObject.h">
-      <Filter>Networking</Filter>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\NetworkObject.cpp">
-      <Filter>Networking</Filter>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\NetworkState.h">
-      <Filter>Networking</Filter>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\NetworkState.cpp">
-      <Filter>Networking</Filter>
-    </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\Constraint.h">
       <Filter>Physics</Filter>
     </ClCompile>
@@ -187,47 +157,11 @@
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\PhysicsSystem.h">
       <Filter>Physics</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\enet\callbacks.c">
-      <Filter>eNet</Filter>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\Helper.h">
+      <Filter>Helper</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\enet\list.h">
-      <Filter>eNet</Filter>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\enet\list.c">
-      <Filter>eNet</Filter>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\enet\protocol.h">
-      <Filter>eNet</Filter>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\enet\protocol.c">
-      <Filter>eNet</Filter>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\enet\enet.h">
-      <Filter>eNet</Filter>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\enet\time.h">
-      <Filter>eNet</Filter>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\enet\types.h">
-      <Filter>eNet</Filter>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\enet\utility.h">
-      <Filter>eNet</Filter>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\enet\compress.c">
-      <Filter>eNet</Filter>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\enet\host.c">
-      <Filter>eNet</Filter>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\enet\packet.c">
-      <Filter>eNet</Filter>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\enet\peer.c">
-      <Filter>eNet</Filter>
-    </ClCompile>
-    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\enet\unix.h">
-      <Filter>eNet</Filter>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\Helper.cpp">
+      <Filter>Helper</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -235,6 +169,12 @@
       <Filter>Precompile Header File</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\CMakeFiles\CSC8503CoreClasses.dir\Release\cmake_pch.hxx">
+      <Filter>Precompile Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\CMakeFiles\CSC8503CoreClasses.dir\MinSizeRel\cmake_pch.hxx">
+      <Filter>Precompile Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503CoreClasses\CMakeFiles\CSC8503CoreClasses.dir\RelWithDebInfo\cmake_pch.hxx">
       <Filter>Precompile Header File</Filter>
     </ClInclude>
   </ItemGroup>
@@ -263,8 +203,8 @@
     <Filter Include="Header Files">
       <UniqueIdentifier>{1E9C4A05-DF7A-3B99-A670-37A7954F2EA4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Networking">
-      <UniqueIdentifier>{430396B6-180D-3538-A344-B0FC48D40634}</UniqueIdentifier>
+    <Filter Include="Helper">
+      <UniqueIdentifier>{7503DC84-11CF-340A-BC32-63A8AD25AE6C}</UniqueIdentifier>
     </Filter>
     <Filter Include="Physics">
       <UniqueIdentifier>{7EF232F1-EB46-3B88-97B4-FA12BC4BC6D4}</UniqueIdentifier>
@@ -274,9 +214,6 @@
     </Filter>
     <Filter Include="Source Files">
       <UniqueIdentifier>{251FCD03-D7BE-3CE9-BB7C-81488C2C79E4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="eNet">
-      <UniqueIdentifier>{F8EFAF80-4B64-3CA9-9FFF-05B51E8B4C7C}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

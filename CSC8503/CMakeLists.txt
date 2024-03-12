@@ -39,14 +39,14 @@ if(NOT("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64"))
 
     set(Header_Files
         #"NetworkedGame.h"
-        #"NetworkPlayer.h"
-        #"TutorialGame.h"
-        #"Projectile.h"
-        #"Hole.h"
+        "NetworkPlayer.h"
+        "TutorialGame.h"
+        "Projectile.h"
+        "Hole.h"
         "PS5_Game.h"
-        #"BouncePad.h"
-        #"GravityWell.h"
-        #"Teleporter.h"
+        "BouncePad.h"
+        "GravityWell.h"
+        "Teleporter.h"
         "LevelFileLoaderBase.h"
         "WindowsLevelLoader.h"
         "LevelEnum.h"
@@ -59,25 +59,27 @@ if(NOT("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64"))
         "BaseTextureManager.h"
         "Light.h"
         "DirectionalLight.h"
+        "Powerup.h"
     )
     source_group("Header Files" FILES ${Header_Files})
 
     set(Source_Files
         "Main.cpp"
         #"NetworkedGame.cpp"
-        #"NetworkPlayer.cpp"
-        #"TutorialGame.cpp"
-        #"Projectile.cpp"
-        #"Hole.cpp"
+        "NetworkPlayer.cpp"
+        "TutorialGame.cpp"
+        "Projectile.cpp"
+        "Hole.cpp"
         "PS5_Game.cpp"
-        #"BouncePad.cpp"
-        #"GravityWell.cpp"
-        #"Teleporter.cpp"
+        "BouncePad.cpp"
+        "GravityWell.cpp"
+        "Teleporter.cpp"
         "WindowsLevelLoader.cpp"
         "ApplicationState.cpp"
         #"MenuSystem.cpp"
         "Singleton.cpp"
         "BaseTextureManager.cpp"
+        "Powerup.cpp"
     )
     source_group("Source Files" FILES ${Source_Files})
 
@@ -129,8 +131,8 @@ if(NOT("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64"))
         ${Header_Files}
         ${Source_Files}
         #${NetPlugins}
-        #${AudioEngine}
-        #${AI_Files}
+        ${AudioEngine}
+        ${AI_Files}
         ${UIPlaystation}
         ${PS5_Rendering_Files}
     )
@@ -217,11 +219,22 @@ if(NOT("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64"))
     include_directories("../CSC8503CoreClasses/")
     include_directories("../PS5Core/")
     include_directories("../GLTFLoader/")
-
+    include_directories("../Dependencies/FMOD/Playstation/include/")   
+     
+    target_link_libraries(${PROJECT_NAME} LINK_PUBLIC "${CMAKE_SOURCE_DIR}/Dependencies/FMOD/Playstation/lib/libfmod_stub_weak.a")
+    target_link_libraries(${PROJECT_NAME} LINK_PUBLIC "${CMAKE_SOURCE_DIR}/Dependencies/FMOD/Playstation/lib/libfmodL_stub_weak.a")
+    target_link_libraries(${PROJECT_NAME} LINK_PUBLIC "${CMAKE_SOURCE_DIR}/Dependencies/FMOD/Playstation/lib/libfmodstudio_stub_weak.a")
+    target_link_libraries(${PROJECT_NAME} LINK_PUBLIC "${CMAKE_SOURCE_DIR}/Dependencies/FMOD/Playstation/lib/libfmodstudioL_stub_weak.a")
     target_link_libraries(${PROJECT_NAME} LINK_PUBLIC NCLCoreClasses)
     target_link_libraries(${PROJECT_NAME} LINK_PUBLIC CSC8503CoreClasses)
     target_link_libraries(${PROJECT_NAME} LINK_PUBLIC PS5Core)
     target_link_libraries(${PROJECT_NAME} LINK_PUBLIC GLTFLoader)
+
+    #target_link_libraries(${PROJECT_NAME} 
+    #    PRIVATE "../Dependencies/FMOD/Playstation/lib/"
+    #    PRIVATE libfmod_stub_weak
+    #    PRIVATE libfmodL_stub_weak
+    #)
 
     # Set the tool and GenerateHeader on PSSL files in ${PSSL_SHADERS}
     set_property(SOURCE ${ALL_SHADERS} PROPERTY VS_TOOL_OVERRIDE WavePsslc)
@@ -293,6 +306,32 @@ if(NOT("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64"))
     )
 
     include_directories(${COMPILE_ASSET_ROOT}) 
+    
+
+     # Function to copy files
+    function(copy_files_from_source_to_destinations SOURCE_DIR DESTINATIONS FILE_PATTERN)
+        message("Copying files from Source: " ${SOURCE_DIR})
+
+        if ("${FILE_PATTERN}" MATCHES "\\*")
+            file(GLOB_RECURSE FILES ${SOURCE_DIR}/**/${FILE_PATTERN})
+        else()
+            set(FILES ${SOURCE_DIR}/${FILE_PATTERN})
+        endif()
+
+        foreach(DEST_DIR ${DESTINATIONS})
+            message("Copying files to Destination: " ${DEST_DIR})
+            file(COPY ${FILES} DESTINATION ${DEST_DIR})
+        endforeach()
+    endfunction()
+
+    # FMOD dlls
+    set(FMOD_SOURCE_DIR ${CMAKE_SOURCE_DIR}/Dependencies)
+    set(FMOD_DESTINATIONS
+        ${CMAKE_BINARY_DIR}/CSC8503
+        ${CMAKE_SOURCE_DIR}/Prospero/Debug
+        ${CMAKE_SOURCE_DIR}/Prospero/Release
+    )
+    copy_files_from_source_to_destinations(${FMOD_SOURCE_DIR} "${FMOD_DESTINATIONS}" "*.dll")
 
 else()
 
@@ -348,6 +387,7 @@ else()
         "OGLTextureManager.h"
         "Light.h"
         "DirectionalLight.h"
+        "Powerup.h"
     )
     source_group("Header Files" FILES ${Header_Files})
 
@@ -368,6 +408,7 @@ else()
         "Singleton.cpp"
         "BaseTextureManager.cpp"
         "OGLTextureManager.cpp"
+        "Powerup.cpp"
     )
     source_group("Source Files" FILES ${Source_Files})
 

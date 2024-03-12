@@ -7,7 +7,28 @@
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\NetworkPlayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\TutorialGame.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\Projectile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\Hole.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\PS5_Game.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\BouncePad.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\GravityWell.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\Teleporter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\WindowsLevelLoader.cpp">
@@ -22,6 +43,15 @@
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\BaseTextureManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\PowerUp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\AudioEngine.cpp">
+      <Filter>AudioEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\AiStatemachineObject.cpp">
+      <Filter>AI_Files</Filter>
+    </ClCompile>
     <ClCompile Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\UIPlaystation.cpp">
       <Filter>UIPlaystation</Filter>
     </ClCompile>
@@ -30,7 +60,28 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\NetworkPlayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\TutorialGame.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\Projectile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\Hole.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\PS5_Game.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\BouncePad.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\GravityWell.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\Teleporter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\LevelFileLoaderBase.h">
@@ -66,6 +117,15 @@
     <ClInclude Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\DirectionalLight.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\PowerUp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\AudioEngine.h">
+      <Filter>AudioEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\AiStatemachineObject.h">
+      <Filter>AI_Files</Filter>
+    </ClInclude>
     <ClInclude Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\UIBase.h">
       <Filter>UIPlaystation</Filter>
     </ClInclude>
@@ -84,11 +144,23 @@
     <ClInclude Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\CMakeFiles\CSC8503.dir\Release\cmake_pch.hxx">
       <Filter>Precompile Header File</Filter>
     </ClInclude>
+    <ClInclude Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\CMakeFiles\CSC8503.dir\MinSizeRel\cmake_pch.hxx">
+      <Filter>Precompile Header File</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\CMakeFiles\CSC8503.dir\RelWithDebInfo\cmake_pch.hxx">
+      <Filter>Precompile Header File</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="C:\Users\c3012094\source\repos\CSC8508\CSC8503\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Filter Include="AI_Files">
+      <UniqueIdentifier>{D4D112DF-69A2-3D04-BFE7-4EA318AC6E92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AudioEngine">
+      <UniqueIdentifier>{623CAA92-2D2E-385F-BD66-9F7FD0931867}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Header Files">
       <UniqueIdentifier>{1E9C4A05-DF7A-3B99-A670-37A7954F2EA4}</UniqueIdentifier>
     </Filter>

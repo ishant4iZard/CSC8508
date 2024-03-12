@@ -9,7 +9,6 @@
 
 #include "../PS5Core/PS5Window.h"
 
-
 using namespace NCL;
 using namespace CSC8503;
 
@@ -27,6 +26,11 @@ PS5_Game::PS5_Game(GameWorld& inWorld, GameTechRendererInterface& inRenderer, Ph
 	NCL::PS5::PS5Window* w = (NCL::PS5::PS5Window*)Window::GetWindow();
 
 	world.GetMainCamera().SetController(*w->GetController());
+
+	// TODO : Fix FMOD load prx files
+	//audioEngine = new AudioEngine();
+	//int backGroundMusic = audioEngine->CreateSound("../Assets/Audio/abc.mp3", true);
+	//audioEngine->PlaySound(backGroundMusic, true);
 }
 
 /*
@@ -64,6 +68,8 @@ PS5_Game::~PS5_Game() {
 
 	delete basicTex;
 	delete basicShader;
+
+	//delete audioEngine;
 }
 
 void PS5_Game::UpdateGame(float dt) {
@@ -122,6 +128,8 @@ void PS5_Game::UpdateGame(float dt) {
 
 	SelectObject();
 	MoveSelectedObject();
+
+	//audioEngine->Update();
 
 	world.UpdateWorld(dt);
 	physics.Update(dt);

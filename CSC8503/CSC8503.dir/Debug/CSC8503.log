@@ -1,1 +1,101 @@
-﻿  CSC8503.vcxproj -> C:\Users\c3012094\source\repos\CSC8508\CSC8503\Debug\CSC8503.elf
+﻿  AudioEngine.cpp
+  In file included from C:\Users\c3012094\source\repos\CSC8508\CSC8503\AudioEngine.cpp:1:
+C:\Users\c3012094\source\repos\CSC8508\CSC8503/AudioEngine.h(15,19): warning : variable 'fmodModuleId' set but not used [-Wunused-but-set-variable]
+                  SceKernelModule fmodModuleId = sceKernelLoadStartModule("./libfmod.prx", 0, 0, 0, NULL, NULL);
+                                  ^
+  1 warning generated.
+  Main.cpp
+  In file included from C:\Users\c3012094\source\repos\CSC8508\CSC8503\Main.cpp:18:
+  In file included from C:\Users\c3012094\source\repos\CSC8508\CSC8503/PS5_Game.h:6:
+C:\Users\c3012094\source\repos\CSC8508\CSC8503/AudioEngine.h(15,19): warning : variable 'fmodModuleId' set but not used [-Wunused-but-set-variable]
+                  SceKernelModule fmodModuleId = sceKernelLoadStartModule("./libfmod.prx", 0, 0, 0, NULL, NULL);
+                                  ^
+  In file included from C:\Users\c3012094\source\repos\CSC8508\CSC8503\Main.cpp:21:
+  In file included from C:\Users\c3012094\source\repos\CSC8508\CSC8503/GameTechAGCRenderer.h:6:
+  In file included from C:\Users\c3012094\source\repos\CSC8508\CSC8503/../PS5Core/AGCRenderer.h:12:
+  In file included from C:\Users\c3012094\source\repos\CSC8508\CSC8503\..\PS5Core/AGCMesh.h:9:
+C:\Users\c3012094\source\repos\CSC8508\CSC8503\..\NCLCoreClasses\Mesh.h(94,12): warning : enumeration value 'MAX_PRIM' not handled in switch [-Wswitch]
+                          switch (GetPrimitiveType()) {
+                                  ^~~~~~~~~~~~~~~~~~
+C:\Users\c3012094\source\repos\CSC8508\CSC8503\..\NCLCoreClasses\Mesh.h(111,11): warning : enumeration value 'MAX_PRIM' not handled in switch [-Wswitch]
+                          switch(GetPrimitiveType()) {
+                                 ^~~~~~~~~~~~~~~~~~
+C:\Users\c3012094\source\repos\CSC8508\CSC8503\..\NCLCoreClasses\Mesh.h(191,51): warning : returning reference to local temporary object [-Wreturn-stack-address]
+                  const unsigned int& GetInstanceCount() { return instanceModelMatrices.size(); }
+                                                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Users\c3012094\source\repos\CSC8508\CSC8503\Main.cpp(88,2): warning : delete called on non-final 'NCL::CSC8503::PhysicsSystem' that has virtual functions but non-virtual destructor [-Wdelete-non-abstract-non-virtual-dtor]
+          delete physics;
+          ^
+C:\Users\c3012094\source\repos\CSC8508\CSC8503\Main.cpp(90,2): warning : delete called on non-final 'NCL::CSC8503::GameWorld' that has virtual functions but non-virtual destructor [-Wdelete-non-abstract-non-virtual-dtor]
+          delete world;
+          ^
+  6 warnings generated.
+  NetworkPlayer.cpp
+  In file included from C:\Users\c3012094\source\repos\CSC8508\CSC8503\NetworkPlayer.cpp:2:
+  In file included from C:\Users\c3012094\source\repos\CSC8508\CSC8503/TutorialGame.h:10:
+  In file included from C:\Users\c3012094\source\repos\CSC8508\CSC8503/GameTechAGCRenderer.h:6:
+  In file included from C:\Users\c3012094\source\repos\CSC8508\CSC8503/../PS5Core/AGCRenderer.h:12:
+  In file included from C:\Users\c3012094\source\repos\CSC8508\CSC8503\..\PS5Core/AGCMesh.h:9:
+C:\Users\c3012094\source\repos\CSC8508\CSC8503\..\NCLCoreClasses\Mesh.h(94,12): warning : enumeration value 'MAX_PRIM' not handled in switch [-Wswitch]
+                          switch (GetPrimitiveType()) {
+                                  ^~~~~~~~~~~~~~~~~~
+C:\Users\c3012094\source\repos\CSC8508\CSC8503\..\NCLCoreClasses\Mesh.h(111,11): warning : enumeration value 'MAX_PRIM' not handled in switch [-Wswitch]
+                          switch(GetPrimitiveType()) {
+                                 ^~~~~~~~~~~~~~~~~~
+C:\Users\c3012094\source\repos\CSC8508\CSC8503\..\NCLCoreClasses\Mesh.h(191,51): warning : returning reference to local temporary object [-Wreturn-stack-address]
+                  const unsigned int& GetInstanceCount() { return instanceModelMatrices.size(); }
+                                                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  In file included from C:\Users\c3012094\source\repos\CSC8508\CSC8503\NetworkPlayer.cpp:2:
+  In file included from C:\Users\c3012094\source\repos\CSC8508\CSC8503/TutorialGame.h:15:
+  In file included from C:\Users\c3012094\source\repos\CSC8508\CSC8503/AiTreeObject.h:4:
+C:\Users\c3012094\source\repos\CSC8508\CSC8503\..\CSC8503CoreClasses\BehaviourSelector.h(12,11): warning : enumeration value 'Initialise' not handled in switch [-Wswitch]
+                  switch (nodeState) {
+                          ^~~~~~~~~
+  In file included from C:\Users\c3012094\source\repos\CSC8508\CSC8503\NetworkPlayer.cpp:2:
+  In file included from C:\Users\c3012094\source\repos\CSC8508\CSC8503/TutorialGame.h:15:
+  In file included from C:\Users\c3012094\source\repos\CSC8508\CSC8503/AiTreeObject.h:5:
+C:\Users\c3012094\source\repos\CSC8508\CSC8503\..\CSC8503CoreClasses\BehaviourSequence.h(13,12): warning : enumeration value 'Initialise' not handled in switch [-Wswitch]
+                          switch (nodeState) {
+                                  ^~~~~~~~~
+C:\Users\c3012094\source\repos\CSC8508\CSC8503\..\CSC8503CoreClasses\BehaviourSequence.h(39,12): warning : enumeration value 'Initialise' not handled in switch [-Wswitch]
+                          switch (i) {
+                                  ^
+  In file included from C:\Users\c3012094\source\repos\CSC8508\CSC8503\NetworkPlayer.cpp:2:
+  In file included from C:\Users\c3012094\source\repos\CSC8508\CSC8503/TutorialGame.h:16:
+C:\Users\c3012094\source\repos\CSC8508\CSC8503/AiStatemachineObject.h(38,43): warning : implicit conversion from 'int' to 'float' changes value from 2147483647 to 2147483648 [-Wimplicit-const-int-float-conversion]
+              float distanceToNearestProj = INT_MAX;
+                                            ^~~~~~~
+  C:\Program Files (x86)\SCE\Prospero SDKs\8.000\target\include\sys\limits.h(58,18): note: expanded from macro 'INT_MAX'
+  #define INT_MAX         __INT_MAX       /* max value for an int */
+                          ^~~~~~~~~
+  C:\Program Files (x86)\SCE\Prospero SDKs\8.000\target\include\x86\_limits.h(57,19): note: expanded from macro '__INT_MAX'
+  #define __INT_MAX       0x7fffffff      /* max value for an int */
+                          ^~~~~~~~~~
+  In file included from C:\Users\c3012094\source\repos\CSC8508\CSC8503\NetworkPlayer.cpp:6:
+  In file included from C:\Users\c3012094\source\repos\CSC8508\CSC8503/PS5_Game.h:6:
+C:\Users\c3012094\source\repos\CSC8508\CSC8503/AudioEngine.h(15,19): warning : variable 'fmodModuleId' set but not used [-Wunused-but-set-variable]
+                  SceKernelModule fmodModuleId = sceKernelLoadStartModule("./libfmod.prx", 0, 0, 0, NULL, NULL);
+                                  ^
+C:\Users\c3012094\source\repos\CSC8508\CSC8503\NetworkPlayer.cpp(124,21): warning : unused variable 'ORBIT_RADIUS' [-Wunused-variable]
+          const static float ORBIT_RADIUS = 75.0; // Ensure that this value matches the distance of the player from the center
+                             ^
+  9 warnings generated.
+  PS5_Game.cpp
+  In file included from C:\Users\c3012094\source\repos\CSC8508\CSC8503\PS5_Game.cpp:1:
+  In file included from C:\Users\c3012094\source\repos\CSC8508\CSC8503/PS5_Game.h:6:
+C:\Users\c3012094\source\repos\CSC8508\CSC8503/AudioEngine.h(15,19): warning : variable 'fmodModuleId' set but not used [-Wunused-but-set-variable]
+                  SceKernelModule fmodModuleId = sceKernelLoadStartModule("./libfmod.prx", 0, 0, 0, NULL, NULL);
+                                  ^
+  In file included from C:\Users\c3012094\source\repos\CSC8508\CSC8503\PS5_Game.cpp:4:
+  In file included from C:\Users\c3012094\source\repos\CSC8508\CSC8503\..\CSC8503CoreClasses\RenderObject.h:4:
+C:\Users\c3012094\source\repos\CSC8508\CSC8503\..\NCLCoreClasses\Mesh.h(94,12): warning : enumeration value 'MAX_PRIM' not handled in switch [-Wswitch]
+                          switch (GetPrimitiveType()) {
+                                  ^~~~~~~~~~~~~~~~~~
+C:\Users\c3012094\source\repos\CSC8508\CSC8503\..\NCLCoreClasses\Mesh.h(111,11): warning : enumeration value 'MAX_PRIM' not handled in switch [-Wswitch]
+                          switch(GetPrimitiveType()) {
+                                 ^~~~~~~~~~~~~~~~~~
+C:\Users\c3012094\source\repos\CSC8508\CSC8503\..\NCLCoreClasses\Mesh.h(191,51): warning : returning reference to local temporary object [-Wreturn-stack-address]
+                  const unsigned int& GetInstanceCount() { return instanceModelMatrices.size(); }
+                                                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  4 warnings generated.
+  CSC8503.vcxproj -> C:\Users\c3012094\source\repos\CSC8508\CSC8503\Debug\CSC8503.elf

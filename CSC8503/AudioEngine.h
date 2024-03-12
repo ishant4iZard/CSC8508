@@ -6,10 +6,16 @@
 #include <fmod.hpp>
 
 #include <map>
+#include <stdlib.h>
 
 class AudioEngine {
 public :
 	AudioEngine() {
+#ifndef _WIN32
+		SceKernelModule fmodModuleId = sceKernelLoadStartModule("./libfmod.prx", 0, 0, 0, NULL, NULL);
+		fmodModuleId = sceKernelLoadStartModule("./libfmodL.prx", 0, 0, 0, NULL, NULL);
+#endif
+
 		result = FMOD::System_Create(&system);
 		result = system->init(512, FMOD_INIT_NORMAL, nullptr);
 	}

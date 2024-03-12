@@ -1,10 +1,15 @@
+#pragma once
 #include "../NCLCoreClasses/KeyboardMouseController.h"
 
-#pragma once
+#ifdef _WIN32
 #include "GameTechRenderer.h"
 #ifdef USEVULKAN
 #include "GameTechVulkanRenderer.h"
 #endif
+#else
+#include "GameTechAGCRenderer.h"
+#endif
+
 #include "PhysicsSystem.h"
 
 #include "AiTreeObject.h"
@@ -106,10 +111,19 @@ namespace NCL {
 
 			GameObject* capsule;
 
+
+#ifdef _WIN32
 #ifdef USEVULKAN
-			GameTechVulkanRenderer*	renderer;
+		GameTechVulkanRenderer* renderer;
 #else
-			GameTechRenderer* renderer;
+		GameTechRenderer* renderer;
+#endif
+#else
+		GameTechAGCRenderer* renderer;
+#endif
+
+#ifdef USEVULKAN
+#else
 #endif
 			PhysicsSystem*		physics;
 			GameWorld*			world;
@@ -184,7 +198,12 @@ namespace NCL {
 #pragma endregion
 
 			ApplicationState* appState;
+
+#ifdef _WIN32
 			OGLTextureManager* bm;
+#endif
+			
+			
 			std::vector<Vector3> powerUpSpawnPointList;
 		};
 	}

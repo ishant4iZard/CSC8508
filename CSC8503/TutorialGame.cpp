@@ -22,12 +22,17 @@ using namespace CSC8503;
 
 TutorialGame::TutorialGame() : controller(*Window::GetWindow()->GetKeyboard(), *Window::GetWindow()->GetMouse()) {
 	world		= new GameWorld();
+
+#ifdef _WIN32
 #ifdef USEVULKAN
 	renderer	= new GameTechVulkanRenderer(*world);
 	renderer->Init();
 	renderer->InitStructures();
 #else 
 	renderer = new GameTechRenderer(*world);
+#endif
+#else
+	renderer = new GameTechAGCRenderer(*world);
 #endif
 
 	physics		= new PhysicsSystem(*world);
@@ -58,7 +63,7 @@ TutorialGame::TutorialGame() : controller(*Window::GetWindow()->GetKeyboard(), *
 	ui = UIPlaystation::GetInstance();
 #endif
 	appState = ApplicationState::GetInstance();
-	bm = new OGLTextureManager();
+	//bm = new OGLTextureManager();
 	BindEvents();
 }
 
@@ -160,11 +165,11 @@ TutorialGame::~TutorialGame()	{
 	delete renderer;
 	delete world;
 
-	delete levelFileLoader;
+	//delete levelFileLoader;
 
-	delete[] groundTextureList;
-	delete[] wallTextureList;
-	delete[] sandTextureList;
+	//delete[] groundTextureList;
+	//delete[] wallTextureList;
+	//delete[] sandTextureList;
 }
 
 void TutorialGame::UpdateGame(float dt) {
@@ -245,7 +250,7 @@ GameObject* TutorialGame::AddFloorToWorld(const Vector3& position, const Vector3
 
 void TutorialGame::SpawnDataDrivenLevel(GameLevelNumber inGameLevelNumber)
 {
-	std::ifstream input{ levelFileLoader->GetLevelFilePath(inGameLevelNumber)};
+	/*std::ifstream input{ levelFileLoader->GetLevelFilePath(inGameLevelNumber)};
 
 	if (!input.is_open()) {
 		std::cerr <<"[TutorialGame::SpawnDataDrivenLevel] Couldn't read file: " << levelFileLoader->GetLevelFilePath(inGameLevelNumber) << "\n";
@@ -269,7 +274,7 @@ void TutorialGame::SpawnDataDrivenLevel(GameLevelNumber inGameLevelNumber)
 		Vector2 tempTiling = Vector2(tempLevelNodeData[10], tempLevelNodeData[11]);
 
 		(this->*levelObjectSpawnFunctionList[(int)tempLevelNodeData[0]])(tempPosition, tempRotation, tempScale, tempTiling);
-	}
+	}*/
 }
 
 void NCL::CSC8503::TutorialGame::SpawnWall(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling)
