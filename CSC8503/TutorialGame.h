@@ -23,6 +23,8 @@
 
 #ifdef _WIN32
 #include "WindowsLevelLoader.h"
+#else
+#include "WindowsLevelLoader.h"
 #endif // _WIN32
 
 #include "ApplicationState.h"
@@ -179,6 +181,8 @@ namespace NCL {
 
 
 #ifdef _WIN32
+			WindowsLevelLoader* levelFileLoader;
+#else
 			WindowsLevelLoader* levelFileLoader;
 #endif // _WIN32
 

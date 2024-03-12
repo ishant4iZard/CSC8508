@@ -19,6 +19,7 @@
 #include "PS5Window.h"
 #include "PS5Controller.h"
 #include "GameTechAGCRenderer.h"
+#include "TutorialGame.h"
 
 size_t sceUserMainThreadStackSize = 2 * 1024 * 1024;
 extern const char sceUserMainThreadName[] = "TeamProjectGameMain";
@@ -72,22 +73,23 @@ int main() {
 	c->MapButton(0, "Up");
 	c->MapButton(2, "Down");
 
-	GameWorld* world = new GameWorld();
-	GameTechAGCRenderer* renderer = new GameTechAGCRenderer(*world);
-	PhysicsSystem* physics = new PhysicsSystem(*world);
+	//GameWorld* world = new GameWorld();
+	//GameTechAGCRenderer* renderer = new GameTechAGCRenderer(*world);
+	//PhysicsSystem* physics = new PhysicsSystem(*world);
 
-	PS5_Game* g = new PS5_Game(*world, *renderer, *physics);
+	//PS5_Game* g = new PS5_Game(*world, *renderer, *physics);
+	TutorialGame* g = new TutorialGame();
 
 	while (w->UpdateWindow()) {
 		float dt = w->GetTimer().GetTimeDeltaSeconds();
 		g->UpdateGame(dt);
-		renderer->Update(dt);
-		renderer->Render();
+		//renderer->Update(dt);
+		//renderer->Render();
 	}
 
-	delete physics;
-	delete renderer;
-	delete world;
+	//delete physics;
+	//delete renderer;
+	//delete world;
 #else
 	/** Check the NetSubsystem work condition */
 	bool bIsNetSystemInitSuccess = false;
