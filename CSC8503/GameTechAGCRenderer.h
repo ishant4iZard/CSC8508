@@ -11,6 +11,7 @@
 #include "../Assets/Shaders/PSSL/ShaderConstants.psslh"
 #include "../Assets/Shaders/PSSL/TechObject.psslh"
 #include "GameTechAGCModel.h"
+#include "FrameData.h"
 
 namespace NCL {
 	namespace Rendering {
@@ -62,65 +63,7 @@ namespace NCL {
 
 			void GPUSkinningPass();
 
-			Shader* defaultShader;
-
 			GameWorld& gameWorld;
-
-			/*
-			Handling buffers in AGC isn't too bad, as they are a small wrapper around an existing
-			memory allocation. Here I have a small struct that will fill out a memory allocation with
-			all of the data required by the frame. We can then make Buffers out of this at any
-			offset we want to send to our shaders - in this case we're going to use one bug allocation
-			to hold both the constants used by shaders, as well as all of the debug vertices, and object
-			matrices. No fancy suballocations here, the allocator is as simple as it gets - it just
-			advances or 'bumps' a pointer along. Perfect for recording a frame's data to memory!
-			*/
-			struct BumpAllocator {
-				char* dataStart;//Start of our allocated memory
-				char* data;		//Current write point of our memory
-				size_t			bytesWritten;
-
-				template<typename T>
-				void WriteData(T value) {
-					memcpy(data, &value, sizeof(T));
-					data += sizeof(T);
-					bytesWritten += sizeof(T);
-				}
-				void WriteData(void* inData, size_t byteCount) {
-					memcpy(data, inData, byteCount);
-					data += byteCount;
-					bytesWritten += byteCount;
-				}
-
-				void AlignData(size_t alignment) {
-					char* oldData = data;
-					data = (char*)((((uintptr_t)data + alignment - 1) / (uintptr_t)alignment) * (uintptr_t)alignment);
-					bytesWritten += data - oldData;
-				}
-
-				void Reset() {
-					bytesWritten = 0;
-					data = dataStart;
-				}
-			};
-
-			struct FrameData {
-				sce::Agc::Core::Buffer constantBuffer;
-				sce::Agc::Core::Buffer objectBuffer;
-
-				sce::Agc::Core::Buffer debugLineBuffer;
-				sce::Agc::Core::Buffer debugTextBuffer;
-
-				BumpAllocator data;
-
-				int globalDataOffset = 0;	//Where does the global data start in the buffer?
-				int objectStateOffset = 0;	//Where does the object states start?
-				int debugLinesOffset = 0;	//Where do the debug lines start?
-				int debugTextOffset = 0;	//Where do the debug text verts start?
-
-				size_t lineVertCount = 0;
-				size_t textVertCount = 0;
-			};
 
 			struct SkinningJob {
 				RenderObject* object;
@@ -142,7 +85,7 @@ namespace NCL {
 
 			sce::Agc::Core::Buffer arrayBuffer;
 
-			NCL::GameTechAGCModel* rendererModel;
+			GameTechAGCModel* rendererModel;
 			sce::Agc::CxDepthRenderTarget		shadowTarget;
 			NCL::PS5::AGCTexture* shadowMap; //ptr into bindless array
 			sce::Agc::Core::Sampler				shadowSampler;

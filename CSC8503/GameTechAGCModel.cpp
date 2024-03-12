@@ -1,11 +1,11 @@
 #include "GameTechAGCModel.h"
 #define SAFE_DELETE(a) if (a != NULL) delete a; a = NULL;
 #define SAFE_DELETE_ARRAY(a, MAX) for (auto i = 0; i < MAX; i++) { if (a[i] != NULL) delete a[i]; a[i] = NULL; }
-NCL::GameTechAGCModel::GameTechAGCModel()
+NCL::CSC8503::GameTechAGCModel::GameTechAGCModel()
 {
 }
 
-NCL::GameTechAGCModel::~GameTechAGCModel()
+NCL::CSC8503::GameTechAGCModel::~GameTechAGCModel()
 {
 	SAFE_DELETE(pbrVertexShader);
 	SAFE_DELETE(pbrPixelShader);
