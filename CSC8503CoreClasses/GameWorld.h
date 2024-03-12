@@ -4,6 +4,9 @@
 #include "Ray.h"
 #include "CollisionDetection.h"
 #include "QuadTree.h"
+#include <mutex>
+
+
 namespace NCL {
 		class Camera;
 		using Maths::Ray;
@@ -41,6 +44,7 @@ namespace NCL {
 			}
 
 			bool Raycast(Ray& r, RayCollision& closestCollision, bool closestObject = false, GameObject* ignore = nullptr) const;
+			bool FindObjectByRaycast(Ray& r, RayCollision& closestCollision, std::string tag, GameObject* ignore = nullptr) const;
 
 			virtual void UpdateWorld(float dt);
 
@@ -57,6 +61,8 @@ namespace NCL {
 			int GetWorldStateID() const {
 				return worldStateCounter;
 			}
+
+			std::mutex gameObjectsMutex;
 
 		protected:
 			std::vector<GameObject*> gameObjects;

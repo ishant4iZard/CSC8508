@@ -78,7 +78,7 @@ void GameServer::UpdateServer()
 
 		if (type == ENetEventType::ENET_EVENT_TYPE_CONNECT) {
 			std::cout << "Server : New client connected" << std::endl;
-			AddConnectClient(peer);
+			//AddConnectClient(peer);
 		}
 		else if (type == ENetEventType::ENET_EVENT_TYPE_DISCONNECT) {
 			std::cout << "Server : A client has disconnected" << std::endl;
@@ -91,6 +91,13 @@ void GameServer::UpdateServer()
 		}
 		enet_packet_destroy(event.packet);
 	}
+}
+
+void GameServer::SetClientList(int index, int ID)
+{
+	if (index >= clientMax) return;
+
+	Clients[index - 1] = ID;
 }
 
 void GameServer::AddConnectClient(int peerID)

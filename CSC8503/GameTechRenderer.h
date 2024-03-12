@@ -3,7 +3,7 @@
 #include "OGLShader.h"
 #include "OGLTexture.h"
 #include "OGLMesh.h"
-
+#include "Event.h"
 #include "GameWorld.h"
 
 #include "MeshMaterial.h"
@@ -23,10 +23,14 @@ namespace NCL {
 	class Maths::Vector4;
 	namespace CSC8503 {
 		class RenderObject;
+		class DirectionalLight;
+		class OglHdrFbo;
+		class OglPostProcessingFbo;
 
-		class GameTechRenderer : public OGLRenderer	{
+		class GameTechRenderer : public OGLRenderer, public EventListener {
 		public:
 			GameTechRenderer(GameWorld& world);
+			void CreateScreenQuadMesh();
 			~GameTechRenderer();
 
 			Mesh*		LoadMesh(const std::string& name);
@@ -34,6 +38,7 @@ namespace NCL {
 			Shader*		LoadShader(const std::string& vertex, const std::string& fragment);
 
 			void Update(float dt) override;
+			void ReceiveEvent(EventType eventType) override;
 
 		protected:
 			void NewRenderLines();
@@ -48,19 +53,29 @@ namespace NCL {
 			void BuildObjectList();
 			void SortObjectList();
 			void RenderShadowMap();
-			void RenderCamera(); 
+			void UpdatePBRUniforms(const NCL::CSC8503::RenderObject* const& i);
+			void UpdateGlobalLightUniform(const OGLShader* inShader);
+			void RenderCamera();
+			void RenderInstancedRenderObject();
 			void RenderSkybox();
-
+			void ApplyFrostingPostProcessing();
+			void ApplyToneMapping();
+			void RenderProcessedScene();
 			void LoadSkybox();
 
 			void SetDebugStringBufferSizes(size_t newVertCount);
 			void SetDebugLineBufferSizes(size_t newVertCount);
 
 			vector<const RenderObject*> activeObjects;
+			vector<const RenderObject*> instancedRenderObjectList;
 
 			OGLShader*  debugShader;
 			OGLShader*  skyboxShader;
+			OGLShader* pbrShader;
+			OGLShader* toneMapperShader;
+			OGLShader* gammaCorrectionShader;
 			OGLMesh*	skyboxMesh;
+			OGLMesh* screenQuad;
 			GLuint		skyboxTex;
 
 			//shadow mapping things
@@ -141,8 +156,15 @@ namespace NCL {
 
 #pragma region UI
 			UIBase* ui;
-#pragma endregion
+
+			DirectionalLight* directionalLight;
+
+			OglHdrFbo* pbrFbo;
+			OglPostProcessingFbo* toneMappingFbo;
+
+			float timeOfPortalCollision = 0;
+			bool wasPortalCollided;
+			const float PORTAL_BLINK_TIME = 0.5;
 		};
 	}
 }
-

@@ -1,20 +1,13 @@
 #include "NetworkPlayer.h"
 #include "NetworkedGame.h"
 #include "PhysicsObject.h"
+#include "PowerUp.h"
+#include "Event.h"
+
 # define  SQUARE(x) (x * x) 
 
 using namespace NCL;
 using namespace CSC8503;
-
-Vector3 Lerp(const Vector3& start, const Vector3& end, float t) {
-	t = std::clamp(t, 0.0f, 1.0f);
-
-	float lerpedX = start.x + t * (end.x - start.x);
-	float lerpedY = start.y + t * (end.y - start.y);
-	float lerpedZ = start.z + t * (end.z - start.z);
-
-	return Vector3(lerpedX, lerpedY, lerpedZ);
-}
 
 NetworkPlayer::NetworkPlayer(NetworkedGame* game, int num)	{
 	this->game = game;
@@ -23,7 +16,7 @@ NetworkPlayer::NetworkPlayer(NetworkedGame* game, int num)	{
 	timeElapsed = 0.0f;
 	timeElapsed = projectileReplenishTimer = 0.0f;
 	numProjectilesAccumulated = MAX_PROJECTILE_CAPACITY;
-	movementSpeed = 10;
+	movementSpeed = 35;
 }
 
 NetworkPlayer::~NetworkPlayer()	{
@@ -36,6 +29,28 @@ void NetworkPlayer::OnCollisionBegin(GameObject* otherObject) {
 		{
 			game->OnPlayerCollision(this, (NetworkPlayer*)otherObject);
 		}
+		
+		if (otherObject->gettag() == "PowerUp") {
+			PowerUp* powerup = dynamic_cast<PowerUp*>(otherObject);
+			powerUpType ActivatePowerUp = powerup->getPowerUp();
+			//game->setActivePowerup(ActivatePowerUp);
+			switch (ActivatePowerUp)
+			{
+			case NCL::CSC8503::ice:
+				EventEmitter::EmitEvent(ACTIVATE_ICE_POWER_UP);
+				break;
+			case NCL::CSC8503::sand:
+				EventEmitter::EmitEvent(ACTIVATE_SAND_POWER_UP);
+				break;
+			case NCL::CSC8503::wind:
+				EventEmitter::EmitEvent(ACTIVATE_WIND_POWER_UP);
+				break;
+			default:
+				break;
+			}
+			powerup->deactivate();
+		}
+		
 	}
 }
 
@@ -144,12 +159,16 @@ void NetworkPlayer::MovePlayerInSquarePattern(float dt) {
 }
 
 void NetworkPlayer::MovePlayerTowardsCursor(float dt){
+	Vector3 playerPos = transform.GetPosition();
+	playerPos.y = 5.6;
+	transform.SetPosition(playerPos);
+
 	Vector3 movementDirection = (pointPos - transform.GetPosition()).Normalised();
 	movementDirection.y = 0;
 
 	Vector3 currentVelocity = this->GetPhysicsObject()->GetLinearVelocity();
 	Vector3 targetVelocity = movementDirection * movementSpeed;
-	Vector3 velocity = Lerp(currentVelocity, targetVelocity, dt);
+	Vector3 velocity = Vector3::Lerp(currentVelocity, targetVelocity, dt * 0.5);
 
 	this->GetPhysicsObject()->SetLinearVelocity(velocity);
 }
@@ -168,12 +187,13 @@ void NetworkPlayer::ReplenishProjectiles(float dt) {
 
 void NetworkPlayer::Fire()
 {
+	
 	if (numProjectilesAccumulated <= 0) return;
 	numProjectilesAccumulated--;
 
 	Vector3 fireDir = GetPlayerForwardVector().Normalised();
 	Vector3 firePos = transform.GetPosition() + fireDir * 3;
-	std::cout << firePos.y;
+	//std::cout << firePos.y;
 
 	game->SpawnProjectile(this, firePos, fireDir);
 	//std::cout << "player " << playerNum << " fired!" << std::endl;

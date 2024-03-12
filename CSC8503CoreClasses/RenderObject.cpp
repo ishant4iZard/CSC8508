@@ -13,6 +13,7 @@ RenderObject::RenderObject(Transform* parentTransform, Mesh* mesh, Texture* tex,
 	this->texture	= tex;
 	this->shader	= shader;
 	this->colour	= Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+	this->tiling = Vector2(1.0f, 1.0f);
 }
 
 RenderObject::~RenderObject() {

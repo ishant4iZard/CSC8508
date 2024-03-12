@@ -27,8 +27,7 @@ namespace NCL {
 			}
 			~Ray(void) {}
 
-			Vector3 GetPosition() const {return position;	}
-
+			Vector3 GetPosition() const {return position;}
 			Vector3 GetDirection() const {return direction;	}
 
 		protected:

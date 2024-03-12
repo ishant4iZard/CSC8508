@@ -4,6 +4,8 @@ set(PROJECT_NAME CSC8503)
 # Source groups
 ################################################################################
 set(NetPlugins
+    "OnlineSubsystemBase.h"
+    "OnlineSubsystemBase.cpp"
     "steam.h"
     "steam.cpp"
 )
@@ -15,6 +17,15 @@ set(AudioEngine
 )
 source_group("AudioEngine" FILES ${AudioEngine})
 
+set(UI
+    "UIBase.h"
+    "UIWindows.h"
+    "UIPlaystation.h"
+    "UIWindows.cpp"
+    "UIPlaystation.cpp"
+)
+source_group("UI" FILES ${UI})
+
 set(Header_Files
     "GameTechRenderer.h"
     "NetworkedGame.h"
@@ -25,14 +36,12 @@ set(Header_Files
     "BouncePad.h"
     "GravityWell.h"
     "Teleporter.h"
-    "UIBase.h"
+    "PowerUp.h"
     "LevelFileLoaderBase.h"
     "WindowsLevelLoader.h"
     "LevelEnum.h"
     "LevelObjectEnum.h"
-    "UIWindows.h"
     "ApplicationState.h"
-    "UIPlaystation.h"
     "MenuSystem.h"
     "Event.h"
     "EventType.h"
@@ -40,6 +49,11 @@ set(Header_Files
     "RenderObjectMaleGuard.h"
     "GameAnimation.h"
     "MaxGuard.h"
+    "Singleton.h"
+    "BaseTextureManager.h"
+    "OGLTextureManager.h"
+    "Light.h"
+    "DirectionalLight.h"
 )
 source_group("Header Files" FILES ${Header_Files})
 
@@ -52,18 +66,27 @@ set(Source_Files
     "Projectile.cpp"
     "Hole.cpp"
     "BouncePad.cpp"
+    "PowerUp.cpp"
     "GravityWell.cpp"
     "Teleporter.cpp"
     "WindowsLevelLoader.cpp"
-    "UIWindows.cpp"
     "ApplicationState.cpp"
-    "UIPlaystation.cpp"
     "MenuSystem.cpp"
     "MaleGuard.cpp"
     "RenderObjectMaleGuard.cpp"
     "GameAnimation.cpp"
     "MaxGuard.cpp"
+    "Singleton.cpp"
+    "BaseTextureManager.cpp"
+    "OGLTextureManager.cpp"
 )
+source_group("Source Files" FILES ${Source_Files})
+
+set(OGL_Rendering_Files
+    "OglHdrFbo.h"
+    "OglPostProcessingFbo.h"
+)
+source_group("OGL Rendering Files" FILES ${OGL_Rendering_Files})
 
 set(AI_Files
     "AiStatemachineObject.cpp"
@@ -84,7 +107,6 @@ file(GLOB SHADER_FILES ${ASSET_ROOT}/Shaders/VK/*.*)
 
 endif()
 
-source_group("Source Files" FILES ${Source_Files})
 
 set(ImGUI_Files
     "imconfig.h"
@@ -111,8 +133,10 @@ set(ALL_FILES
     ${Source_Files}
     ${ImGUI_Files}
     ${NetPlugins}
+    ${OGL_Rendering_Files}
     ${AudioEngine}
     ${AI_Files}
+    ${UI}
 )
 
 if(USE_VULKAN)
@@ -123,6 +147,7 @@ if(USE_VULKAN)
         ${AudioEngine}
         ${SHADER_FILES}
         ${ImGUI_Files}
+        ${UI}
     )
 
 foreach (file ${SHADER_FILES})
@@ -312,20 +337,47 @@ if(USE_VULKAN)
     add_dependencies(${PROJECT_NAME} SHADER_FILES)
 endif()
 
-# Copy dlls into build directory_____________________________________________________________________
+# Function to copy files
+function(copy_files_from_source_to_destinations SOURCE_DIR DESTINATIONS FILE_PATTERN)
+    message("Copying files from Source: " ${SOURCE_DIR})
 
-# FMOD
-set(DLL_SOURCE_DIR ${CMAKE_SOURCE_DIR}/Dependencies)
-message("Source" ${CMAKE_SOURCE_DIR}/Dependencies)
-set(DLL_DEST_DIR ${CMAKE_BINARY_DIR}/CSC8503)
-message("Build" ${CMAKE_BINARY_DIR}/CSC8503)
-file(GLOB_RECURSE DLL_FILES ${DLL_SOURCE_DIR}/**/*.dll)
-file(COPY ${DLL_FILES} DESTINATION ${DLL_DEST_DIR})
+    if ("${FILE_PATTERN}" MATCHES "\\*")
+        file(GLOB_RECURSE FILES ${SOURCE_DIR}/**/${FILE_PATTERN})
+    else()
+        set(FILES ${SOURCE_DIR}/${FILE_PATTERN})
+    endif()
 
-# Steam
-set(DLL_SOURCE_DIR ${CMAKE_SOURCE_DIR}/Steamworksdk)
-message("Source" ${CMAKE_SOURCE_DIR}/Steamworksdk)
-set(DLL_DEST_DIR ${CMAKE_BINARY_DIR}/CSC8503)
-message("Build" ${CMAKE_BINARY_DIR}/CSC8503)
-file(GLOB_RECURSE DLL_FILES ${DLL_SOURCE_DIR}/**/*.dll)
-file(COPY ${DLL_FILES} DESTINATION ${DLL_DEST_DIR})
+    foreach(DEST_DIR ${DESTINATIONS})
+        message("Copying files to Destination: " ${DEST_DIR})
+        file(COPY ${FILES} DESTINATION ${DEST_DIR})
+    endforeach()
+endfunction()
+
+# FMOD dlls
+set(FMOD_SOURCE_DIR ${CMAKE_SOURCE_DIR}/Dependencies)
+set(FMOD_DESTINATIONS
+    ${CMAKE_BINARY_DIR}/CSC8503
+    ${CMAKE_SOURCE_DIR}/x64/Debug
+    ${CMAKE_SOURCE_DIR}/x64/Release
+)
+copy_files_from_source_to_destinations(${FMOD_SOURCE_DIR} "${FMOD_DESTINATIONS}" "*.dll")
+
+# Steam dlls
+set(STEAM_SOURCE_DIR ${CMAKE_SOURCE_DIR}/Steamworksdk)
+set(STEAM_DESTINATIONS
+    ${CMAKE_BINARY_DIR}/CSC8503
+    ${CMAKE_SOURCE_DIR}/x64/Debug
+    ${CMAKE_SOURCE_DIR}/x64/Release
+)
+copy_files_from_source_to_destinations(${STEAM_SOURCE_DIR} "${STEAM_DESTINATIONS}" "*.dll")
+
+# Steam app id
+set(APP_ID_SOURCE_DIR ${CMAKE_SOURCE_DIR}/Steamworksdk)
+set(APP_ID_DESTINATIONS
+    ${CMAKE_BINARY_DIR}/CSC8503
+    ${CMAKE_SOURCE_DIR}/x64/Debug
+    ${CMAKE_SOURCE_DIR}/x64/Release
+)
+copy_files_from_source_to_destinations(${APP_ID_SOURCE_DIR} "${APP_ID_DESTINATIONS}" "steam_appid.txt")
+
+# TO DO : copy files to ORBIS

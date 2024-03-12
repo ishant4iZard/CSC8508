@@ -13,19 +13,25 @@ using namespace CSC8503;
 #include <sstream>
 
 #include "ApplicationState.h"
+
 #ifdef _WIN32
+#include <steam_api.h>
 #include "UIWindows.h"
 #else //_ORBIS
 #include "UIPlaystation.h"
 #endif
-#include <steam_api.h>
 
 #include "Event.h"
 std::multimap<EventType, EventListener*> EventEmitter::listeners;
 
 int main() {
+
+/** Check the NetSubsystem work condition */
+	bool bIsNetSystemInitSuccess = false;
+#ifdef _WIN32
 	if (SteamAPI_Init())
 	{
+		bIsNetSystemInitSuccess = true;
 		std::cout << "Steam API initialized successfully.\n";
 	}
 	else
@@ -33,8 +39,11 @@ int main() {
 		std::cout << "Steam API failed to initialize.\n";
 		std::cout << "You may need run the steam app.\n";
 	}
+#else
+	// Check Playstation subsystem
+#endif
 
-	Window*w = Window::CreateGameWindow("CSC8503 Game technology!", 1280, 720 , false);
+	Window*w = Window::CreateGameWindow("CSC8503 Game technology!", 1920, 1080 , true);
 
 	if (!w->HasInitialised()) {
 		return -1;
@@ -47,6 +56,7 @@ int main() {
 
 	std::string IPAdd;
 	w->GetLocalIPV4Address(IPAdd);
+	g->GetMenuSystem()->SetIsNetsystemInitSuccess(bIsNetSystemInitSuccess);
 	g->GetMenuSystem()->SetLocalIPv4Address(IPAdd);
 
 	w->GetTimer().GetTimeDeltaSeconds(); //Clear the timer so we don't get a larget first dt!
@@ -70,20 +80,37 @@ int main() {
 		//w->SetTitle("Gametech frame time:" + std::to_string(1000.0f * dt));
 		w->SetTitle("Frame Rate : " + std::to_string(1.0f / dt));
 
-		SteamAPI_RunCallbacks();
+/** NetSubsystem Callback Event */
+		if (bIsNetSystemInitSuccess)
+		{
+#ifdef _WIN32
+			SteamAPI_RunCallbacks();
+#else
+
+#endif
+		}
 
 		g->UpdateGame(dt);
 	}
 	
 	// Singleton cleanup
 	ApplicationState::Destory();
+
+/** NetSubsystem Handle Shutdown */
+	if (bIsNetSystemInitSuccess) 
+	{
+#ifdef _WIN32
+		SteamAPI_Shutdown();
+#else //_ORBIS
+#endif
+	}
+
 #ifdef _WIN32
 	UIWindows::Destroy();
 #else //_ORBIS
 	UIPlaystation::Destroy();
 #endif
 
-	SteamAPI_Shutdown();
 
 	Window::DestroyGameWindow();
 }

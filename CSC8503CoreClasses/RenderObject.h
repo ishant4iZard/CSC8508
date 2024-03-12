@@ -10,6 +10,16 @@ namespace NCL {
 		class Transform;
 		using namespace Maths;
 
+		enum class TextureType : uint8_t
+		{
+			ALBEDO = 0,
+			NORMAL,
+			METAL,
+			ROUGHNESS,
+			AO,
+			MAX_TYPE
+		};
+
 		class RenderObject
 		{
 		public:
@@ -24,6 +34,20 @@ namespace NCL {
 				return texture;
 			}
 
+			Texture* GetTexture(const TextureType& inType) const
+			{
+				if(inType != TextureType::MAX_TYPE)
+					return textureList[(uint8_t)inType];
+				return nullptr;
+			}
+
+			const char* GetTextureName(const TextureType& inType) const
+			{
+				if (inType != TextureType::MAX_TYPE)
+					return textureNameList[(uint8_t)inType];
+				return "";
+			}
+
 			Mesh*	GetMesh() const {
 				return mesh;
 			}
@@ -36,20 +60,38 @@ namespace NCL {
 				return shader;
 			}
 
+			void SetShader(Shader* inShader) { this->shader = inShader; }
+			void SetMesh(Mesh* inMesh) { this->mesh = inMesh; }
 			void SetColour(const Vector4& c) {
 				colour = c;
+			}
+			void SetTexture(const TextureType& inType, Texture* inTex)
+			{
+				if (inType == TextureType::MAX_TYPE) return;
+				textureList[(uint8_t)inType] = inTex;
 			}
 
 			Vector4 GetColour() const {
 				return colour;
 			}
 
+			Vector2 GetTiling() const { return tiling; }
+			void SetTiling(const Vector2& inTiling) { this->tiling = inTiling; }
+
 		protected:
 			Mesh*		mesh;
 			Texture*	texture;
+			Texture* textureList[(uint8_t)TextureType::MAX_TYPE];
 			Shader*		shader;
 			Transform*	transform;
 			Vector4		colour;
+			Vector2 tiling;
+			const char* textureNameList[(uint8_t)TextureType::MAX_TYPE] = {
+				"diffuseTex",
+				"normalTex",
+				"metallicTex",
+				"roughnessTex",
+				"ambiantOccTex" };
 		};
 	}
 }

@@ -47,6 +47,10 @@ namespace NCL::Rendering {
 
 			INDEX_BUFFER,
 
+			InstanceModelMatrix,
+			InstanceModelMatrixRow1,
+			InstanceModelMatrixRow2,
+			InstanceModelMatrixRow3,
 			MAX_ATTRIBUTES
 		};	
 		
@@ -59,6 +63,10 @@ namespace NCL::Rendering {
 			std::string("Joint Weights"),
 			std::string("Joint Indices"),
 			std::string("Index Buffer")
+			std::string("Instance Model Matrix"),
+			std::string("Instance Model Matrix Row 1"),
+			std::string("Instance Model Matrix Row 2"),
+			std::string("Instance Model Matrix Row 3")
 		};
 	};
 
@@ -180,10 +188,11 @@ namespace NCL::Rendering {
 		const std::vector<Vector4>&		GetTangentData()		const { return tangents;	}
 		const std::vector<Vector4>&		GetSkinWeightData()		const { return skinWeights; }
 		const std::vector<Vector4i>&		GetSkinIndexData()		const { return skinIndices; }
-
+		const std::vector<Matrix4>& GetInstanceModelMatricesData() const { return instanceModelMatrices; }
 		const std::vector<int>& GetJointParents()	const {
 			return jointParents;
 		}
+		const unsigned int& GetInstanceCount() { return instanceModelMatrices.size(); }
 
 		const std::vector<unsigned int>& GetIndexData()			const { return indices;		}
 
@@ -198,10 +207,13 @@ namespace NCL::Rendering {
 		void SetVertexSkinWeights(const std::vector<Vector4>& newSkinWeights);
 		void SetVertexSkinIndices(const std::vector<Vector4i>& newSkinIndices);
 
+		void SetInstanceModelMatrices(const std::vector<Matrix4>& inInstanceModelMatrices);
+		void AddInstanceModelMatrices(const Matrix4& inModelMatrix);
 		void SetDebugName(const std::string& debugName);
 
+		void SetInstanceCount(const unsigned int& inInstanceCount);
 		virtual void UploadToGPU(Rendering::RendererBase* renderer = nullptr) = 0;
-
+		virtual void UpdateInstanceModelMatrix() = 0;
 		uint32_t GetAssetID() const {
 			return assetID;
 		}
@@ -225,6 +237,7 @@ namespace NCL::Rendering {
 		std::vector<Vector3>		normals;
 		std::vector<Vector4>		tangents;
 		std::vector<unsigned int>	indices;
+		std::vector<Matrix4>		instanceModelMatrices;
 		std::vector<SubMesh>		subMeshes;
 		std::vector<std::string>	subMeshNames;
 
@@ -234,6 +247,8 @@ namespace NCL::Rendering {
 		std::vector<int>			jointParents;
 		std::vector<Matrix4>		bindPose;
 		std::vector<Matrix4>		inverseBindPose;
+		
+		unsigned int instanceCount = 0;
 	};
 
 	using UniqueMesh = std::unique_ptr<Mesh>;

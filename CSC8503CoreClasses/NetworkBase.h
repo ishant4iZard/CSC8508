@@ -6,7 +6,7 @@ struct _ENetEvent;
 
 enum BasicNetworkMessages {
 	None,
-	Hello,
+	Client_Hello,
 	Message,
 	String_Message,
 	Delta_State,	//1 byte per channel since the last state
@@ -15,7 +15,9 @@ enum BasicNetworkMessages {
 	Player_Connected,
 	Player_Disconnected,
 	Player_Fire,
+	Player_Score,
 	Projectile_Deactivate,
+	Round_Over,
 	Shutdown
 };
 

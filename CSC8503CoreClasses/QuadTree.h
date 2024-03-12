@@ -63,7 +63,6 @@ namespace NCL {
 					for (int i = 0; i < 4; ++i) {
 						children[i].Insert(object, objectPos, objectSize,
 							depthLeft - 1, maxSize);
-
 					}
 
 				}
@@ -76,6 +75,9 @@ namespace NCL {
 							for (const auto& i : contents) {
 								for (int j = 0; j < 4; ++j) {
 									auto entry = i;
+									/*if (entry.object->GetName() == "wall") {
+										std::cout << "youhoo\n";
+									}*/
 									children[j].Insert(entry.object, entry.pos,
 										entry.size, depthLeft - 1, maxSize);
 
@@ -92,9 +94,10 @@ namespace NCL {
 
 			}
 
-			CollisionDetection::CollisionInfo CheckBroadwithstatic(T& object, const Vector3& objectPos, const Vector3& objectSize, int depthLeft, int maxSize) {
-				QuadTreeEntry<T> temp(object, objectPos, objectSize);
-				CollisionDetection::CollisionInfo info;
+			std::list< QuadTreeEntry<T>> CheckBroadwithstatic(T& object, const Vector3& objectPos, const Vector3& objectSize, int depthLeft, int maxSize) {
+				//QuadTreeEntry<T> temp(object, objectPos, objectSize);
+				std::list< QuadTreeEntry<T>> info;
+				std::list< QuadTreeEntry<T>> temp;
 				if (!CollisionDetection::AABBTest(objectPos,
 					Vector3(position.x, 0, position.y), objectSize,
 					Vector3(size.x, 1000.0f, size.y))) {
@@ -102,25 +105,20 @@ namespace NCL {
 				}
 				if (children) { // not a leaf node , just descend the tree
 					for (int i = 0; i < 4; ++i) {
-						return children[i].CheckBroadwithstatic(object, objectPos, objectSize,
-							depthLeft - 1, maxSize);
+						temp = children[i].CheckBroadwithstatic(object, objectPos, objectSize,depthLeft - 1, maxSize);
+						if(temp.size()!=0)
+							info.insert(info.end(), temp.begin(), temp.end());
 					}
+					return info;
 				}
 				else {
-					for (const auto& it : contents) {
-						if (broadPhaseHelper(it, temp)) {
-							info.a = temp.object;
-							info.b = it.object;
-							return info;
-						}
-					}
+					return contents;
 				}
-
 			}
 
 			void Split() {
 				Vector2 halfSize = size / 2.0f;
-				children = new QuadTreeNode <T >[4];
+				children = new QuadTreeNode <T> [4];
 				children[0] = QuadTreeNode <T >(position +
 					Vector2(-halfSize.x, halfSize.y), halfSize);
 				children[1] = QuadTreeNode <T >(position +
@@ -139,17 +137,24 @@ namespace NCL {
 				if (children) {
 					for (int i = 0; i < 4; ++i) {
 						children[i].OperateOnContents(func);
-
 					}
 
 				}
 				else {
 					if (!contents.empty()) {
 						func(contents);
-
 					}
 
 				}
+			}
+			void Clear() {
+				if (children) {
+					for (int i = 0; i < 4; ++i) {
+						children[i].Clear();
+					}
+				}
+				contents.clear();
+				children= nullptr;
 			}
 
 		protected:
@@ -188,12 +193,15 @@ namespace NCL {
 				root.DebugDraw();
 			}
 
-			CollisionDetection::CollisionInfo CheckBroadwithstatic(T object, const Vector3& pos, const Vector3& size){
+			std::list< QuadTreeEntry<T>> CheckBroadwithstatic(T object, const Vector3& pos, const Vector3& size){
 				return root.CheckBroadwithstatic(object, pos, size, maxDepth, maxSize);
 			}
 
 			void OperateOnContents(typename QuadTreeNode<T>::QuadTreeFunc  func) {
 				root.OperateOnContents(func);
+			}
+			void Clear() {
+				root.Clear();
 			}
 
 		protected:

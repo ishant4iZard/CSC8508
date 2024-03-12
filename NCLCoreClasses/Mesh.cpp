@@ -121,8 +121,26 @@ void Mesh::SetVertexSkinIndices(const std::vector<Vector4i>& newSkinIndices) {
 	skinIndices = newSkinIndices;
 }
 
+void Mesh::SetInstanceModelMatrices(const std::vector<Matrix4>& inInstanceModelMatrices){
+	instanceModelMatrices = inInstanceModelMatrices;
+	SetInstanceCount(instanceModelMatrices.size());
+	UpdateInstanceModelMatrix();
+}
+
+void NCL::Rendering::Mesh::AddInstanceModelMatrices(const Matrix4& inModelMatrix)
+{
+	instanceModelMatrices.emplace_back(inModelMatrix);
+	SetInstanceCount(instanceModelMatrices.size());
+	UpdateInstanceModelMatrix();
+}
+
 void Mesh::SetDebugName(const std::string& newName) {
 	debugName = newName;
+}
+
+void Mesh::SetInstanceCount(const unsigned int& inInstanceCount)
+{
+	instanceCount = inInstanceCount;
 }
 
 void Mesh::SetJointNames(const std::vector < std::string >& newNames) {

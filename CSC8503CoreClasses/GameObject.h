@@ -39,6 +39,10 @@ namespace NCL::CSC8503 {
 		Transform& GetTransform() {
 			return transform;
 		}
+		
+		Transform& GetSweptTransform() {
+			return SweptTransform;
+		}
 
 		RenderObject* GetRenderObject() const {
 			return renderObject;
@@ -89,7 +93,13 @@ namespace NCL::CSC8503 {
 
 		bool GetBroadphaseAABB(Vector3&outsize) const;
 
+		CollisionVolume* getSweptVolume() const {
+			return SweptVolume;
+		}
+
 		void UpdateBroadphaseAABB();
+
+		void UpdateSweptVolume(float dt);
 
 		void SetWorldID(int newID) {
 			worldID = newID;
@@ -106,6 +116,12 @@ namespace NCL::CSC8503 {
 		void settag(std::string ttag) {
 			tag = ttag;
 		}
+		
+		void setName(std::string inname) {
+			name = inname;
+		}
+
+
 
 		
 
@@ -116,6 +132,9 @@ namespace NCL::CSC8503 {
 		PhysicsObject*		physicsObject;
 		RenderObject*		renderObject;
 		NetworkObject*		networkObject;
+
+		CollisionVolume*	SweptVolume;
+		Transform			SweptTransform;
 
 		bool		isActive;
 		int			worldID;
