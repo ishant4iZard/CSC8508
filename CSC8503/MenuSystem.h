@@ -14,13 +14,14 @@ namespace NCL {
 	namespace  CSC8503 {
 		class PushdownMachine;
 		class NetworkedGame;
+		class TutorialGame;
 		class OnlineSubsystemBase;
 		class NetSystem_Steam;
 
 		class MenuSystem
 		{
 		public:
-			MenuSystem(NetworkedGame* Game);
+			MenuSystem(TutorialGame* Game);
 			~MenuSystem();
 
 			void Update(float dt);
@@ -62,6 +63,7 @@ namespace NCL {
 			ApplicationState* appState;
 
 			// Local States 
+			bool isSoloGameBtnPressed = false;
 			bool isCreatingLobby = false;
 			bool isLobbyCreated = false;
 			bool isSearchLobbyBtnPressed = false;

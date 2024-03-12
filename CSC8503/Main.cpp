@@ -41,9 +41,10 @@ int main() {
 	}
 #else
 	// Check Playstation subsystem
+	bIsNetSystemInitSuccess = true;
 #endif
 
-	Window*w = Window::CreateGameWindow("CSC8503 Game technology!", 1920, 1080 , true);
+	Window*w = Window::CreateGameWindow("CSC8503 Game technology!", 1920, 1080 , false);
 
 	if (!w->HasInitialised()) {
 		return -1;
@@ -52,12 +53,17 @@ int main() {
 	w->ShowOSPointer(true);
 	w->LockMouseToWindow(false);
 
+#ifdef _WIN32
 	NetworkedGame* g = new NetworkedGame();
 
 	std::string IPAdd;
 	w->GetLocalIPV4Address(IPAdd);
 	g->GetMenuSystem()->SetIsNetsystemInitSuccess(bIsNetSystemInitSuccess);
 	g->GetMenuSystem()->SetLocalIPv4Address(IPAdd);
+#else
+	// Run Ps5 Game
+
+#endif
 
 	w->GetTimer().GetTimeDeltaSeconds(); //Clear the timer so we don't get a larget first dt!
 	while (w->UpdateWindow() && !Window::GetKeyboard()->KeyDown(KeyCodes::ESCAPE)) {

@@ -208,8 +208,8 @@ void NetworkedGame::UpdateAsServer(float dt) {
 	UpdateMinimumState();
 
 	ServerUpdatePlayersList();
-	ServerUpdateScoreList();
 	CheckPlayerListAndSpawnPlayers();
+	ServerUpdateScoreList();
 
 	if (LocalPlayer)
 	{
