@@ -19,6 +19,7 @@ using namespace NCL;
 using namespace CSC8503;
 #define POWER_UP_SPAWN_TIME 30.0f
 #define MAX_POWER_UP_COUNT 3
+#define SAFE_DELETE_PBR_TEXTURE(a) for (uint8_t i = 0; i < (uint8_t)TextureType::MAX_TYPE; i++){ if (a[i] != NULL) delete a[i]; a[i] = NULL; }
 
 TutorialGame::TutorialGame() : controller(*Window::GetWindow()->GetKeyboard(), *Window::GetWindow()->GetMouse()) {
 	world		= new GameWorld();
@@ -169,9 +170,9 @@ TutorialGame::~TutorialGame()	{
 
 	delete levelFileLoader;
 
-	//delete[] groundTextureList;
-	//delete[] wallTextureList;
-	//delete[] sandTextureList;
+	SAFE_DELETE_PBR_TEXTURE(groundTextureList)
+	SAFE_DELETE_PBR_TEXTURE(wallTextureList)
+	SAFE_DELETE_PBR_TEXTURE(sandTextureList)
 }
 
 void TutorialGame::UpdateGame(float dt) {
