@@ -31,5 +31,25 @@ namespace NCL {
             float life;
 
         };
+
+        class GenerateParticle {
+        public:
+            GenerateParticle(Shader* inShader, Texture* inTexture, int inNum);
+
+            void Update(float dt, GameObject* otherObject, int newParticle, Vector2 offset = Vector2(0.0f, 0.0f));
+            void Draw();
+
+        protected:
+            void init();
+            void respawnParticle(Particle* inParticle, GameObject* otherObject, Vector2 offset = Vector2(0.0f, 0.0f));
+            GLuint FirstUnusedParticle();
+
+            GLuint VAO;
+            Shader* shader;
+            Texture* texture;
+            
+            std::vector<Particle> particles;
+            int num;
+        };
 	}
 }
