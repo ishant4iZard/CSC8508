@@ -34,7 +34,7 @@ float noise(vec2 n) {
 
 //Fractal Brownian Motion to create more complex noise
 float fbm(vec2 n) {
-	float total = 0.0, amplitude = 0.5;
+	float total = 0.0, amplitude = 0.8;
 	for (int i = 0; i < 4; i++) {
         total += noise(n ) * amplitude;
 		n += n;
@@ -66,8 +66,8 @@ vec4 getColor(vec2 uv, float cf, float per) {
     float t1 = per * cf;
     float t2 = t1 + per;
     
-    float k1 = 0.3;
-    float k2 = 0.6;
+    float k1 = 0.9;
+    float k2 = 0.1;
     
     vec2 uv1 = calculateNext(uv, t1 * k1 + k2);
     vec2 uv2 = calculateNext(uv, t2 * k1 + k2);
@@ -107,7 +107,7 @@ void main(void) {
 
     vec3 norm = normal(uv);
     float alphaEdge = 1.0 - smoothstep(0.0, Radius, len);
-    float alphaCenter = smoothstep(0.0, (Radius - Radius * 0.5), len);
+    float alphaCenter = smoothstep(0.0, (Radius - Radius * 0.7), len);
 
     vec4 colorEdge = mix(vec4(0.0), mix( mix(color - color * Intensity, texture(
         mainTex, uv), 0.2), texture(mainTex, norm.xz * 0.5 + 0.5), 0.3), alphaEdge);

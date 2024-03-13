@@ -336,14 +336,19 @@ void NCL::CSC8503::TutorialGame::SpawnTarget(const Vector3& inPosition, const Ve
 	SphereVolume* volume = new SphereVolume(radius);
 	hole->SetBoundingVolume((CollisionVolume*)volume);
 	hole->GetTransform().SetScale(inScale).SetPosition(inPosition).SetOrientation(Quaternion::EulerAnglesToQuaternion(inRotation.x, inRotation.y, inRotation.z));
-	hole->SetRenderObject(new RenderObject(&hole->GetTransform(), cubeMesh, targetTex, targetholeShader));
 	hole->SetPhysicsObject(new PhysicsObject(&hole->GetTransform(), hole->GetBoundingVolume()));
 	hole->GetPhysicsObject()->SetInverseMass(0);
 	hole->GetPhysicsObject()->InitSphereInertia();
 
-	//hole->GetRenderObject()->SetColour(Vector4(0, 0, 0, 1));
-	//hole->GetRenderObject()->SetTiling(inTiling);
+	GameObject* targetDisplay = new GameObject();
+	targetDisplay->GetTransform()
+		.SetPosition(Vector3(inPosition.x, -3.0, inPosition.z))
+		.SetScale(Vector3(inScale.x, inScale.y, inScale.z))
+		.SetOrientation(Quaternion::EulerAnglesToQuaternion(inRotation.x, inRotation.y, inRotation.z));
+	targetDisplay->SetRenderObject(new RenderObject(&targetDisplay->GetTransform(), cubeMesh, targetTex, targetholeShader));
+
 	world->AddGameObject(hole);
+	world->AddGameObject(targetDisplay);
 }
 
 void NCL::CSC8503::TutorialGame::SpawnBlackHole(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling)
@@ -356,13 +361,21 @@ void NCL::CSC8503::TutorialGame::SpawnBlackHole(const Vector3& inPosition, const
 	SphereVolume* volume = new SphereVolume(radius);
 	gravityWell->SetBoundingVolume((CollisionVolume*)volume);
 	gravityWell->GetTransform().SetScale(inScale).SetPosition(inPosition).SetOrientation(Quaternion::EulerAnglesToQuaternion(inRotation.x, inRotation.y, inRotation.z));
-	gravityWell->SetRenderObject(new RenderObject(&gravityWell->GetTransform(), sphereMesh, blackholeTex, blackholeShader));
+	
 	gravityWell->SetPhysicsObject(new PhysicsObject(&gravityWell->GetTransform(), gravityWell->GetBoundingVolume()));
 	gravityWell->GetPhysicsObject()->SetInverseMass(0);
 	gravityWell->GetPhysicsObject()->InitSphereInertia(); 
 	
+	GameObject* blackholeDisplay = new GameObject();
+	blackholeDisplay->GetTransform()
+		.SetPosition(Vector3(inPosition.x, -2.0, inPosition.z))
+		.SetScale(Vector3(inScale.x, inScale.y, inScale.z))
+		.SetOrientation(Quaternion::EulerAnglesToQuaternion(inRotation.x, inRotation.y, inRotation.z));
+	blackholeDisplay->SetRenderObject(new RenderObject(&blackholeDisplay->GetTransform(), sphereMesh, blackholeTex, blackholeShader));
+
 	gravitywell = gravityWell;
 	world->AddGameObject(gravityWell);
+	world->AddGameObject(blackholeDisplay);
 }
 void NCL::CSC8503::TutorialGame::AddPowerUpSpawnPoint(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling)
 {
