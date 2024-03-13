@@ -25,6 +25,7 @@ namespace NCL {
 
 			void ReduceTimeLeft(float dt) { timeLeft -= dt; }
 			const float GetTimeLeft() { return timeLeft; }
+			void ResetTime() { timeLeft = LIFE_TIME_AMOUNT; }
 
 			bool getTeleport() {
 				return canTeleport;

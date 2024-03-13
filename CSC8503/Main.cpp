@@ -19,7 +19,6 @@
 #include "PS5Window.h"
 #include "PS5Controller.h"
 #include "GameTechAGCRenderer.h"
-#include "TutorialGame.h"
 
 size_t sceUserMainThreadStackSize = 2 * 1024 * 1024;
 extern const char sceUserMainThreadName[] = "TeamProjectGameMain";
@@ -35,7 +34,7 @@ int main() {
 
 	bool bIsNetSystemInitSuccess = false;
 #ifdef _WIN32
-	Window* w = Window::CreateGameWindow("CSC8503 Game technology!", 1920, 1080, true);
+	Window* w = Window::CreateGameWindow("CSC8503 Game technology!", 1920, 1080, false);
 
 	/** Check the NetSubsystem work condition */
 	if (SteamAPI_Init())
@@ -50,31 +49,6 @@ int main() {
 	}
 #else // PROSPERO
 	NCL::PS5::PS5Window* w  = new NCL::PS5::PS5Window("Hello!", 1920, 1080);
-	NCL::PS5::PS5Controller* c = w->GetController();
-
-	c->MapAxis(0, "LeftX");
-	c->MapAxis(1, "LeftY");
-
-	c->MapAxis(2, "RightX");
-	c->MapAxis(3, "RightY");
-
-	c->MapAxis(4, "DX");
-	c->MapAxis(5, "DY");
-
-	c->MapButton(0, "Triangle");
-	c->MapButton(1, "Circle");
-	c->MapButton(2, "Cross");
-	c->MapButton(3, "Square");
-
-	//These are the axis/button aliases the inbuilt camera class reads from:
-	c->MapAxis(0, "XLook");
-	c->MapAxis(1, "YLook");
-
-	c->MapAxis(2, "Sidestep");
-	c->MapAxis(3, "Forward");
-
-	c->MapButton(0, "Up");
-	c->MapButton(2, "Down");
 #endif
 
 	if (!w->HasInitialised()) {
@@ -93,7 +67,7 @@ int main() {
 	g->GetMenuSystem()->SetIsNetsystemInitSuccess(bIsNetSystemInitSuccess);
 	g->GetMenuSystem()->SetLocalIPv4Address(IPAdd);
 #else
-	TutorialGame* g = new TutorialGame();
+	PS5_Game* g = new PS5_Game();
 #endif
 
 	w->GetTimer().GetTimeDeltaSeconds(); //Clear the timer so we don't get a larget first dt!
@@ -112,7 +86,7 @@ int main() {
 			w->SetWindowPosition(0, 0);
 		}
 
-		if (!Window::GetKeyboard()->KeyDown(KeyCodes::ESCAPE))
+		if (Window::GetKeyboard()->KeyDown(KeyCodes::ESCAPE))
 			break;
 
 		w->SetTitle("Frame Rate : " + std::to_string(1.0f / dt));
