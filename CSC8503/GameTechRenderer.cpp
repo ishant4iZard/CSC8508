@@ -179,7 +179,6 @@ void GameTechRenderer::RenderFrame() {
 	NewRenderText();
 	glDisable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	ui->RenderUI();
 }
@@ -447,8 +446,7 @@ void GameTechRenderer::RenderCamera() {
 			glUniform4fv(lightColourLocation, 1, (float*)&lightColour);
 			glUniform1f(lightRadiusLocation , lightRadius);
 
-			//int shadowTexLocation = glGetUniformLocation(shader->GetProgramID(), "shadowTex");
-			//glUniform1i(shadowTexLocation, 1);
+			
 
 			activeShader = shader;
 		}

@@ -1,7 +1,7 @@
 #pragma once
 #include "Transform.h"
 #include "CollisionVolume.h"
-#include "Light.h"
+//#include "Light.h"
 
 
 using std::vector;
@@ -53,6 +53,10 @@ namespace NCL::CSC8503 {
 
 		Light* GetLightComponent() const {
 			return light;
+		} // light list
+
+		void SetLightComponent(Light* newLightComponent) {
+			light = newLightComponent;
 		}
 
 		NetworkObject* GetNetworkObject() const {

@@ -57,12 +57,12 @@ namespace NCL {
 			void SetDebugStringBufferSizes(size_t newVertCount);
 			void SetDebugLineBufferSizes(size_t newVertCount);
 
-			void BuildLightList();
+			void BuildLightList(); // light list
 
 			vector<const RenderObject*> activeObjects;
 			vector<const RenderObject*> instancedRenderObjectList;
 
-			vector<const Light*> activeLights;
+			vector<const Light*> activeLights; // light list
 
 			OGLShader*  debugShader;
 			OGLShader*  skyboxShader;
