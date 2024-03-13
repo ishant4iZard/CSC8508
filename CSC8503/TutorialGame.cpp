@@ -48,16 +48,16 @@ TutorialGame::TutorialGame() {
 	physics->UseGravity(false);
 
 #ifdef _WIN32
-	controller = new KeyboardMouseController(*Window::GetWindow()->GetKeyboard(), *Window::GetWindow()->GetMouse())
+	controller = new KeyboardMouseController(*Window::GetWindow()->GetKeyboard(), *Window::GetWindow()->GetMouse());
 
-	controller.MapAxis(0, "Sidestep");
-	controller.MapAxis(1, "UpDown");
-	controller.MapAxis(2, "Forward");
+	controller->MapAxis(0, "Sidestep");
+	controller->MapAxis(1, "UpDown");
+	controller->MapAxis(2, "Forward");
 
-	controller.MapAxis(3, "XLook");
-	controller.MapAxis(4, "YLook");
+	controller->MapAxis(3, "XLook");
+	controller->MapAxis(4, "YLook");
 
-	world->GetMainCamera().SetController(controller);
+	world->GetMainCamera().SetController(*controller);
 #else
 	controller = (dynamic_cast<PS5::PS5Window*>(Window::GetWindow()))->GetController();
 
