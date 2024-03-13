@@ -94,7 +94,6 @@ bool NetworkedGame::StartAsServer() {
 
 	StartLevel();
 
-	appState->SetIsGameOver(false);
 
 	return true;
 }
@@ -122,7 +121,7 @@ bool NetworkedGame::StartAsClient(char a, char b, char c, char d) {
 	thisClient->RegisterPacketHandler(Round_Over, this);
 	thisClient->RegisterPacketHandler(Player_Score, this);
 
-	//StartLevel();
+	StartLevel();
 }
 
 void NetworkedGame::DestroyServer()
@@ -368,7 +367,7 @@ void NetworkedGame::CheckPlayerListAndSpawnPlayers()
 	{
 		if (PlayersList[i] != -1)
 		{
-			world->gameObjectsMutex.lock();
+			//world->gameObjectsMutex.lock();
 			if (ControledPlayersList[i] == nullptr)
 			{
 				Vector3 pos;
@@ -392,15 +391,15 @@ void NetworkedGame::CheckPlayerListAndSpawnPlayers()
 					movementDirection = Vector3(0, 0, -1);
 					break;
 				}
-				world->gameObjectsMutex.unlock();
+				/*world->gameObjectsMutex.unlock();*/
 
 				ControledPlayersList[i] = AddNetworkPlayerToWorld(pos, i);
 				ControledPlayersList[i]->SetMovementDir(movementDirection);
 			}
-			else
+			/*else
 			{
 				world->gameObjectsMutex.unlock();
-			}
+			}*/
 		}
 		if (GetLocalPlayerNumber() != -1)
 		{
@@ -592,6 +591,7 @@ void NetworkedGame::StartLevel() {
 	CheckPlayerListAndSpawnPlayers();
 	SpawnAI();
 	physics->createStaticTree();//this needs to be at the end of all initiations
+	appState->SetIsGameOver(false);
 
 }
 
