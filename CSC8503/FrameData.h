@@ -7,7 +7,7 @@ namespace NCL
 	namespace CSC8503 
 	{
 		struct FrameData {
-			sce::Agc::Core::Buffer constantBuffer;
+			sce::Agc::Core::Buffer constantBuffer; //Store data that is common for all shaders like projection matrix, camera position
 			sce::Agc::Core::Buffer objectBuffer;
 			sce::Agc::Core::Buffer debugLineBuffer;
 			sce::Agc::Core::Buffer debugTextBuffer;

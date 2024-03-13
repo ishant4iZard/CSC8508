@@ -72,6 +72,9 @@ namespace NCL {
 
 			FrameData* allFrames;
 			FrameData* currentFrame;
+			/// <summary>
+			/// Frame index to implement double buffer pattern.
+			/// </summary>
 			int currentFrameIndex;
 
 			NCL::PS5::AGCMesh* quadMesh;

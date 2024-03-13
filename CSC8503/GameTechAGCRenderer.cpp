@@ -68,18 +68,20 @@ GameTechAGCRenderer::GameTechAGCRenderer(GameWorld& world) : AGCRenderer(*Window
 	rendererModel->SetPixelShader(PixelShaderName::PBR, new AGCShader("Tech_vv.ags", allocator));
 
 	allFrames = new FrameData[FRAMES_IN_FLIGHT];
+	// Initialize framebuffer constant buffer to pass constant data among shader
 	for (int i = 0; i < FRAMES_IN_FLIGHT; ++i) {
 
 		{//We store scene object matrices etc in a big UBO
 			allFrames[i].data.dataStart = (char*)allocator.Allocate(1024 * 1024 * 64, sce::Agc::Alignment::kBuffer);
 			allFrames[i].data.data = allFrames[i].data.dataStart;
 
-			sce::Agc::Core::BufferSpec bufSpec;
-			bufSpec.initAsConstantBuffer(allFrames[i].data.dataStart, sizeof(ShaderConstants));
+			sce::Agc::Core::BufferSpec tempConstBuffSpec;
+			tempConstBuffSpec.initAsConstantBuffer(allFrames[i].data.dataStart, sizeof(ShaderConstants));
 
-			SceError error = sce::Agc::Core::initialize(&allFrames[i].constantBuffer, &bufSpec);
+			SceError error = sce::Agc::Core::initialize(&allFrames[i].constantBuffer, &tempConstBuffSpec);
 		}
 	}
+
 	currentFrameIndex = 0;
 	currentFrame = &allFrames[currentFrameIndex];
 
@@ -151,7 +153,7 @@ Shader* GameTechAGCRenderer::LoadShader(const std::string& vertex, const std::st
 }
 
 void GameTechAGCRenderer::RenderFrame() {
-	currentFrame = &allFrames[currentFrameIndex];
+	currentFrame = &allFrames[currentFrameIndex]; //Get data from back buffer to write on
 
 	currentFrame->data.Reset();
 
@@ -178,7 +180,7 @@ void GameTechAGCRenderer::RenderFrame() {
 	//Step 8: Draw the main scene render target to the screen with a compute shader
 	DisplayRenderPass(); //Puts our scene on screen, uses a compute
 
-	currentFrameIndex = (currentFrameIndex + 1) % FRAMES_IN_FLIGHT;
+	currentFrameIndex = (currentFrameIndex + 1) % FRAMES_IN_FLIGHT; //Swap the front and back buffer
 }
 
 /*
@@ -186,28 +188,28 @@ This method builds a struct that
 
 */
 void GameTechAGCRenderer::WriteRenderPassConstants() {
-	ShaderConstants frameData;
-	frameData.lightColour = Vector4(0.8f, 0.8f, 0.5f, 1.0f);
-	frameData.lightRadius = 1000.0f;
-	frameData.lightPosition = Vector3(-100.0f, 60.0f, -100.0f);
-	frameData.cameraPos = gameWorld.GetMainCamera().GetPosition();
+	ShaderConstants tempConstantFrameData;
+	tempConstantFrameData.lightColour = Vector4(0.8f, 0.8f, 0.5f, 1.0f);
+	tempConstantFrameData.lightRadius = 1000.0f;
+	tempConstantFrameData.lightPosition = Vector3(-100.0f, 60.0f, -100.0f);
+	tempConstantFrameData.cameraPos = gameWorld.GetMainCamera().GetPosition();
 
-	frameData.viewMatrix = gameWorld.GetMainCamera().BuildViewMatrix();
-	frameData.projMatrix = gameWorld.GetMainCamera().BuildProjectionMatrix(hostWindow.GetScreenAspect());
+	tempConstantFrameData.viewMatrix = gameWorld.GetMainCamera().BuildViewMatrix();
+	tempConstantFrameData.projMatrix = gameWorld.GetMainCamera().BuildProjectionMatrix(hostWindow.GetScreenAspect());
 
-	frameData.viewProjMatrix = frameData.projMatrix * frameData.viewMatrix;
+	tempConstantFrameData.viewProjMatrix = tempConstantFrameData.projMatrix * tempConstantFrameData.viewMatrix;
 
-	frameData.inverseViewProjMatrix = frameData.viewProjMatrix.Inverse();
-	frameData.inverseViewMatrix = frameData.viewMatrix.Inverse();
-	frameData.inverseProjMatrix = frameData.projMatrix.Inverse();
+	tempConstantFrameData.inverseViewProjMatrix = tempConstantFrameData.viewProjMatrix.Inverse();
+	tempConstantFrameData.inverseViewMatrix = tempConstantFrameData.viewMatrix.Inverse();
+	tempConstantFrameData.inverseProjMatrix = tempConstantFrameData.projMatrix.Inverse();
 
-	frameData.orthoMatrix = Matrix4::Orthographic(0.0f, 100.0f, 100.0f, 0.0f, -1.0f, 1.0f);
-	frameData.shadowMatrix = Matrix4::Perspective(50.0f, 500.0f, 1.0f, 45.0f) *
-		Matrix4::BuildViewMatrix(frameData.lightPosition, Vector3(0, 0, 0), Vector3(0, 1, 0));
+	tempConstantFrameData.orthoMatrix = Matrix4::Orthographic(0.0f, 100.0f, 100.0f, 0.0f, -1.0f, 1.0f);
+	tempConstantFrameData.shadowMatrix = Matrix4::Perspective(50.0f, 500.0f, 1.0f, 45.0f) *
+		Matrix4::BuildViewMatrix(tempConstantFrameData.lightPosition, Vector3(0, 0, 0), Vector3(0, 1, 0));
 
-	frameData.shadowID = shadowMap->GetAssetID();
+	tempConstantFrameData.shadowID = shadowMap->GetAssetID();
 
-	currentFrame->data.WriteData<ShaderConstants>(frameData); //Let's start filling up our frame data!
+	currentFrame->data.WriteData<ShaderConstants>(tempConstantFrameData); //Let's start filling up our frame data!
 
 	currentFrame->data.AlignData(128);
 	currentFrame->objectStateOffset = currentFrame->data.bytesWritten;
@@ -544,7 +546,7 @@ void GameTechAGCRenderer::RenderDebugText() {
 void GameTechAGCRenderer::UpdateObjectList() {
 	activeObjects.clear();
 
-	char* dataPos = currentFrame->data.data;
+	char* dataPos = currentFrame->data.data; //Get starting position of last data entered
 	int at = 0;
 	gameWorld.OperateOnContents(
 		[&](GameObject* o) {
@@ -553,7 +555,7 @@ void GameTechAGCRenderer::UpdateObjectList() {
 				if (g) {
 					activeObjects.push_back(g);
 
-					ObjectState state;
+					ObjectState state; //PSSL Header
 					state.modelMatrix = g->GetTransform()->GetMatrix();
 
 					state.colour = g->GetColour();
@@ -574,24 +576,24 @@ void GameTechAGCRenderer::UpdateObjectList() {
 						if (!b) {
 							//We've not yet made a buffer to hold the verts of this mesh!
 							//We need a new mesh to store the positions, normals, and tangents of this mesh
-							size_t vertexSize = sizeof(Vector3) + sizeof(Vector3) + sizeof(Vector4);
+							size_t vertexSize = sizeof(Vector3) + sizeof(Vector3) + sizeof(Vector4); //Position + Scale + Rotation gives size of one vertex
 							size_t vertexCount = m->GetVertexCount();
-							size_t bufferSize = vertexCount * vertexSize;
+							size_t bufferSize = vertexCount * vertexSize; //Total size of buffer to hold data of mesh vertices
 
 							char* vertexData = (char*)allocator.Allocate((uint64_t)(bufferSize), sce::Agc::Alignment::kBuffer);
 
-							sce::Agc::Core::BufferSpec bufSpec;
-							bufSpec.initAsRegularBuffer(vertexData, vertexSize, vertexCount);
+							sce::Agc::Core::BufferSpec tempRegularBufferSpecs;
+							tempRegularBufferSpecs.initAsRegularBuffer(vertexData, vertexSize, vertexCount);
 
-							sce::Agc::Core::Buffer vBuffer;
-							SceError error = sce::Agc::Core::initialize(&vBuffer, &bufSpec);
+							sce::Agc::Core::Buffer tempVertexBuffer;
+							SceError error = sce::Agc::Core::initialize(&tempVertexBuffer, &tempRegularBufferSpecs);
 
 							uint32_t bufferID = bufferCount++;
-							b = new AGCBuffer(vBuffer, vertexData);
+							b = new AGCBuffer(tempVertexBuffer, vertexData);
 							b->SetAssetID(bufferID);
 							g->SetGPUBuffer(b);
 
-							bindlessBuffers[bufferID] = vBuffer;
+							bindlessBuffers[bufferID] = tempVertexBuffer;
 						}
 						state.index[1] = b->GetAssetID();
 
