@@ -97,6 +97,10 @@ if(NOT("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64"))
         "GameTechRendererInterface.h"
         "GameTechAGCRenderer.cpp"
         "GameTechAGCRenderer.h"
+        "GameTechAGCModel.h"
+        "GameTechAGCModel.cpp"
+        "BumpAllocator.h"
+        "FrameData.h"
     )
     source_group("PS5 Rendering Files" FILES ${PS5_Rendering_Files})
 
