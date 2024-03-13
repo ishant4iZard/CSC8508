@@ -43,7 +43,9 @@ int main() {
 	// Check Playstation subsystem
 #endif
 
+
 	Window*w = Window::CreateGameWindow("CSC8503 Game technology!", 1920, 1080 , false);
+
 
 	if (!w->HasInitialised()) {
 		return -1;

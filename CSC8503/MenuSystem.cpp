@@ -511,8 +511,12 @@ PushdownState::PushdownResult PlayingHUD::OnUpdate(float dt, PushdownState** new
 				appState->SetIsClient(false);
 				Game->DestroyClient();
 			}
-			EventEmitter::RemoveListner(this);
-			return  PushdownResult::Pop;
+			ShowGameResult(Game);
+			if (Window::GetKeyboard()->KeyPressed(KeyCodes::Type::RETURN))
+			{
+				EventEmitter::RemoveListner(this);
+				return  PushdownResult::Pop;
+			}
 		}
 
 		/** Game going HUD */
@@ -520,7 +524,9 @@ PushdownState::PushdownResult PlayingHUD::OnUpdate(float dt, PushdownState** new
 		{
 			ShowTimeLeft(Game);
 			ui->DrawStringText("Player    " + Game->GetPlayerNameByIndex(Game->GetLocalPlayerIndex()), Vector2(83, 30), UIBase::WHITE);
-			ui->DrawStringText("Score     " + std::to_string(Game->GetPlayerScoreByIndex(Game->GetLocalPlayerIndex())), Vector2(83, 40), UIBase::WHITE);
+			ui->DrawStringText("Your Score     " + std::to_string(Game->GetPlayerScoreByIndex(Game->GetLocalPlayerIndex())), Vector2(83, 40), UIBase::WHITE);
+			ui->DrawStringText("Hold TAB To", Vector2(83, 50), UIBase::WHITE);
+			ui->DrawStringText("Show Score Table", Vector2(83, 55), UIBase::WHITE);
 
 			if (Window::GetKeyboard()->KeyHeld(KeyCodes::Type::TAB))
 			{
@@ -563,9 +569,9 @@ void PlayingHUD::ShowScoreTable(NetworkedGame* Game)
 	{
 		if (Game->GetPlayerScoreByIndex(i) != -1)
 		{
-			ui->DrawStringText("Player " + std::to_string(i + 1), Vector2(25, 30 + i * 7), UIBase::BLUE);
-			ui->DrawStringText(Game->GetPlayerNameByIndex(i), Vector2(45, 30 + i * 7), UIBase::BLUE);
-			ui->DrawStringText("Your Score: " + std::to_string(Game->GetPlayerScoreByIndex(i)), Vector2(65, 30 + i * 7), UIBase::BLUE);
+			ui->DrawStringText("Player" + std::to_string(i + 1), Vector2(25, 30 + i * 7), UIBase::BLUE);
+			ui->DrawStringText(Game->GetPlayerNameByIndex(i), Vector2(40, 30 + i * 7), UIBase::BLUE);
+			ui->DrawStringText("Score: " + std::to_string(Game->GetPlayerScoreByIndex(i)), Vector2(60, 30 + i * 7), UIBase::BLUE);
 		}
 	}
 }
@@ -587,3 +593,47 @@ void PlayingHUD::CheckRoundTime(NetworkedGame* Game)
 		EventEmitter::EmitEvent(EventType::ROUND_OVER);
 	}
 }
+
+void PlayingHUD::ShowGameResult(NetworkedGame* Game)
+{
+	int LoaclPlayerScore = Game->GetPlayerScoreByIndex(Game->GetLocalPlayerIndex());
+	int Rank = 1;
+	for (int i = 0; i < 4; ++i)
+	{
+		if (Game->GetPlayerScoreByIndex(i) != -1)
+		{
+			ui->DrawStringText("Player " + std::to_string(i + 1), Vector2(25, 30 + i * 7), UIBase::BLUE);
+			ui->DrawStringText(Game->GetPlayerNameByIndex(i), Vector2(45, 30 + i * 7), UIBase::BLUE);
+			ui->DrawStringText("Score: " + std::to_string(Game->GetPlayerScoreByIndex(i)), Vector2(65, 30 + i * 7), UIBase::BLUE);
+			if (LoaclPlayerScore < Game->GetPlayerScoreByIndex(i))
+			{
+				++Rank;
+			}
+		}
+	}
+	std::string RoundResult;
+	switch (Rank)
+	{
+	case 1:
+		RoundResult = std::string("You are the Winner ! ! !");
+		break;
+
+	case 2:
+		RoundResult = std::string("Sorry! You are 2nd ! ! !");
+		break;
+
+	case 3:
+		RoundResult = std::string("Sorry! You are 3rd ! ! !");
+		break;
+
+	case 4:
+		RoundResult = std::string("Sorry! You are 4th ! ! !");
+		break;
+
+	default:
+		break;
+	}
+	ui->DrawStringText(RoundResult, Vector2(40, 15), UIBase::RED);
+	ui->DrawStringText("Press Enter To Continue!...", Vector2(25, 60), UIBase::YELLOW);
+}
+

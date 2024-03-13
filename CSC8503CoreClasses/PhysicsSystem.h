@@ -73,7 +73,7 @@ namespace NCL {
 			float powerUptime;
 			const float powerUpLifetime = 10;
 
-			Vector3 wind = Vector3(0,0,0);
+			Vector3 wind = Vector3();
 
 			//QuadTree <GameObject*>* staticTree = new QuadTree<GameObject*>(Vector2(256.0f, 256.0f), 8, 10);
 
