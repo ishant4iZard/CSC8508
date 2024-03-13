@@ -173,6 +173,41 @@ void NetworkPlayer::MovePlayerTowardsCursor(float dt){
 	this->GetPhysicsObject()->SetLinearVelocity(velocity);
 }
 
+void NCL::CSC8503::NetworkPlayer::RotatePlayerBasedOnController(float dt, float rotationX, float rotationY)
+{
+	Vector3 pointPos = Vector3(rotationX, 0, rotationY);
+	Quaternion orientation;
+	Vector3 pos = Vector3(0, 0, 0);
+	Vector3 targetForwardVec = (pointPos - pos);
+	targetForwardVec.y = 0;
+	targetForwardVec = targetForwardVec.Normalised();
+
+	Vector3 forward = Vector3(0, 0, -1);
+
+	float cosTheta = Vector3::Dot(forward, targetForwardVec);
+	Vector3 rotationAxis;
+	float angle;
+	if (cosTheta < -1 + 0.001f)
+	{
+		rotationAxis = Vector3::Cross(Vector3(0, 0, 1), forward);
+		if (rotationAxis.Length() < 0.01)
+		{
+			rotationAxis = Vector3::Cross(Vector3(1, 0, 0), forward);
+		}
+		rotationAxis = rotationAxis.Normalised();
+		angle = 3.1415926f;
+	}
+	else
+	{
+		rotationAxis = Vector3::Cross(forward, targetForwardVec);
+		rotationAxis = rotationAxis.Normalised();
+		angle = std::acos(cosTheta);
+	}
+	orientation = GenerateOrientation(rotationAxis, angle);
+
+	transform.SetOrientation(orientation);
+}
+
 void NCL::CSC8503::NetworkPlayer::MovePlayerBasedOnController(float dt, float horizontalInput, float verticalInput)
 {
 	Vector3 playerPos = transform.GetPosition();
@@ -194,7 +229,7 @@ void NetworkPlayer::ReplenishProjectiles(float dt) {
 
 	projectileReplenishTimer += dt;
 
-	if (projectileReplenishTimer > PROJECTILE_RELOAD_RATE)
+	if (projectileReplenishTimer > 1.0f / PROJECTILE_RELOAD_RATE)
 	{
 		numProjectilesAccumulated = (numProjectilesAccumulated + 1) % MAX_PROJECTILE_CAPACITY;
 		projectileReplenishTimer = 0.0f;

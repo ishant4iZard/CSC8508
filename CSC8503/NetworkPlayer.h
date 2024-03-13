@@ -19,6 +19,7 @@ namespace NCL {
 			void RotatePlayer(float dt);
 			void MovePlayerInSquarePattern(float dt); // The player will move along the boundaries of the level in a square pattern
 			void MovePlayerTowardsCursor(float dt);
+			void RotatePlayerBasedOnController(float dt, float rotationX, float rotationY);
 			void MovePlayerBasedOnController(float dt, float horizontalInput, float verticalInput);
 			void ReplenishProjectiles(float dt);
 

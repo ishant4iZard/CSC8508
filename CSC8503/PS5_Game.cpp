@@ -16,24 +16,72 @@ using namespace CSC8503;
 
 NCL::CSC8503::PS5_Game::PS5_Game()
 {
-	SpawnPlayer();
 	StartLevel();
 }
 
 NCL::CSC8503::PS5_Game::~PS5_Game()
 {
 	delete player;
+
+	for (auto i : projectileList)
+		delete i;
+	projectileList.clear();
 }
 
 void NCL::CSC8503::PS5_Game::UpdateGame(float dt)
 {
 	physics->Update(dt);
+	timeSinceFire += dt;
 	MovePlayer(dt);
+	player->ReplenishProjectiles(dt);
+	if(controller->GetNamedButton("Cross"))
+		Fire();
 	TutorialGame::UpdateGame(dt);
+}
+
+void NCL::CSC8503::PS5_Game::InitializeProjectilePool()
+{
+	for (int i = 0; i < PROJECTILE_POOL_SIZE; i++) {
+		Projectile* newBullet = new Projectile(player, this);
+
+		float radius = 1.0f;
+		Vector3 sphereSize = Vector3(radius, radius, radius);
+		SphereVolume* volume = new SphereVolume(radius);
+		newBullet->SetBoundingVolume((CollisionVolume*)volume);
+		newBullet->GetTransform().SetScale(sphereSize).SetPosition(Vector3(0, 0, 0));
+		newBullet->SetRenderObject(new RenderObject(&newBullet->GetTransform(), sphereMesh, basicTex, basicShader));
+		newBullet->SetPhysicsObject(new PhysicsObject(&newBullet->GetTransform(), newBullet->GetBoundingVolume()));
+		newBullet->GetPhysicsObject()->SetInverseMass(Projectile::inverseMass);
+		newBullet->GetPhysicsObject()->InitSphereInertia();
+		newBullet->GetRenderObject()->SetColour(Debug::RED);
+
+		int bulletID = Projectile::CurrentAvailableProjectileID++;
+
+		world->AddGameObject(newBullet);
+
+		newBullet->GetPhysicsObject()->SetElasticity(1.0f);
+		newBullet->GetPhysicsObject()->SetFriction(1.0f);
+		newBullet->GetPhysicsObject()->SetFriction(1.0f);
+
+		projectileList.push_back(newBullet);
+		newBullet->deactivate();
+	}
 }
 
 void NCL::CSC8503::PS5_Game::SpawnProjectile(NetworkPlayer* player, Vector3 firePos, Vector3 fireDir)
 {
+	Projectile* newBullet = nullptr;
+	for (auto i : projectileList) {
+		if (i->IsActive()) continue;
+		newBullet = i;
+	}
+
+	if (!newBullet) return;
+	newBullet->activate();
+
+	newBullet->GetTransform().SetPosition(firePos);
+	Vector3 force = fireDir * Projectile::FireForce;
+	newBullet->GetPhysicsObject()->ApplyLinearImpulse(force);
 }
 
 void NCL::CSC8503::PS5_Game::SpawnPlayer()
@@ -62,6 +110,8 @@ void NCL::CSC8503::PS5_Game::SpawnPlayer()
 
 void NCL::CSC8503::PS5_Game::StartLevel()
 {
+	SpawnPlayer();
+	InitializeProjectilePool();
 	physics->createStaticTree();
 }
 
@@ -73,4 +123,20 @@ void NCL::CSC8503::PS5_Game::MovePlayer(float dt) {
 	float horizontalInput	= controller->GetNamedAxis("XLook");
 	float verticalInput		= controller->GetNamedAxis("YLook");
 	player->MovePlayerBasedOnController(dt, horizontalInput, verticalInput);
+
+	float rotationX = controller->GetNamedAxis("RightX");
+	float rotationY = -controller->GetNamedAxis("RightY");
+
+	if (rotationX == 0 && rotationY == 0) return;
+
+	player->RotatePlayerBasedOnController(dt, rotationX, rotationY);
+}
+
+void NCL::CSC8503::PS5_Game::Fire()
+{
+	if (timeSinceFire < 1.0f / FIRE_RATE) return;
+
+	//std::cout << "Fire\n";
+	player->Fire();
+	timeSinceFire = 0;
 }
