@@ -4,6 +4,8 @@
 #include "PushdownState.h"
 #include "Projectile.h"
 
+#include "ThreadPool.h"
+
 #include "GameClient.h"
 #include "ApplicationState.h"
 
@@ -130,10 +132,12 @@ namespace NCL {
 			int fireSFX = -1;
 			bool UpdatePhysics = false;
 
-			void PhysicsUpdate(float dt);
-			void NonPhysicsUpdate(float dt);
+
+			ThreadPool* poolPTR;
 
 		public:
+			void NonPhysicsUpdate(float dt);
+			void PhysicsUpdate(float dt);
 			inline bool IsServer() { return thisServer != nullptr ? true : false; }
 			inline bool IsClient() { return thisClient != nullptr ? true : false; }
 			inline GameServer* GetServer() const { return thisServer; }

@@ -50,6 +50,7 @@ set(Header_Files
     "OGLTextureManager.h"
     "Light.h"
     "DirectionalLight.h"
+    "ThreadPool.h"
 )
 source_group("Header Files" FILES ${Header_Files})
 
