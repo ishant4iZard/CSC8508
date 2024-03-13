@@ -15,13 +15,20 @@
 #include <sstream>
 #include <Helper.h>
 
+#ifndef _WIN32
+#include "PS5Window.h"
+#endif
+
 using namespace NCL;
 using namespace CSC8503;
 #define POWER_UP_SPAWN_TIME 30.0f
 #define MAX_POWER_UP_COUNT 3
+#define SAFE_DELETE_PBR_TEXTURE(a) for (uint8_t i = 0; i < (uint8_t)TextureType::MAX_TYPE; i++){ if (a[i] != NULL) delete a[i]; a[i] = NULL; }
 
-TutorialGame::TutorialGame() : controller(*Window::GetWindow()->GetKeyboard(), *Window::GetWindow()->GetMouse()) {
+TutorialGame::TutorialGame() {
 	world		= new GameWorld();
+
+#ifdef _WIN32
 #ifdef USEVULKAN
 	renderer	= new GameTechVulkanRenderer(*world);
 	renderer->Init();
@@ -29,17 +36,19 @@ TutorialGame::TutorialGame() : controller(*Window::GetWindow()->GetKeyboard(), *
 #else 
 	renderer = new GameTechRenderer(*world);
 #endif
+#else
+	renderer = new GameTechAGCRenderer(*world);
+#endif
 
 	physics		= new PhysicsSystem(*world);
 
-#ifdef _WIN32
 	levelFileLoader = new WindowsLevelLoader();
-#endif // _WIN32
 
 	//useGravity		= false;
 	physics->UseGravity(false);
 
-	world->GetMainCamera().SetController(controller);
+#ifdef _WIN32
+	controller = new KeyboardMouseController(*Window::GetWindow()->GetKeyboard(), *Window::GetWindow()->GetMouse())
 
 	controller.MapAxis(0, "Sidestep");
 	controller.MapAxis(1, "UpDown");
@@ -47,6 +56,33 @@ TutorialGame::TutorialGame() : controller(*Window::GetWindow()->GetKeyboard(), *
 
 	controller.MapAxis(3, "XLook");
 	controller.MapAxis(4, "YLook");
+
+	world->GetMainCamera().SetController(controller);
+#else
+	controller = (dynamic_cast<PS5::PS5Window*>(Window::GetWindow()))->GetController();
+
+	controller->MapAxis(0, "LeftX");
+	controller->MapAxis(1, "LeftY");
+	controller->MapAxis(2, "RightX");
+	controller->MapAxis(3, "RightY");
+	controller->MapAxis(4, "DX");
+	controller->MapAxis(5, "DY");
+	controller->MapButton(0, "Triangle");
+	controller->MapButton(1, "Circle");
+	controller->MapButton(2, "Cross");
+	controller->MapButton(3, "Square");
+
+	//These are the axis/button aliases the inbuilt camera class reads from:
+	controller->MapAxis(0, "XLook");
+	controller->MapAxis(1, "YLook");
+
+	controller->MapAxis(2, "Sidestep");
+	controller->MapAxis(3, "Forward");
+	
+	controller->MapButton(0, "Up");
+	controller->MapButton(2, "Down");
+#endif
+
 	currentlevel = level::level1;
 
 
@@ -58,7 +94,7 @@ TutorialGame::TutorialGame() : controller(*Window::GetWindow()->GetKeyboard(), *
 	ui = UIPlaystation::GetInstance();
 #endif
 	appState = ApplicationState::GetInstance();
-	bm = new OGLTextureManager();
+	//bm = new OGLTextureManager();
 	BindEvents();
 }
 
@@ -162,9 +198,9 @@ TutorialGame::~TutorialGame()	{
 
 	delete levelFileLoader;
 
-	delete[] groundTextureList;
-	delete[] wallTextureList;
-	delete[] sandTextureList;
+	SAFE_DELETE_PBR_TEXTURE(groundTextureList)
+	SAFE_DELETE_PBR_TEXTURE(wallTextureList)
+	SAFE_DELETE_PBR_TEXTURE(sandTextureList)
 }
 
 void TutorialGame::UpdateGame(float dt) {

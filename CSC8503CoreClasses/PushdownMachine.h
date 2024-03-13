@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stack>
+
 namespace NCL {
 	namespace CSC8503 {
 		class PushdownState;

@@ -2,7 +2,7 @@
 
 namespace NCL {
 	namespace CSC8503 {
-		class NetworkedGame;
+		//class NetworkedGame;
 		class PushdownState
 		{
 		public:

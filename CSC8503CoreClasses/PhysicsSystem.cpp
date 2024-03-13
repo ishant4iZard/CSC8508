@@ -83,6 +83,7 @@ void PhysicsSystem::Update(float dt) {
 	powerUptime -= dt;
 	if (powerUptime <= 0) {
 		activePowerup = powerUpType::none;
+		EventEmitter::EmitEvent(ACTIVATE_NONE_POWER_UP);
 	}
 
 	GameTimer t;

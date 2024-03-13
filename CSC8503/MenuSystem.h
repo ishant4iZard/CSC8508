@@ -10,6 +10,8 @@
 #endif
 #include "Event.h"
 
+//TODO needs to be refactored
+
 namespace NCL {
 	namespace  CSC8503 {
 		class PushdownMachine;
@@ -126,6 +128,7 @@ namespace NCL {
 			void ReceiveEvent(const EventType eventType) override;
 
 		protected:
+			//TODO ifdef
 			void CheckAndDisplayLobbyMembersList(OnlineSubsystemBase* Subsystem, NetworkedGame* Game);
 			std::string DisplayMemberLineByIndex(OnlineSubsystemBase* Subsystem, int Index);
 
@@ -158,11 +161,11 @@ namespace NCL {
 			UIBase* ui;
 			ApplicationState* appState;
 
-			void ShowScoreTable(NetworkedGame* Game);
-			void ShowTimeLeft(NetworkedGame* Game);
-			void CheckRoundTime(NetworkedGame* Game);
-			void ShowGameResult(NetworkedGame* Game);
-			std::string GetRoundPowerUpState(NetworkedGame* Game);
+			void ShowScoreTable(TutorialGame* Game);
+			void ShowTimeLeft(TutorialGame* Game);
+			void CheckRoundTime(TutorialGame* Game);
+			void ShowGameResult(TutorialGame* Game);
+			std::string GetRoundPowerUpState(TutorialGame* Game);
 		};
 	}
 }

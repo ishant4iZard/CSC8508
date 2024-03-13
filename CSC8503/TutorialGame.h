@@ -1,10 +1,15 @@
+#pragma once
 #include "../NCLCoreClasses/KeyboardMouseController.h"
 
-#pragma once
+#ifdef _WIN32
 #include "GameTechRenderer.h"
 #ifdef USEVULKAN
 #include "GameTechVulkanRenderer.h"
 #endif
+#else
+#include "GameTechAGCRenderer.h"
+#endif
+
 #include "PhysicsSystem.h"
 
 #include "AiTreeObject.h"
@@ -16,17 +21,17 @@
 #include "TutorialGame.h"
 #include "PowerUp.h"
 
-#ifdef _WIN32
 #include "WindowsLevelLoader.h"
-#endif // _WIN32
 
 #include "ApplicationState.h"
 #include "../CSC8503/UIBase.h"
+
 #ifdef _WIN32
 #include "../CSC8503/UIWindows.h"
 #include "OGLTextureManager.h"
 #else //_ORBIS
 #include "../CSC8503/UIPlaystation.h"
+#include "PS5Controller.h"
 #endif
 
 #define USE_SHADOW = false
@@ -106,17 +111,23 @@ namespace NCL {
 
 			GameObject* capsule;
 
+
+#ifdef _WIN32
+		KeyboardMouseController controller;
 #ifdef USEVULKAN
-			GameTechVulkanRenderer*	renderer;
+		GameTechVulkanRenderer* renderer;
 #else
-			GameTechRenderer* renderer;
+		GameTechRenderer* renderer;
+#endif
+#else
+		GameTechAGCRenderer* renderer;
+		PS5::PS5Controller* controller;
 #endif
 			PhysicsSystem*		physics;
 			GameWorld*			world;
 
 
 
-			KeyboardMouseController controller;
 
 			bool useGravity;
 
@@ -162,12 +173,7 @@ namespace NCL {
 			unsigned int activePowerUpCount = 0;
 			powerUpType activePowerUp = powerUpType::none;
 
-
-
-#ifdef _WIN32
 			WindowsLevelLoader* levelFileLoader;
-#endif // _WIN32
-
 
 			const int TIME_LIMIT = 200;
 
@@ -184,7 +190,12 @@ namespace NCL {
 #pragma endregion
 
 			ApplicationState* appState;
+
+#ifdef _WIN32
 			OGLTextureManager* bm;
+#endif
+			
+			
 			std::vector<Vector3> powerUpSpawnPointList;
 		};
 	}
