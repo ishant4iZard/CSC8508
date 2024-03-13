@@ -130,6 +130,18 @@ if(NOT("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64"))
     )
     source_group("ImGUI_Files" FILES ${ImGUI_Files})
 
+    file(GLOB_RECURSE ALL_SHADERS CONFIGURE_DEPENDS 
+        ${COMPILE_ASSET_ROOT}Shaders/PSSL/*.pssl
+    )
+    source_group("Shader Files" FILES ${ALL_SHADERS})
+
+    file(GLOB_RECURSE ALL_TEXTURES CONFIGURE_DEPENDS 
+        ${COMPILE_ASSET_ROOT}Textures/*.jpg 
+        ${COMPILE_ASSET_ROOT}Textures/*.png 
+        ${COMPILE_ASSET_ROOT}Textures/*.dds 
+    )
+    source_group("Texture Files" FILES ${ALL_TEXTURES})
+
     # PS5 files
     set(ALL_FILES
         ${Header_Files}
@@ -139,6 +151,8 @@ if(NOT("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64"))
         ${AI_Files}
         ${UIPlaystation}
         ${PS5_Rendering_Files}
+        ${ALL_SHADERS}
+        ${ALL_TEXTURES}
     )
 
     #file(GLOB_RECURSE Header_Files CONFIGURE_DEPENDS *.h)
@@ -147,18 +161,6 @@ if(NOT("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64"))
     #file(GLOB_RECURSE Source_Files CONFIGURE_DEPENDS *.cpp)
     #source_group("Source Files" FILES ${Source_Files})
     #
-
-    file(GLOB_RECURSE ALL_SHADERS CONFIGURE_DEPENDS 
-    	${COMPILE_ASSET_ROOT}Shaders/PSSL/*.pssl 
-    )
-    source_group("Shader Files" FILES ${ALL_SHADERS})
-    
-    file(GLOB_RECURSE ALL_TEXTURES CONFIGURE_DEPENDS 
-	    ${COMPILE_ASSET_ROOT}Textures/*.jpg 
-	    ${COMPILE_ASSET_ROOT}Textures/*.png 
-	    ${COMPILE_ASSET_ROOT}Textures/*.dds 
-    )
-    source_group("Texture Files" FILES ${ALL_TEXTURES})
 
     #set(ALL_FILES
     #    ${Header_Files}

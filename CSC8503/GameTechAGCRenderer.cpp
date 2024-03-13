@@ -559,9 +559,10 @@ void GameTechAGCRenderer::UpdateObjectList() {
 					state.modelMatrix = g->GetTransform()->GetMatrix();
 
 					state.colour = g->GetColour();
+					state.tiling = g->GetTiling();
+
 					state.index[0] = 0; //Default Texture
 					state.index[1] = 0; //Skinning buffer
-
 					Texture* t = g->GetDefaultTexture();
 					if (t) {
 						state.index[0] = t->GetAssetID();
