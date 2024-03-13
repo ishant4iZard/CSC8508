@@ -173,6 +173,22 @@ void NetworkPlayer::MovePlayerTowardsCursor(float dt){
 	this->GetPhysicsObject()->SetLinearVelocity(velocity);
 }
 
+void NCL::CSC8503::NetworkPlayer::MovePlayerBasedOnController(float dt, float horizontalInput, float verticalInput)
+{
+	Vector3 playerPos = transform.GetPosition();
+
+	playerPos.y = 5.6;
+	transform.SetPosition(playerPos);
+
+	Vector3 movementDirection = Vector3(horizontalInput, 0, verticalInput).Normalised();
+
+	Vector3 currentVelocity = this->GetPhysicsObject()->GetLinearVelocity();
+	Vector3 targetVelocity = movementDirection * movementSpeed;
+	Vector3 velocity = Vector3::Lerp(currentVelocity, targetVelocity, dt * 0.5);
+
+	this->GetPhysicsObject()->SetLinearVelocity(velocity); 
+}
+
 void NetworkPlayer::ReplenishProjectiles(float dt) {
 	const static int PROJECTILE_RELOAD_RATE = 1; // 1 projectile per second is replenished
 
