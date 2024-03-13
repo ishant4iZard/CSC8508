@@ -50,6 +50,7 @@ set(Header_Files
     "OGLTextureManager.h"
     "Light.h"
     "DirectionalLight.h"
+    "Particles.h"
 )
 source_group("Header Files" FILES ${Header_Files})
 
@@ -71,6 +72,7 @@ set(Source_Files
     "Singleton.cpp"
     "BaseTextureManager.cpp"
     "OGLTextureManager.cpp"
+    "Particles.cpp"
 )
 source_group("Source Files" FILES ${Source_Files})
 
