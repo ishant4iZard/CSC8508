@@ -113,7 +113,7 @@ namespace NCL {
 
 
 #ifdef _WIN32
-		KeyboardMouseController controller;
+		KeyboardMouseController* controller;
 #ifdef USEVULKAN
 		GameTechVulkanRenderer* renderer;
 #else

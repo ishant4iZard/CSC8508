@@ -3,6 +3,7 @@
 #include "PhysicsObject.h"
 #include "RenderObject.h"
 #include "TextureLoader.h"
+#include "GravityWell.h"
 
 #include "PositionConstraint.h"
 #include "OrientationConstraint.h"
@@ -34,6 +35,7 @@ void NCL::CSC8503::PS5_Game::UpdateGame(float dt)
 	timeSinceFire += dt;
 	MovePlayer(dt);
 	player->ReplenishProjectiles(dt);
+	gravitywell->PullProjectilesWithinField(projectileList);
 	if(controller->GetNamedButton("Cross"))
 		Fire();
 	TutorialGame::UpdateGame(dt);
