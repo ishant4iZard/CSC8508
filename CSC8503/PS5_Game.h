@@ -1,4 +1,5 @@
 #pragma once
+#include "AiStatemachineObject.h"
 #include "PhysicsSystem.h"
 #include "MeshAnimation.h"
 #include "GameTechRendererInterface.h"
@@ -36,6 +37,10 @@ namespace NCL {
 
 			const float FIRE_RATE = 1;
 			float timeSinceFire = 0;
+
+			void SpawnAI();
+			AiStatemachineObject* AddAiStateObjectToWorld(const Vector3& position);
+			AiStatemachineObject* AIStateObject;
 		};
 	}
 }
