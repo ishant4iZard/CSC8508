@@ -166,6 +166,8 @@ void NetworkPlayer::MovePlayerTowardsCursor(float dt){
 	Vector3 movementDirection = (pointPos - transform.GetPosition()).Normalised();
 	movementDirection.y = 0;
 
+	if (!this->GetPhysicsObject()) return;
+
 	Vector3 currentVelocity = this->GetPhysicsObject()->GetLinearVelocity();
 	Vector3 targetVelocity = movementDirection * movementSpeed;
 	Vector3 velocity = Vector3::Lerp(currentVelocity, targetVelocity, dt * 0.5);

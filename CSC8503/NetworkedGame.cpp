@@ -94,6 +94,8 @@ bool NetworkedGame::StartAsServer() {
 
 	StartLevel();
 
+	appState->SetIsGameOver(false);
+
 	return true;
 }
 
@@ -141,7 +143,7 @@ void NetworkedGame::DestroyClient()
 
 void NetworkedGame::UpdateGame(float dt) {
 	Debug::UpdateRenderables(dt);
-	if (thisServer) {
+	if (thisServer && !appState->GetIsGameOver()) {
 		UpdatePhysics = true;
 		//PhysicsUpdate(dt);
 		timer += dt;
@@ -150,18 +152,24 @@ void NetworkedGame::UpdateGame(float dt) {
 	/*NonPhysicsUpdate(dt);
 	PhysicsUpdate(dt);*/
 
-	std::thread physicsUpdateThread(&NetworkedGame::PhysicsUpdate, this,dt);
-	std::thread nonPhysicsUpdateThread(&NetworkedGame::NonPhysicsUpdate, this, dt);
+	if (!appState->GetIsGameOver()) {
+		std::thread physicsUpdateThread(&NetworkedGame::PhysicsUpdate, this, dt);
+		std::thread nonPhysicsUpdateThread(&NetworkedGame::NonPhysicsUpdate, this, dt);
 
-	if (AIStateObject) {
-		AIStateObject->DetectProjectiles(ProjectileList);
-		AIStateObject->Update(dt);
+
+
+		nonPhysicsUpdateThread.join();
+		physicsUpdateThread.join();
+
+		if (AIStateObject) {
+			AIStateObject->DetectProjectiles(ProjectileList);
+			AIStateObject->Update(dt);
+		}
 	}
 	Menu->Update(dt);
-	TutorialGame::UpdateGame(dt);
+	audioEngine->Update();
 
-	nonPhysicsUpdateThread.join();
-	physicsUpdateThread.join();
+	TutorialGame::UpdateGame(dt);
 
 }
 
@@ -360,6 +368,7 @@ void NetworkedGame::CheckPlayerListAndSpawnPlayers()
 	{
 		if (PlayersList[i] != -1)
 		{
+			world->gameObjectsMutex.lock();
 			if (ControledPlayersList[i] == nullptr)
 			{
 				Vector3 pos;
@@ -383,8 +392,14 @@ void NetworkedGame::CheckPlayerListAndSpawnPlayers()
 					movementDirection = Vector3(0, 0, -1);
 					break;
 				}
+				world->gameObjectsMutex.unlock();
+
 				ControledPlayersList[i] = AddNetworkPlayerToWorld(pos, i);
 				ControledPlayersList[i]->SetMovementDir(movementDirection);
+			}
+			else
+			{
+				world->gameObjectsMutex.unlock();
 			}
 		}
 		if (GetLocalPlayerNumber() != -1)
@@ -419,7 +434,9 @@ NetworkPlayer* NetworkedGame::AddNetworkPlayerToWorld(const Vector3& position, i
 	character->GetPhysicsObject()->SetInverseMass(inverseMass);
 	character->GetPhysicsObject()->InitCubeInertia();
 
+
 	world->AddGameObject(character);
+
 	networkObjects.insert(std::pair<int, NetworkObject*>(playerNum, character->GetNetworkObject()));
 
 	Vector4 colour;
@@ -459,7 +476,6 @@ void NetworkedGame::SpawnPlayer() {
 
 void NetworkedGame::SpawnProjectile(NetworkPlayer* owner, Vector3 firePos, Vector3 fireDir)
 {
-	world->gameObjectsMutex.lock();
 	Projectile* newBullet = new Projectile(owner, this);
 
 	float radius = 1.0f;
@@ -515,7 +531,6 @@ void NetworkedGame::SpawnProjectile(NetworkPlayer* owner, Vector3 firePos, Vecto
 		firePacket.NetObjectID = bulletID;
 		thisServer->SendGlobalPacket(firePacket);
 	}
-	world->gameObjectsMutex.unlock();
 
 }
 
@@ -561,10 +576,8 @@ void NetworkedGame::OnRep_DeactiveProjectile(int objectID)
 }
 
 void NetworkedGame::StartLevel() {
-	InitWorld();
 	PlayersList.clear();
 	ControledPlayersList.clear();
-	//PlayersNameList.clear();
 	PlayersScoreList.clear();
 	for (int i = 0; i < 4; ++i)
 	{
@@ -574,19 +587,25 @@ void NetworkedGame::StartLevel() {
 		PlayersScoreList.push_back(-1);
 	}
 	ProjectileList.clear();
+	InitWorld();
+	//PlayersNameList.clear();
 	CheckPlayerListAndSpawnPlayers();
 	SpawnAI();
 	physics->createStaticTree();//this needs to be at the end of all initiations
+
 }
 
 void NetworkedGame::EndLevel()
 {
+
 	world->ClearAndErase();
 	physics->Clear();
+	ControledPlayersList.clear();
 	networkObjects.clear();
 	if(AIStateObject)
 		AIStateObject = NULL;
 	InitCamera();
+
 }
 
 void NetworkedGame::ReceivePacket(int type, GamePacket* payload, int source) {
@@ -845,7 +864,6 @@ void NetworkedGame::NonPhysicsUpdate(float dt)
 	
 
 
-	audioEngine->Update();
 }
 
 void NetworkedGame::SpawnAI() {

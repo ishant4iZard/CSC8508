@@ -35,9 +35,11 @@ void GameWorld::ClearAndErase() {
 }
 
 void GameWorld::AddGameObject(GameObject* o) {
+	gameObjectsMutex.lock();
 	gameObjects.emplace_back(o);
 	o->SetWorldID(worldIDCounter++);
 	worldStateCounter++;
+	gameObjectsMutex.unlock();
 }
 
 void GameWorld::RemoveGameObject(GameObject* o, bool andDelete) {

@@ -258,6 +258,7 @@ A single function to add a large immoveable cube to the bottom of our world
 */
 
 GameObject* TutorialGame::AddFloorToWorld(const Vector3& position, const Vector3& size) {
+
 	GameObject *floor = new GameObject();
 
 	Vector3 floorSize = size;
@@ -274,6 +275,7 @@ GameObject* TutorialGame::AddFloorToWorld(const Vector3& position, const Vector3
 	floor->GetPhysicsObject()->InitCubeInertia();
 
 	world->AddGameObject(floor);
+
 
 	return floor;
 }
@@ -347,6 +349,7 @@ void NCL::CSC8503::TutorialGame::SpawnFloor(const Vector3& inPosition, const Vec
 
 void NCL::CSC8503::TutorialGame::SpawnBouncingPad(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling)
 {
+
 	BouncePad* tempBouncePad = new BouncePad(bouncePlatformMesh, basicTex, instancePbrShader);
 	for (size_t i = 0; i < (uint8_t)TextureType::MAX_TYPE; i++)
 	{
@@ -358,10 +361,12 @@ void NCL::CSC8503::TutorialGame::SpawnBouncingPad(const Vector3& inPosition, con
 	tempBouncePad->GetTransform().SetPosition(inPosition);
 
 	bouncePlatformMesh->AddInstanceModelMatrices(tempBouncePad->GetTransform().GetMatrix());
+
 }
 
 void NCL::CSC8503::TutorialGame::SpawnTarget(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling)
 {
+
 	Hole* hole = new Hole();
 
 	float radius = 2.0f;
@@ -377,11 +382,13 @@ void NCL::CSC8503::TutorialGame::SpawnTarget(const Vector3& inPosition, const Ve
 	hole->GetRenderObject()->SetColour(Vector4(0, 0, 0, 1));
 	hole->GetRenderObject()->SetTiling(inTiling);
 	world->AddGameObject(hole);
+
 }
 
 void NCL::CSC8503::TutorialGame::SpawnBlackHole(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling)
 {
 	//GravityWell
+
 	GravityWell* gravityWell = new GravityWell();
 
 	float radius = 1.5f;
@@ -396,6 +403,7 @@ void NCL::CSC8503::TutorialGame::SpawnBlackHole(const Vector3& inPosition, const
 	
 	gravitywell = gravityWell;
 	world->AddGameObject(gravityWell);
+
 }
 void NCL::CSC8503::TutorialGame::AddPowerUpSpawnPoint(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling)
 {
@@ -449,6 +457,7 @@ physics worlds. You'll probably need another function for the creation of OBB cu
 
 
 GameObject* TutorialGame::AddCapsuleToWorld(const Vector3& position, float radius, float halfHeight, float inverseMass, float elasticity) {
+
 	GameObject* capsule = new GameObject("capsule");
 
 	CapsuleVolume* volume = new CapsuleVolume(halfHeight, radius, false, true);
@@ -468,11 +477,13 @@ GameObject* TutorialGame::AddCapsuleToWorld(const Vector3& position, float radiu
 
 	world->AddGameObject(capsule);
 
+
 	return capsule;
 }
 
 
 GameObject* TutorialGame::AddObbCubeToWorld(const Vector3& position, Vector3 dimensions, float inverseMass, float elasticity) {
+
 	 cube = new GameObject("cube");
 
 	OBBVolume* volume = new OBBVolume(dimensions,false, true);
@@ -491,9 +502,12 @@ GameObject* TutorialGame::AddObbCubeToWorld(const Vector3& position, Vector3 dim
 
 	world->AddGameObject(cube);
 
+
+
 	return cube;
 }
 GameObject* TutorialGame::AddAABBCubeToWorld(const Vector3& position, Vector3 dimensions, float inverseMass, float elasticity) {
+
 	GameObject* cube = new GameObject("cube");
 
 	AABBVolume* volume = new AABBVolume(dimensions, false ,true);
@@ -516,6 +530,7 @@ GameObject* TutorialGame::AddAABBCubeToWorld(const Vector3& position, Vector3 di
 }
 GameObject* NCL::CSC8503::TutorialGame::AddTeleporterToWorld(const Vector3& position1,const Vector3& position2,const Vector3& rotation1 , const Vector3& rotation2, Vector3 dimensions, float inverseMass, float elasticity)
 {
+
 	Teleporter* teleporter1 = new Teleporter();
 	OBBVolume* volume1 = new OBBVolume(dimensions, true, true);
 	teleporter1->SetBoundingVolume((CollisionVolume*)volume1);
@@ -605,6 +620,8 @@ void TutorialGame::InitPowerup()
 
 	(this->*powerupInitFunctionList[Helper::GetRandomEnumValue(powerUpType::MAX_POWERUP)])(tempPowerup, pbrShader);
 	world->AddGameObject(tempPowerup);
+
+
 }
 
 

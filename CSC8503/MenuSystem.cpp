@@ -98,7 +98,6 @@ PushdownState::PushdownResult MainMenu::OnUpdate(float dt, PushdownState** newSt
 
 		if (appState->GetIsServer())
 		{
-			appState->SetIsGameOver(false);
 			Game->StartAsServer();
 			*newState = new PlayingHUD();
 			return PushdownResult::Push;
@@ -633,18 +632,21 @@ void PlayingHUD::CheckRoundTime(TutorialGame* Game)
 	}
 }
 
-void PlayingHUD::ShowGameResult(NetworkedGame* Game)
+void PlayingHUD::ShowGameResult(TutorialGame* Game)
 {
-	int LoaclPlayerScore = Game->GetPlayerScoreByIndex(Game->GetLocalPlayerIndex());
+	//TODO dynamic cast game
+	NetworkedGame* tempGame = dynamic_cast<NetworkedGame*> (Game);
+
+	int LoaclPlayerScore = tempGame->GetPlayerScoreByIndex(tempGame->GetLocalPlayerIndex());
 	int Rank = 1;
 	for (int i = 0; i < 4; ++i)
 	{
-		if (Game->GetPlayerScoreByIndex(i) != -1)
+		if (tempGame->GetPlayerScoreByIndex(i) != -1)
 		{
 			ui->DrawStringText("Player " + std::to_string(i + 1), Vector2(25, 30 + i * 7), UIBase::BLUE);
-			ui->DrawStringText(Game->GetPlayerNameByIndex(i), Vector2(45, 30 + i * 7), UIBase::BLUE);
-			ui->DrawStringText("Score: " + std::to_string(Game->GetPlayerScoreByIndex(i)), Vector2(65, 30 + i * 7), UIBase::BLUE);
-			if (LoaclPlayerScore < Game->GetPlayerScoreByIndex(i))
+			ui->DrawStringText(tempGame->GetPlayerNameByIndex(i), Vector2(45, 30 + i * 7), UIBase::BLUE);
+			ui->DrawStringText("Score: " + std::to_string(tempGame->GetPlayerScoreByIndex(i)), Vector2(65, 30 + i * 7), UIBase::BLUE);
+			if (LoaclPlayerScore < tempGame->GetPlayerScoreByIndex(i))
 			{
 				++Rank;
 			}
@@ -676,10 +678,13 @@ void PlayingHUD::ShowGameResult(NetworkedGame* Game)
 	ui->DrawStringText("Press Enter To Continue!...", Vector2(25, 60), UIBase::YELLOW);
 }
 
-std::string PlayingHUD::GetRoundPowerUpState(NetworkedGame* Game)
+std::string PlayingHUD::GetRoundPowerUpState(TutorialGame* Game)
 {
+	//TODO dynamic cast game
+	NetworkedGame* tempGame = dynamic_cast<NetworkedGame*> (Game);
+
 	std::string state;
-	switch (Game->GetCurrentPowerUpType())
+	switch (tempGame->GetCurrentPowerUpType())
 	{
 	case powerUpType::none:
 		state = std::string("No powerup");
