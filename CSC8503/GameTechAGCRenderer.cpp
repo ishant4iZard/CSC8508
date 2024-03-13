@@ -567,7 +567,7 @@ void GameTechAGCRenderer::UpdateObjectList() {
 						state.index[0] = t->GetAssetID();
 					}
 
-					//SetPbrTexture(&state, g);
+					SetPbrTexture(&state, g);
 
 					AGCMesh* m = (AGCMesh*)g->GetMesh();
 					if (m && m->GetJointCount() > 0) {//It's a skeleton mesh, need to update transformed vertices buffer
@@ -614,9 +614,8 @@ void GameTechAGCRenderer::UpdateObjectList() {
 
 void NCL::CSC8503::GameTechAGCRenderer::SetPbrTexture(ObjectState* outState, RenderObject* inRenderObj)
 {
-	outState->index[0] = 0; //Default Texture
-	Texture* tempTex = inRenderObj->GetTexture(TextureType::ALBEDO);
-	if (tempTex != nullptr)
+	AGCTexture* tempTex = (AGCTexture*)inRenderObj->GetTexture(TextureType::ALBEDO);
+	if (tempTex)
 	{
 		outState->index[0] = tempTex->GetAssetID();
 	}
