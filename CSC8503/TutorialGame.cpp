@@ -350,16 +350,14 @@ void NCL::CSC8503::TutorialGame::SpawnFloor(const Vector3& inPosition, const Vec
 
 void NCL::CSC8503::TutorialGame::SpawnBouncingPad(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling)
 {
-	BouncePad* tempBouncePad = new BouncePad(bouncePlatformMesh, basicTex, instancePbrShader);
+	BouncePad* tempBouncePad = new BouncePad(bouncePlatformMesh, basicTex, instancePbrShader, inScale * 2);
 	for (size_t i = 0; i < (uint8_t)TextureType::MAX_TYPE; i++)
 	{
 		tempBouncePad->GetRenderObject()->SetTexture((TextureType)i, groundTextureList[i]);
 	}
 	tempBouncePad->GetRenderObject()->SetTiling(inTiling);
 	world->AddGameObject(tempBouncePad);
-
-	tempBouncePad->GetTransform().SetPosition(inPosition);
-
+	tempBouncePad->GetTransform().SetPosition(inPosition).SetOrientation(Quaternion::EulerAnglesToQuaternion(inRotation.x, inRotation.y, inRotation.z));
 	bouncePlatformMesh->AddInstanceModelMatrices(tempBouncePad->GetTransform().GetMatrix());
 }
 
@@ -588,7 +586,7 @@ GameObject* NCL::CSC8503::TutorialGame::AddTeleporterToWorld(const Vector3& posi
 
 void NCL::CSC8503::TutorialGame::InitTeleporters()
 {
-	AddTeleporterToWorld((Vector3(48, 5.6f, 0)), (Vector3(-48, 5.6f, 45)), Vector3(0, -45, 0), Vector3(0, 90, 0) , Vector3(10, 10, 3.5));
+	AddTeleporterToWorld((Vector3(60, 5.0f, -41)), (Vector3(-61, 5.0f, 40)), Vector3(0, -45, 0), Vector3(0, 90, 0) , Vector3(10, 10, 3.5));
 }
 
 void TutorialGame::TestAddStaticObjectsToWorld() {
