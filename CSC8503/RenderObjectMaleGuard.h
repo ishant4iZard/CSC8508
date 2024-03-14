@@ -21,6 +21,7 @@ namespace NCL {
 		{
 		public:
 			RenderObjectMaleGuard(Transform* parentTransform, Mesh* mesh, Texture* tex, Shader* shader, MeshMaterial* material);
+			RenderObjectMaleGuard(Transform* parentTransform, Mesh* mesh, Texture* tex, Shader* shader);
 			~RenderObjectMaleGuard();
 
 			void SetAnimation(MeshAnimation* animation) { maleGuardAnimation = animation; }
@@ -34,6 +35,9 @@ namespace NCL {
 			void SetMaleGuardRotation(Vector4 inRotation);
 			Vector4 GetMaleGuardRotation();
 
+			void SetMaleGuardQuaternion(Quaternion inOrientation);
+			Quaternion GetMaleGuardQuaternion();
+
 		protected:
 
 			MeshMaterial* maleGuardMaterial;
@@ -46,6 +50,8 @@ namespace NCL {
 			Vector3 maleGuardScale;
 			Vector3 maleGuardRotation;
 			float rotateDegrees;
+
+			Quaternion orientation;
 		};
 	}
 }

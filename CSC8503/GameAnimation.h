@@ -18,6 +18,7 @@ namespace NCL {
 
 			void AddAnimatedObject(MaleGuard* animatedObject);
 			void AddAnimatedObject(MaxGuard* animatedObject);
+			void AddAnimatedObject(GameObject* animatedObject);
 			void RemoveAnimatedObject(MaleGuard* animatedObject, bool andDelete = false);
 			void RemoveAnimatedObject(MaxGuard* animatedObject, bool andDelete = false);
 

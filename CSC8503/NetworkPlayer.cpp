@@ -4,6 +4,8 @@
 #include "PowerUp.h"
 #include "Event.h"
 
+#include "RenderObjectMaleGuard.h"
+
 # define  SQUARE(x) (x * x) 
 
 using namespace NCL;
@@ -17,6 +19,22 @@ NetworkPlayer::NetworkPlayer(NetworkedGame* game, int num)	{
 	timeElapsed = projectileReplenishTimer = 0.0f;
 	numProjectilesAccumulated = MAX_PROJECTILE_CAPACITY;
 	movementSpeed = 35;
+
+
+	anmNames[IDLE] = "Idle1";
+	anmNames[GUNFIRE1] = "Gunfire1";
+	anmNames[STEPFORWARD] = "StepForward";
+	anmNames[HAPPY] = "Happy";
+
+	for (int i = 0; i < NUM_ANMS; i++) {
+		AnmName anm = static_cast<AnmName>(i);
+		maleGuardAnimations[anm] = new MeshAnimation(anmNames[anm] + ".anm");
+	}
+
+	activeAnimation = maleGuardAnimations[STEPFORWARD];
+
+	animationStateCounter = 0;
+	defaultAnimation = maleGuardAnimations[IDLE];
 }
 
 NetworkPlayer::~NetworkPlayer()	{
@@ -98,6 +116,11 @@ void NetworkPlayer::SetPlayerYaw(const Vector3& pointPos)
 	orientation = GenerateOrientation(rotationAxis, angle);
 
 	transform.SetOrientation(orientation);
+
+	float currentAngle = ((RenderObjectMaleGuard*)renderObject)->GetMaleGuardRotation().x;
+	((RenderObjectMaleGuard*)renderObject)->SetMaleGuardRotation(Vector4(angle + currentAngle, rotationAxis.x, rotationAxis.y, rotationAxis.z));
+	//((RenderObjectMaleGuard*)renderObject)->SetMaleGuardRotation(orientation);
+	((RenderObjectMaleGuard*)renderObject)->SetMaleGuardQuaternion(orientation);
 }
 
 void NetworkPlayer::OscillatePlayer(float dt) {
@@ -162,6 +185,7 @@ void NetworkPlayer::MovePlayerTowardsCursor(float dt){
 	Vector3 playerPos = transform.GetPosition();
 	playerPos.y = 5.6;
 	transform.SetPosition(playerPos);
+	((RenderObjectMaleGuard*)renderObject)->SetMaleGuardPosition(playerPos);
 
 	Vector3 movementDirection = (pointPos - transform.GetPosition()).Normalised();
 	movementDirection.y = 0;
@@ -194,6 +218,10 @@ void NetworkPlayer::Fire()
 	Vector3 fireDir = GetPlayerForwardVector().Normalised();
 	Vector3 firePos = transform.GetPosition() + fireDir * 3;
 	//std::cout << firePos.y;
+
+	//set the animation
+	SetAnimation(AnmName::GUNFIRE1);
+	SetAnimationStateCounter();
 
 	game->SpawnProjectile(this, firePos, fireDir);
 	//std::cout << "player " << playerNum << " fired!" << std::endl;

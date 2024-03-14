@@ -106,10 +106,9 @@ namespace NCL {
 			size_t textCount;
 
 			//Skeletal Animation
-			void LoadAnimationAssets();
 			void LoadTextureToMesh();
-			void RenderAnimation(Vector3 inPos, Vector3 inScale, Vector4 inRotation, int animatedObjectID, string name);
-			void LoadCurrentAnimationAssets(OGLShader* currentShader, MeshMaterial* currentMaterial, MeshAnimation* currentAnimation, int animatedObjectID);
+			void RenderAnimation(Vector3 inPos, Vector3 inScale, Vector4 inRotation, Quaternion inQuaternion, int animatedObjectID, string name);
+			void LoadCurrentAnimationAssets(OGLShader* currentShader, MeshMaterial* currentMaterial, MeshAnimation* currentAnimation, int animatedObjectID , int animationState);
 
 			void Matrix4ToIdentity(Matrix4* mat4);
 
@@ -132,6 +131,8 @@ namespace NCL {
 			MeshAnimation* maleGuardAnimationGunfire1;//Gunfire1.anm
 			MeshAnimation* maleGuardAnimationHappy;//Happy.anm
 			MeshAnimation* activeAnimation[4];
+			MeshAnimation* animationDefault[4];
+
 
 			int currentFrame[4] = { 0 };
 			float frameTime[4] = { 0.0f };
@@ -151,6 +152,8 @@ namespace NCL {
 			void RenderAnimatedObject();
 			void RenderMaleGuard(GameObject* maleGuard);
 			void RenderMaxGuard(GameObject* maxGuard);
+
+			int animationStateCounter[4];
 			//Skeletal Animation
 
 

@@ -72,6 +72,10 @@ namespace NCL::CSC8503 {
 			return name;
 		}
 
+		void SetName(std::string inName) {
+			name = inName;
+		}
+
 		virtual void OnCollisionBegin(GameObject* otherObject) {
 			//std::cout << "OnCollisionBegin event occured!\n";
 			//todo
@@ -121,7 +125,13 @@ namespace NCL::CSC8503 {
 			name = inname;
 		}
 
+		void SetAnimatedObjectID(int newID) {
+			animatedObjectID = newID;
+		}
 
+		int GetAnimatedObjectID() {
+			return animatedObjectID;
+		}
 
 		
 
@@ -142,6 +152,8 @@ namespace NCL::CSC8503 {
 		std::string	tag;
 
 		Vector3 broadphaseAABB;
+
+		int animatedObjectID;
 	};
 }
 

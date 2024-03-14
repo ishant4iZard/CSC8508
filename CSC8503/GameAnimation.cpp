@@ -28,3 +28,9 @@ void GameAnimation::AddAnimatedObject(MaxGuard* animatedObject) {
 	animatedObject->SetAnimatedObjectID(anmObjectsIDCounter++);
 	anmObjectsStateCounter++;
 }
+
+void GameAnimation::AddAnimatedObject(GameObject* animatedObject) {
+	animatedObjects.emplace_back(animatedObject);
+	animatedObject->SetAnimatedObjectID(anmObjectsIDCounter++);
+	anmObjectsStateCounter++;
+}

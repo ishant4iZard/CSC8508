@@ -11,7 +11,7 @@ layout(location = 1) in vec4 colour;
 layout(location = 2) in vec2 texCoord;
 layout(location = 3) in vec3 normal;
 layout(location = 4) in vec4 tangent;
-layout(location = 7) in mat4 instanceMatrix;
+layout(location = 8) in mat4 instanceMatrix;
 
 uniform vec4 objectColour = vec4(1,1,1,1);
 

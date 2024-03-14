@@ -244,9 +244,9 @@ void TutorialGame::InitWorld() {
 	InitTeleporters();
 
 	InitMaleGuard();
-	maleGuard = SpawnMaleGuard(Vector3(20, 10, 20), Vector3(40.0f, 40.0f, 40.0f), 5.0f, maleGuardMesh, maleGuardDefultTex);
-	maleGuard2nd = SpawnMaleGuard(Vector3(-20, 10, -20), Vector3(20.0f, 20.0f, 20.0f), 5.0f, maxGuardMesh, maxGuardDefultTex);
-	maxGuard = SpawnMaxGuard(Vector3(-20, 10, 20), Vector3(20.0f, 20.0f, 20.0f), 5.0f, maxGuardMesh, maxGuardDefultTex);
+	/*maleGuard = SpawnMaleGuard(Vector3(20, 10, 20), Vector3(10.0f, 10.0f, 10.0f), 5.0f, maleGuardMesh, maleGuardDefultTex);
+	maleGuard2nd = SpawnMaleGuard(Vector3(-20, 10, -20), Vector3(10.0f, 10.0f, 10.0f), 5.0f, maxGuardMesh, maxGuardDefultTex);
+	maxGuard = SpawnMaxGuard(Vector3(-20, 10, 20), Vector3(10.0f, 10.0f, 10.0f), 5.0f, maxGuardMesh, maxGuardDefultTex);*/
 
 	GameObject* test = AddCapsuleToWorld(Vector3(-25, 5.6, 25), 1.0f, 2.0f);
 }

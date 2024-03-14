@@ -2,6 +2,7 @@
 
 #include <string>
 #include "../OpenGLRendering/OGLTexture.h"
+#include "Maths.h"
 using namespace std;
 
 using namespace NCL;
@@ -13,6 +14,13 @@ RenderObjectMaleGuard::RenderObjectMaleGuard(Transform* parentTransform, Mesh* m
 
 	maleGuardMaterial = material;
 	
+}
+
+RenderObjectMaleGuard::RenderObjectMaleGuard(Transform* parentTransform, Mesh* mesh, Texture* tex, Shader* shader)
+	:RenderObject(parentTransform, mesh, tex, shader) {
+
+	//maleGuardMaterial = material;
+	orientation = Quaternion();
 }
 
 RenderObjectMaleGuard::~RenderObjectMaleGuard() {
@@ -42,4 +50,12 @@ void RenderObjectMaleGuard::SetMaleGuardRotation(Vector4 inRotation) {
 
 Vector4 RenderObjectMaleGuard::GetMaleGuardRotation() {
 	return Vector4(rotateDegrees, maleGuardRotation.x, maleGuardRotation.y, maleGuardRotation.z);
+}
+
+void RenderObjectMaleGuard::SetMaleGuardQuaternion(Quaternion inOrientation) {
+	orientation = inOrientation;
+}
+
+Quaternion RenderObjectMaleGuard::GetMaleGuardQuaternion() {
+	return orientation;
 }

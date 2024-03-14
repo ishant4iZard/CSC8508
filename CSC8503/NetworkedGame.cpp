@@ -14,6 +14,8 @@
 #include "GravityWell.h"
 #include "NavigationGrid.h"
 #include <cmath>
+#include "GameAnimation.h"
+#include "RenderObjectMaleGuard.h"
 
 #define COLLISION_MSG 30
 
@@ -398,6 +400,8 @@ void NetworkedGame::CheckPlayerListAndSpawnPlayers()
 
 NetworkPlayer* NetworkedGame::AddNetworkPlayerToWorld(const Vector3& position, int playerNum)
 {
+	world->gameObjectsMutex.lock();
+
 	float meshSize = 2.0f;
 	Vector3 volumeSize = Vector3(1.0, 1.6, 1.0);
 	float inverseMass = 1.0f / 600000.0f;
@@ -411,13 +415,28 @@ NetworkPlayer* NetworkedGame::AddNetworkPlayerToWorld(const Vector3& position, i
 		.SetScale(Vector3(meshSize, meshSize, meshSize))
 		.SetPosition(position);
 
-	character->SetRenderObject(new RenderObject(&character->GetTransform(), charMesh, nullptr, basicShader));
+	//character->SetRenderObject(new RenderObject(&character->GetTransform(), charMesh, nullptr, basicShader));
+	character->SetRenderObject(new RenderObjectMaleGuard(&character->GetTransform(), maleGuardMesh, maleGuardDefultTex, anmShader));
 	character->SetPhysicsObject(new PhysicsObject(&character->GetTransform(), character->GetBoundingVolume()));
 	character->SetNetworkObject(new NetworkObject(*character, playerNum));
-
+	
 	character->GetPhysicsObject()->SetInverseMass(inverseMass);
 	character->GetPhysicsObject()->InitCubeInertia();
+	
+	RenderObject* characterRenderObject = character->GetRenderObject();
+	RenderObjectMaleGuard* maleGuardRenderObject = static_cast<RenderObjectMaleGuard*>(characterRenderObject);
+	
+	//To do , use maleGuard for testing
+	maleGuardRenderObject->SetAnimation(character->GetAnimation());
+	//...
 
+	maleGuardRenderObject->SetMaleGuardPosition(position);
+	maleGuardRenderObject->SetMaleGuardScale(Vector3(meshSize, meshSize, meshSize) * 10);
+	maleGuardRenderObject->SetMaleGuardRotation(Vector4(180, 0, 1, 0));
+
+	character->setName("MaleGuard");
+
+	animatedObject->AddAnimatedObject(character);
 	world->AddGameObject(character);
 	networkObjects.insert(std::pair<int, NetworkObject*>(playerNum, character->GetNetworkObject()));
 
@@ -439,6 +458,8 @@ NetworkPlayer* NetworkedGame::AddNetworkPlayerToWorld(const Vector3& position, i
 	}
 	character->GetRenderObject()->SetColour(colour);
 
+
+	world->gameObjectsMutex.unlock();
 	return character;
 }
 

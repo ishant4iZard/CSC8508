@@ -62,7 +62,7 @@ namespace NCL::Rendering {
 			std::string("Tangents"),
 			std::string("Joint Weights"),
 			std::string("Joint Indices"),
-			std::string("Index Buffer")
+			std::string("Index Buffer"),
 			std::string("Instance Model Matrix"),
 			std::string("Instance Model Matrix Row 1"),
 			std::string("Instance Model Matrix Row 2"),
