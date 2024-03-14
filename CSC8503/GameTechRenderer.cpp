@@ -1062,6 +1062,9 @@ void GameTechRenderer::RenderAnimation(Vector3 inPos, Vector3 inScale, Vector4 i
 
 void GameTechRenderer::Update(float dt) {
 	gameWorld.gameObjectsMutex.lock();
+
+	time += dt;
+
 	for (int i = 0; i < activeAnimatedObjects.size(); i++) {
 		frameTime[i] -= dt;
 		while (frameTime[i] < 0.0f) {
