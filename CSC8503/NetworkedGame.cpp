@@ -407,7 +407,7 @@ void NetworkedGame::CheckPlayerListAndSpawnPlayers()
 
 NetworkPlayer* NetworkedGame::AddNetworkPlayerToWorld(const Vector3& position, int playerNum)
 {
-	world->gameObjectsMutex.lock();
+	
 
 	float meshSize = 2.0f;
 	Vector3 volumeSize = Vector3(1.0, 1.6, 1.0);
@@ -467,7 +467,7 @@ NetworkPlayer* NetworkedGame::AddNetworkPlayerToWorld(const Vector3& position, i
 	character->GetRenderObject()->SetColour(colour);
 
 
-	world->gameObjectsMutex.unlock();
+	
 	return character;
 }
 
