@@ -107,7 +107,7 @@ void main(void) {
 
     vec3 norm = normal(uv);
     float alphaEdge = 1.0 - smoothstep(0.0, Radius, len);
-    float alphaCenter = smoothstep(0.0, (Radius - Radius * 0.7), len);
+    float alphaCenter = smoothstep(0.0, (Radius - Radius * 0.8), len);
 
     vec4 colorEdge = mix(vec4(0.0), mix( mix(color - color * Intensity, texture(
         mainTex, uv), 0.2), texture(mainTex, norm.xz * 0.5 + 0.5), 0.3), alphaEdge);
