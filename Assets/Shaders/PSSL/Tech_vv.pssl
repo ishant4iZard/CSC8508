@@ -1,0 +1,46 @@
+#include "ShaderConstants.psslh"
+#include "VertexAttributes.psslh"
+#include "Skinning.psslh"
+#include "TechObject.psslh"
+#include "Bindless.psslh"
+#include "Vertex.psslh"
+
+#define DIFFUSE_TEX   0
+#define SKINNING 1
+#define MAX_INDEX  4
+
+struct VS_OUTPUT
+{
+	float4 Position		: S_POSITION;
+	float2 UV			: TEXCOORD0;
+	float4 Colour		: TEXCOORD1;	
+	int	texID			: TEXCOORD2;
+
+	float4 ShadowClip	: TEXCOORD2;
+};
+
+[CxxSymbol("TestShader::gs")]
+VS_OUTPUT main(uint vertID : S_VERTEX_ID, uint objID : S_SRT_DATA, uint instanceID : S_INSTANCE_ID)
+{
+	VS_OUTPUT Output;
+
+	uint id = objID + instanceID;
+
+	ObjectState s = objects[id];
+
+	float4 position;
+	float3 normal;
+	float3 tangent;
+	float3 bitangent;
+
+	TransformVertexToWorld(s, vertID, position, normal, tangent, bitangent);
+
+	Output.Position = TransformWorldToClip(position);
+	Output.UV		= float2(TextureCoords[vertID].x * s.tiling.x, TextureCoords[vertID].y * s.tiling.y); 
+	Output.Colour	= s.colour;
+	Output.texID	= s.index[DIFFUSE_TEX];
+
+	Output.ShadowClip = mul(Constants.shadowMatrix, position);
+
+	return Output;
+}

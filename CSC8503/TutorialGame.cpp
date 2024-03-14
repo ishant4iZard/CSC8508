@@ -158,11 +158,11 @@ void TutorialGame::InitialiseAssets() {
 	wallTextureList[(uint8_t)TextureType::ROUGHNESS] = renderer->LoadTexture("Metal_03/roughness.png");
 	wallTextureList[(uint8_t)TextureType::AO] = renderer->LoadTexture("Metal_03/ao.png");
 
-	sandTextureList[(uint8_t)TextureType::ALBEDO] = renderer->LoadTexture("Sand_02/albedo.png");
-	sandTextureList[(uint8_t)TextureType::NORMAL] = renderer->LoadTexture("Sand_02/normal_gl.png");
-	sandTextureList[(uint8_t)TextureType::METAL] = renderer->LoadTexture("Sand_02/metallic.png");
-	sandTextureList[(uint8_t)TextureType::ROUGHNESS] = renderer->LoadTexture("Sand_02/roughness.png");
-	sandTextureList[(uint8_t)TextureType::AO] = renderer->LoadTexture("Sand_02/ao.png");
+	sandTextureList[(uint8_t)TextureType::ALBEDO] = renderer->LoadTexture("GroundTile11/albedo.png");
+	sandTextureList[(uint8_t)TextureType::NORMAL] = renderer->LoadTexture("GroundTile11/normal_gl.png");
+	sandTextureList[(uint8_t)TextureType::METAL] = renderer->LoadTexture("GroundTile11/metallic.png");
+	sandTextureList[(uint8_t)TextureType::ROUGHNESS] = renderer->LoadTexture("GroundTile11/roughness.png");
+	sandTextureList[(uint8_t)TextureType::AO] = renderer->LoadTexture("GroundTile11/ao.png");
 
 #ifdef defined(USE_SHADOW)
 	basicShader = renderer->LoadShader("scene.vert", "scene.frag");

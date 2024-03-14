@@ -1,0 +1,32 @@
+#include "ShaderConstants.psslh"
+#include "VertexAttributes.psslh"
+#include "Skinning.psslh"
+#include "TechObject.psslh"
+#include "Bindless.psslh"
+#include "Vertex.psslh"
+
+struct VS_OUTPUT
+{
+	float4 Position		: S_POSITION;
+};
+
+[CxxSymbol("TestShader::gs")]
+VS_OUTPUT main(uint vertID : S_VERTEX_ID, uint objID : S_SRT_DATA, uint instanceID : S_INSTANCE_ID)
+{
+	VS_OUTPUT Output;
+
+	uint id = objID + instanceID;
+
+	ObjectState s = objects[id];
+
+	float4 position;
+	float3 normal;
+	float3 tangent;
+	float3 bitangent;
+
+	TransformVertexToWorld(s, vertID, position, normal, tangent, bitangent);
+
+	Output.Position = mul(Constants.shadowMatrix,mul(s.modelMatrix,position));
+
+	return Output;
+}

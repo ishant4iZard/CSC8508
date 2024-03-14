@@ -1,0 +1,28 @@
+ConstantBuffer ShaderConstants : register(c0) //In CB block 0
+{
+	column_major matrix m_WorldViewProj;
+};
+
+struct VS_OUTPUT
+{
+	float4 Position		: S_POSITION;
+	float2 UV			: TEXCOORD0;
+};
+
+struct Vertex
+{
+	float3	pos;
+	float2	uv;
+	int		texID;
+};
+
+[CxxSymbol("TestShader::gs")]
+VS_OUTPUT main(Vertex v, uint id : S_VERTEX_ID)
+{
+	VS_OUTPUT Output;
+
+	Output.Position = mul(m_WorldViewProj, float4(v.pos.xy, 0, 1));
+	Output.UV		= v.uv;;
+
+	return Output;
+}
