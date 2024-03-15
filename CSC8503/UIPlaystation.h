@@ -22,7 +22,7 @@ public:
 		const NCL::KeyCodes::Type& keyCode = NCL::KeyCodes::RETURN,
 		const NCL::Maths::Vector2& size = NCL::Maths::Vector2(360, 50)
 	) override;
-	void RenderUI()  override;
+	void RenderUI(float dt = 0)  override;
 
 protected:
 	UIPlaystation() {};

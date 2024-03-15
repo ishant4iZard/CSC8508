@@ -7,6 +7,8 @@
 #include "AudioEngine.h"
 #include "TutorialGame.h"
 #include "Projectile.h"
+#include "UIPlaystation.h"
+#include "UIBase.h"
 #include <vector>
 
 namespace NCL {
@@ -31,16 +33,21 @@ namespace NCL {
 			void MovePlayer(float dt);
 			void Fire();
 
-			const int PROJECTILE_POOL_SIZE = 60;
+			const int PROJECTILE_POOL_SIZE = 20;
 			std::vector<Projectile*> projectileList;
 			void InitializeProjectilePool();
 
-			const float FIRE_RATE = 1;
+			const float FIRE_RATE = 1.5;
 			float timeSinceFire = 0;
 
 			void SpawnAI();
 			AiStatemachineObject* AddAiStateObjectToWorld(const Vector3& position);
 			AiStatemachineObject* AIStateObject;
+
+			UIBase* ui;
+
+			const int GAME_TIME = 200; // seconds
+			float timeElapsed = 0;
 		};
 	}
 }

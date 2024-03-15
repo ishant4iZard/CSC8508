@@ -35,7 +35,7 @@ public:
 		const NCL::KeyCodes::Type& keyCode = NCL::KeyCodes::RETURN,
 		const NCL::Maths::Vector2& size = NCL::Maths::Vector2(360, 50)
 	) = 0;	
-	virtual void RenderUI() = 0;
+	virtual void RenderUI(float dt = 0) = 0;
 
 	static const NCL::Maths::Vector4 RED;
 	static const NCL::Maths::Vector4 GREEN;

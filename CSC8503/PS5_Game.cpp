@@ -12,12 +12,14 @@
 #include "../PS5Core/PS5Window.h"
 
 #include <iostream>
+#include <string>
 
 using namespace NCL;
 using namespace CSC8503;
 
 NCL::CSC8503::PS5_Game::PS5_Game()
 {
+	ui = UIPlaystation::GetInstance();
 	StartLevel();
 }
 
@@ -33,8 +35,9 @@ NCL::CSC8503::PS5_Game::~PS5_Game()
 void NCL::CSC8503::PS5_Game::StartLevel()
 {
 	SpawnPlayer();
-	SpawnAI();
 	InitializeProjectilePool();
+	SpawnAI();
+	SpawnDataDrivenLevel(GameLevelNumber::LEVEL_1);
 	physics->createStaticTree();
 }
 
@@ -44,11 +47,27 @@ void NCL::CSC8503::PS5_Game::EndLevel()
 
 void NCL::CSC8503::PS5_Game::UpdateGame(float dt)
 {
+	TutorialGame::UpdateGame(dt);
+
+	if (timeElapsed > GAME_TIME) {
+		ui->DrawStringText("Game Over", Vector2(5, 5), UIBase::RED);
+		ui->DrawStringText("Score: " + std::to_string(player->GetScore()), Vector2(5, 10), UIBase::RED);
+		ui->RenderUI(dt);
+		return;
+	}
+
+	ui->DrawStringText("Score: " + std::to_string(player->GetScore()), Vector2(5, 5), UIBase::RED);
+	ui->DrawStringText("Bullets: " + std::to_string(player->GetNumBullets()), Vector2(5, 10), UIBase::RED);
+	ui->DrawStringText("Time Left: " + std::to_string((int)(GAME_TIME - timeElapsed)), Vector2(5, 15), UIBase::RED);
+
+	timeElapsed += dt;
+
 	physics->Update(dt);
 	if (AIStateObject) {
 		AIStateObject->DetectProjectiles(projectileList);
 		AIStateObject->Update(dt);
 	}
+	
 	timeSinceFire += dt;
 	MovePlayer(dt);
 	player->ReplenishProjectiles(dt);
@@ -66,8 +85,8 @@ void NCL::CSC8503::PS5_Game::UpdateGame(float dt)
 
 	if(controller->GetNamedButton("Cross"))
 		Fire();
-	TutorialGame::UpdateGame(dt);
-	Debug::UpdateRenderables(dt);
+
+	ui->RenderUI();
 }
 
 void NCL::CSC8503::PS5_Game::InitializeProjectilePool()
@@ -140,6 +159,9 @@ void NCL::CSC8503::PS5_Game::SpawnProjectile(NetworkPlayer* player, Vector3 fire
 	newBullet->ResetTime();
 
 	newBullet->GetTransform().SetPosition(firePos);
+	newBullet->GetPhysicsObject()->ClearForces();
+	newBullet->GetPhysicsObject()->SetLinearVelocity(Vector3(0, 0, 0));
+	newBullet->GetPhysicsObject()->SetAngularVelocity(Vector3(0, 0, 0));
 	Vector3 force = fireDir * Projectile::FireForce;
 	newBullet->GetPhysicsObject()->ApplyLinearImpulse(force);
 }
