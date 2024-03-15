@@ -1,0 +1,29 @@
+#include "ShaderConstants.psslh"
+#include "VertexAttributes.psslh"
+
+struct VS_OUTPUT
+{
+	float4 Position		: S_POSITION;
+	float3 Direction	: TEXCOORD0;
+};
+
+struct Vertex
+{
+	float3 pos;
+};
+
+[CxxSymbol("TestShader::gs")]
+VS_OUTPUT main(uint vertID : S_VERTEX_ID)
+{
+	VS_OUTPUT Output;
+
+	Output.Position = float4(Positions[vertID].xy, 1, 1);
+
+	float3 dir = float3(Positions[vertID].xy, -1);
+	dir.x *= Constants.inverseProjMatrix[0][0];
+	dir.y *= Constants.inverseProjMatrix[1][1];
+
+	Output.Direction = mul(float3x3(Constants.inverseViewMatrix), normalize(dir));
+
+	return Output;
+}
