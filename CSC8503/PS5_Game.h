@@ -9,6 +9,7 @@
 #include "Projectile.h"
 #include "UIPlaystation.h"
 #include "UIBase.h"
+#include "ApplicationState.h"
 #include <vector>
 
 namespace NCL {
@@ -48,6 +49,7 @@ namespace NCL {
 
 			const int GAME_TIME = 200; // seconds
 			float timeElapsed = 0;
+			ApplicationState* appState;
 		};
 	}
 }
