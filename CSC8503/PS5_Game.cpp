@@ -19,6 +19,7 @@ using namespace CSC8503;
 
 NCL::CSC8503::PS5_Game::PS5_Game()
 {
+	appState = ApplicationState::GetInstance();
 	ui = UIPlaystation::GetInstance();
 	StartLevel();
 }
@@ -39,6 +40,8 @@ void NCL::CSC8503::PS5_Game::StartLevel()
 	SpawnAI();
 	SpawnDataDrivenLevel(GameLevelNumber::LEVEL_1);
 	physics->createStaticTree();
+	appState->SetIsGameOver(false);
+	appState->SetIsGamePaused(false);
 }
 
 void NCL::CSC8503::PS5_Game::EndLevel()
@@ -53,6 +56,8 @@ void NCL::CSC8503::PS5_Game::UpdateGame(float dt)
 		ui->DrawStringText("Game Over", Vector2(5, 5), UIBase::RED);
 		ui->DrawStringText("Score: " + std::to_string(player->GetScore()), Vector2(5, 10), UIBase::RED);
 		ui->RenderUI(dt);
+		appState->SetIsGameOver(true);
+		appState->SetIsGamePaused(true);
 		return;
 	}
 
