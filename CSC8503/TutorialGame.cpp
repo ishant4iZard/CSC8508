@@ -67,10 +67,13 @@ TutorialGame::TutorialGame() {
 	controller->MapAxis(3, "RightY");
 	controller->MapAxis(4, "DX");
 	controller->MapAxis(5, "DY");
+
 	controller->MapButton(0, "Triangle");
 	controller->MapButton(1, "Circle");
 	controller->MapButton(2, "Cross");
 	controller->MapButton(3, "Square");
+	controller->MapButton(4, "Square");
+	controller->MapButton(5, "");
 
 	//These are the axis/button aliases the inbuilt camera class reads from:
 	controller->MapAxis(0, "XLook");
@@ -158,11 +161,11 @@ void TutorialGame::InitialiseAssets() {
 	wallTextureList[(uint8_t)TextureType::ROUGHNESS] = renderer->LoadTexture("Metal_03/roughness.png");
 	wallTextureList[(uint8_t)TextureType::AO] = renderer->LoadTexture("Metal_03/ao.png");
 
-	sandTextureList[(uint8_t)TextureType::ALBEDO] = renderer->LoadTexture("Sand_02/albedo.png");
-	sandTextureList[(uint8_t)TextureType::NORMAL] = renderer->LoadTexture("Sand_02/normal_gl.png");
-	sandTextureList[(uint8_t)TextureType::METAL] = renderer->LoadTexture("Sand_02/metallic.png");
-	sandTextureList[(uint8_t)TextureType::ROUGHNESS] = renderer->LoadTexture("Sand_02/roughness.png");
-	sandTextureList[(uint8_t)TextureType::AO] = renderer->LoadTexture("Sand_02/ao.png");
+	sandTextureList[(uint8_t)TextureType::ALBEDO] = renderer->LoadTexture("GroundTile11/albedo.png");
+	sandTextureList[(uint8_t)TextureType::NORMAL] = renderer->LoadTexture("GroundTile11/normal_gl.png");
+	sandTextureList[(uint8_t)TextureType::METAL] = renderer->LoadTexture("GroundTile11/metallic.png");
+	sandTextureList[(uint8_t)TextureType::ROUGHNESS] = renderer->LoadTexture("GroundTile11/roughness.png");
+	sandTextureList[(uint8_t)TextureType::AO] = renderer->LoadTexture("GroundTile11/ao.png");
 
 #ifdef defined(USE_SHADOW)
 	basicShader = renderer->LoadShader("scene.vert", "scene.frag");
@@ -240,15 +243,16 @@ void TutorialGame::InitWorld() {
 	physics->UseGravity(false);
 	physics->SetBroadphase(true);
 	timer = 0;
-	AddCapsuleToWorld(Vector3(-75, 10, -75), 2.0f, 5.0f);
-	capsule = AddCapsuleToWorld(Vector3(-80, 5.6, -80), 1.0f, 2.0f);
+	//AddCapsuleToWorld(Vector3(-75, 10, -75), 2.0f, 5.0f);
+	//capsule = AddCapsuleToWorld(Vector3(-80, 5.6, -80), 1.0f, 2.0f);
 
-	SpawnDataDrivenLevel(GameLevelNumber::LEVEL_1);
 	InitTeleporters();
 
-
-
-	GameObject* test = AddCapsuleToWorld(Vector3(-25, 5.6, 25), 1.0f, 2.0f);
+	// TODO(Sameer) : Everything drawn after spawn level has a circle around it (PS5 error)
+#ifdef _WIN32
+	SpawnDataDrivenLevel(GameLevelNumber::LEVEL_1);
+#endif
+	//GameObject* test = AddCapsuleToWorld(Vector3(-25, 5.6, 25), 1.0f, 2.0f);
 }
 
 /*
@@ -576,6 +580,7 @@ GameObject* NCL::CSC8503::TutorialGame::AddTeleporterToWorld(const Vector3& posi
 	teleporter2Display->SetRenderObject(new RenderObject(&teleporter2Display->GetTransform(), cubeMesh, portalTex, portalShader));
 
 	//teleporter1->setConnectedTeleporter(teleporter2);
+	//teleporter2->setConnectedTeleporter(teleporter1);
 
 	world->AddGameObject(teleporter1);
 	world->AddGameObject(teleporter1Display);

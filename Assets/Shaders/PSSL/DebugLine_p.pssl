@@ -1,0 +1,12 @@
+
+struct VS_OUTPUT
+{
+	float4 Position		: S_POSITION;
+	float4 Colour		: TEXCOORD1;
+};
+
+[CxxSymbol("TestShader::ps")]
+float4 main(VS_OUTPUT vertex) : S_TARGET_OUTPUT
+{
+	return vertex.Colour;  
+}

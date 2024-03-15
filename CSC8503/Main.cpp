@@ -32,10 +32,11 @@ std::multimap<EventType, EventListener*> EventEmitter::listeners;
 
 int main() {
 
+	Window* w = Window::CreateGameWindow("CSC8503 Game technology!", 1920, 1080, false);
+	if (!w->HasInitialised()) return -1;
+
 	bool bIsNetSystemInitSuccess = false;
 #ifdef _WIN32
-	Window* w = Window::CreateGameWindow("CSC8503 Game technology!", 1920, 1080, false);
-
 	/** Check the NetSubsystem work condition */
 	if (SteamAPI_Init())
 	{
@@ -47,18 +48,8 @@ int main() {
 		std::cout << "Steam API failed to initialize.\n";
 		std::cout << "You may need run the steam app.\n";
 	}
-#else// PROSPERO
-	bIsNetSystemInitSuccess = true;
-	NCL::PS5::PS5Window* w  = new NCL::PS5::PS5Window("Hello!", 1920, 1080);
-#endif
 
-	if (!w->HasInitialised()) {
-		return -1;
-	}	
-	
-
-#ifdef _WIN32
- 	w->ShowOSPointer(true);
+	w->ShowOSPointer(true);
 	w->LockMouseToWindow(false);
 
 	NetworkedGame* g = new NetworkedGame();

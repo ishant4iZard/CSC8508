@@ -1,0 +1,5 @@
+struct SkinnedVertex {
+	float3 position;
+	float3 normal;
+	float4 tangent;
+};

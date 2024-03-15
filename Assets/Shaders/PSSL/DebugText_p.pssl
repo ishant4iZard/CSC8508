@@ -1,0 +1,23 @@
+
+struct VS_OUTPUT
+{
+	float4 Position		: S_POSITION;
+	float2 UV			: TEXCOORD0;
+	float4 Colour		: TEXCOORD1;
+};
+
+SamplerState sampler			: register(s0);
+
+Texture2D<float4> inputTexture	: register(t1);
+
+[CxxSymbol("TestShader::ps")]
+float4 main(VS_OUTPUT vertex) : S_TARGET_OUTPUT
+{
+	float4 texSample = inputTexture.Sample(sampler, vertex.UV) ;
+
+	//if(texSample.r < 0.00001f) {
+		//discard;
+	//}
+
+	return texSample.rrrr * vertex.Colour;
+}

@@ -1,0 +1,31 @@
+#include "ShaderConstants.psslh"
+
+struct TextState {
+	float2 pos;
+	float2 uv;
+	float4 colour;
+};
+
+RegularBuffer<TextState> textVerts : register(t0);
+
+struct VS_OUTPUT
+{
+	float4 Position		: S_POSITION;
+	float2 UV			: TEXCOORD0;
+	float4 Colour		: TEXCOORD1;	
+};
+
+[CxxSymbol("TestShader::gs")]
+VS_OUTPUT main(uint id : S_VERTEX_ID)
+{
+	VS_OUTPUT Output;
+
+	TextState v = textVerts[id];
+
+	Output.Position = mul(Constants.orthoMatrix,float4(v.pos.xy,1, 1));
+
+	Output.UV		= v.uv;
+	Output.Colour	= v.colour;
+
+	return Output;
+}

@@ -39,6 +39,10 @@ namespace NCL {
 				movementDirection = dir;
 			}
 
+			int GetNumBullets() {
+				return numProjectilesAccumulated;
+			}
+
 		protected:
 			TutorialGame* game;
 			int playerNum;

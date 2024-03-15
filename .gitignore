@@ -55,8 +55,6 @@ _deps
 # PS5
 /sce_module
 /PS5Core
-*.pssl
-*.psslh
 *.gnf
 
 # Builds

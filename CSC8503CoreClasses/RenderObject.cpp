@@ -15,6 +15,11 @@ RenderObject::RenderObject(Transform* parentTransform, Mesh* mesh, Texture* tex,
 	this->shader	= shader;
 	this->colour	= Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 	this->tiling = Vector2(1.0f, 1.0f);
+
+	for (size_t i = 0; i < (uint8_t)TextureType::MAX_TYPE; i++)
+	{
+		textureList[i] = NULL;
+	}
 }
 
 RenderObject::~RenderObject() {

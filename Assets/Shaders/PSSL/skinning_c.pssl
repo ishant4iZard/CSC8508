@@ -1,0 +1,36 @@
+#include "Skinning.psslh"
+
+RegularBuffer<float3> inputPositions	: register(t0);
+RegularBuffer<float3> inputNormals		: register(t1);
+RegularBuffer<float4> inputTangents		: register(t2);
+RegularBuffer<float4> inputWeights		: register(t3);
+RegularBuffer<uint4>  inputIndices		: register(t4);
+RegularBuffer<column_major matrix>  inputMatrices	: register(t5);
+
+RW_RegularBuffer<SkinnedVertex> output	: register(u0);
+
+[NUM_THREADS(64,1,1)]
+void main(uint dispatchThreadID : S_DISPATCH_THREAD_ID) {
+
+	float3 pos	   = inputPositions[dispatchThreadID];
+	float3 normal  = inputNormals[dispatchThreadID];
+	float4 tangent = inputTangents[dispatchThreadID];
+
+	float4 weights	= inputWeights[dispatchThreadID]; 
+	uint4 indices	= inputIndices[dispatchThreadID]; 
+
+	SkinnedVertex v;
+	v.position	= float3(0,0,0);
+	v.normal	= float3(0,0,0);
+	v.tangent	= float4(0,0,0,tangent.w);
+
+	for(int i = 0; i < 4; ++i) {
+		float4x4 mat = inputMatrices[indices[i]];
+
+		v.position		+= (mul(mat,float4(pos,1))			* weights[i]).xyz;
+		v.normal		+= (mul(mat,float4(normal,1))		* weights[i]).xyz;
+		v.tangent.xyz	+= (mul(mat,float4(tangent.xyz,1))	* weights[i]).xyz;
+	}
+
+	output[dispatchThreadID] = v;
+}
