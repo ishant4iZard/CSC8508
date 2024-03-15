@@ -2,6 +2,7 @@
 
 UIPlaystation* UIPlaystation::ui = nullptr;
 
+#ifndef _WIN32
 // Static Colors
 const NCL::Maths::Vector4 UIBase::RED       = NCL::Debug::RED;
 const NCL::Maths::Vector4 UIBase::GREEN     = NCL::Debug::GREEN;
@@ -11,6 +12,7 @@ const NCL::Maths::Vector4 UIBase::WHITE     = NCL::Debug::WHITE;
 const NCL::Maths::Vector4 UIBase::YELLOW    = NCL::Debug::YELLOW;
 const NCL::Maths::Vector4 UIBase::MAGENTA   = NCL::Debug::MAGENTA;
 const NCL::Maths::Vector4 UIBase::CYAN      = NCL::Debug::CYAN;
+#endif
 
 UIPlaystation* UIPlaystation::GetInstance()
 {
