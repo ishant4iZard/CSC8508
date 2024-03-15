@@ -41,8 +41,6 @@ namespace NCL {
 			void SetAnimation(int inAnimationID) { activeAnimation = maleGuardAnimations[inAnimationID]; }
 			MeshAnimation* GetAnimation() { return activeAnimation; }
 
-			MeshAnimation* GetDefalutAnimation() { return defaultAnimation; }
-
 			void SetAnimationStateCounter() { animationStateCounter++; }
 			int GetAnimationStateCounter() { return animationStateCounter; }
 
@@ -62,7 +60,6 @@ namespace NCL {
 			MeshAnimation* activeAnimation;
 			std::string anmNames[4];
 			MeshAnimation* maleGuardAnimations[4];
-			MeshAnimation* defaultAnimation;
 
 			int animationStateCounter;
 

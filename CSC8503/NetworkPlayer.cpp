@@ -21,10 +21,10 @@ NetworkPlayer::NetworkPlayer(NetworkedGame* game, int num)	{
 	movementSpeed = 35;
 
 
-	anmNames[IDLE] = "Idle1";
-	anmNames[GUNFIRE1] = "Gunfire1";
-	anmNames[STEPFORWARD] = "StepForward";
-	anmNames[HAPPY] = "Happy";
+	anmNames[IDLE] = "Male_Guard_Idle";
+	anmNames[GUNFIRE1] = "Male_Guard_GunfireRifle";
+	anmNames[STEPFORWARD] = "Male_Guard_StepForwardRifle";
+	anmNames[HAPPY] = "Male_Guard_Happy";
 
 	for (int i = 0; i < NUM_ANMS; i++) {
 		AnmName anm = static_cast<AnmName>(i);
@@ -34,7 +34,6 @@ NetworkPlayer::NetworkPlayer(NetworkedGame* game, int num)	{
 	activeAnimation = maleGuardAnimations[STEPFORWARD];
 
 	animationStateCounter = 0;
-	defaultAnimation = maleGuardAnimations[IDLE];
 }
 
 NetworkPlayer::~NetworkPlayer()	{
