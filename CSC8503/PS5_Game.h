@@ -10,7 +10,11 @@
 #include "UIPlaystation.h"
 #include "UIBase.h"
 #include "ApplicationState.h"
+#include "DebugHUD.h"
+
 #include <vector>
+#include <chrono>
+using namespace std::chrono;
 
 namespace NCL {
 	namespace CSC8503 {
@@ -50,6 +54,9 @@ namespace NCL {
 			const int GAME_TIME = 200; // seconds
 			float timeElapsed = 0;
 			ApplicationState* appState;
+
+			DebugHUD* debugHUD;
+			bool isDebuHUDActive;
 		};
 	}
 }

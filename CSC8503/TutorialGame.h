@@ -27,9 +27,9 @@
 #include "WindowsLevelLoader.h"
 #include "ApplicationState.h"
 #include "UIBase.h"
-#include "DebugHUD.h"
 
 #define USE_SHADOW = false
+
 enum class level {
 	level1 = 1,
 	level2 = 2,
@@ -170,9 +170,6 @@ namespace NCL {
 			ApplicationState* appState;
 
 			std::vector<Vector3> powerUpSpawnPointList;
-
-			DebugHUD* debugHUD;
-			bool isDebugHUDActive = false;
 		};
 	}
 }

@@ -93,7 +93,6 @@ TutorialGame::TutorialGame() {
 	appState = ApplicationState::GetInstance();
 
 	BindEvents();
-	debugHUD = new DebugHUD();
 }
 
 TutorialGame::~TutorialGame()	{
@@ -114,8 +113,6 @@ TutorialGame::~TutorialGame()	{
 	delete world;
 
 	delete levelFileLoader;
-
-	delete debugHUD;
 
 	SAFE_DELETE_PBR_TEXTURE(groundTextureList)
 	SAFE_DELETE_PBR_TEXTURE(wallTextureList)
@@ -153,28 +150,6 @@ void TutorialGame::UpdateGame(float dt) {
 	renderer->Update(dt);
 	
 	UpdatePowerUpSpawnTimer(dt);
-
-#ifdef _WIN32
-	if (Window::GetKeyboard()->KeyHeld(KeyCodes::Type::I))
-		isDebugHUDActive = true;
-	else
-		isDebugHUDActive = false;
-#else
-	if (controller->GetNamedButton("Cross"))
-		isDebugHUDActive = true;
-	else
-		isDebugHUDActive = false;
-#endif
-
-	if (isDebugHUDActive)
-	{
-		debugHUD->DrawDebugHUD({
-			dt,
-			0.1,
-			10,
-			100
-		});
-	}
 }
 
 void NCL::CSC8503::TutorialGame::UpdatePowerUpSpawnTimer(float dt)

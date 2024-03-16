@@ -22,11 +22,13 @@ NCL::CSC8503::PS5_Game::PS5_Game()
 	appState = ApplicationState::GetInstance();
 	ui = UIPlaystation::GetInstance();
 	StartLevel();
+	debugHUD = new DebugHUD();
 }
 
 NCL::CSC8503::PS5_Game::~PS5_Game()
 {
 	delete player;
+	delete debugHUD;
 
 	for (auto i : projectileList)
 		delete i;
@@ -50,6 +52,10 @@ void NCL::CSC8503::PS5_Game::EndLevel()
 
 void NCL::CSC8503::PS5_Game::UpdateGame(float dt)
 {
+	std::optional<time_point<high_resolution_clock>> frameStartTime;
+	if (isDebuHUDActive)
+		frameStartTime = high_resolution_clock::now();
+
 	TutorialGame::UpdateGame(dt);
 
 	if (timeElapsed > GAME_TIME) {
@@ -92,6 +98,25 @@ void NCL::CSC8503::PS5_Game::UpdateGame(float dt)
 		Fire();
 
 	ui->RenderUI();
+
+	std::optional<time_point<high_resolution_clock>> frameEndTime;
+	if (isDebuHUDActive)
+		frameEndTime = high_resolution_clock::now();
+
+	if (controller->GetNamedButton("Cross"))
+	{
+		isDebuHUDActive = true;
+
+		if (!frameStartTime.has_value() || !frameEndTime.has_value()) return;
+
+		auto duration = duration_cast<microseconds>(frameEndTime.value() - frameStartTime.value());
+		debugHUD->DrawDebugHUD({
+			dt,
+			duration.count(),
+			physics->GetNumberOfCollisions(),
+			world->GetNumberOfObjects()
+		});
+	}
 }
 
 void NCL::CSC8503::PS5_Game::InitializeProjectilePool()

@@ -1,9 +1,9 @@
 #pragma once
 struct DebugHUDParams {
 	float dt;
-	float timeCost;
+	long long timeCost;
 	int numberOfCollisions;
-	int numberOfColliders;
+	int numberOfObjects;
 };
 
 class UIBase;

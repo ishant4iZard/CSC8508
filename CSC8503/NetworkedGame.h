@@ -14,7 +14,12 @@
 #else //_ORBIS
 #include "../CSC8503/UIPlaystation.h"
 #endif
+
 #include "AudioEngine.h"
+#include "DebugHUD.h"
+
+#include <chrono>
+using namespace std::chrono;
 
 namespace NCL {
 	namespace CSC8503 {
@@ -135,6 +140,9 @@ namespace NCL {
 
 			void PhysicsUpdate(float dt);
 			void NonPhysicsUpdate(float dt);
+
+			DebugHUD* debugHUD;
+			bool isDebuHUDActive;
 
 		public:
 			inline bool IsServer() { return thisServer != nullptr ? true : false; }

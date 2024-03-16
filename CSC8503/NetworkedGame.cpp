@@ -59,12 +59,15 @@ NetworkedGame::NetworkedGame()	{
 
 	// Trigger music
 	fireSFX = audioEngine->CreateSound("../../Assets/Audio/jump.mp3", false);
+
+	debugHUD = new DebugHUD();
 }
 
 NetworkedGame::~NetworkedGame()	{
 	delete thisServer;
 	delete thisClient;
 	delete audioEngine;
+	delete debugHUD;
 }
 
 bool NetworkedGame::StartAsServer() {
@@ -141,7 +144,12 @@ void NetworkedGame::DestroyClient()
 }
 
 void NetworkedGame::UpdateGame(float dt) {
+	std::optional<time_point<high_resolution_clock>> frameStartTime;
+	if(isDebuHUDActive)
+		frameStartTime = high_resolution_clock::now();
+
 	Debug::UpdateRenderables(dt);
+
 	if (thisServer && !appState->GetIsGameOver()) {
 		UpdatePhysics = true;
 		//PhysicsUpdate(dt);
@@ -154,8 +162,6 @@ void NetworkedGame::UpdateGame(float dt) {
 	if (!appState->GetIsGameOver()) {
 		std::thread physicsUpdateThread(&NetworkedGame::PhysicsUpdate, this, dt);
 		std::thread nonPhysicsUpdateThread(&NetworkedGame::NonPhysicsUpdate, this, dt);
-
-
 
 		nonPhysicsUpdateThread.join();
 		physicsUpdateThread.join();
@@ -170,6 +176,25 @@ void NetworkedGame::UpdateGame(float dt) {
 
 	TutorialGame::UpdateGame(dt);
 
+	std::optional<time_point<high_resolution_clock>> frameEndTime;
+	if (isDebuHUDActive)
+		frameEndTime = high_resolution_clock::now();
+
+	if (Window::GetKeyboard()->KeyHeld(KeyCodes::Type::I))
+	{
+		isDebuHUDActive = true;
+
+		if (!frameStartTime.has_value() || !frameEndTime.has_value()) return;
+
+		auto duration = duration_cast<microseconds>(frameEndTime.value() - frameStartTime.value());
+		debugHUD->DrawDebugHUD({
+			dt,
+			duration.count(),
+			physics->GetNumberOfCollisions(),
+			world->GetNumberOfObjects()
+		});
+
+	}
 }
 
 
