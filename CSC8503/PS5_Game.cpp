@@ -88,7 +88,7 @@ void NCL::CSC8503::PS5_Game::UpdateGame(float dt)
 			i->deactivate();
 	}
 
-	if(controller->GetNamedButton("Cross"))
+	if(controller->GetNamedButtonAnalogue("R2") > 0.2f)
 		Fire();
 
 	ui->RenderUI();
