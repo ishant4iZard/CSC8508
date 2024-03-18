@@ -568,6 +568,9 @@ void NetworkedGame::OnRep_DeactiveProjectile(int objectID)
 
 void NetworkedGame::StartLevel() {
 	InitWorld();
+	SpawnDataDrivenLevel(GameLevelNumber::LEVEL_1);
+	InitTeleporters();
+
 	PlayersList.clear();
 	ControledPlayersList.clear();
 	//PlayersNameList.clear();
@@ -600,6 +603,7 @@ void NetworkedGame::EndLevel()
 	world->ClearAndErase();
 	physics->Clear();
 	networkObjects.clear();
+	gravitywell.clear();
 
 	if(AIStateObject)
 		AIStateObject = NULL;
@@ -847,7 +851,8 @@ void NetworkedGame::NonPhysicsUpdate(float dt)
 			UpdatePlayerState(dt);
 			UpdateProjectiles(dt);
 
-			gravitywell->PullProjectilesWithinField(ProjectileList);
+			for(auto i: gravitywell)
+				i->PullProjectilesWithinField(ProjectileList);
 			//physics->Update(dt);
 			//UpdatePhysics = true;
 		}

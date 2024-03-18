@@ -53,7 +53,7 @@ namespace NCL {
 
 			void UpdatePowerUpSpawnTimer(float dt);
 
-			GravityWell* gravitywell;
+			vector<GravityWell*> gravitywell;
 
 			powerUpType getActivePowerup() {
 				return activePowerUp;
