@@ -64,7 +64,7 @@ int main() {
 #endif
 
 	w->GetTimer().GetTimeDeltaSeconds(); //Clear the timer so we don't get a larget first dt!
-	while (w->UpdateWindow()) {
+	while (w->UpdateWindow() && !g->CloseGame) {
 		float dt = w->GetTimer().GetTimeDeltaSeconds();
 
 #ifdef _WIN32

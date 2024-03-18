@@ -30,6 +30,8 @@ namespace NCL {
 			void EndLevel();
 			void SpawnProjectile(NetworkPlayer* player, Vector3 firePos, Vector3 fireDir);
 
+			PS5::PS5Controller* GetController() const { return controller; }
+
 		protected:
 			void InitialisePlayerAssets();
 			void SpawnPlayer();
@@ -64,6 +66,14 @@ namespace NCL {
 			bool isDebuHUDActive;
 
 			AudioEngine* audioEngine;
+
+			class PS5MenuSystem* Menu;
+
+		public:
+			inline float GetTimeLeft() const { return GAME_TIME_LIMIT - timeElapsed; }
+			int GetPlayerScore() const;
+			int GEtPlayerBulletsNum() const;
+			powerUpType GetActivatedPowerUpType() const { return physics->GetCurrentPowerUpState(); }
 		};
 	}
 }

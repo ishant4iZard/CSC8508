@@ -5,6 +5,7 @@
 #include "TextureLoader.h"
 #include "GravityWell.h"
 #include "NavigationGrid.h"
+#include "PS5MenuSystem.h"
 
 #include "PositionConstraint.h"
 #include "OrientationConstraint.h"
@@ -21,9 +22,11 @@ NCL::CSC8503::PS5_Game::PS5_Game()
 {
 	appState = ApplicationState::GetInstance();
 	ui = UIPlaystation::GetInstance();
-	StartLevel();
-	debugHUD = new DebugHUD();
+	
+	//StartLevel();
 
+	Menu = new PS5MenuSystem(this);
+	debugHUD = new DebugHUD();
 	//audioEngine = new AudioEngine();
 }
 
@@ -44,14 +47,25 @@ void NCL::CSC8503::PS5_Game::StartLevel()
 	SpawnPlayer();
 	InitializeProjectilePool();
 	SpawnAI();
+	InitTeleporters();
 	SpawnDataDrivenLevel(GameLevelNumber::LEVEL_1);
 	physics->createStaticTree();
 	appState->SetIsGameOver(false);
 	appState->SetIsGamePaused(false);
+	timeElapsed = 0.0f;
 }
 
 void NCL::CSC8503::PS5_Game::EndLevel()
 {
+	appState->SetIsGameOver(true);
+	world->ClearAndErase();
+	physics->Clear();
+	//delete player;
+	player = nullptr;
+	projectileList.clear();
+	if (AIStateObject)
+		AIStateObject = NULL;
+	InitCamera();
 }
 
 void NCL::CSC8503::PS5_Game::UpdateGame(float dt)
@@ -62,52 +76,63 @@ void NCL::CSC8503::PS5_Game::UpdateGame(float dt)
 
 	TutorialGame::UpdateGame(dt);
 
-	if (timeElapsed > GAME_TIME_LIMIT) {
-		ui->DrawStringText("Game Over", Vector2(5, 5), UIBase::RED);
-		ui->DrawStringText("Score: " + std::to_string(player->GetScore()), Vector2(5, 10), UIBase::RED);
-		ui->RenderUI(dt);
-		appState->SetIsGameOver(true);
-		appState->SetIsGamePaused(true);
-		return;
-	}
+	Menu->Update(dt);
 
-	ui->DrawStringText("Score: " + std::to_string(player->GetScore()), Vector2(5, 5), UIBase::RED);
-	ui->DrawStringText("Bullets: " + std::to_string(player->GetNumBullets()), Vector2(5, 10), UIBase::RED);
-	ui->DrawStringText("Time Left: " + std::to_string((int)(GAME_TIME_LIMIT - timeElapsed)), Vector2(5, 15), UIBase::RED);
-
-	timeElapsed += dt;
-
-	physics->Update(dt);
-	if (AIStateObject) {
-		AIStateObject->DetectProjectiles(projectileList);
-		AIStateObject->Update(dt);
-	}
-	
-	timeSinceFire += dt;
-	MovePlayer(dt);
-	player->ReplenishProjectiles(dt);
-	gravitywell->PullProjectilesWithinField(projectileList);
-
-	for (auto i : projectileList)
+	if (!appState->GetIsGameOver())
 	{
-		if (!i->IsActive()) continue;
+		/*if (timeElapsed > GAME_TIME_LIMIT) {
+			ui->DrawStringText("Game Over", Vector2(5, 5), UIBase::RED);
+			ui->DrawStringText("Score: " + std::to_string(player->GetScore()), Vector2(5, 10), UIBase::RED);
+			ui->RenderUI(dt);
+			appState->SetIsGameOver(true);
+			appState->SetIsGamePaused(true);
+			return;
+		}*/
 
-		i->ReduceTimeLeft(dt);
+		/*ui->DrawStringText("Score: " + std::to_string(player->GetScore()), Vector2(5, 5), UIBase::RED);
+		ui->DrawStringText("Bullets: " + std::to_string(player->GetNumBullets()), Vector2(5, 10), UIBase::RED);
+		ui->DrawStringText("Time Left: " + std::to_string((int)(GAME_TIME_LIMIT - timeElapsed)), Vector2(5, 15), UIBase::RED);*/
 
-		if (i->GetTimeLeft() <= 0)
-			i->deactivate();
+		if (!appState->GetIsGamePaused())
+		{
+			timeElapsed += dt;
+
+			physics->Update(dt);
+			if (AIStateObject) {
+				AIStateObject->DetectProjectiles(projectileList);
+				AIStateObject->Update(dt);
+			}
+
+			timeSinceFire += dt;
+
+			MovePlayer(dt);
+			if (controller->GetNamedButtonAnalogue("R2") > 0.2f)
+				Fire();
+
+			player->ReplenishProjectiles(dt);
+			gravitywell->PullProjectilesWithinField(projectileList);
+
+			for (auto i : projectileList)
+			{
+				if (!i->IsActive()) continue;
+
+				i->ReduceTimeLeft(dt);
+
+				if (i->GetTimeLeft() <= 0)
+					i->deactivate();
+			}
+		}
+
 	}
 
-	if(controller->GetNamedButtonAnalogue("R2") > 0.2f)
-		Fire();
 
-	ui->RenderUI();
+	ui->RenderUI(dt);
 
 	std::optional<time_point<high_resolution_clock>> frameEndTime;
 	if (isDebuHUDActive)
 		frameEndTime = high_resolution_clock::now();
 
-	if (controller->GetNamedButton("Cross"))
+	if (controller->GetNamedButton("Triangle"))
 	{
 		isDebuHUDActive = true;
 
@@ -251,4 +276,18 @@ void NCL::CSC8503::PS5_Game::Fire()
 
 	player->Fire();
 	timeSinceFire = 0;
+}
+
+int NCL::CSC8503::PS5_Game::GetPlayerScore() const
+{
+	if (!player) return 0;
+
+	return player->GetScore();
+}
+
+int NCL::CSC8503::PS5_Game::GEtPlayerBulletsNum() const
+{
+	if (!player) return 0;
+
+	return player->GetNumBullets();
 }

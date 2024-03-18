@@ -63,6 +63,8 @@ namespace NCL {
 				activePowerUp = inPowerup;
 			}
 
+			bool CloseGame = false;
+
 		protected:
 			void InitialiseAssets();
 			void InitCamera();
