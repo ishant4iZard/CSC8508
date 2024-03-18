@@ -82,6 +82,8 @@ namespace NCL::CSC8503 {
 	struct PlayersScorePacket : public GamePacket
 	{
 		int ScoreList[4];
+		char PowerUpState;
+
 		PlayersScorePacket(std::vector<int>& ServerScoreList)
 		{
 			type = Player_Score;

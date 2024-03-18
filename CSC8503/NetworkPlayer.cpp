@@ -166,6 +166,8 @@ void NetworkPlayer::MovePlayerTowardsCursor(float dt){
 	Vector3 movementDirection = (pointPos - transform.GetPosition()).Normalised();
 	movementDirection.y = 0;
 
+	if (!this->GetPhysicsObject()) return;
+
 	Vector3 currentVelocity = this->GetPhysicsObject()->GetLinearVelocity();
 	Vector3 targetVelocity = movementDirection * movementSpeed;
 	Vector3 velocity = Vector3::Lerp(currentVelocity, targetVelocity, dt * 0.5);
@@ -225,13 +227,14 @@ void NCL::CSC8503::NetworkPlayer::MovePlayerBasedOnController(float dt, float ho
 }
 
 void NetworkPlayer::ReplenishProjectiles(float dt) {
-	const static int PROJECTILE_RELOAD_RATE = 1; // 1 projectile per second is replenished
+	const static float PROJECTILE_RELOAD_RATE = 0.5; // 1 projectile per second is replenished
 
 	projectileReplenishTimer += dt;
 
-	if (projectileReplenishTimer > 1.0f / PROJECTILE_RELOAD_RATE)
+	if (projectileReplenishTimer > 1.0f / PROJECTILE_RELOAD_RATE && numProjectilesAccumulated < MAX_PROJECTILE_CAPACITY)
 	{
-		numProjectilesAccumulated = (numProjectilesAccumulated + 1) % MAX_PROJECTILE_CAPACITY;
+		numProjectilesAccumulated = (numProjectilesAccumulated + 1) % (MAX_PROJECTILE_CAPACITY + 1);
+		numProjectilesAccumulated = numProjectilesAccumulated == 0 ? MAX_PROJECTILE_CAPACITY : numProjectilesAccumulated;
 		projectileReplenishTimer = 0.0f;
 	}
 }
@@ -244,7 +247,6 @@ void NetworkPlayer::Fire()
 
 	Vector3 fireDir = GetPlayerForwardVector().Normalised();
 	Vector3 firePos = transform.GetPosition() + fireDir * 3;
-	//std::cout << firePos.y;
 
 #ifdef _WIN32
 	NetworkedGame* tempGame = dynamic_cast<NetworkedGame*>(game);
@@ -253,7 +255,6 @@ void NetworkPlayer::Fire()
 #endif
 
 	tempGame->SpawnProjectile(this, firePos, fireDir);
-	//std::cout << "player " << playerNum << " fired!" << std::endl;
 }
 
 Vector3 NetworkPlayer::GetPlayerForwardVector()

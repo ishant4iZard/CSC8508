@@ -98,10 +98,12 @@ namespace NCL {
 
 			void UpdateAnimation(float dt)
 			{
+				static const float ANIMATION_SPEED = 500;
+
 				if (!mesh || !anim) {
 					return;
 				}
-				animTime -= dt;
+				animTime -= dt * ANIMATION_SPEED;
 
 				if (animTime <= 0) {
 					currentAnimFrame++;
@@ -143,7 +145,7 @@ namespace NCL {
 				"roughnessTex",
 				"ambiantOccTex" };
 
-			MeshAnimation* anim;
+			MeshAnimation* anim = nullptr;
 
 			std::vector<Matrix4> skeleton;
 			float	animTime = 0.0f;

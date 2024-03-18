@@ -12,18 +12,26 @@
 #include "../PS5Core/PS5Window.h"
 
 #include <iostream>
+#include <string>
 
 using namespace NCL;
 using namespace CSC8503;
 
 NCL::CSC8503::PS5_Game::PS5_Game()
 {
+	appState = ApplicationState::GetInstance();
+	ui = UIPlaystation::GetInstance();
 	StartLevel();
+	debugHUD = new DebugHUD();
+
+	//audioEngine = new AudioEngine();
 }
 
 NCL::CSC8503::PS5_Game::~PS5_Game()
 {
+	//delete audioEngine;
 	delete player;
+	delete debugHUD;
 
 	for (auto i : projectileList)
 		delete i;
@@ -32,10 +40,14 @@ NCL::CSC8503::PS5_Game::~PS5_Game()
 
 void NCL::CSC8503::PS5_Game::StartLevel()
 {
+	InitialisePlayerAssets();
 	SpawnPlayer();
-	SpawnAI();
 	InitializeProjectilePool();
+	SpawnAI();
+	SpawnDataDrivenLevel(GameLevelNumber::LEVEL_1);
 	physics->createStaticTree();
+	appState->SetIsGameOver(false);
+	appState->SetIsGamePaused(false);
 }
 
 void NCL::CSC8503::PS5_Game::EndLevel()
@@ -44,14 +56,37 @@ void NCL::CSC8503::PS5_Game::EndLevel()
 
 void NCL::CSC8503::PS5_Game::UpdateGame(float dt)
 {
+	std::optional<time_point<high_resolution_clock>> frameStartTime;
+	if (isDebuHUDActive)
+		frameStartTime = high_resolution_clock::now();
+
+	TutorialGame::UpdateGame(dt);
+
+	if (timeElapsed > GAME_TIME_LIMIT) {
+		ui->DrawStringText("Game Over", Vector2(5, 5), UIBase::RED);
+		ui->DrawStringText("Score: " + std::to_string(player->GetScore()), Vector2(5, 10), UIBase::RED);
+		ui->RenderUI(dt);
+		appState->SetIsGameOver(true);
+		appState->SetIsGamePaused(true);
+		return;
+	}
+
+	ui->DrawStringText("Score: " + std::to_string(player->GetScore()), Vector2(5, 5), UIBase::RED);
+	ui->DrawStringText("Bullets: " + std::to_string(player->GetNumBullets()), Vector2(5, 10), UIBase::RED);
+	ui->DrawStringText("Time Left: " + std::to_string((int)(GAME_TIME_LIMIT - timeElapsed)), Vector2(5, 15), UIBase::RED);
+
+	timeElapsed += dt;
+
 	physics->Update(dt);
 	if (AIStateObject) {
 		AIStateObject->DetectProjectiles(projectileList);
 		AIStateObject->Update(dt);
 	}
+	
 	timeSinceFire += dt;
 	MovePlayer(dt);
 	player->ReplenishProjectiles(dt);
+
 	gravitywell->PullProjectilesWithinField(projectileList);
 
 	for (auto i : projectileList)
@@ -64,10 +99,29 @@ void NCL::CSC8503::PS5_Game::UpdateGame(float dt)
 			i->deactivate();
 	}
 
-	if(controller->GetNamedButton("Cross"))
+	if(controller->GetNamedButtonAnalogue("R2") > 0.2f)
 		Fire();
-	TutorialGame::UpdateGame(dt);
-	Debug::UpdateRenderables(dt);
+
+	ui->RenderUI();
+
+	std::optional<time_point<high_resolution_clock>> frameEndTime;
+	if (isDebuHUDActive)
+		frameEndTime = high_resolution_clock::now();
+
+	if (controller->GetNamedButton("Cross"))
+	{
+		isDebuHUDActive = true;
+
+		if (!frameStartTime.has_value() || !frameEndTime.has_value()) return;
+
+		auto duration = duration_cast<microseconds>(frameEndTime.value() - frameStartTime.value());
+		debugHUD->DrawDebugHUD({
+			dt,
+			duration.count(),
+			physics->GetNumberOfCollisions(),
+			world->GetNumberOfObjects()
+		});
+	}
 }
 
 void NCL::CSC8503::PS5_Game::InitializeProjectilePool()
@@ -123,8 +177,14 @@ AiStatemachineObject* NCL::CSC8503::PS5_Game::AddAiStateObjectToWorld(const Vect
 	AIStateObject->GetPhysicsObject()->InitSphereInertia();
 
 	world->AddGameObject(AIStateObject);
+	player->GetRenderObject()->SetAnimation(*playerWalkingAnimation);
 
 	return AIStateObject;
+}
+
+void NCL::CSC8503::PS5_Game::SwitchAnimations(RenderObject* renderObject, MeshAnimation* animation)
+{
+	renderObject->SetAnimation(*animation);
 }
 
 void NCL::CSC8503::PS5_Game::SpawnProjectile(NetworkPlayer* player, Vector3 firePos, Vector3 fireDir)
@@ -140,32 +200,41 @@ void NCL::CSC8503::PS5_Game::SpawnProjectile(NetworkPlayer* player, Vector3 fire
 	newBullet->ResetTime();
 
 	newBullet->GetTransform().SetPosition(firePos);
+	newBullet->GetPhysicsObject()->ClearForces();
+	newBullet->GetPhysicsObject()->SetLinearVelocity(Vector3(0, 0, 0));
+	newBullet->GetPhysicsObject()->SetAngularVelocity(Vector3(0, 0, 0));
 	Vector3 force = fireDir * Projectile::FireForce;
 	newBullet->GetPhysicsObject()->ApplyLinearImpulse(force);
 }
 
 void NCL::CSC8503::PS5_Game::SpawnPlayer()
 {
-	float meshSize = 2.0f;
+	float meshSize = 5.0f;
 	float inverseMass = 1.0f / 600000.0f;
 
 	player = new NetworkPlayer(this, 0);
-
 	SphereVolume* volume = new SphereVolume(1.6f);
 
 	player->SetBoundingVolume((CollisionVolume*)volume);
+
 	player->GetTransform()
 		.SetScale(Vector3(meshSize, meshSize, meshSize))
 		.SetPosition(Vector3(0, 10, -75));
 
-	player->SetRenderObject(new RenderObject(&player->GetTransform(), charMesh, nullptr, basicShader));
+	player->SetRenderObject(new RenderObject(&player->GetTransform(), playerMesh, basicTex, playerShader));
 	player->SetPhysicsObject(new PhysicsObject(&player->GetTransform(), player->GetBoundingVolume()));
 
 	player->GetPhysicsObject()->SetInverseMass(inverseMass);
 	player->GetPhysicsObject()->InitCubeInertia();
 
 	world->AddGameObject(player);
-	player->GetRenderObject()->SetColour(Debug::RED);
+}
+
+void NCL::CSC8503::PS5_Game::InitialisePlayerAssets()
+{
+	playerMesh				= renderer->LoadMesh("Role_T.msh");
+	playerWalkingAnimation	= new MeshAnimation("Role_T.anm");
+	playerShader			= renderer->LoadShader("scene.vert", "scene.frag");
 }
 
 void NCL::CSC8503::PS5_Game::MovePlayer(float dt) {
@@ -179,6 +248,7 @@ void NCL::CSC8503::PS5_Game::MovePlayer(float dt) {
 	if (rotationX == 0 && rotationY == 0) return;
 
 	player->RotatePlayerBasedOnController(dt, rotationX, rotationY);
+	SwitchAnimations(player->GetRenderObject(), playerWalkingAnimation);
 }
 
 void NCL::CSC8503::PS5_Game::Fire()

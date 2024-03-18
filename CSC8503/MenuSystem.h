@@ -65,6 +65,7 @@ namespace NCL {
 			ApplicationState* appState;
 
 			// Local States 
+			bool isSoloGameBtnPressed = false;
 			bool isCreatingLobby = false;
 			bool isLobbyCreated = false;
 			bool isSearchLobbyBtnPressed = false;
@@ -163,6 +164,8 @@ namespace NCL {
 			void ShowScoreTable(TutorialGame* Game);
 			void ShowTimeLeft(TutorialGame* Game);
 			void CheckRoundTime(TutorialGame* Game);
+			void ShowGameResult(TutorialGame* Game);
+			std::string GetRoundPowerUpState(TutorialGame* Game);
 		};
 	}
 }
