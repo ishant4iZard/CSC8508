@@ -209,31 +209,6 @@ void TutorialGame::InitialiseAssets() {
 	InitMaleGuard();
 }
 
-TutorialGame::~TutorialGame()	{
-	delete cubeMesh;
-	delete wallMesh;
-	delete bouncePlatformMesh;
-	delete sphereMesh;
-	delete charMesh;
-	delete enemyMesh;
-	delete bonusMesh;
-	delete basicTex;
-	delete basicShader;
-	delete pbrShader;
-	delete blackholeTex;
-	delete targetTex;
-
-	delete physics;
-	delete renderer;
-	delete world;
-
-	delete levelFileLoader;
-
-	delete[] groundTextureList;
-	delete[] wallTextureList;
-	delete[] sandTextureList;
-}
-
 void TutorialGame::UpdateGame(float dt) {
 
 	if (Window::GetKeyboard()->KeyPressed(KeyCodes::M)) {
@@ -285,56 +260,6 @@ void NCL::CSC8503::TutorialGame::UpdatePowerUpSpawnTimer(float dt)
 	}
 }
 
-void TutorialGame::InitialiseAssets() {
-	cubeMesh	= renderer->LoadMesh("cube.msh");
-	wallMesh = renderer->LoadMesh("cube.msh");
-	bouncePlatformMesh = renderer->LoadMesh("cube.msh");
-	sphereMesh	= renderer->LoadMesh("sphere.msh");
-	charMesh	= renderer->LoadMesh("goat.msh");
-	enemyMesh	= renderer->LoadMesh("Keeper.msh");
-	bonusMesh	= renderer->LoadMesh("sphere.msh");
-	gooseMesh	= renderer->LoadMesh("goose.msh");
-	capsuleMesh = renderer->LoadMesh("capsule.msh");
-	
-	blackholeTex = renderer->LoadTexture("blackhole.jpg");
-	basicTex	= renderer->LoadTexture("checkerboard.png");
-	portalTex	= renderer->LoadTexture("PortalTex.jpg");
-	sandTex		= renderer->LoadTexture("sand.jpg");
-	targetTex = renderer->LoadTexture("blackhole.png");
-
-	groundTextureList[(uint8_t)TextureType::ALBEDO] = renderer->LoadTexture("GrassWithRock01/albedo.png");
-	groundTextureList[(uint8_t)TextureType::NORMAL] = renderer->LoadTexture("GrassWithRock01/normal_gl.png");
-	groundTextureList[(uint8_t)TextureType::METAL] = renderer->LoadTexture("GrassWithRock01/metallic.png");
-	groundTextureList[(uint8_t)TextureType::ROUGHNESS] = renderer->LoadTexture("GrassWithRock01/roughness.png");
-	groundTextureList[(uint8_t)TextureType::AO] = renderer->LoadTexture("GrassWithRock01/ao.png");
-
-	wallTextureList[(uint8_t)TextureType::ALBEDO] = renderer->LoadTexture("Metal_03/albedo.png");
-	wallTextureList[(uint8_t)TextureType::NORMAL] = renderer->LoadTexture("Metal_03/normal_gl.png");
-	wallTextureList[(uint8_t)TextureType::METAL] = renderer->LoadTexture("Metal_03/metallic.png");
-	wallTextureList[(uint8_t)TextureType::ROUGHNESS] = renderer->LoadTexture("Metal_03/roughness.png");
-	wallTextureList[(uint8_t)TextureType::AO] = renderer->LoadTexture("Metal_03/ao.png");
-
-	sandTextureList[(uint8_t)TextureType::ALBEDO] = renderer->LoadTexture("GroundTile11/albedo.png");
-	sandTextureList[(uint8_t)TextureType::NORMAL] = renderer->LoadTexture("GroundTile11/normal_gl.png");
-	sandTextureList[(uint8_t)TextureType::METAL] = renderer->LoadTexture("GroundTile11/metallic.png");
-	sandTextureList[(uint8_t)TextureType::ROUGHNESS] = renderer->LoadTexture("GroundTile11/roughness.png");
-	sandTextureList[(uint8_t)TextureType::AO] = renderer->LoadTexture("GroundTile11/ao.png");
-
-#ifdef defined(USE_SHADOW)
-	basicShader = renderer->LoadShader("scene.vert", "scene.frag");
-#else
-	basicShader = renderer->LoadShader("scene.vert", "sceneNoShadow.frag");
-#endif // USE_SHADOW
-
-	pbrShader = renderer->LoadShader("pbr.vert", "pbr.frag");
-	portalShader = renderer->LoadShader("scene.vert", "portal.frag");
-	instancePbrShader = renderer->LoadShader("pbrInstanced.vert", "pbr.frag");
-	blackholeShader = renderer->LoadShader("blackhole.vert", "blackhole.frag");
-	targetholeShader = renderer->LoadShader("targethole.vert", "targethole.frag");
-
-	InitCamera();
-	InitWorld();
-}
 
 void TutorialGame::InitCamera() {
 	world->GetMainCamera().SetNearPlane(0.1f);

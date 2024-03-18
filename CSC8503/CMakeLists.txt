@@ -15,62 +15,6 @@ if(NOT("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64"))
     )
     source_group("NetPlugins" FILES ${NetPlugins})
 
-set(Header_Files
-    "GameTechRenderer.h"
-    "NetworkedGame.h"
-    "NetworkPlayer.h"
-    "TutorialGame.h"
-    "Projectile.h"
-    "Hole.h"
-    "BouncePad.h"
-    "GravityWell.h"
-    "Teleporter.h"
-    "PowerUp.h"
-    "LevelFileLoaderBase.h"
-    "WindowsLevelLoader.h"
-    "LevelEnum.h"
-    "LevelObjectEnum.h"
-    "ApplicationState.h"
-    "MenuSystem.h"
-    "Event.h"
-    "EventType.h"
-    "MaleGuard.h"
-    "RenderObjectMaleGuard.h"
-    "GameAnimation.h"
-    "MaxGuard.h"
-    "Singleton.h"
-    "BaseTextureManager.h"
-    "OGLTextureManager.h"
-    "Light.h"
-    "DirectionalLight.h"
-    "ThreadPool.h"
-)
-source_group("Header Files" FILES ${Header_Files})
-
-set(Source_Files
-    "GameTechRenderer.cpp"
-    "Main.cpp"
-    "NetworkedGame.cpp"
-    "NetworkPlayer.cpp"
-    "TutorialGame.cpp"
-    "Projectile.cpp"
-    "Hole.cpp"
-    "BouncePad.cpp"
-    "PowerUp.cpp"
-    "GravityWell.cpp"
-    "Teleporter.cpp"
-    "WindowsLevelLoader.cpp"
-    "ApplicationState.cpp"
-    "MenuSystem.cpp"
-    "MaleGuard.cpp"
-    "RenderObjectMaleGuard.cpp"
-    "GameAnimation.cpp"
-    "MaxGuard.cpp"
-    "Singleton.cpp"
-    "BaseTextureManager.cpp"
-    "OGLTextureManager.cpp"
-)
-source_group("Source Files" FILES ${Source_Files})
     set(AudioEngine
         "AudioEngine.h"
         "AudioEngine.cpp"
@@ -452,6 +396,10 @@ else()
         "DirectionalLight.h"
         "DebugHUD.h"
         "ThreadPool.h"
+        "MaleGuard.h"
+        "RenderObjectMaleGuard.h"
+        "GameAnimation.h"
+        "MaxGuard.h"
     )
     source_group("Header Files" FILES ${Header_Files})
 
@@ -474,6 +422,10 @@ else()
         "OGLTextureManager.cpp"
         "Powerup.cpp"
         "DebugHUD.cpp"
+        "MaleGuard.cpp"
+        "RenderObjectMaleGuard.cpp"
+        "GameAnimation.cpp"
+        "MaxGuard.cpp"
     )
     source_group("Source Files" FILES ${Source_Files})
 
