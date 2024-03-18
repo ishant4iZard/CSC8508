@@ -691,15 +691,15 @@ std::string PlayingHUD::GetRoundPowerUpState(TutorialGame* Game)
 		break;
 
 	case powerUpType::ice:
-		state = std::string("ice");
+		state = std::string("Ice");
 		break;
 
 	case powerUpType::sand:
-		state = std::string("sand");
+		state = std::string("Sand");
 		break;
 
 	case powerUpType::wind:
-		state = std::string("wind");
+		state = std::string("Wind");
 		break;
 
 	default:

@@ -1,6 +1,7 @@
 #include "TutorialGame.h"
 #include "GameWorld.h"
 #include "PhysicsObject.h"
+#include "PhysicsSystem.h"
 #include "RenderObject.h"
 #include "TextureLoader.h"
 #include "Hole.h"
@@ -71,6 +72,7 @@ TutorialGame::TutorialGame() {
 	controller->MapButton(3, "Square");
 	controller->MapButton(4, "Square");
 	controller->MapButton(5, "");
+	controller->MapButton(7, "R1");
 
 	//These are the axis/button aliases the inbuilt camera class reads from:
 	controller->MapAxis(0, "XLook");
@@ -83,6 +85,8 @@ TutorialGame::TutorialGame() {
 
 	controller->MapButton(0, "Up");
 	controller->MapButton(2, "Down");
+
+	controller->MapButton(10, "Option");
 
 	ui = UIPlaystation::GetInstance();
 #endif
@@ -234,11 +238,6 @@ void TutorialGame::InitWorld() {
 	physics->UseGravity(false);
 	physics->SetBroadphase(true);
 	timer = 0;
-
-	// TODO(Sameer) : Everything drawn after spawn level has a random mesh embedded in it (PS5 bug)
-#ifndef _WIN32
-	InitTeleporters();
-#endif
 }
 
 void TutorialGame::InitPowerup()

@@ -38,6 +38,8 @@ namespace NCL {
 
 			int GetNumberOfCollisions() const { return allCollisions.size(); }
 
+			inline powerUpType GetCurrentPowerUpState() const { return activePowerup; }
+
 		protected:
 			void BasicCollisionDetection();
 			void BroadPhase();
@@ -78,9 +80,6 @@ namespace NCL {
 			Vector3 wind = Vector3();
 
 			//QuadTree <GameObject*>* staticTree = new QuadTree<GameObject*>(Vector2(256.0f, 256.0f), 8, 10);
-
-		public:
-			inline powerUpType GetCurrentPowerUpState() const {	return activePowerup;}
 		};
 	}
 }
