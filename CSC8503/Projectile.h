@@ -1,11 +1,9 @@
 #pragma once
-
 #include "GameObject.h"
 
 namespace NCL {
 	namespace  CSC8503 {
 		class NetworkPlayer;
-		class NetworkedGame;
 		class TutorialGame;
 
 		class Projectile : public GameObject
@@ -27,6 +25,7 @@ namespace NCL {
 
 			void ReduceTimeLeft(float dt) { timeLeft -= dt; }
 			const float GetTimeLeft() { return timeLeft; }
+			void ResetTime() { timeLeft = LIFE_TIME_AMOUNT; }
 
 			bool getTeleport() {
 				return canTeleport;

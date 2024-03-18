@@ -4,17 +4,18 @@
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include "Win32Window.h"
-#endif
-
-#ifdef __ORBIS__
-#include "../Plugins/PlayStation4/PS4Window.h"
+#else
+#include "../PS5Core/PS5Window.h"
 #endif
 
 #include "RendererBase.h"
 #include "GameTimer.h"
 
+
+#ifdef _WIN32
 #pragma comment(lib, "Ws2_32.lib")
 #pragma comment(lib, "iphlpapi.lib")
+#endif
 
 using namespace NCL;
 using namespace Rendering;
@@ -41,9 +42,8 @@ Window* Window::CreateGameWindow(std::string title, int sizeX, int sizeY, bool f
 	}
 #ifdef _WIN32
 	return new Win32Code::Win32Window(title, sizeX, sizeY, fullScreen, offsetX, offsetY);
-#endif
-#ifdef __ORBIS__
-	return new PS4::PS4Window(title, sizeX, sizeY, fullScreen, offsetX, offsetY);
+#else
+	return new PS5::PS5Window(title, sizeX, sizeY);
 #endif
 }
 

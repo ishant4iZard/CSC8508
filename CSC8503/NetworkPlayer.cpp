@@ -1,5 +1,10 @@
 #include "NetworkPlayer.h"
+#include "TutorialGame.h"
+#ifdef _WIN32
 #include "NetworkedGame.h"
+#else
+#include "PS5_Game.h"
+#endif
 #include "PhysicsObject.h"
 #include "PowerUp.h"
 #include "Event.h"
@@ -9,7 +14,7 @@
 using namespace NCL;
 using namespace CSC8503;
 
-NetworkPlayer::NetworkPlayer(NetworkedGame* game, int num)	{
+NetworkPlayer::NetworkPlayer(TutorialGame* game, int num)	{
 	this->game = game;
 	playerNum  = num;
 	this->settag("Player");
@@ -25,11 +30,6 @@ NetworkPlayer::~NetworkPlayer()	{
 
 void NetworkPlayer::OnCollisionBegin(GameObject* otherObject) {
 	if (game) {
-		if (dynamic_cast<NetworkPlayer*>(otherObject))
-		{
-			game->OnPlayerCollision(this, (NetworkPlayer*)otherObject);
-		}
-		
 		if (otherObject->gettag() == "PowerUp") {
 			PowerUp* powerup = dynamic_cast<PowerUp*>(otherObject);
 			powerUpType ActivatePowerUp = powerup->getPowerUp();
@@ -166,6 +166,8 @@ void NetworkPlayer::MovePlayerTowardsCursor(float dt){
 	Vector3 movementDirection = (pointPos - transform.GetPosition()).Normalised();
 	movementDirection.y = 0;
 
+	if (!this->GetPhysicsObject()) return;
+
 	Vector3 currentVelocity = this->GetPhysicsObject()->GetLinearVelocity();
 	Vector3 targetVelocity = movementDirection * movementSpeed;
 	Vector3 velocity = Vector3::Lerp(currentVelocity, targetVelocity, dt * 0.5);
@@ -173,14 +175,66 @@ void NetworkPlayer::MovePlayerTowardsCursor(float dt){
 	this->GetPhysicsObject()->SetLinearVelocity(velocity);
 }
 
+void NCL::CSC8503::NetworkPlayer::RotatePlayerBasedOnController(float dt, float rotationX, float rotationY)
+{
+	Vector3 pointPos = Vector3(rotationX, 0, rotationY);
+	Quaternion orientation;
+	Vector3 pos = Vector3(0, 0, 0);
+	Vector3 targetForwardVec = (pointPos - pos);
+	targetForwardVec.y = 0;
+	targetForwardVec = targetForwardVec.Normalised();
+
+	Vector3 forward = Vector3(0, 0, -1);
+
+	float cosTheta = Vector3::Dot(forward, targetForwardVec);
+	Vector3 rotationAxis;
+	float angle;
+	if (cosTheta < -1 + 0.001f)
+	{
+		rotationAxis = Vector3::Cross(Vector3(0, 0, 1), forward);
+		if (rotationAxis.Length() < 0.01)
+		{
+			rotationAxis = Vector3::Cross(Vector3(1, 0, 0), forward);
+		}
+		rotationAxis = rotationAxis.Normalised();
+		angle = 3.1415926f;
+	}
+	else
+	{
+		rotationAxis = Vector3::Cross(forward, targetForwardVec);
+		rotationAxis = rotationAxis.Normalised();
+		angle = std::acos(cosTheta);
+	}
+	orientation = GenerateOrientation(rotationAxis, angle);
+
+	transform.SetOrientation(orientation);
+}
+
+void NCL::CSC8503::NetworkPlayer::MovePlayerBasedOnController(float dt, float horizontalInput, float verticalInput)
+{
+	Vector3 playerPos = transform.GetPosition();
+
+	playerPos.y = 5.6;
+	transform.SetPosition(playerPos);
+
+	Vector3 movementDirection = Vector3(horizontalInput, 0, verticalInput).Normalised();
+
+	Vector3 currentVelocity = this->GetPhysicsObject()->GetLinearVelocity();
+	Vector3 targetVelocity = movementDirection * movementSpeed;
+	Vector3 velocity = Vector3::Lerp(currentVelocity, targetVelocity, dt * 0.5);
+
+	this->GetPhysicsObject()->SetLinearVelocity(velocity); 
+}
+
 void NetworkPlayer::ReplenishProjectiles(float dt) {
-	const static int PROJECTILE_RELOAD_RATE = 1; // 1 projectile per second is replenished
+	const static float PROJECTILE_RELOAD_RATE = 0.5; // 1 projectile per second is replenished
 
 	projectileReplenishTimer += dt;
 
-	if (projectileReplenishTimer > PROJECTILE_RELOAD_RATE)
+	if (projectileReplenishTimer > 1.0f / PROJECTILE_RELOAD_RATE && numProjectilesAccumulated < MAX_PROJECTILE_CAPACITY)
 	{
-		numProjectilesAccumulated = (numProjectilesAccumulated + 1) % MAX_PROJECTILE_CAPACITY;
+		numProjectilesAccumulated = (numProjectilesAccumulated + 1) % (MAX_PROJECTILE_CAPACITY + 1);
+		numProjectilesAccumulated = numProjectilesAccumulated == 0 ? MAX_PROJECTILE_CAPACITY : numProjectilesAccumulated;
 		projectileReplenishTimer = 0.0f;
 	}
 }
@@ -193,10 +247,14 @@ void NetworkPlayer::Fire()
 
 	Vector3 fireDir = GetPlayerForwardVector().Normalised();
 	Vector3 firePos = transform.GetPosition() + fireDir * 3;
-	//std::cout << firePos.y;
 
-	game->SpawnProjectile(this, firePos, fireDir);
-	//std::cout << "player " << playerNum << " fired!" << std::endl;
+#ifdef _WIN32
+	NetworkedGame* tempGame = dynamic_cast<NetworkedGame*>(game);
+#else
+	PS5_Game* tempGame = dynamic_cast<PS5_Game*>(game);
+#endif
+
+	tempGame->SpawnProjectile(this, firePos, fireDir);
 }
 
 Vector3 NetworkPlayer::GetPlayerForwardVector()

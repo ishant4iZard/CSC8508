@@ -28,6 +28,12 @@ GameObject::~GameObject()	{
 	networkObject = nullptr;
 }
 
+void GameObject::Update(float dt) {
+	if (renderObject) {
+		renderObject->UpdateAnimation(dt);
+	}
+}
+
 bool GameObject::GetBroadphaseAABB(Vector3&outSize) const {
 	if (!boundingVolume || isActive == false) {
 		return false;
@@ -44,18 +50,11 @@ void GameObject::UpdateBroadphaseAABB() {
 		broadphaseAABB = ((AABBVolume&)*boundingVolume).GetHalfDimensions();
 	}
 	else if (boundingVolume->type == VolumeType::Sphere) {
-		if (!SweptVolume) {
-			float r = ((SphereVolume&)*boundingVolume).GetRadius();
-			broadphaseAABB = Vector3(r, r, r);
-		}
-		else if (SweptVolume->type == VolumeType::Capsule) {
-			Matrix3 mat = Matrix3(SweptTransform.GetOrientation());
-			mat = mat.Absolute();
-			float halfheight = ((CapsuleVolume&)*SweptVolume).GetHalfHeight();
-			float radius = ((CapsuleVolume&)*SweptVolume).GetRadius();
-			Vector3 halfSizes = Vector3(radius, halfheight, radius);
-			broadphaseAABB = mat * halfSizes;
-		}
+		
+		float r = ((SphereVolume&)*boundingVolume).GetRadius();
+		broadphaseAABB = Vector3(r, r, r);
+		
+		
 	}
 	else if (boundingVolume->type == VolumeType::OBB) {
 		Matrix3 mat = Matrix3(transform.GetOrientation());

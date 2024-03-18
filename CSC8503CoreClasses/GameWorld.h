@@ -62,6 +62,8 @@ namespace NCL {
 				return worldStateCounter;
 			}
 
+			int GetNumberOfObjects() { return gameObjects.size(); }
+
 			std::mutex gameObjectsMutex;
 
 		protected:

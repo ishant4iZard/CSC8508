@@ -4,6 +4,8 @@
 #include "PushdownState.h"
 #include "Projectile.h"
 
+#include "ThreadPool.h"
+
 #include "GameClient.h"
 #include "ApplicationState.h"
 
@@ -14,7 +16,12 @@
 #else //_ORBIS
 #include "../CSC8503/UIPlaystation.h"
 #endif
+
 #include "AudioEngine.h"
+#include "DebugHUD.h"
+
+#include <chrono>
+using namespace std::chrono;
 
 namespace NCL {
 	namespace CSC8503 {
@@ -51,8 +58,9 @@ namespace NCL {
 
 			void OnPlayerCollision(NetworkPlayer* a, NetworkPlayer* b);
 
+			const int PROJECTILE_POOL_SIZE = 20;
 			std::vector<Projectile*> ProjectileList;
-
+			void InitializeProjectilePool(NetworkPlayer* player);
 			
 			/** Network public function */
 			int GetConnectedClientsNum();
@@ -130,10 +138,16 @@ namespace NCL {
 			int fireSFX = -1;
 			bool UpdatePhysics = false;
 
-			void PhysicsUpdate(float dt);
-			void NonPhysicsUpdate(float dt);
+
+			powerUpType CurrentPowerUpType;
+			ThreadPool* poolPTR;
+
+			DebugHUD* debugHUD;
+			bool isDebuHUDActive;
 
 		public:
+			void NonPhysicsUpdate(float dt);
+			void PhysicsUpdate(float dt);
 			inline bool IsServer() { return thisServer != nullptr ? true : false; }
 			inline bool IsClient() { return thisClient != nullptr ? true : false; }
 			inline GameServer* GetServer() const { return thisServer; }
@@ -145,6 +159,7 @@ namespace NCL {
 			inline int GetPlayerScoreByIndex(int index) { return PlayersScoreList[index]; }
 			inline float GetRoundTimer() const { return timer; }
 			inline int GetRoundTimeLimit() const { return TIME_LIMIT; }
+			inline powerUpType GetCurrentPowerUpType() const { return CurrentPowerUpType; }
 		};
 
 
