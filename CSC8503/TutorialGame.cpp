@@ -21,12 +21,14 @@
 
 using namespace NCL;
 using namespace CSC8503;
+
 #define POWER_UP_SPAWN_TIME 30.0f
 #define MAX_POWER_UP_COUNT 3
 #define SAFE_DELETE_PBR_TEXTURE(a) for (uint8_t i = 0; i < (uint8_t)TextureType::MAX_TYPE; i++){ if (a[i] != NULL) delete a[i]; a[i] = NULL; }
 
 TutorialGame::TutorialGame() {
 	world		= new GameWorld();
+	world->ClearAndErase();
 	physics = new PhysicsSystem(*world);
 	physics->UseGravity(false);
 
@@ -177,7 +179,7 @@ void TutorialGame::InitialiseAssets() {
 	gooseMesh	= renderer->LoadMesh("goose.msh");
 	capsuleMesh = renderer->LoadMesh("capsule.msh");
 	
-	blackholeTex = renderer->LoadTexture("blackhole.png");
+	blackholeTex = renderer->LoadTexture("blackhole.jpg");
 	basicTex	= renderer->LoadTexture("checkerboard.png");
 	portalTex	= renderer->LoadTexture("PortalTex.jpg");
 	sandTex		= renderer->LoadTexture("sand.jpg");
@@ -232,10 +234,7 @@ void TutorialGame::InitWorld() {
 	timer = 0;
 
 	// TODO(Sameer) : Everything drawn after spawn level has a random mesh embedded in it (PS5 bug)
-#ifdef _WIN32
-	SpawnDataDrivenLevel(GameLevelNumber::LEVEL_1);
-	InitTeleporters();
-#else
+#ifndef _WIN32
 	InitTeleporters();
 #endif
 }
