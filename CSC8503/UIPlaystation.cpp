@@ -2,16 +2,16 @@
 
 UIPlaystation* UIPlaystation::ui = nullptr;
 
-#ifdef _ORBIS 
+#ifndef _WIN32
 // Static Colors
-const NCL::Maths::Vector4 UIBase::RED = NCL::Debug::RED;
-const NCL::Maths::Vector4 UIBase::GREEN = NCL::Debug::GREEN;
-const NCL::Maths::Vector4 UIBase::BLUE = NCL::Debug::BLUE;
-const NCL::Maths::Vector4 UIBase::BLACK = NCL::Debug::BLACK;
-const NCL::Maths::Vector4 UIBase::WHITE = NCL::Debug::WHITE;
-const NCL::Maths::Vector4 UIBase::YELLOW = NCL::Debug::YELLOW;
-const NCL::Maths::Vector4 UIBase::MAGENTA = NCL::Debug::MAGENTA;
-const NCL::Maths::Vector4 UIBase::CYAN = NCL::Debug::CYAN;
+const NCL::Maths::Vector4 UIBase::RED       = NCL::Debug::RED;
+const NCL::Maths::Vector4 UIBase::GREEN     = NCL::Debug::GREEN;
+const NCL::Maths::Vector4 UIBase::BLUE      = NCL::Debug::BLUE;
+const NCL::Maths::Vector4 UIBase::BLACK     = NCL::Debug::BLACK;
+const NCL::Maths::Vector4 UIBase::WHITE     = NCL::Debug::WHITE;
+const NCL::Maths::Vector4 UIBase::YELLOW    = NCL::Debug::YELLOW;
+const NCL::Maths::Vector4 UIBase::MAGENTA   = NCL::Debug::MAGENTA;
+const NCL::Maths::Vector4 UIBase::CYAN      = NCL::Debug::CYAN;
 #endif
 
 UIPlaystation* UIPlaystation::GetInstance()
@@ -37,10 +37,12 @@ void UIPlaystation::DrawStringText(
     const NCL::Maths::Vector4& color
 )
 {
-	UIElementProps* newElement = new UIElementProps();
-	newElement->elementType = Text;
+    UIElementProps* newElement = new UIElementProps();
+    newElement->elementType = Text;
+    newElement->text = text;
+    newElement->color = color;
+    newElement->position = position;
 	uiElements.push_back(newElement);
-	NCL::Debug::Print(text, position, color);
 }
 
 void UIPlaystation::DrawButton(
@@ -52,23 +54,33 @@ void UIPlaystation::DrawButton(
     const NCL::Maths::Vector2& size
 )
 {
-	UIElementProps* newElement = new UIElementProps();
-	newElement->elementType = Button;
+    UIElementProps* newElement = new UIElementProps();
+    newElement->elementType = Button;
+    newElement->text = text;
+    newElement->color = color;
+    newElement->callback = callback;
+    newElement->size = size;
+    newElement->position = position;
 	uiElements.push_back(newElement);
 	std::string displayText = text + " " + keycodeToStringMap[keyCode];
-	NCL::Debug::Print(displayText, position, color);
 }
 
-void UIPlaystation::RenderUI()
+void UIPlaystation::RenderUI(float dt)
 {
+    NCL::Debug::UpdateRenderables(dt);
+
     for (auto uiElement : uiElements) {
         switch (uiElement->elementType) {
         case Button:
+            NCL::Debug::Print(uiElement->text, uiElement->position, uiElement->color);
 			if (NCL::Window::GetKeyboard()->KeyPressed(uiElement->keyCode))
 				uiElement->callback();
             break;
+        
         case Text:
-			break;
+            NCL::Debug::Print(uiElement->text, uiElement->position, uiElement->color);
+            break;
+        
         default:
             break;
         }

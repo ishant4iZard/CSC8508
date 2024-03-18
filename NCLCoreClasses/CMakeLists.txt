@@ -103,6 +103,8 @@ set(Windowing_and_Input__Win32
 )
 source_group("Windowing and Input\\Win32" FILES ${Windowing_and_Input__Win32})
 
+
+
 set(ALL_FILES
     ${Asset_Handling}
     ${Header_Files}
@@ -110,8 +112,19 @@ set(ALL_FILES
     ${Rendering}
     ${Source_Files}
     ${Windowing_and_Input}
-    ${Windowing_and_Input__Win32}
 )
+
+if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
+    set(ALL_FILES
+        ${Asset_Handling}
+        ${Header_Files}
+        ${Maths}
+        ${Rendering}
+        ${Source_Files}
+        ${Windowing_and_Input}
+        ${Windowing_and_Input__Win32}
+    )
+endif()
 
 ################################################################################
 # Target

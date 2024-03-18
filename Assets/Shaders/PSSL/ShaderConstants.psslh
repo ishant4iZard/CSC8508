@@ -1,0 +1,26 @@
+struct ShaderConstants
+{
+	matrix shadowMatrix;
+	matrix orthoMatrix;
+
+	matrix viewProjMatrix;
+	matrix viewMatrix;
+	matrix projMatrix;
+
+	matrix inverseViewProjMatrix;
+	matrix inverseViewMatrix;
+	matrix inverseProjMatrix;
+
+	float3 lightPosition;
+	float  lightRadius;
+	float4 lightColour;
+	float3 cameraPos;
+	uint32_t shadowID;
+};
+
+#ifndef __cplusplus 
+ConstantBuffer constants : register(c0)
+{
+	ShaderConstants Constants;
+}
+#endif

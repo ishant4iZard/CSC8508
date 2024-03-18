@@ -1,0 +1,46 @@
+#include "ShaderConstants.psslh"
+
+struct VS_OUTPUT
+{
+	float4 Position		: S_POSITION;
+	float2 UV			: TEXCOORD0;
+	float4 Colour		: TEXCOORD1;
+	int	texID			: TEXCOORD2;
+	float4 ShadowClip	: TEXCOORD2;
+};
+
+SamplerState sampler			: register(s0);
+SamplerState shadowSampler		: register(s1);
+
+RegularBuffer<sce::Agc::Core::Texture> textures : register(t0);
+
+[CxxSymbol("TestShader::ps")]
+float4 main(VS_OUTPUT vertex) : S_TARGET_OUTPUT
+{
+	Texture2D<float4> tex = Texture2D<float4>(textures[NonUniformResourceIndex(vertex.texID)]);
+
+	float4 texSample = tex.Sample(sampler, vertex.UV) * vertex.Colour;
+
+	//Shadow mapping		
+	Texture2D<float> shadowTex = Texture2D<float>(textures[Constants.shadowID]);
+
+	float3 shadowNDC		= vertex.ShadowClip.xyz / vertex.ShadowClip.w;
+
+	shadowNDC.xy = (shadowNDC.xy * 0.5f) + float2(0.5f);
+	shadowNDC.y = 1.0f - shadowNDC.y;
+
+	float  shadowSample		= shadowTex.Sample(shadowSampler, shadowNDC.xy);
+
+	float shadow = 1.0f;
+	float offset        = -0.001f;
+
+	if(shadowNDC.x > 0.0f && shadowNDC.x < 1.0f && 
+       shadowNDC.y > 0.0f && shadowNDC.y < 1.0f &&
+	   shadowNDC.z > 0.0f && shadowNDC.z < 1.0f) {
+        if(shadowSample < shadowNDC.z + offset) {
+            shadow = 0.5f;
+        }
+    } 
+	
+	return texSample * float4(shadow,shadow,shadow,1);  
+}

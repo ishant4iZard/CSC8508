@@ -5,11 +5,11 @@
 #include "MaleGuard.h"
 namespace NCL {
 	namespace CSC8503 {
-		class NetworkedGame;
+		class TutorialGame;
 
 		class NetworkPlayer : public GameObject {
 		public:
-			NetworkPlayer(NetworkedGame* game, int num);
+			NetworkPlayer(TutorialGame* game, int num);
 			~NetworkPlayer();
 
 			void OnCollisionBegin(GameObject* otherObject) override;
@@ -20,6 +20,8 @@ namespace NCL {
 			void RotatePlayer(float dt);
 			void MovePlayerInSquarePattern(float dt); // The player will move along the boundaries of the level in a square pattern
 			void MovePlayerTowardsCursor(float dt);
+			void RotatePlayerBasedOnController(float dt, float rotationX, float rotationY);
+			void MovePlayerBasedOnController(float dt, float horizontalInput, float verticalInput);
 			void ReplenishProjectiles(float dt);
 
 			bool isFire = false;
@@ -43,9 +45,12 @@ namespace NCL {
 
 			void SetAnimationStateCounter() { animationStateCounter++; }
 			int GetAnimationStateCounter() { return animationStateCounter; }
+			int GetNumBullets() {
+				return numProjectilesAccumulated;
+			}
 
 		protected:
-			NetworkedGame* game;
+			TutorialGame* game;
 			int playerNum;
 			int Score = 0;
 			float timeElapsed;

@@ -2,6 +2,9 @@
 #include "Texture.h"
 #include "Shader.h"
 #include "Mesh.h"
+#include <Buffer.h>
+#include "MeshAnimation.h"
+
 
 namespace NCL {
 	using namespace NCL::Rendering;
@@ -32,6 +35,14 @@ namespace NCL {
 
 			Texture* GetDefaultTexture() const {
 				return texture;
+			}
+
+			Buffer* GetGPUBuffer() const {
+				return buffer;
+			}
+
+			void SetGPUBuffer(Buffer* b) {
+				buffer = b;
 			}
 
 			Texture* GetTexture(const TextureType& inType) const
@@ -78,7 +89,48 @@ namespace NCL {
 			Vector2 GetTiling() const { return tiling; }
 			void SetTiling(const Vector2& inTiling) { this->tiling = inTiling; }
 
+			void SetAnimation(MeshAnimation& inAnim)
+			{
+				anim = &inAnim;
+
+				skeleton.resize(anim->GetJointCount());
+			}
+
+			void UpdateAnimation(float dt)
+			{
+				static const float ANIMATION_SPEED = 500;
+
+				if (!mesh || !anim) {
+					return;
+				}
+				animTime -= dt * ANIMATION_SPEED;
+
+				if (animTime <= 0) {
+					currentAnimFrame++;
+					animTime += anim->GetFrameTime();
+					currentAnimFrame = (currentAnimFrame++) % anim->GetFrameCount();
+
+					std::vector<Matrix4>const& inverseBindPose = mesh->GetInverseBindPose();
+
+					if (inverseBindPose.size() != anim->GetJointCount()) {
+						//oh no
+						return;
+					}
+
+					const Matrix4* joints = anim->GetJointData(currentAnimFrame);
+
+					for (int i = 0; i < skeleton.size(); ++i) {
+						skeleton[i] = joints[i] * inverseBindPose[i];
+					}
+				}
+			}
+
+			std::vector<Matrix4>& GetSkeleton() {
+				return skeleton;
+			}
+
 		protected:
+			Buffer* buffer;
 			Mesh*		mesh;
 			Texture*	texture;
 			Texture* textureList[(uint8_t)TextureType::MAX_TYPE];
@@ -92,6 +144,12 @@ namespace NCL {
 				"metallicTex",
 				"roughnessTex",
 				"ambiantOccTex" };
+
+			MeshAnimation* anim = nullptr;
+
+			std::vector<Matrix4> skeleton;
+			float	animTime = 0.0f;
+			int currentAnimFrame = 0;
 		};
 	}
 }

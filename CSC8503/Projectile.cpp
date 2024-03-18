@@ -1,6 +1,5 @@
 #include "Projectile.h"
 #include "TutorialGame.h"
-#include "NetworkedGame.h"
 #include "NetworkPlayer.h"
 
 using namespace NCL;

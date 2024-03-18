@@ -1,0 +1,54 @@
+#include "ShaderConstants.psslh"
+#include "VertexAttributes.psslh"
+#include "Skinning.psslh"
+#include "TechObject.psslh"
+#include "Bindless.psslh"
+#include "Vertex.psslh"
+
+#define DIFFUSE_TEX   0
+#define COLOR_GREEN 1
+#define COLOR_BLUE  2
+
+struct VS_Output 
+{
+    float4 Position : S_POSITION;
+    float4 Colour : TEXCOORD1;
+    float2 UV : TEXCOORD2;
+    float4 shadowProj : TEXCOORD3;
+    float3 Normal : TEXCOORD4;
+    float3 Tangent : TEXCOORD5;
+    float3 BiNormal : TEXCOORD6;
+    float3 WorldPos : TEXCOORD7;
+};
+
+[CxxSymbol("TestShader::gs")]
+VS_Output main(uint vertID : S_VERTEX_ID, uint objID : S_SRT_DATA, uint instanceID : S_INSTANCE_ID) 
+{
+    VS_Output Output;
+
+    uint id = objID + instanceID;
+
+	ObjectState objState = objects[id];
+
+    float4 tempPosition;
+	float3 tempNormal;
+	float3 tangent;
+	float3 tempBiTangent;
+
+	TransformVertexToWorld(objState, vertID, tempPosition, tempNormal, tangent, tempBiTangent);
+
+    Output.Position = TransformWorldToClip(tempPosition);
+
+
+    Output.Normal = tempNormal; // World tempNormal
+    Output.Tangent = tangent; // World tangent
+    Output.BiNormal = tempBiTangent; //World binormal/tempBiTangent
+
+    Output.shadowProj = mul(Constants.shadowMatrix, tempPosition);
+    Output.WorldPos = mul(objState.modelMatrix, float4(Positions[vertID], 1.0)).xyz;
+
+    Output.UV = float2(TextureCoords[vertID].x * objState.tiling.x, TextureCoords[vertID].y * objState.tiling.y);
+    Output.Colour = objState.colour;
+
+    return Output;
+}

@@ -1,21 +1,24 @@
 #include "MenuSystem.h"
+#include "TutorialGame.h"
 #include "NetworkedGame.h"
 #include "PushdownMachine.h"
 
 #include "OnlineSubsystemBase.h"
 #include "steam.h"
 
+// TODO sit with T and change everything to tutorial game and non network related
+
 using namespace NCL;
 using namespace CSC8503;
 
 using std::string;
 
-MenuSystem::MenuSystem(NetworkedGame* Game)
+MenuSystem::MenuSystem(TutorialGame* Game)
 {
 #ifdef _WIN32
 	OnlineSubsystem = NetSystem_Steam::GetInstance();
 #else
-
+	OnlineSubsystem = nullptr;
 #endif
 	MenuMachine = new PushdownMachine(new MainMenu());
 	MenuMachine->SetGame(Game);
@@ -34,12 +37,18 @@ void MenuSystem::Update(float dt)
 
 void MenuSystem::SetIsNetsystemInitSuccess(bool result)
 {
-	OnlineSubsystem->SetIsOnlineSubsystemInitSuccess(result);
+	if (OnlineSubsystem)
+	{
+		OnlineSubsystem->SetIsOnlineSubsystemInitSuccess(result);
+	}
 }
 
 void MenuSystem::SetLocalIPv4Address(const std::string& IP)
 {
-	OnlineSubsystem->SetLocalIPv4Address(IP);
+	if (OnlineSubsystem)
+	{
+		OnlineSubsystem->SetLocalIPv4Address(IP);
+	}
 }  
 
 /** Main Menu Update */
@@ -47,19 +56,29 @@ PushdownState::PushdownResult MainMenu::OnUpdate(float dt, PushdownState** newSt
 {
 	if (game && OnlineSubsystem)
 	{
+#ifdef _WIN32
 		OnlineSubsystemBase* Subsystem = (OnlineSubsystemBase*)OnlineSubsystem;
 		NetworkedGame* Game = (NetworkedGame*)game;
+#else
+#endif
 
-		if (!Subsystem->GetIsOnlineSubsystemInitSuccess())
+		if (Subsystem && !Subsystem->GetIsOnlineSubsystemInitSuccess())
 		{
 			ui->DrawStringText("NetSystem init failed! Please check your steam or playstation 5 network state and restart game!", Vector2(5, 40), UIBase::RED);
 			return PushdownResult::NoChange;
 		}
-		else
+		if(Subsystem)
 		{
 			Subsystem->SetCurrentUserName();
 		}
 
+		if (isSoloGameBtnPressed)
+		{
+			isSoloGameBtnPressed = false;
+			Game->SetLocalPlayerIndex(0);
+			appState->SetIsServer(true);
+			Game->isDevMode = true;
+		}
 		if (isLobbyCreated)
 		{
 			Game->isDevMode = false;
@@ -76,23 +95,27 @@ PushdownState::PushdownResult MainMenu::OnUpdate(float dt, PushdownState** newSt
 			*newState = new MultiplayerSearchMenu();
 			return Push;
 		}
-		/*if (isDevSASPressed)
-		{
-			isDevSASPressed = false;
-			Game->isDevMode = true;
-			*newState = new PlayingHUD();
-			return Push;
-		}
-		if (isDevSACPressed)
-		{
-			isDevSACPressed = false;
-			*newState = new PlayingHUD();
-			return Push;
-		}*/
 
+		if (appState->GetIsServer())
+		{
+			Game->StartAsServer();
+			*newState = new PlayingHUD();
+			return PushdownResult::Push;
+		}
+		ui->DrawButton(
+			"Solo Game",
+			Vector2(5, 23),
+			[&]() {
+				isSoloGameBtnPressed = true;
+			},
+			UIBase::WHITE,
+			KeyCodes::NUM1 // Only for PS
+		);
+
+#ifdef _WIN32
 		ui->DrawButton(
 			"Create Lobby",
-			Vector2(5, 23),
+			Vector2(5, 33),
 			[&, Subsystem]() {
 				if (!isCreatingLobby)
 				{
@@ -106,13 +129,14 @@ PushdownState::PushdownResult MainMenu::OnUpdate(float dt, PushdownState** newSt
 
 		ui->DrawButton(
 			"Search Lobby",
-			Vector2(5, 33),
+			Vector2(5, 43),
 			[&]() {
 				isSearchLobbyBtnPressed = true;
 			},
 			UIBase::WHITE,
 			KeyCodes::NUM2 // Only for PS
 		);
+#endif
 
 		/** for devlop only */
 		if (appState->GetIsServer())
@@ -131,8 +155,9 @@ PushdownState::PushdownResult MainMenu::OnUpdate(float dt, PushdownState** newSt
 		}
 		ui->DrawButton(
 			"Local: Play As Server",
-			Vector2(5, 43),
+			Vector2(5, 53),
 			[&, Game]() {
+				Game->SetLocalPlayerIndex(0);
 				appState->SetIsServer(true);
 				Game->isDevMode = true;
 			},
@@ -141,7 +166,7 @@ PushdownState::PushdownResult MainMenu::OnUpdate(float dt, PushdownState** newSt
 		);
 		ui->DrawButton(
 			"Local: Play As Client",
-			Vector2(5, 53),
+			Vector2(5, 63),
 			[&, Game]() {
 				appState->SetIsClient(true);
 			},
@@ -493,8 +518,11 @@ PushdownState::PushdownResult PlayingHUD::OnUpdate(float dt, PushdownState** new
 {
 	if (game && OnlineSubsystem)
 	{
+#ifdef _WIN32
 		OnlineSubsystemBase* Subsystem = (OnlineSubsystemBase*)OnlineSubsystem;
 		NetworkedGame* Game = (NetworkedGame*)game;
+#else
+#endif
 
 		CheckRoundTime(Game);
 
@@ -523,10 +551,12 @@ PushdownState::PushdownResult PlayingHUD::OnUpdate(float dt, PushdownState** new
 		if (!appState->GetIsGameOver())
 		{
 			ShowTimeLeft(Game);
-			ui->DrawStringText("Player    " + Game->GetPlayerNameByIndex(Game->GetLocalPlayerIndex()), Vector2(83, 30), UIBase::WHITE);
+			//ui->DrawStringText("Player    " + Game->GetPlayerNameByIndex(Game->GetLocalPlayerIndex()), Vector2(83, 30), UIBase::WHITE);
+			ui->DrawStringText("Player    " + Subsystem->GetCurrentUserName(), Vector2(83, 30), UIBase::WHITE);
 			ui->DrawStringText("Your Score     " + std::to_string(Game->GetPlayerScoreByIndex(Game->GetLocalPlayerIndex())), Vector2(83, 40), UIBase::WHITE);
-			ui->DrawStringText("Hold TAB To", Vector2(83, 50), UIBase::WHITE);
-			ui->DrawStringText("Show Score Table", Vector2(83, 55), UIBase::WHITE);
+			ui->DrawStringText("PowerUp State:  " + GetRoundPowerUpState(Game), Vector2(83, 50), UIBase::WHITE);		
+			ui->DrawStringText("Hold TAB To", Vector2(83, 60), UIBase::WHITE);
+			ui->DrawStringText("Show Score Table", Vector2(83, 65), UIBase::WHITE);
 
 			if (Window::GetKeyboard()->KeyHeld(KeyCodes::Type::TAB))
 			{
@@ -563,49 +593,60 @@ void PlayingHUD::ReceiveEvent(const EventType eventType)
 	}
 }
 
-void PlayingHUD::ShowScoreTable(NetworkedGame* Game)
+void PlayingHUD::ShowScoreTable(TutorialGame* Game)
 {
+	//TODO dynamic cast game
+	NetworkedGame* tempGame = dynamic_cast<NetworkedGame*> (Game);
 	for (int i = 0; i < 4; ++i)
 	{
-		if (Game->GetPlayerScoreByIndex(i) != -1)
+		if (tempGame->GetPlayerScoreByIndex(i) != -1)
 		{
-			ui->DrawStringText("Player" + std::to_string(i + 1), Vector2(25, 30 + i * 7), UIBase::BLUE);
-			ui->DrawStringText(Game->GetPlayerNameByIndex(i), Vector2(40, 30 + i * 7), UIBase::BLUE);
-			ui->DrawStringText("Score: " + std::to_string(Game->GetPlayerScoreByIndex(i)), Vector2(60, 30 + i * 7), UIBase::BLUE);
+			ui->DrawStringText("Player " + std::to_string(i + 1), Vector2(25, 30 + i * 7), UIBase::BLUE);
+			ui->DrawStringText(tempGame->GetPlayerNameByIndex(i), Vector2(45, 30 + i * 7), UIBase::BLUE);
+			ui->DrawStringText("Your Score: " + std::to_string(tempGame->GetPlayerScoreByIndex(i)), Vector2(65, 30 + i * 7), UIBase::BLUE);
 		}
 	}
 }
 
-void PlayingHUD::ShowTimeLeft(NetworkedGame* Game)
+void PlayingHUD::ShowTimeLeft(TutorialGame* Game)
 {
+	//TODO dynamic cast game
+	NetworkedGame* tempGame = dynamic_cast<NetworkedGame*> (Game);
+
 	ui->DrawStringText("Timeleft:", Vector2(83, 15), UIBase::WHITE);
 
-	float timeLeft = Game->GetRoundTimeLimit() - Game->GetRoundTimer();
+	float timeLeft = tempGame->GetRoundTimeLimit() - tempGame->GetRoundTimer();
 	int time = (int)timeLeft + 1;
 	
 	ui->DrawStringText(std::to_string(time), Vector2(90, 15), UIBase::WHITE);
 }
 
-void PlayingHUD::CheckRoundTime(NetworkedGame* Game)
+void PlayingHUD::CheckRoundTime(TutorialGame* Game)
 {
-	if (Game->GetRoundTimer() > Game->GetRoundTimeLimit())
+	//TODO dynamic cast game
+	NetworkedGame* tempGame = dynamic_cast<NetworkedGame*> (Game);
+
+	if (tempGame->GetRoundTimer() > tempGame->GetRoundTimeLimit())
 	{
 		EventEmitter::EmitEvent(EventType::ROUND_OVER);
 	}
 }
 
-void PlayingHUD::ShowGameResult(NetworkedGame* Game)
+void PlayingHUD::ShowGameResult(TutorialGame* Game)
 {
-	int LoaclPlayerScore = Game->GetPlayerScoreByIndex(Game->GetLocalPlayerIndex());
+	//TODO dynamic cast game
+	NetworkedGame* tempGame = dynamic_cast<NetworkedGame*> (Game);
+
+	int LoaclPlayerScore = tempGame->GetPlayerScoreByIndex(tempGame->GetLocalPlayerIndex());
 	int Rank = 1;
 	for (int i = 0; i < 4; ++i)
 	{
-		if (Game->GetPlayerScoreByIndex(i) != -1)
+		if (tempGame->GetPlayerScoreByIndex(i) != -1)
 		{
 			ui->DrawStringText("Player " + std::to_string(i + 1), Vector2(25, 30 + i * 7), UIBase::BLUE);
-			ui->DrawStringText(Game->GetPlayerNameByIndex(i), Vector2(45, 30 + i * 7), UIBase::BLUE);
-			ui->DrawStringText("Score: " + std::to_string(Game->GetPlayerScoreByIndex(i)), Vector2(65, 30 + i * 7), UIBase::BLUE);
-			if (LoaclPlayerScore < Game->GetPlayerScoreByIndex(i))
+			ui->DrawStringText(tempGame->GetPlayerNameByIndex(i), Vector2(45, 30 + i * 7), UIBase::BLUE);
+			ui->DrawStringText("Score: " + std::to_string(tempGame->GetPlayerScoreByIndex(i)), Vector2(65, 30 + i * 7), UIBase::BLUE);
+			if (LoaclPlayerScore < tempGame->GetPlayerScoreByIndex(i))
 			{
 				++Rank;
 			}
@@ -635,5 +676,35 @@ void PlayingHUD::ShowGameResult(NetworkedGame* Game)
 	}
 	ui->DrawStringText(RoundResult, Vector2(40, 15), UIBase::RED);
 	ui->DrawStringText("Press Enter To Continue!...", Vector2(25, 60), UIBase::YELLOW);
+}
+
+std::string PlayingHUD::GetRoundPowerUpState(TutorialGame* Game)
+{
+	//TODO dynamic cast game
+	NetworkedGame* tempGame = dynamic_cast<NetworkedGame*> (Game);
+
+	std::string state;
+	switch (tempGame->GetCurrentPowerUpType())
+	{
+	case powerUpType::none:
+		state = std::string("No powerup");
+		break;
+
+	case powerUpType::ice:
+		state = std::string("ice");
+		break;
+
+	case powerUpType::sand:
+		state = std::string("sand");
+		break;
+
+	case powerUpType::wind:
+		state = std::string("wind");
+		break;
+
+	default:
+		break;
+	}
+	return state;
 }
 
