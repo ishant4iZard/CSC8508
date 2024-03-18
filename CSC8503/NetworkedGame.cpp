@@ -59,12 +59,65 @@ NetworkedGame::NetworkedGame()	{
 
 	// Trigger music
 	fireSFX = audioEngine->CreateSound("../../Assets/Audio/jump.mp3", false);
+
+	debugHUD = new DebugHUD();
 }
 
 NetworkedGame::~NetworkedGame()	{
 	delete thisServer;
 	delete thisClient;
 	delete audioEngine;
+	delete debugHUD;
+}
+
+void NetworkedGame::InitializeProjectilePool(NetworkPlayer* player)
+{
+	if (!player) return;
+
+	for (int i = 0; i < PROJECTILE_POOL_SIZE; i++) {
+		Projectile* newBullet = new Projectile(player, this);
+
+		float radius = 1.0f;
+		Vector3 sphereSize = Vector3(radius, radius, radius);
+		SphereVolume* volume = new SphereVolume(radius);
+		newBullet->SetBoundingVolume((CollisionVolume*)volume);
+		newBullet->GetTransform().SetScale(sphereSize).SetPosition(Vector3(0, 0, 0));
+		newBullet->SetRenderObject(new RenderObject(&newBullet->GetTransform(), sphereMesh, basicTex, basicShader));
+		newBullet->SetPhysicsObject(new PhysicsObject(&newBullet->GetTransform(), newBullet->GetBoundingVolume()));
+		newBullet->GetPhysicsObject()->SetInverseMass(Projectile::inverseMass);
+		newBullet->GetPhysicsObject()->InitSphereInertia();
+		newBullet->GetPhysicsObject()->SetElasticity(1.0f);
+		newBullet->GetPhysicsObject()->SetFriction(1.0f);
+		newBullet->GetPhysicsObject()->SetFriction(1.0f);
+
+		int playerNum = player->GetPlayerNum();
+		Vector4 colour;
+		switch (playerNum)
+		{
+		case 0:
+			colour = Debug::RED;
+			break;
+		case 1:
+			colour = Debug::BLUE;
+			break;
+		case 2:
+			colour = Debug::YELLOW;
+			break;
+		case 3:
+			colour = Debug::CYAN;
+			break;
+		}
+		newBullet->GetRenderObject()->SetColour(colour);
+
+		int bulletID = Projectile::CurrentAvailableProjectileID++;
+		newBullet->SetNetworkObject(new NetworkObject(*newBullet, bulletID));
+		networkObjects.insert(std::pair<int, NetworkObject*>(bulletID, newBullet->GetNetworkObject()));
+
+		world->AddGameObject(newBullet);
+		ProjectileList.push_back(newBullet);
+
+		newBullet->deactivate();
+	}
 }
 
 bool NetworkedGame::StartAsServer() {
@@ -93,7 +146,6 @@ bool NetworkedGame::StartAsServer() {
 	appState->SetIsServer(true);
 
 	StartLevel();
-
 
 	return true;
 }
@@ -141,7 +193,12 @@ void NetworkedGame::DestroyClient()
 }
 
 void NetworkedGame::UpdateGame(float dt) {
+	std::optional<time_point<high_resolution_clock>> frameStartTime;
+	if(isDebuHUDActive)
+		frameStartTime = high_resolution_clock::now();
+
 	Debug::UpdateRenderables(dt);
+
 	if (thisServer && !appState->GetIsGameOver()) {
 		UpdatePhysics = true;
 		//PhysicsUpdate(dt);
@@ -154,8 +211,6 @@ void NetworkedGame::UpdateGame(float dt) {
 	if (!appState->GetIsGameOver()) {
 		std::thread physicsUpdateThread(&NetworkedGame::PhysicsUpdate, this, dt);
 		std::thread nonPhysicsUpdateThread(&NetworkedGame::NonPhysicsUpdate, this, dt);
-
-
 
 		nonPhysicsUpdateThread.join();
 		physicsUpdateThread.join();
@@ -170,6 +225,25 @@ void NetworkedGame::UpdateGame(float dt) {
 
 	TutorialGame::UpdateGame(dt);
 
+	std::optional<time_point<high_resolution_clock>> frameEndTime;
+	if (isDebuHUDActive)
+		frameEndTime = high_resolution_clock::now();
+
+	if (Window::GetKeyboard()->KeyHeld(KeyCodes::Type::I))
+	{
+		isDebuHUDActive = true;
+
+		if (!frameStartTime.has_value() || !frameEndTime.has_value()) return;
+
+		auto duration = duration_cast<microseconds>(frameEndTime.value() - frameStartTime.value());
+		debugHUD->DrawDebugHUD({
+			dt,
+			duration.count(),
+			physics->GetNumberOfCollisions(),
+			world->GetNumberOfObjects()
+		});
+
+	}
 }
 
 
@@ -395,6 +469,7 @@ void NetworkedGame::CheckPlayerListAndSpawnPlayers()
 
 				ControledPlayersList[i] = AddNetworkPlayerToWorld(pos, i);
 				ControledPlayersList[i]->SetMovementDir(movementDirection);
+				InitializeProjectilePool(ControledPlayersList[i]);
 			}
 			/*else
 			{
@@ -475,62 +550,32 @@ void NetworkedGame::SpawnPlayer() {
 
 void NetworkedGame::SpawnProjectile(NetworkPlayer* owner, Vector3 firePos, Vector3 fireDir)
 {
-	Projectile* newBullet = new Projectile(owner, this);
-
-	float radius = 1.0f;
-	Vector3 sphereSize = Vector3(radius, radius, radius);
-	SphereVolume* volume = new SphereVolume(radius);
-	newBullet->SetBoundingVolume((CollisionVolume*)volume);
-	newBullet->GetTransform().SetScale(sphereSize).SetPosition(firePos);
-	newBullet->SetRenderObject(new RenderObject(&newBullet->GetTransform(), sphereMesh, basicTex, basicShader));
-	newBullet->SetPhysicsObject(new PhysicsObject(&newBullet->GetTransform(), newBullet->GetBoundingVolume()));
-	newBullet->GetPhysicsObject()->SetInverseMass(Projectile::inverseMass);
-	newBullet->GetPhysicsObject()->InitSphereInertia();
-
-	int playerNum = owner->GetPlayerNum();
-	Vector4 colour;
-	switch (playerNum)
-	{
-	case 0:
-		colour = Debug::RED;
-		break;
-	case 1:
-		colour = Debug::BLUE;
-		break;
-	case 2:
-		colour = Debug::YELLOW;
-		break;
-	case 3:
-		colour = Debug::CYAN;
-		break;
+	Projectile* newBullet = nullptr;
+	for (auto i : ProjectileList) {
+		if (i->IsActive()) continue;
+		newBullet = i;
 	}
-	newBullet->GetRenderObject()->SetColour(colour);
 
-	int bulletID = Projectile::CurrentAvailableProjectileID++;
-	newBullet->SetNetworkObject(new NetworkObject(*newBullet, bulletID));
+	if (!newBullet) return;
+	newBullet->activate();
+	newBullet->ResetTime();
 
-	world->AddGameObject(newBullet);
-	networkObjects.insert(std::pair<int, NetworkObject*>(bulletID, newBullet->GetNetworkObject()));
-
-	newBullet->GetPhysicsObject()->SetElasticity(1.0f);
-	newBullet->GetPhysicsObject()->SetFriction(1.0f);
-	newBullet->GetPhysicsObject()->SetFriction(1.0f);
-
+	newBullet->GetTransform().SetPosition(firePos);
+	newBullet->GetPhysicsObject()->ClearForces();
+	newBullet->GetPhysicsObject()->SetLinearVelocity(Vector3(0, 0, 0));
+	newBullet->GetPhysicsObject()->SetAngularVelocity(Vector3(0, 0, 0));
 	Vector3 force = fireDir * Projectile::FireForce;
-	//newBullet->GetPhysicsObject()->SetLinearVelocity(fireDir);
 	newBullet->GetPhysicsObject()->ApplyLinearImpulse(force);
-
-	ProjectileList.push_back(newBullet);
 	
+	int playerNum = owner->GetPlayerNum();
 
 	if (thisServer)
 	{
 		PlayerFirePacket firePacket;
 		firePacket.PlayerNum = playerNum;
-		firePacket.NetObjectID = bulletID;
+		firePacket.NetObjectID = newBullet->GetNetworkObject()->GetNetworkID();
 		thisServer->SendGlobalPacket(firePacket);
 	}
-
 }
 
 void NetworkedGame::OnRep_SpawnProjectile(int PlayerNum, int NetObjectID)
@@ -586,10 +631,14 @@ void NetworkedGame::StartLevel() {
 		PlayersScoreList.push_back(-1);
 	}
 	ProjectileList.clear();
+	
 	InitWorld();
 	//PlayersNameList.clear();
 	CheckPlayerListAndSpawnPlayers();
 	SpawnAI();
+	SpawnDataDrivenLevel(GameLevelNumber::LEVEL_1);
+	InitTeleporters();
+
 	physics->createStaticTree();//this needs to be at the end of all initiations
 	appState->SetIsGameOver(false);
 

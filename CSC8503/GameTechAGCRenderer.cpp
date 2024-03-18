@@ -191,7 +191,7 @@ void GameTechAGCRenderer::WriteRenderPassConstants() {
 	ShaderConstants tempConstantFrameData;
 	tempConstantFrameData.lightColour = Vector4(0.8f, 0.8f, 0.5f, 1.0f);
 	tempConstantFrameData.lightRadius = 1000.0f;
-	tempConstantFrameData.lightPosition = Vector3(-100.0f, 60.0f, -100.0f);
+	tempConstantFrameData.lightPosition = Vector3(0.0f, 100.0f, 0.0f);
 	tempConstantFrameData.cameraPos = gameWorld.GetMainCamera().GetPosition();
 
 	tempConstantFrameData.viewMatrix = gameWorld.GetMainCamera().BuildViewMatrix();

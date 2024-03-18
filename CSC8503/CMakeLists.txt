@@ -60,6 +60,7 @@ if(NOT("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64"))
         "Light.h"
         "DirectionalLight.h"
         "Powerup.h"
+        "DebugHUD.h"
     )
     source_group("Header Files" FILES ${Header_Files})
 
@@ -80,6 +81,7 @@ if(NOT("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64"))
         "Singleton.cpp"
         "BaseTextureManager.cpp"
         "Powerup.cpp"
+        "DebugHUD.cpp"
     )
     source_group("Source Files" FILES ${Source_Files})
 
@@ -364,9 +366,7 @@ else()
     set(UI
         "UIBase.h"
         "UIWindows.h"
-        "UIPlaystation.h"
         "UIWindows.cpp"
-        "UIPlaystation.cpp"
     )
     source_group("UI" FILES ${UI})
 
@@ -394,6 +394,7 @@ else()
         "Light.h"
         "DirectionalLight.h"
         "Powerup.h"
+        "DebugHUD.h"
     )
     source_group("Header Files" FILES ${Header_Files})
 
@@ -415,6 +416,7 @@ else()
         "BaseTextureManager.cpp"
         "OGLTextureManager.cpp"
         "Powerup.cpp"
+        "DebugHUD.cpp"
     )
     source_group("Source Files" FILES ${Source_Files})
 

@@ -36,6 +36,8 @@ namespace NCL {
 
 			void ReceiveEvent(EventType T) override;
 
+			int GetNumberOfCollisions() const { return allCollisions.size(); }
+
 		protected:
 			void BasicCollisionDetection();
 			void BroadPhase();

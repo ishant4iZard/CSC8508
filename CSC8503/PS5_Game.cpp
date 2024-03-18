@@ -22,11 +22,16 @@ NCL::CSC8503::PS5_Game::PS5_Game()
 	appState = ApplicationState::GetInstance();
 	ui = UIPlaystation::GetInstance();
 	StartLevel();
+	debugHUD = new DebugHUD();
+
+	//audioEngine = new AudioEngine();
 }
 
 NCL::CSC8503::PS5_Game::~PS5_Game()
 {
+	//delete audioEngine;
 	delete player;
+	delete debugHUD;
 
 	for (auto i : projectileList)
 		delete i;
@@ -35,6 +40,7 @@ NCL::CSC8503::PS5_Game::~PS5_Game()
 
 void NCL::CSC8503::PS5_Game::StartLevel()
 {
+	InitialisePlayerAssets();
 	SpawnPlayer();
 	InitializeProjectilePool();
 	SpawnAI();
@@ -50,9 +56,13 @@ void NCL::CSC8503::PS5_Game::EndLevel()
 
 void NCL::CSC8503::PS5_Game::UpdateGame(float dt)
 {
+	std::optional<time_point<high_resolution_clock>> frameStartTime;
+	if (isDebuHUDActive)
+		frameStartTime = high_resolution_clock::now();
+
 	TutorialGame::UpdateGame(dt);
 
-	if (timeElapsed > GAME_TIME) {
+	if (timeElapsed > GAME_TIME_LIMIT) {
 		ui->DrawStringText("Game Over", Vector2(5, 5), UIBase::RED);
 		ui->DrawStringText("Score: " + std::to_string(player->GetScore()), Vector2(5, 10), UIBase::RED);
 		ui->RenderUI(dt);
@@ -63,7 +73,7 @@ void NCL::CSC8503::PS5_Game::UpdateGame(float dt)
 
 	ui->DrawStringText("Score: " + std::to_string(player->GetScore()), Vector2(5, 5), UIBase::RED);
 	ui->DrawStringText("Bullets: " + std::to_string(player->GetNumBullets()), Vector2(5, 10), UIBase::RED);
-	ui->DrawStringText("Time Left: " + std::to_string((int)(GAME_TIME - timeElapsed)), Vector2(5, 15), UIBase::RED);
+	ui->DrawStringText("Time Left: " + std::to_string((int)(GAME_TIME_LIMIT - timeElapsed)), Vector2(5, 15), UIBase::RED);
 
 	timeElapsed += dt;
 
@@ -88,10 +98,29 @@ void NCL::CSC8503::PS5_Game::UpdateGame(float dt)
 			i->deactivate();
 	}
 
-	if(controller->GetNamedButton("Cross"))
+	if(controller->GetNamedButtonAnalogue("R2") > 0.2f)
 		Fire();
 
 	ui->RenderUI();
+
+	std::optional<time_point<high_resolution_clock>> frameEndTime;
+	if (isDebuHUDActive)
+		frameEndTime = high_resolution_clock::now();
+
+	if (controller->GetNamedButton("Cross"))
+	{
+		isDebuHUDActive = true;
+
+		if (!frameStartTime.has_value() || !frameEndTime.has_value()) return;
+
+		auto duration = duration_cast<microseconds>(frameEndTime.value() - frameStartTime.value());
+		debugHUD->DrawDebugHUD({
+			dt,
+			duration.count(),
+			physics->GetNumberOfCollisions(),
+			world->GetNumberOfObjects()
+		});
+	}
 }
 
 void NCL::CSC8503::PS5_Game::InitializeProjectilePool()
@@ -173,26 +202,34 @@ void NCL::CSC8503::PS5_Game::SpawnProjectile(NetworkPlayer* player, Vector3 fire
 
 void NCL::CSC8503::PS5_Game::SpawnPlayer()
 {
-	float meshSize = 2.0f;
+	float meshSize = 5.0f;
 	float inverseMass = 1.0f / 600000.0f;
 
 	player = new NetworkPlayer(this, 0);
-
 	SphereVolume* volume = new SphereVolume(1.6f);
 
 	player->SetBoundingVolume((CollisionVolume*)volume);
+
 	player->GetTransform()
 		.SetScale(Vector3(meshSize, meshSize, meshSize))
 		.SetPosition(Vector3(0, 10, -75));
 
-	player->SetRenderObject(new RenderObject(&player->GetTransform(), charMesh, nullptr, basicShader));
+	player->SetRenderObject(new RenderObject(&player->GetTransform(), playerMesh, basicTex, playerShader));
 	player->SetPhysicsObject(new PhysicsObject(&player->GetTransform(), player->GetBoundingVolume()));
 
 	player->GetPhysicsObject()->SetInverseMass(inverseMass);
 	player->GetPhysicsObject()->InitCubeInertia();
 
+	player->GetRenderObject()->SetAnimation(*playerAnimation);
+
 	world->AddGameObject(player);
-	player->GetRenderObject()->SetColour(Debug::RED);
+}
+
+void NCL::CSC8503::PS5_Game::InitialisePlayerAssets()
+{
+	playerMesh		= renderer->LoadMesh("Role_T.msh");
+	playerAnimation = new MeshAnimation("Role_T.anm");
+	playerShader	= renderer->LoadShader("scene.vert", "scene.frag");
 }
 
 void NCL::CSC8503::PS5_Game::MovePlayer(float dt) {

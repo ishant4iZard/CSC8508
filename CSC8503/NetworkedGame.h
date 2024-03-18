@@ -14,7 +14,12 @@
 #else //_ORBIS
 #include "../CSC8503/UIPlaystation.h"
 #endif
+
 #include "AudioEngine.h"
+#include "DebugHUD.h"
+
+#include <chrono>
+using namespace std::chrono;
 
 namespace NCL {
 	namespace CSC8503 {
@@ -51,8 +56,9 @@ namespace NCL {
 
 			void OnPlayerCollision(NetworkPlayer* a, NetworkPlayer* b);
 
+			const int PROJECTILE_POOL_SIZE = 20;
 			std::vector<Projectile*> ProjectileList;
-
+			void InitializeProjectilePool(NetworkPlayer* player);
 			
 			/** Network public function */
 			int GetConnectedClientsNum();
@@ -135,6 +141,9 @@ namespace NCL {
 
 			void PhysicsUpdate(float dt);
 			void NonPhysicsUpdate(float dt);
+
+			DebugHUD* debugHUD;
+			bool isDebuHUDActive;
 
 		public:
 			inline bool IsServer() { return thisServer != nullptr ? true : false; }

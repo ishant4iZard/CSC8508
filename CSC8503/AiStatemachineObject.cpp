@@ -14,9 +14,6 @@ using namespace NCL;
 using namespace CSC8503;
 
 Vector3 PredictInterceptionPoint(Vector3 p1, Vector3 v1, Vector3 p2, float s2) {
-	//return p1; // TODO : Make this stop jittering
-
-	// This makes the game lag for some reason
 	Vector3 relativePositions = p1 - p2;
 
 	Vector3 v2 = relativePositions.Normalised() * s2;
@@ -98,43 +95,6 @@ void AiStatemachineObject::MoveRandomly(float dt) {
 
 }
 
-//void AiStatemachineObject::DetectProjectiles(GameObject* gameObject,float dt) {
-//	Vector3 objectPosition = gameObject->GetTransform().GetPosition();
-//	Vector3 objectForward = gameObject->GetTransform().GetOrientation() * Vector3(0, 0, 1);
-//
-//	const int numRays = 50;
-//	const float angleIncrement = 2 * 3.14 / numRays;
-//	vector<Ray> rays;
-//	for (int i = 0; i < numRays; i++) {
-//		float angle = angleIncrement * i;
-//		float x = cos(angle);
-//		float z = sin(angle);
-//
-//		Vector3 dir = Vector3(x, 0, z);
-//		rays.push_back(Ray(objectPosition, dir));
-//		//Debug::DrawLine(objectPosition, dir * 100, Debug::RED);
-//	}
-//
-//	float shortestDistance = INT_MAX;
-//	bool projFound = false;
-//	RayCollision  closestCollision;
-//	for (auto ray : rays) {
-//		if (world->FindObjectByRaycast(ray, closestCollision, "Projectile", gameObject)) {
-//			GameObject* ObjectHit = (GameObject*)closestCollision.node;
-//			float distance = (ObjectHit->GetTransform().GetPosition() - objectPosition).Length();
-//
-//			if (distance < shortestDistance) {
-//				projectileToChase = ObjectHit;
-//				shortestDistance = distance;
-//				distanceToNearestProj = distance;
-//				projFound = true;
-//			}
-//		}
-//	}
-//
-//	if (!projFound) distanceToNearestProj = INT_MAX;
-//}
-
 void AiStatemachineObject::DetectProjectiles(std::vector<Projectile*> ProjectileList) {
 	Vector3 objectPosition = this->GetTransform().GetPosition();
 	Vector3 objectForward = this->GetTransform().GetOrientation() * Vector3(0, 0, 1);
@@ -170,7 +130,7 @@ void AiStatemachineObject::ChaseClosestProjectile(float dt) {
 	// Only use path finding if the projectile is not directly acccessible
 	else {
 		FindPathFromAIToProjectile(dt);
-		DisplayPathfinding();
+		//DisplayPathfinding();
 		const static float bufferDistance = 0.2f;
 
 		if (projectileToChase == nullptr || pathFromAIToPlayer.empty()) return;
@@ -202,7 +162,7 @@ void AiStatemachineObject::ChaseClosestProjectile(float dt) {
 }
 
 bool AiStatemachineObject::CanSeeProjectile() {
-	if (projectileToChase == nullptr) return false;
+	if (projectileToChase == nullptr || !projectileToChase->IsActive()) return false;
 
 	Vector3 dir = projectileToChase->GetTransform().GetPosition() - transform.GetPosition();
 	dir = dir.Normalised();
