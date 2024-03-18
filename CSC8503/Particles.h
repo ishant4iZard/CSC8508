@@ -16,15 +16,24 @@ namespace NCL {
 	namespace CSC8503 {
         class Particle {
         public:
-            Particle() : position(0.0f, 0.0f), velocity(0.0f, 0.0f), color(1.0f, 1.0f, 1.0f, 1.0f), life(0.0f) {}
+            Particle() : position(0.0f, 0.0f, 0.0f), velocity(0.0f, 0.0f), color(1.0f, 1.0f, 1.0f, 1.0f), life(0.0f) {}
             ~Particle() {};
 
-            void SetPosition(const Vector2& inPosition) { position = inPosition; }
-            Vector2 Getposition() const { return position; }
+            void SetPosition(const Vector3& inPosition) { position = inPosition; }
+            Vector3 Getposition() const { return position; }
+
+            void SetVelocity(const Vector2& inVelocity) { velocity = inVelocity; }
+            Vector2 GetVelocity() const { return velocity; }
+
+            void SetColor(const Vector4& inColor) { color = inColor; }
+            Vector4 GetColor() const { return color; }
+
+            void SetLife(const float inLife) { life = inLife; }
+            float GetLife() const { return life; }
 
 
         protected:
-            Vector2 position;
+            Vector3 position;
             Vector2 velocity;
             Vector4 color;
 
@@ -32,9 +41,9 @@ namespace NCL {
 
         };
 
-        class GenerateParticle {
+        class GenerateParticle : public OGLRenderer {
         public:
-            GenerateParticle(Shader* inShader, Texture* inTexture, int inNum);
+            GenerateParticle(OGLShader* inShader, OGLTexture* inTexture, int inNum);
 
             void Update(float dt, GameObject* otherObject, int newParticle, Vector2 offset = Vector2(0.0f, 0.0f));
             void Draw();
@@ -45,8 +54,9 @@ namespace NCL {
             GLuint FirstUnusedParticle();
 
             GLuint VAO;
-            Shader* shader;
-            Texture* texture;
+            GLuint	particleTex;
+            OGLShader* shader;
+            OGLTexture* texture;
             
             std::vector<Particle> particles;
             int num;
