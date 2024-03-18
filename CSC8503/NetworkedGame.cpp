@@ -221,6 +221,7 @@ void NetworkedGame::UpdateGame(float dt) {
 		AIStateObject->DetectProjectiles(ProjectileList);
 		AIStateObject->Update(dt);
 	}
+
 	Menu->Update(dt);
 	audioEngine->Update();
 
@@ -624,6 +625,9 @@ void NetworkedGame::OnRep_DeactiveProjectile(int objectID)
 }
 
 void NetworkedGame::StartLevel() {
+	InitWorld();
+	SpawnDataDrivenLevel(GameLevelNumber::LEVEL_1);
+	InitTeleporters();
 	PlayersList.clear();
 	ControledPlayersList.clear();
 	PlayersScoreList.clear();
@@ -640,12 +644,9 @@ void NetworkedGame::StartLevel() {
 	}
 	ProjectileList.clear();
 	
-	InitWorld();
 	//PlayersNameList.clear();
 	CheckPlayerListAndSpawnPlayers();
 	SpawnAI();
-	SpawnDataDrivenLevel(GameLevelNumber::LEVEL_1);
-	InitTeleporters();
 
 	physics->createStaticTree();//this needs to be at the end of all initiations
 	appState->SetIsGameOver(false);

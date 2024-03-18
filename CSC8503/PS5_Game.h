@@ -34,10 +34,10 @@ namespace NCL {
 			void InitialisePlayerAssets();
 			void SpawnPlayer();
 
-			NetworkPlayer*	player			= nullptr;
-			Mesh*			playerMesh		= nullptr;
-			MeshAnimation*	playerAnimation = nullptr;
-			Shader*			playerShader	= nullptr;
+			NetworkPlayer*	player					= nullptr;
+			Mesh*			playerMesh				= nullptr;
+			MeshAnimation*	playerWalkingAnimation	= nullptr;
+			Shader*			playerShader			= nullptr;
 
 
 			void MovePlayer(float dt);
@@ -64,6 +64,8 @@ namespace NCL {
 			bool isDebuHUDActive;
 
 			AudioEngine* audioEngine;
+
+			void SwitchAnimations(RenderObject* renderObject, MeshAnimation* animation);
 		};
 	}
 }

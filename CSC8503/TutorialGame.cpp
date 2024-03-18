@@ -183,6 +183,7 @@ void TutorialGame::InitialiseAssets() {
 	basicTex	= renderer->LoadTexture("checkerboard.png");
 	portalTex	= renderer->LoadTexture("PortalTex.jpg");
 	sandTex		= renderer->LoadTexture("sand.jpg");
+	targetTex = renderer->LoadTexture("blackhole.png");
 
 	groundTextureList[(uint8_t)TextureType::ALBEDO] = renderer->LoadTexture("GrassWithRock01/albedo.png");
 	groundTextureList[(uint8_t)TextureType::NORMAL] = renderer->LoadTexture("GrassWithRock01/normal_gl.png");
@@ -212,6 +213,7 @@ void TutorialGame::InitialiseAssets() {
 	portalShader = renderer->LoadShader("scene.vert", "portal.frag");
 	instancePbrShader = renderer->LoadShader("pbrInstanced.vert", "pbr.frag");
 	blackholeShader = renderer->LoadShader("blackhole.vert", "blackhole.frag");
+	targetholeShader = renderer->LoadShader("targethole.vert", "targethole.frag");
 
 	InitCamera();
 	InitWorld();
@@ -300,10 +302,6 @@ void NCL::CSC8503::TutorialGame::InitWindPowerup(PowerUp* inPowerup, Shader* inS
 	}
 }
 
-void NCL::CSC8503::TutorialGame::InitTeleporters()
-{
-	AddTeleporterToWorld((Vector3(48, 5.6f, 0)), (Vector3(-48, 5.6f, 45)), Vector3(0, -45, 0), Vector3(0, 90, 0) , Vector3(10, 10, 3.5));
-}
 
 GameObject* TutorialGame::AddFloorToWorld(const Vector3& position, const Vector3& size) {
 
