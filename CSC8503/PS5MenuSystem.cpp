@@ -67,11 +67,14 @@ PushdownState::PushdownResult PS5PlayingHUD::OnUpdate(float dt, PushdownState** 
 		{
 			if (!appState->GetIsGamePaused())
 			{
-				ui->DrawStringText("Time Left: " + std::to_string((int)(Game->GetTimeLeft())), Vector2(3, 15), UIBase::WHITE);
-				ui->DrawStringText("Your Score " + std::to_string(Game->GetPlayerScore()), Vector2(3, 25), UIBase::WHITE);
-				ui->DrawStringText("Bullets:   " + std::to_string(Game->GEtPlayerBulletsNum()), Vector2(3, 35), UIBase::WHITE);
+				ui->DrawStringText("Time Left:  " + std::to_string((int)(Game->GetTimeLeft())), Vector2(3, 15), UIBase::WHITE);
+				ui->DrawStringText("Your Score: " + std::to_string(Game->GetPlayerScore()), Vector2(3, 25), UIBase::WHITE);
+				ui->DrawStringText("Bullets:    " + std::to_string(Game->GEtPlayerBulletsNum()), Vector2(3, 35), UIBase::WHITE);
 				ui->DrawStringText("PowerUp State:  ", Vector2(3, 45), UIBase::WHITE);
 				ui->DrawStringText(GetRoundPowerUpState(Game), Vector2(3, 50), UIBase::WHITE);
+
+				ui->DrawStringText("Press Option:", Vector2(3, 60), UIBase::WHITE);
+				ui->DrawStringText("Pause Game", Vector2(3, 65), UIBase::WHITE);
 
 				if (Game->GetController()->GetNamedButton("Option"))
 				{
@@ -94,9 +97,22 @@ PushdownState::PushdownResult PS5PlayingHUD::OnUpdate(float dt, PushdownState** 
 
 				if (Game->GetController()->GetNamedButton("Triangle"))
 				{
-					Game->EndLevel();
-					return PushdownResult::Pop;
+					appState->SetIsGameOver(true);
 				}
+			}
+		}
+		else
+		{
+			ui->DrawStringText("Round Over !", Vector2(40, 15), UIBase::WHITE);
+
+			ui->DrawStringText("Your Score: " + std::to_string(Game->GetPlayerScore()), Vector2(25, 40), UIBase::WHITE);
+
+			ui->DrawStringText("Press R1: Main Menu ", Vector2(25,60), UIBase::WHITE);
+
+			if (Game->GetController()->GetNamedButton("R1"))
+			{
+				Game->EndLevel();
+				return PushdownResult::Pop;
 			}
 		}
 	}

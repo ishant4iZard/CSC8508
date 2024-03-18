@@ -72,6 +72,7 @@ TutorialGame::TutorialGame() {
 	controller->MapButton(3, "Square");
 	controller->MapButton(4, "Square");
 	controller->MapButton(5, "");
+	controller->MapButton(7, "R1");
 
 	//These are the axis/button aliases the inbuilt camera class reads from:
 	controller->MapAxis(0, "XLook");
