@@ -5,20 +5,21 @@
 #include "Bindless.psslh"
 #include "Vertex.psslh"
 
-#define DIFFUSE_TEX   0
-#define COLOR_GREEN 1
-#define COLOR_BLUE  2
-
 struct VS_Output 
 {
     float4 Position : S_POSITION;
     float4 Colour : TEXCOORD1;
     float2 UV : TEXCOORD2;
-    float4 shadowProj : TEXCOORD3;
+    float4 ShadowProj : TEXCOORD3;
     float3 Normal : TEXCOORD4;
     float3 Tangent : TEXCOORD5;
     float3 BiNormal : TEXCOORD6;
     float3 WorldPos : TEXCOORD7;
+    int albedoTexId : TEXCOORD8;
+    int normalTexId : TEXCOORD9;
+    int roughnessTexId : TEXCOORD10;
+	int metalicTexId : TEXCOORD11;
+    int aoTexId : TEXCOORD12;
 };
 
 [CxxSymbol("TestShader::gs")]
@@ -44,11 +45,16 @@ VS_Output main(uint vertID : S_VERTEX_ID, uint objID : S_SRT_DATA, uint instance
     Output.Tangent = tangent; // World tangent
     Output.BiNormal = tempBiTangent; //World binormal/tempBiTangent
 
-    Output.shadowProj = mul(Constants.shadowMatrix, tempPosition);
+    Output.ShadowProj = mul(Constants.shadowMatrix, tempPosition);
     Output.WorldPos = mul(objState.modelMatrix, float4(Positions[vertID], 1.0)).xyz;
 
     Output.UV = float2(TextureCoords[vertID].x * objState.tiling.x, TextureCoords[vertID].y * objState.tiling.y);
     Output.Colour = objState.colour;
-
+    //PBR TEXTURE ID INITIALIZATION
+    Output.albedoTexId = objState.index[0];
+    Output.normalTexId = objState.index[2];
+    Output.roughnessTexId = objState.index[3];
+    Output.metalicTexId = objState.index[4];
+    Output.aoTexId = objState.index[5];
     return Output;
 }

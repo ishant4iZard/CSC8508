@@ -63,6 +63,7 @@ namespace NCL {
 
 			void GPUSkinningPass();
 
+			void InitPbrSamplers();
 			GameWorld& gameWorld;
 
 			struct SkinningJob {
@@ -97,6 +98,11 @@ namespace NCL {
 			NCL::PS5::AGCTexture* screenTex; //ptr into bindless array
 
 			std::vector<SkinningJob> frameJobs;
+
+			sce::Agc::Core::Sampler normalSampler;
+			sce::Agc::Core::Sampler mettalicSampler;
+			sce::Agc::Core::Sampler roughnessSampler;
+			sce::Agc::Core::Sampler aoSampler;
 		};
 	}
 }
