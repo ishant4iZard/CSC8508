@@ -380,6 +380,7 @@ else()
         "BouncePad.h"
         "GravityWell.h"
         "Teleporter.h"
+        "Powerup.h"
         "LevelFileLoaderBase.h"
         "WindowsLevelLoader.h"
         "LevelEnum.h"
@@ -393,8 +394,8 @@ else()
         "OGLTextureManager.h"
         "Light.h"
         "DirectionalLight.h"
-        "Powerup.h"
         "DebugHUD.h"
+        "ThreadPool.h"
     )
     source_group("Header Files" FILES ${Header_Files})
 

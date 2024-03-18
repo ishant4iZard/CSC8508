@@ -14,8 +14,8 @@ namespace NCL {
 
 			static int CurrentAvailableProjectileID;
 
-			BouncePad( Mesh* inMesh, Texture* inTex, Shader* inShader);
-			//BouncePad(Mesh* inMesh, Texture* inTex, Shader* inShader);
+			BouncePad(NetworkPlayer* inOwner, NetworkedGame* inGame, Mesh* inMesh, Texture* inTex, Shader* inShader);
+			BouncePad(Mesh* inMesh, Texture* inTex, Shader* inShader, const Vector3& inScale);
 			~BouncePad();
 
 		protected:

@@ -61,12 +61,14 @@ NetworkedGame::NetworkedGame()	{
 	fireSFX = audioEngine->CreateSound("../../Assets/Audio/jump.mp3", false);
 
 	debugHUD = new DebugHUD();
+	poolPTR = new ThreadPool(2);
 }
 
 NetworkedGame::~NetworkedGame()	{
 	delete thisServer;
 	delete thisClient;
 	delete audioEngine;
+	delete poolPTR;
 	delete debugHUD;
 }
 
@@ -198,7 +200,6 @@ void NetworkedGame::UpdateGame(float dt) {
 		frameStartTime = high_resolution_clock::now();
 
 	Debug::UpdateRenderables(dt);
-
 	if (thisServer && !appState->GetIsGameOver()) {
 		UpdatePhysics = true;
 		//PhysicsUpdate(dt);
@@ -208,17 +209,17 @@ void NetworkedGame::UpdateGame(float dt) {
 	/*NonPhysicsUpdate(dt);
 	PhysicsUpdate(dt);*/
 
-	if (!appState->GetIsGameOver()) {
-		std::thread physicsUpdateThread(&NetworkedGame::PhysicsUpdate, this, dt);
-		std::thread nonPhysicsUpdateThread(&NetworkedGame::NonPhysicsUpdate, this, dt);
+	//std::thread physicsUpdateThread(&NetworkedGame::PhysicsUpdate, this,dt);
+	//std::thread nonPhysicsUpdateThread(&NetworkedGame::NonPhysicsUpdate, this, dt);
+	if (poolPTR) {
+		poolPTR->enqueue([this, dt]() {this->PhysicsUpdate(dt); });
+		poolPTR->enqueue([this, dt]() {this->NonPhysicsUpdate(dt); });
+	}
 
-		nonPhysicsUpdateThread.join();
-		physicsUpdateThread.join();
 
-		if (AIStateObject) {
-			AIStateObject->DetectProjectiles(ProjectileList);
-			AIStateObject->Update(dt);
-		}
+	if (AIStateObject) {
+		AIStateObject->DetectProjectiles(ProjectileList);
+		AIStateObject->Update(dt);
 	}
 	Menu->Update(dt);
 	audioEngine->Update();
@@ -228,6 +229,9 @@ void NetworkedGame::UpdateGame(float dt) {
 	std::optional<time_point<high_resolution_clock>> frameEndTime;
 	if (isDebuHUDActive)
 		frameEndTime = high_resolution_clock::now();
+		
+	//nonPhysicsUpdateThread.join();
+	//physicsUpdateThread.join();
 
 	if (Window::GetKeyboard()->KeyHeld(KeyCodes::Type::I))
 	{
@@ -623,6 +627,10 @@ void NetworkedGame::StartLevel() {
 	PlayersList.clear();
 	ControledPlayersList.clear();
 	PlayersScoreList.clear();
+	if (poolPTR) {
+		delete poolPTR;
+		poolPTR = nullptr;
+	}
 	for (int i = 0; i < 4; ++i)
 	{
 		PlayersList.push_back(-1);
@@ -641,16 +649,22 @@ void NetworkedGame::StartLevel() {
 
 	physics->createStaticTree();//this needs to be at the end of all initiations
 	appState->SetIsGameOver(false);
+	poolPTR = new ThreadPool(2);
 
 }
 
 void NetworkedGame::EndLevel()
 {
 
+	if (poolPTR) {
+		delete poolPTR;
+		poolPTR = nullptr;
+	}
 	world->ClearAndErase();
 	physics->Clear();
 	ControledPlayersList.clear();
 	networkObjects.clear();
+
 	if(AIStateObject)
 		AIStateObject = NULL;
 	InitCamera();

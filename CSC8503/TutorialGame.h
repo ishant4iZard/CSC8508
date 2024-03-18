@@ -117,16 +117,18 @@ namespace NCL {
 			Mesh*		bouncePlatformMesh	= nullptr;
 			Mesh*		sphereMesh			= nullptr;
 			
-			Texture*	basicTex			= nullptr;
-			Texture*	sandTex				= nullptr;
-			Texture*	portalTex			= nullptr;
-			Texture*	blackholeTex		= nullptr;
+			Texture*	basicTex		= nullptr;
+			Texture*	sandTex			= nullptr;
+			Texture*	portalTex		= nullptr;
+			Texture*	blackholeTex	= nullptr;
+			Texture*	targetTex		= nullptr;
 
-			Shader*		basicShader			= nullptr;
-			Shader*		pbrShader			= nullptr;
-			Shader*		portalShader		= nullptr;
-			Shader* 	instancePbrShader	= nullptr;
-			Shader*		blackholeShader		= nullptr;
+			Shader*		basicShader		= nullptr;
+			Shader*		pbrShader		= nullptr;
+			Shader*		portalShader	= nullptr;
+			Shader* 	instancePbrShader = nullptr;
+			Shader*		blackholeShader = nullptr;
+			Shader* 	targetholeShader = nullptr;
 
 			Texture* groundTextureList[(uint8_t)TextureType::MAX_TYPE];
 			Texture* wallTextureList[(uint8_t)TextureType::MAX_TYPE];

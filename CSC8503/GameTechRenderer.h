@@ -77,6 +77,7 @@ namespace NCL {
 
 			//shadow mapping things
 			OGLShader*	shadowShader;
+			OGLShader*	testShader;
 			GLuint		shadowTex;
 			GLuint		shadowFBO;
 			Matrix4     shadowMatrix;
