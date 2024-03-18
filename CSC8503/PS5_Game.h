@@ -10,6 +10,7 @@
 #include "UIPlaystation.h"
 #include "UIBase.h"
 #include "ApplicationState.h"
+#include "MeshAnimation.h"
 #include "DebugHUD.h"
 
 #include <vector>
@@ -25,15 +26,19 @@ namespace NCL {
 
 			void UpdateGame(float dt) override;
 
-
 			void StartLevel();
 			void EndLevel();
 			void SpawnProjectile(NetworkPlayer* player, Vector3 firePos, Vector3 fireDir);
 
 		protected:
+			void InitialisePlayerAssets();
 			void SpawnPlayer();
 
-			NetworkPlayer* player;
+			NetworkPlayer*	player			= nullptr;
+			Mesh*			playerMesh		= nullptr;
+			MeshAnimation*	playerAnimation = nullptr;
+			Shader*			playerShader	= nullptr;
+
 
 			void MovePlayer(float dt);
 			void Fire();
@@ -51,12 +56,14 @@ namespace NCL {
 
 			UIBase* ui;
 
-			const int GAME_TIME = 200; // seconds
+			const int GAME_TIME_LIMIT = 200; // seconds
 			float timeElapsed = 0;
 			ApplicationState* appState;
 
 			DebugHUD* debugHUD;
 			bool isDebuHUDActive;
+
+			AudioEngine* audioEngine;
 		};
 	}
 }

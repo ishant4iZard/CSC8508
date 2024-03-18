@@ -46,9 +46,12 @@ DebugHUD::~DebugHUD()
 
 void DebugHUD::DrawDebugHUD(DebugHUDParams p)
 {
-	ui->DrawStringText("Frame Rate: " + std::to_string(1.0f / p.dt), Vector2(2, 2));
-	ui->DrawStringText("Time Cost: " + std::to_string(p.timeCost) + " micro seconds", Vector2(2, 5));
-	ui->DrawStringText("Number Of Collisions: " + std::to_string(p.numberOfCollisions), Vector2(2, 8));
-	ui->DrawStringText("Number Of Objects: " + std::to_string(p.numberOfObjects), Vector2(2, 11));
-	ui->DrawStringText("Memory Footprint: " + getMemoryUsageMB() + " mb", Vector2(2, 14));
+	ui->DrawStringText("Frame Rate: " + std::to_string(1.0f / p.dt), Vector2(2, 84));
+	ui->DrawStringText("Time Cost: " + std::to_string(p.timeCost) + " micro seconds", Vector2(2, 87));
+	ui->DrawStringText("Number Of Collisions: " + std::to_string(p.numberOfCollisions), Vector2(2, 90));
+	ui->DrawStringText("Number Of Objects: " + std::to_string(p.numberOfObjects), Vector2(2, 93));
+
+#ifdef _WIN32
+	ui->DrawStringText("Memory Footprint: " + getMemoryUsageMB() + " mb", Vector2(2, 96));
+#endif
 }

@@ -8,12 +8,25 @@
 #include <map>
 #include <stdlib.h>
 
+#ifndef _WIN32
+#include <assert.h>
+#endif // !_WIN32
+
 class AudioEngine {
 public :
 	AudioEngine() {
 #ifndef _WIN32
-		SceKernelModule fmodModuleId = sceKernelLoadStartModule("./libfmod.prx", 0, 0, 0, NULL, NULL);
-		fmodModuleId = sceKernelLoadStartModule("./libfmodL.prx", 0, 0, 0, NULL, NULL);
+		SceKernelModule fmodModuleId = sceKernelLoadStartModule("./libfmodL.prx", 0, 0, 0, NULL, NULL);
+		assert(fmodModuleId < 0 && "Failed to load module");
+		
+		fmodModuleId = sceKernelLoadStartModule("./libfmod.prx", 0, 0, 0, NULL, NULL);
+		assert(fmodModuleId < 0 && "Failed to load module");		
+		
+		fmodModuleId = sceKernelLoadStartModule("./libfmodstudio.prx", 0, 0, 0, NULL, NULL);
+		assert(fmodModuleId < 0 && "Failed to load module");
+
+		fmodModuleId = sceKernelLoadStartModule("./libfmodstudioL.prx", 0, 0, 0, NULL, NULL);
+		assert(fmodModuleId < 0 && "Failed to load module");
 #endif
 
 		result = FMOD::System_Create(&system);
