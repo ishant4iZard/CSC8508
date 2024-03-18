@@ -7,11 +7,14 @@ Comments and queries to: richard-gordon.davison AT ncl.ac.uk
 https://research.ncl.ac.uk/game/
 */
 #pragma once
+#include "Matrix2.h"
+//#include "Matrix4.h"
+#include "Vector3.h"
 
 namespace NCL::Maths {
-	class Matrix2;
+	//class Matrix2;
 	class Matrix4;
-	class Vector3;
+	//class Vector3;
 	class Quaternion;
 
 	class Matrix3	{

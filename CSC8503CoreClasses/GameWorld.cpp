@@ -70,13 +70,17 @@ void GameWorld::UpdateWorld(float dt) {
 	unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 	std::default_random_engine e(seed);
 
-	if (shuffleObjects) {
-		std::shuffle(gameObjects.begin(), gameObjects.end(), e);
+	for (GameObject* g : gameObjects) {
+		g->Update(dt);
 	}
 
-	if (shuffleConstraints) {
-		std::shuffle(constraints.begin(), constraints.end(), e);
-	}
+	//if (shuffleObjects) {
+	//	std::shuffle(gameObjects.begin(), gameObjects.end(), e);
+	//}
+
+	//if (shuffleConstraints) {
+	//	std::shuffle(constraints.begin(), constraints.end(), e);
+	//}
 }
 
 bool GameWorld::Raycast(Ray& r, RayCollision& closestCollision, bool closestObject, GameObject* ignoreThis) const {

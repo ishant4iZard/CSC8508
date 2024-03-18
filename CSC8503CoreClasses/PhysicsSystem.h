@@ -36,6 +36,8 @@ namespace NCL {
 
 			void ReceiveEvent(EventType T) override;
 
+			int GetNumberOfCollisions() const { return allCollisions.size(); }
+
 		protected:
 			void BasicCollisionDetection();
 			void BroadPhase();
@@ -77,7 +79,8 @@ namespace NCL {
 
 			//QuadTree <GameObject*>* staticTree = new QuadTree<GameObject*>(Vector2(256.0f, 256.0f), 8, 10);
 
-
+		public:
+			inline powerUpType GetCurrentPowerUpState() const {	return activePowerup;}
 		};
 	}
 }

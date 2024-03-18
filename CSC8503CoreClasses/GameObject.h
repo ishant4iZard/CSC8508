@@ -18,6 +18,8 @@ namespace NCL::CSC8503 {
 		GameObject(const std::string& name = "");
 		~GameObject();
 
+		void Update(float dt);
+
 		void SetBoundingVolume(CollisionVolume* vol) {
 			boundingVolume = vol;
 		}
@@ -74,7 +76,6 @@ namespace NCL::CSC8503 {
 
 		virtual void OnCollisionBegin(GameObject* otherObject) {
 			//std::cout << "OnCollisionBegin event occured!\n";
-			//todo
 		}
 
 		virtual void OnCollisionEnd(GameObject* otherObject) {
@@ -82,7 +83,6 @@ namespace NCL::CSC8503 {
 		}
 		virtual void OnTriggerBegin(GameObject* otherObject) {
 			//std::cout << "OnCollisionBegin event occured!\n";
-			//todo
 		}
 
 		virtual void OnTriggerEnd(GameObject* otherObject) {

@@ -4,8 +4,7 @@
 
 namespace NCL {
 	namespace  CSC8503 {
-		class NetworkPlayer;
-		class NetworkedGame;
+		class TutorialGame;
 
 		class BouncePad : public GameObject
 		{
@@ -15,13 +14,11 @@ namespace NCL {
 
 			static int CurrentAvailableProjectileID;
 
-			BouncePad(NetworkPlayer* inOwner, NetworkedGame* inGame, Mesh* inMesh, Texture* inTex, Shader* inShader);
+			//BouncePad(NetworkPlayer* inOwner, NetworkedGame* inGame, Mesh* inMesh, Texture* inTex, Shader* inShader);
 			BouncePad(Mesh* inMesh, Texture* inTex, Shader* inShader, const Vector3& inScale);
 			~BouncePad();
 
 		protected:
-			NetworkedGame* Game;
-			NetworkPlayer* Owner;
 
 			Vector3 scale = Vector3(50,50,6);
 		};
