@@ -125,7 +125,7 @@ bool NetworkedGame::StartAsClient(char a, char b, char c, char d) {
 	thisClient->RegisterPacketHandler(Round_Over, this);
 	thisClient->RegisterPacketHandler(Player_Score, this);
 
-	//StartLevel();
+	StartLevel();
 }
 
 void NetworkedGame::DestroyServer()
