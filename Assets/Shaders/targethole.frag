@@ -90,7 +90,7 @@ vec3 normal(in vec2 uv) {
 }
 
 void main(void) {
-    vec2 uv = IN.texCoord;// - vec2(0.5);
+    vec2 uv = IN.texCoord;
     
 
 
@@ -117,5 +117,4 @@ void main(void) {
 
     fragColor = mix(colorEdge, colorCenter, alphaEdge);
     fragColor.a = fragColor.a + fragColor.a * 0.9;
-    //fragColor = color;
 }
