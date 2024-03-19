@@ -32,8 +32,9 @@ bool GravityWell::IsWithinRange(Projectile* projectile)
 
 void GravityWell::PullProjectilesWithinField(std::vector<Projectile*> projectileList)
 {
+	if (projectileList.size() == 0)return;
 	for (auto i : projectileList) {
-		if (i->IsActive() && i!=NULL) {
+		if (i->IsActive() && i!=nullptr) {
 			if(IsWithinRange(i)) {
 				AddGravityForce(i);
 			}

@@ -25,6 +25,8 @@ void GameWorld::Clear() {
 }
 
 void GameWorld::ClearAndErase() {
+	gameObjectsMutex.lock();
+
 	for (auto& i : gameObjects) {
 		delete i;
 	}
@@ -32,6 +34,8 @@ void GameWorld::ClearAndErase() {
 		delete i;
 	}
 	Clear();
+	gameObjectsMutex.unlock();
+
 }
 
 void GameWorld::AddGameObject(GameObject* o) {

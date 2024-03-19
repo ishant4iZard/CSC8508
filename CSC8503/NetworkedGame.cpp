@@ -364,6 +364,7 @@ void NCL::CSC8503::NetworkedGame::HandleInputAsClient()
 }
 
 void NetworkedGame::BroadcastSnapshot(bool deltaFrame) {
+	world->gameObjectsMutex.lock();
 	std::vector<GameObject*>::const_iterator first;
 	std::vector<GameObject*>::const_iterator last;
 
@@ -390,10 +391,13 @@ void NetworkedGame::BroadcastSnapshot(bool deltaFrame) {
 			delete newPacket;
 		}
 	}
+	world->gameObjectsMutex.unlock();
+
 }
 
 void NetworkedGame::UpdateMinimumState() {
 	//Periodically remove old data from the server
+	world->gameObjectsMutex.lock();
 	int minID = INT_MAX;
 	int maxID = 0; //we could use this to see if a player is lagging behind?
 
@@ -403,6 +407,7 @@ void NetworkedGame::UpdateMinimumState() {
 	}
 	//every client has acknowledged reaching at least state minID
 	//so we can get rid of any old states!
+
 	std::vector<GameObject*>::const_iterator first;
 	std::vector<GameObject*>::const_iterator last;
 	world->GetObjectIterators(first, last);
@@ -414,6 +419,8 @@ void NetworkedGame::UpdateMinimumState() {
 		}
 		o->UpdateStateHistory(minID); //clear out old states so they arent taking up memory...
 	}
+	world->gameObjectsMutex.unlock();
+
 }
 
 void NetworkedGame::ServerUpdatePlayersList()
@@ -495,7 +502,7 @@ void NetworkedGame::CheckPlayerListAndSpawnPlayers()
 
 NetworkPlayer* NetworkedGame::AddNetworkPlayerToWorld(const Vector3& position, int playerNum)
 {
-	
+	world->gameObjectsMutex.lock();
 
 	float meshSize = 2.0f;
 	Vector3 volumeSize = Vector3(1.0, 1.6, 1.0);
@@ -533,7 +540,6 @@ NetworkPlayer* NetworkedGame::AddNetworkPlayerToWorld(const Vector3& position, i
 
 	animatedObject->AddAnimatedObject(character);
 
-	world->AddGameObject(character);
 
 	networkObjects.insert(std::pair<int, NetworkObject*>(playerNum, character->GetNetworkObject()));
 
@@ -556,7 +562,9 @@ NetworkPlayer* NetworkedGame::AddNetworkPlayerToWorld(const Vector3& position, i
 	character->GetRenderObject()->SetColour(colour);
 
 
-	
+	world->gameObjectsMutex.unlock();
+
+	world->AddGameObject(character);
 	return character;
 }
 
@@ -724,7 +732,7 @@ void NetworkedGame::StartLevel() {
 	ProjectileList.clear();
 	
 	//PlayersNameList.clear();
-	CheckPlayerListAndSpawnPlayers();
+	//CheckPlayerListAndSpawnPlayers();
 	SpawnAI();
 
 	physics->createStaticTree();//this needs to be at the end of all initiations

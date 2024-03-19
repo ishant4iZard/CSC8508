@@ -47,11 +47,15 @@ any collisions they are in.
 
 */
 void PhysicsSystem::Clear() {
+	gameWorld.gameObjectsMutex.lock();
+
 	broadphaseCollisions.clear();
 	broadphaseCollisionsVec.clear();
 	allCollisions.clear();
 	staticTree.Clear();
 	activePowerup = powerUpType::none;
+	gameWorld.gameObjectsMutex.unlock();
+
 }
 
 /*
@@ -492,11 +496,13 @@ and work out if they are truly colliding, and if so, add them into the main coll
 */
 void PhysicsSystem::NarrowPhase() {
 	//std::cout << broadphaseCollisions.size()<<"\n";
-	for (std::set < CollisionDetection::CollisionInfo >::iterator
+	/*for (std::set < CollisionDetection::CollisionInfo >::iterator
 		i = broadphaseCollisions.begin();
-		i != broadphaseCollisions.end(); ++i) {
+		i != broadphaseCollisions.end(); i++) {*/
+	gameWorld.gameObjectsMutex.lock();
 
-		CollisionDetection::CollisionInfo info = *i;
+	for(auto const i: broadphaseCollisions){
+		CollisionDetection::CollisionInfo info = i;
 		if (info.a->GetBoundingVolume() == NULL|| info.b->GetBoundingVolume() == NULL)
 		{
 			continue;
@@ -522,6 +528,8 @@ void PhysicsSystem::NarrowPhase() {
 			}
 		}
 	}
+	gameWorld.gameObjectsMutex.unlock();
+
 }
 
 /*

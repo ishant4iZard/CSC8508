@@ -183,15 +183,14 @@ void GameTechRenderer::RenderFrame() {
 	glDisable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	ui->RenderUI();
+	UIWindows::GetInstance()->RenderUI();
 }
 
 void GameTechRenderer::BuildObjectList() {
 	activeObjects.clear();
 	activeAnimatedObjects.clear();
 	instancedRenderObjectList.clear();
-	gameWorld.gameObjectsMutex.lock();
+	//gameWorld.gameObjectsMutex.lock();
 	gameWorld.OperateOnContents(
 		[&](GameObject* o) {
 			if (o->IsActive()) {
@@ -230,7 +229,7 @@ void GameTechRenderer::BuildObjectList() {
 			}
 		}
 	);
-	gameWorld.gameObjectsMutex.unlock();
+	//gameWorld.gameObjectsMutex.unlock();
 }
 
 void GameTechRenderer::SortObjectList() {
@@ -852,8 +851,13 @@ void GameTechRenderer::LoadCurrentAnimationAssets(OGLShader* currentShader, Mesh
 	anmShader = currentShader;
 	
 	//maleGuardMaterial = currentMaterial;
-	maleGuardMaterial = new MeshMaterial("Male_Guard.mat");
-	maxGuardMaterial = new MeshMaterial("Rig_Maximilian.mat");
+	if (maleGuardMaterial == nullptr) {
+		maleGuardMaterial = new MeshMaterial("Male_Guard.mat");
+	}
+	if (maxGuardMaterial == nullptr) {
+		maxGuardMaterial = new MeshMaterial("Rig_Maximilian.mat");
+	}
+	
 
 	if (maleGuardMesh == nullptr) {
 		maleGuardMesh = LoadMesh("Male_Guard.msh");
@@ -1001,14 +1005,16 @@ void GameTechRenderer::RenderAnimation(Vector3 inPos, Vector3 inScale, Vector4 i
 
 	const Matrix4* frameDataAnm = activeAnimation[animatedObjectID]->GetJointData(currentFrame[animatedObjectID]);
 
-	if (name == "MaleGuard") {
-		for (GLuint i = 0; i < maleGuardMesh->GetJointCount(); i++) {
-			frameMatrices.emplace_back(frameDataAnm[i] * invBindPoseMaleGuard[i]);
+	if (frameDataAnm != nullptr) {
+		if (name == "MaleGuard") {
+			for (GLuint i = 0; i < maleGuardMesh->GetJointCount(); i++) {
+				frameMatrices.emplace_back(frameDataAnm[i] * invBindPoseMaleGuard[i]);
+			}
 		}
-	}
-	if (name == "MaxGuard") {
-		for (GLuint i = 0; i < maxGuardMesh->GetJointCount(); i++) {
-			frameMatrices.emplace_back(frameDataAnm[i] * invBindPoseMaxGuard[i]);
+		if (name == "MaxGuard") {
+			for (GLuint i = 0; i < maxGuardMesh->GetJointCount(); i++) {
+				frameMatrices.emplace_back(frameDataAnm[i] * invBindPoseMaxGuard[i]);
+			}
 		}
 	}
 	/*for (GLuint i = 0; i < maleGuardMesh->GetJointCount(); i++) {
@@ -1056,6 +1062,33 @@ void GameTechRenderer::RenderAnimation(Vector3 inPos, Vector3 inScale, Vector4 i
 			DrawBoundMesh((uint32_t)i);
 		}
 	}
+
+	//test
+	
+
+	/*if (name == "MaleGuard") {
+		for (int i = 0; i < maleGuardMesh->GetSubMeshCount(); i++) {
+
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, maleGuardMatDiffuseTextures[i]);
+
+			glActiveTexture(GL_TEXTURE1);
+			glBindTexture(GL_TEXTURE_2D, maleGuardMatBumpTextures[i]);
+
+			const SubMesh* pose = maleGuardMesh->GetSubMesh(i);
+
+			vector<Matrix4> frameMatrices;
+
+			for (unsigned int k; k < pose->count; k++) {
+				int jointID = 
+			}
+
+
+			BindMesh((OGLMesh&)*maleGuardMesh);
+			DrawBoundMesh((uint32_t)i);
+		}
+	}*/
+	//test
 
 	glEnable(GL_BLEND);
 }
