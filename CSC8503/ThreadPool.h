@@ -1,10 +1,13 @@
 #pragma once 
+#include <condition_variable>
 #include <thread> 
 #include <functional> 
 #include <mutex> 
 #include <vector> 
 #include <queue> 
 using namespace std;
+
+//https://www.geeksforgeeks.org/thread-pool-in-cpp/
 
 // Class that represents a simple thread pool 
 class ThreadPool {

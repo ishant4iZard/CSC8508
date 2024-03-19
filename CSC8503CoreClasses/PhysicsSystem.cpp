@@ -65,7 +65,7 @@ bool useSimpleContainer = false;
 int constraintIterationCount = 10;
 
 //This is the fixed timestep we'd LIKE to have
-const int   idealHZ = 60;
+const int   idealHZ = 120;
 const float idealDT = 1.0f / idealHZ;
 
 /*
@@ -118,10 +118,10 @@ void PhysicsSystem::Update(float dt) {
 		dTOffset -= realDT;
 		iteratorCount++;
 
-		ClearForces();	//Once we've finished with the forces, reset them to zero
-
-		UpdateCollisionList(); //Remove any old collisions
 	}
+	ClearForces();	//Once we've finished with the forces, reset them to zero
+
+	UpdateCollisionList(); //Remove any old collisions
 
 
 	t.Tick();

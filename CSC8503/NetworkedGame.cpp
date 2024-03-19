@@ -945,15 +945,18 @@ AiStatemachineObject* NetworkedGame::AddAiStateObjectToWorld(const Vector3& posi
 void NetworkedGame::PhysicsUpdate(float dt)
 {
 	if (UpdatePhysics) {
+		PhysicsMutex.lock();
 		physics->Update(dt);
 		CurrentPowerUpType = physics->GetCurrentPowerUpState();
 		UpdatePhysics = false;
+		PhysicsMutex.unlock();
 	}
 }
 
 void NetworkedGame::NonPhysicsUpdate(float dt)
 {
 	//Debug::UpdateRenderables(dt);
+	NonPhysicsMutex.lock();
 
 	if (!appState->GetIsGameOver()/*true*/) {
 		timeToNextPacket -= dt;
@@ -986,6 +989,7 @@ void NetworkedGame::NonPhysicsUpdate(float dt)
 	}
 
 	
+	NonPhysicsMutex.unlock();
 
 
 }
