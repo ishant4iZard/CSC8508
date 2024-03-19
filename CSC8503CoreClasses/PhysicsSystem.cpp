@@ -499,6 +499,8 @@ void PhysicsSystem::NarrowPhase() {
 	/*for (std::set < CollisionDetection::CollisionInfo >::iterator
 		i = broadphaseCollisions.begin();
 		i != broadphaseCollisions.end(); i++) {*/
+	if (broadphaseCollisions.size() == 0)return;
+
 	gameWorld.gameObjectsMutex.lock();
 
 	for(auto const i: broadphaseCollisions){

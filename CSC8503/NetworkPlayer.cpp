@@ -26,17 +26,25 @@ NetworkPlayer::NetworkPlayer(TutorialGame* game, int num)	{
 	movementSpeed = 35;
 
 
-	anmNames[IDLE] = "Male_Guard_Idle";
-	anmNames[GUNFIRE1] = "Male_Guard_GunfireRifle";
-	anmNames[STEPFORWARD] = "Male_Guard_StepForwardRifle";
-	anmNames[HAPPY] = "Male_Guard_Happy";
+	anmNames[MALEGUARD_IDLE] = "Male_Guard_Idle";
+	anmNames[MALEGUARD_GUNFIRE] = "Male_Guard_GunfireRifle";
+	anmNames[MALEGUARD_STEPFORWARD] = "Male_Guard_StepForwardRifle";
+	anmNames[MALEGUARD_HAPPY] = "Male_Guard_Happy";
+
+	anmNames[MAXGUARD_IDLE] = "Rig_Maximilian_Idle";
+	anmNames[MAXGUARD_GUNFIRE] = "Rig_Maximilian_SingleShot";
+	anmNames[MAXGUARD_WALK] = "Rig_Maximilian_Walk2";
+	anmNames[MAXGUARD_INCENTIVISE] = "Rig_Maximilian_Incentivise";
 
 	for (int i = 0; i < NUM_ANMS; i++) {
 		AnmName anm = static_cast<AnmName>(i);
-		maleGuardAnimations[anm] = new MeshAnimation(anmNames[anm] + ".anm");
+		animations[anm] = new MeshAnimation(anmNames[anm] + ".anm");
 	}
 
-	activeAnimation = maleGuardAnimations[STEPFORWARD];
+	//activeAnimation = animations[STEPFORWARD];
+
+	activeAnimationMaleGuard = animations[MALEGUARD_STEPFORWARD];
+	activeAnimationMaxGuard = animations[MAXGUARD_WALK];
 
 	animationStateCounter = 0;
 }
@@ -272,7 +280,17 @@ void NetworkPlayer::Fire()
 	Vector3 firePos = transform.GetPosition() + fireDir * 3;
 
 	//set the animation
-	SetAnimation(AnmName::GUNFIRE1);
+	switch (playerNum)
+	{
+	case (1):
+		SetMaleGuardAnimation(AnmName::MALEGUARD_GUNFIRE); break;
+	case (0):
+		SetMaxGuardAnimation(AnmName::MAXGUARD_GUNFIRE); break;
+	case (2):
+		SetMaleGuardAnimation(AnmName::MALEGUARD_GUNFIRE); break;
+	case (3):
+		SetMaxGuardAnimation(AnmName::MAXGUARD_GUNFIRE); break;
+	}
 	SetAnimationStateCounter();
 
 	//std::cout << "player " << playerNum << " fired!" << std::endl;

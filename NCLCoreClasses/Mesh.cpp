@@ -167,6 +167,14 @@ void Mesh::SetSubMeshNames(const std::vector < std::string>& newNames) {
 	subMeshNames = newNames;
 }
 
+void Mesh::SetBindPoseIndices(const std::vector<int>& newIndices) {
+	bindPoseIndices = newIndices;
+}
+
+void Mesh::SetBindPoseStates(const std::vector<SubMeshPoses>& newStates) {
+	bindPoseStates = newStates;
+}
+
 void Mesh::CalculateInverseBindPose() {
 	inverseBindPose.resize(bindPose.size());
 
@@ -206,5 +214,13 @@ bool Mesh::ValidateMeshData() {
 		std::cout << __FUNCTION__ << " mesh " << debugName << " has an incorrect skin index attribute count!\n";
 		return false;
 	}
+	return true;
+}
+
+bool Mesh::GetBindPoseState(int subMesh, SubMeshPoses& pose) const {
+	if (subMesh < 0 || subMesh >= (int)bindPoseStates.size()) {
+		return false;
+	}
+	pose = bindPoseStates[subMesh];
 	return true;
 }

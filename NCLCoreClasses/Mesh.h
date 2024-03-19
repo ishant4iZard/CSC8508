@@ -76,6 +76,11 @@ namespace NCL::Rendering {
 		int base  = 0;
 	};
 
+	struct SubMeshPoses { 
+		int start = 0;
+		int count = 0;
+	};
+
 	class Mesh	{
 	public:		
 		virtual ~Mesh();
@@ -160,6 +165,12 @@ namespace NCL::Rendering {
 
 		int GetIndexForJoint(const std::string &name) const;
 
+		const int* GetBindPoseIndices() const {
+			return bindPoseIndices.data();
+		}
+
+		bool GetBindPoseState(int subMesh, SubMeshPoses& pose) const;
+
 		const std::vector<Matrix4>& GetBindPose() const {
 			return bindPose;
 		}
@@ -175,6 +186,9 @@ namespace NCL::Rendering {
 		void SetBindPose(const std::vector<Matrix4>& newMats);
 		void SetInverseBindPose(const std::vector<Matrix4>& newMats);
 		void CalculateInverseBindPose();
+
+		void SetBindPoseIndices(const std::vector<int>& newIndices);
+		void SetBindPoseStates(const std::vector<SubMeshPoses>& newStates);
 
 		bool	GetVertexIndicesForTri(unsigned int i, unsigned int& a, unsigned int& b, unsigned int& c) const;
 		bool	GetTriangle(unsigned int i, Vector3& a, Vector3& b, Vector3& c) const;
@@ -249,6 +263,10 @@ namespace NCL::Rendering {
 		std::vector<Matrix4>		inverseBindPose;
 		
 		unsigned int instanceCount = 0;
+
+		//used for animation
+		std::vector<int>			bindPoseIndices; 
+		std::vector<SubMeshPoses>	bindPoseStates;  
 	};
 
 	using UniqueMesh = std::unique_ptr<Mesh>;

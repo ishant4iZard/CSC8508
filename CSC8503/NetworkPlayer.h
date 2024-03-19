@@ -40,8 +40,14 @@ namespace NCL {
 				movementDirection = dir;
 			}
 
-			void SetAnimation(int inAnimationID) { activeAnimation = maleGuardAnimations[inAnimationID]; }
-			MeshAnimation* GetAnimation() { return activeAnimation; }
+			/*void SetAnimation(int inAnimationID) { activeAnimation = animations[inAnimationID]; }
+			MeshAnimation* GetAnimation() { return activeAnimation; }*/
+
+			void SetMaleGuardAnimation(int inAnimationID) { activeAnimationMaleGuard = animations[inAnimationID]; }
+			MeshAnimation* GetMaleGuardAnimation() { return activeAnimationMaleGuard; }
+
+			void SetMaxGuardAnimation(int inAnimationID) { activeAnimationMaxGuard = animations[inAnimationID]; }
+			MeshAnimation* GetMaxGuardAnimation() { return activeAnimationMaxGuard; }
 
 			void SetAnimationStateCounter() { animationStateCounter++; }
 			int GetAnimationStateCounter() { return animationStateCounter; }
@@ -63,8 +69,10 @@ namespace NCL {
 			float projectileReplenishTimer;
 
 			MeshAnimation* activeAnimation;
-			std::string anmNames[4];
-			MeshAnimation* maleGuardAnimations[4];
+			MeshAnimation* activeAnimationMaleGuard;
+			MeshAnimation* activeAnimationMaxGuard;
+			std::string anmNames[8];
+			MeshAnimation* animations[8];
 
 			int animationStateCounter;
 

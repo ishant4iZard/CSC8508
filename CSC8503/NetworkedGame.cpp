@@ -518,7 +518,33 @@ NetworkPlayer* NetworkedGame::AddNetworkPlayerToWorld(const Vector3& position, i
 		.SetPosition(position);
 
 	//character->SetRenderObject(new RenderObject(&character->GetTransform(), charMesh, nullptr, basicShader));
-	character->SetRenderObject(new RenderObjectMaleGuard(&character->GetTransform(), maleGuardMesh, maleGuardDefultTex, anmShader));
+	
+	MeshAnimation* currentAnm = nullptr;
+	switch (playerNum) {
+	case (1):
+		character->SetRenderObject(new RenderObjectMaleGuard(&character->GetTransform(), maleGuardMesh, maleGuardDefultTex, anmShader)); 
+		character->setName("MaleGuard");
+		currentAnm = character->GetMaleGuardAnimation();
+		break;
+	case (0):
+		character->SetRenderObject(new RenderObjectMaleGuard(&character->GetTransform(), maxGuardMesh, maxGuardDefultTex, anmShader)); 
+		character->setName("MaxGuard"); 
+		currentAnm = character->GetMaxGuardAnimation();
+		break;
+	case (2):
+		character->SetRenderObject(new RenderObjectMaleGuard(&character->GetTransform(), maleGuardMesh, maleGuardDefultTex, anmShader)); 
+		character->setName("MaleGuard"); 
+		currentAnm = character->GetMaxGuardAnimation();
+		break;
+	case (3):
+		character->SetRenderObject(new RenderObjectMaleGuard(&character->GetTransform(), maxGuardMesh, maxGuardDefultTex, anmShader));
+		character->setName("MaxGuard"); 
+		currentAnm = character->GetMaxGuardAnimation();
+		break;
+	}
+	//character->SetRenderObject(new RenderObjectMaleGuard(&character->GetTransform(), maleGuardMesh, maleGuardDefultTex, anmShader));
+	//character->SetRenderObject(new RenderObjectMaleGuard(&character->GetTransform(), maxGuardMesh, maxGuardDefultTex, anmShader));
+	
 	character->SetPhysicsObject(new PhysicsObject(&character->GetTransform(), character->GetBoundingVolume()));
 	character->SetNetworkObject(new NetworkObject(*character, playerNum));
 	
@@ -529,14 +555,17 @@ NetworkPlayer* NetworkedGame::AddNetworkPlayerToWorld(const Vector3& position, i
 	RenderObjectMaleGuard* maleGuardRenderObject = static_cast<RenderObjectMaleGuard*>(characterRenderObject);
 	
 	//To do , use maleGuard for testing
-	maleGuardRenderObject->SetAnimation(character->GetAnimation());
+	//maleGuardRenderObject->SetAnimation(character->GetAnimation());
+	maleGuardRenderObject->SetAnimation(currentAnm);
 	//...
 
 	maleGuardRenderObject->SetMaleGuardPosition(position);
-	maleGuardRenderObject->SetMaleGuardScale(Vector3(meshSize, meshSize, meshSize) * 10);
+	maleGuardRenderObject->SetMaleGuardScale(Vector3(meshSize, meshSize, meshSize) * 4);
 	maleGuardRenderObject->SetMaleGuardRotation(Vector4(180, 0, 1, 0));
 
-	character->setName("MaleGuard");
+	//character->setName("MaleGuard");
+	//character->setName("MaxGuard");
+
 
 	animatedObject->AddAnimatedObject(character);
 
@@ -732,7 +761,7 @@ void NetworkedGame::StartLevel() {
 	ProjectileList.clear();
 	
 	//PlayersNameList.clear();
-	//CheckPlayerListAndSpawnPlayers();
+	CheckPlayerListAndSpawnPlayers();
 	SpawnAI();
 
 	physics->createStaticTree();//this needs to be at the end of all initiations

@@ -11,16 +11,16 @@ MaleGuard::MaleGuard(const std::string& objectName) :GameObject(name) {
 	maleGuardName = objectName;
 	name = objectName;
 
-	anmNames[IDLE]			= "Idle1";
-	anmNames[GUNFIRE1]		= "Gunfire1";
-	anmNames[STEPFORWARD]	= "StepForward";
-	anmNames[HAPPY]			= "Happy";
+	anmNames[MAXGUARD_IDLE]			= "Idle1";
+	anmNames[MAXGUARD_GUNFIRE]		= "Gunfire1";
+	anmNames[MALEGUARD_STEPFORWARD]	= "StepForward";
+	anmNames[MALEGUARD_HAPPY]			= "Happy";
 
 	for (int i = 0; i < NUM_ANMS; i++) {
 		AnmName anm = static_cast<AnmName>(i);
 		maleGuardAnimations[anm] = new MeshAnimation(anmNames[anm] + ".anm");
 	}
 
-	activeAnimation = maleGuardAnimations[IDLE];
+	activeAnimation = maleGuardAnimations[MAXGUARD_IDLE];
 	nextAnimation = activeAnimation;
 }

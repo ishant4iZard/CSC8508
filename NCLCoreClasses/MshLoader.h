@@ -43,7 +43,11 @@ namespace NCL::Rendering {
 		BindPoseInv = 1 << 12,
 		Material = 1 << 13,
 		SubMeshes = 1 << 14,
-		SubMeshNames = 1 << 15
+		SubMeshNames = 1 << 15,
+
+		//used for animation
+		BindPoseIndices = 1 << 16,
+		BindPoseStates = 1 << 17
 	};
 
 	enum class GeometryChunkData {
@@ -70,6 +74,9 @@ namespace NCL::Rendering {
 		static void ReadJointNames(std::ifstream& file, std::vector<std::string>& names);
 		static void ReadSubMeshes(std::ifstream& file, int count, std::vector<struct SubMesh>& subMeshes);
 		static void ReadSubMeshNames(std::ifstream& file, int count, std::vector<std::string>& names);
+
+		static void ReadIntegerArray(std::ifstream& file, std::vector<int>& into);
+		static void ReadBindposes(std::ifstream& file, std::vector<struct SubMeshPoses>& bindPoses);	
 
 		MshLoader() {}
 		~MshLoader() {}
