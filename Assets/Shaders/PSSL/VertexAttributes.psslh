@@ -1,0 +1,8 @@
+
+RegularBuffer<float3> Positions			: register(t10);
+RegularBuffer<float4> Colours			: register(t11);
+RegularBuffer<float2> TextureCoords		: register(t12);
+RegularBuffer<float3> Normals			: register(t13);
+RegularBuffer<float4> Tangents			: register(t14);
+RegularBuffer<float4> JointWeights		: register(t15);
+RegularBuffer<uint4>  JointIndices		: register(t16);

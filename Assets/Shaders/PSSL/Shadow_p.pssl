@@ -1,0 +1,22 @@
+
+struct VS_OUTPUT
+{
+	float4 Position		: S_POSITION;
+	float2 UV			: TEXCOORD0;
+	float4 Colour		: TEXCOORD1;
+	int	texID			: TEXCOORD2;
+};
+
+SamplerState sampler			: register(s0);
+
+RegularBuffer<sce::Agc::Core::Texture> textures : register(t1);
+
+[CxxSymbol("TestShader::ps")]
+float4 main(VS_OUTPUT vertex) : S_TARGET_OUTPUT
+{
+	Texture2D<float4> tex = Texture2D<float4>(textures[NonUniformResourceIndex(vertex.texID)]);
+
+	float4 texSample = tex.Sample(sampler, vertex.UV) * vertex.Colour;
+
+	return texSample;  
+}

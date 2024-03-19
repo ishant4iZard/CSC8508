@@ -354,13 +354,13 @@ enet_peer_on_connect (ENetPeer * peer)
 void
 enet_peer_on_disconnect (ENetPeer * peer)
 {
-    if (peer -> state == ENET_PEER_STATE_CONNECTED || peer -> state == ENET_PEER_STATE_DISCONNECT_LATER)
-    {
-        if (peer -> incomingBandwidth != 0)
-          -- peer -> host -> bandwidthLimitedPeers;
+	if (peer->state == ENET_PEER_STATE_CONNECTED || peer->state == ENET_PEER_STATE_DISCONNECT_LATER)
+	{
+		if (peer->incomingBandwidth != 0)
+			--peer->host->bandwidthLimitedPeers;
 
-        -- peer -> host -> connectedPeers;
-    }
+		--peer->host->connectedPeers;
+	}
 }
 
 /** Forcefully disconnects a peer.
@@ -371,6 +371,7 @@ enet_peer_on_disconnect (ENetPeer * peer)
 void
 enet_peer_reset (ENetPeer * peer)
 {
+
     enet_peer_on_disconnect (peer);
         
     peer -> outgoingPeerID = ENET_PROTOCOL_MAXIMUM_PEER_ID;

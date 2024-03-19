@@ -1,5 +1,8 @@
 #include "GameClient.h"
 #include "./enet/enet.h"
+#include "NetworkObject.h"
+
+
 using namespace NCL;
 using namespace CSC8503;
 
@@ -23,14 +26,18 @@ bool GameClient::Connect(uint8_t a, uint8_t b, uint8_t c, uint8_t d, int portNum
 	if (netPeer != nullptr)
 	{
 		clientState = EClientState::CLIENT_STATE_CONNECTING;
+		std::cout << "Netpeer existed!\n";
 	}
-	return netPeer != nullptr;
+	return netPeer != nullptr; 
 }
 
-void GameClient::UpdateClient() {
+void GameClient::UpdateClient(float dt) {
 	if (netHandle == nullptr) {
 		return;
 	}
+
+	timeGap += dt;
+
 	// Handle all incoming packets
 	ENetEvent event;
 	while (enet_host_service(netHandle, &event, 0) > 0) {
@@ -38,6 +45,11 @@ void GameClient::UpdateClient() {
 			CurrentConnetNetID = netPeer->outgoingPeerID;
 			clientState = EClientState::CLIENT_STATE_CONNECTED;
 			std::cout << "Connected to server !" << std::endl;
+
+			ClientHelloPacket newPacket;
+			newPacket.PlayerListIndex = PlayerIndex;
+			newPacket.PeerID = CurrentConnetNetID;
+			SendPacket(newPacket);
 		}
 		else if (event.type == ENET_EVENT_TYPE_DISCONNECT)
 		{	
@@ -50,6 +62,13 @@ void GameClient::UpdateClient() {
 			ProcessPacket(packet);
 		}
 		enet_packet_destroy(event.packet);
+		timeGap = 0;
+	}
+
+	// Check the server State
+	if (timeGap > 2.0f)
+	{
+		clientState = EClientState::CLIENT_STATE_DISCONNECTED;
 	}
 }
 

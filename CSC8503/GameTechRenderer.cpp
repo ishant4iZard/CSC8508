@@ -107,6 +107,10 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 #else //_ORBIS
 	ui = UIPlaystation::GetInstance();
 #endif
+
+	EventEmitter::RegisterForEvent(PROJECTILE_PORTAL_COLLISION, this);
+	timeOfPortalCollision = 0;
+	wasPortalCollided = false;
 }
 
 void GameTechRenderer::CreateScreenQuadMesh()
@@ -119,6 +123,7 @@ void GameTechRenderer::CreateScreenQuadMesh()
 }
 
 GameTechRenderer::~GameTechRenderer()	{
+	EventEmitter::RemoveListner(this);
 	glDeleteTextures(1, &shadowTex);
 	glDeleteFramebuffers(1, &shadowFBO);
 	SAFE_DELETE(directionalLight);
@@ -435,6 +440,9 @@ void GameTechRenderer::RenderCamera() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	RenderSkybox();
 
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	Matrix4 viewMatrix = gameWorld.GetMainCamera().BuildViewMatrix();
 	Matrix4 projMatrix = gameWorld.GetMainCamera().BuildProjectionMatrix(hostWindow.GetScreenAspect());
 
@@ -469,18 +477,32 @@ void GameTechRenderer::RenderCamera() {
 		UpdatePBRUniforms(tempRenderObj);
 
 		if (activeShader != shader) {
-			projLocation	= glGetUniformLocation(shader->GetProgramID(), "projMatrix");
-			viewLocation	= glGetUniformLocation(shader->GetProgramID(), "viewMatrix");
-			modelLocation	= glGetUniformLocation(shader->GetProgramID(), "modelMatrix");
+			projLocation = glGetUniformLocation(shader->GetProgramID(), "projMatrix");
+			viewLocation = glGetUniformLocation(shader->GetProgramID(), "viewMatrix");
+			modelLocation = glGetUniformLocation(shader->GetProgramID(), "modelMatrix");
 			tilingLocation = glGetUniformLocation(shader->GetProgramID(), "tiling");
-			shadowLocation  = glGetUniformLocation(shader->GetProgramID(), "shadowMatrix");
-			colourLocation  = glGetUniformLocation(shader->GetProgramID(), "objectColour");
+			shadowLocation = glGetUniformLocation(shader->GetProgramID(), "shadowMatrix");
+			colourLocation = glGetUniformLocation(shader->GetProgramID(), "objectColour");
 			hasVColLocation = glGetUniformLocation(shader->GetProgramID(), "hasVertexColours");
-			hasTexLocation  = glGetUniformLocation(shader->GetProgramID(), "hasTexture");
+			hasTexLocation = glGetUniformLocation(shader->GetProgramID(), "hasTexture");
 
-			lightPosLocation	= glGetUniformLocation(shader->GetProgramID(), "lightPos");
+			lightPosLocation = glGetUniformLocation(shader->GetProgramID(), "lightPos");
 			lightColourLocation = glGetUniformLocation(shader->GetProgramID(), "lightColour");
 			lightRadiusLocation = glGetUniformLocation(shader->GetProgramID(), "lightRadius");
+
+			GLint timeLocation = glGetUniformLocation(shader->GetProgramID(), "time");
+
+			GLint blackholeTexLocation = glGetUniformLocation(shader->GetProgramID(), "blackholeTex");
+			GLint wasPortalCollidedLoc = glGetUniformLocation(shader->GetProgramID(), "wasPortalCollided");
+
+			glUniform1f(timeLocation, time);
+
+			if (timeOfPortalCollision + PORTAL_BLINK_TIME > time)
+				wasPortalCollided = true;
+			else
+				wasPortalCollided = false;
+
+			glUniform1i(wasPortalCollidedLoc, (wasPortalCollided ? 100 : -100));
 
 			UpdateGlobalLightUniform(shader);
 
@@ -723,6 +745,18 @@ Texture* GameTechRenderer::LoadTexture(const std::string& name) {
 
 Shader* GameTechRenderer::LoadShader(const std::string& vertex, const std::string& fragment) {
 	return new OGLShader(vertex, fragment);
+}
+
+void NCL::CSC8503::GameTechRenderer::ReceiveEvent(EventType eventType)
+{
+	switch (eventType)
+	{
+	case PROJECTILE_PORTAL_COLLISION:
+		timeOfPortalCollision = time;
+		break;
+	default:
+		break;
+	}
 }
 
 void GameTechRenderer::SetDebugStringBufferSizes(size_t newVertCount) {

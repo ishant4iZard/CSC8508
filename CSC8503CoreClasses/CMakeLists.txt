@@ -103,15 +103,13 @@ set(Source_Files
 )
 source_group("Source Files" FILES ${Source_Files})
 
-set(enet_Files
+set(Playstation_enet_Files
     #"./enet/callbacks.h"
     "./enet/callbacks.c"
     "./enet/list.h"
     "./enet/list.c"
     "./enet/protocol.h"
     "./enet/protocol.c"
-    "./enet/win32.h"
-    "./enet/win32.c"
 
     "./enet/enet.h"
     "./enet/time.h"
@@ -122,21 +120,71 @@ set(enet_Files
     "./enet/host.c"
     "./enet/packet.c"
     "./enet/peer.c"
-)
-source_group("eNet" FILES ${enet_Files})
 
-set(ALL_FILES
-    ${Header_Files}
-    ${Source_Files}
-    ${AI_Behaviour_Tree}
-    ${AI_Pushdown_Automata}
-    ${AI_State_Machine}
-    ${AI_Pathfinding}
-    ${Collision_Detection}
-    ${Networking}
-    ${Physics}
-    ${enet_Files}   
+    "./enet/unix.h"
+    "./enet/unix.c"
 )
+source_group("eNet" FILES ${Playstation_enet_Files})
+
+set(Windows_enet_Files
+    #"./enet/callbacks.h"
+    "./enet/callbacks.c"
+    "./enet/list.h"
+    "./enet/list.c"
+    "./enet/protocol.h"
+    "./enet/protocol.c"
+
+    "./enet/enet.h"
+    "./enet/time.h"
+    "./enet/types.h"
+    "./enet/utility.h"
+
+    "./enet/compress.c"
+    "./enet/host.c"
+    "./enet/packet.c"
+    "./enet/peer.c"
+
+    "./enet/win32.h"
+    "./enet/win32.c"
+)
+source_group("eNet" FILES ${Windows_enet_Files})
+
+set(Helper_Files
+"Helper.h"
+"Helper.cpp"
+)
+source_group("Helper" FILES ${Helper_Files})
+
+if(NOT("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")) 
+    set(ALL_FILES
+        ${Header_Files}
+        ${Source_Files}
+        ${AI_Behaviour_Tree}
+        ${AI_Pushdown_Automata}
+        ${AI_State_Machine}
+        ${AI_Pathfinding}
+        ${Collision_Detection}
+        ${Physics}
+        #${Networking}
+        #${Playstation_enet_Files}   
+        ${Helper_Files}
+    )
+else()
+    set(ALL_FILES
+        ${Header_Files}
+        ${Source_Files}
+        ${AI_Behaviour_Tree}
+        ${AI_Pushdown_Automata}
+        ${AI_State_Machine}
+        ${AI_Pathfinding}
+        ${Collision_Detection}
+        ${Networking}
+        ${Physics}
+        ${Windows_enet_Files}   
+        ${Helper_Files}
+    )
+endif()
+
 
 set_source_files_properties(${ALL_FILES} PROPERTIES LANGUAGE CXX)
 
@@ -147,7 +195,7 @@ add_library(${PROJECT_NAME} STATIC ${ALL_FILES})
 
 #set(CMAKE_CXX_SOURCE_FILE_EXTENSIONS c;C;M;c++;cc;cpp;cxx;m;mm;mpp;CPP;ixx;cppm)
 
-use_props(${PROJECT_NAME} "${CMAKE_CONFIGURATION_TYPES}" "${DEFAULT_CXX_PROPS}")
+#use_props(${PROJECT_NAME} "${CMAKE_CONFIGURATION_TYPES}" "${DEFAULT_CXX_PROPS}")
 set(ROOT_NAMESPACE CSC8503CoreClasses)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES

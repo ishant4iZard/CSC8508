@@ -41,7 +41,6 @@ bool CollisionDetection::RayIntersection(const Ray& r,GameObject& object, RayCol
 		case VolumeType::AABB:		hasCollided = RayAABBIntersection(r, worldTransform, (const AABBVolume&)*volume	, collision); break;
 		case VolumeType::OBB:		hasCollided = RayOBBIntersection(r, worldTransform, (const OBBVolume&)*volume	, collision); break;
 		case VolumeType::Sphere:	hasCollided = RaySphereIntersection(r, worldTransform, (const SphereVolume&)*volume	, collision); break;
-
 		case VolumeType::Capsule:	hasCollided = RayCapsuleIntersection(r, worldTransform, (const CapsuleVolume&)*volume, collision); break;
 	}
 
@@ -197,6 +196,9 @@ bool CollisionDetection::RayCapsuleIntersection(const Ray& r, const Transform& w
 }
 
 bool CollisionDetection::ObjectIntersection(GameObject* a, GameObject* b, CollisionInfo& collisionInfo) {
+	//const CollisionVolume* volA = (a->getSweptVolume()->type) == VolumeType::Invalid ? a->GetBoundingVolume() : a->getSweptVolume();
+	//const CollisionVolume* volB = (b->getSweptVolume()->type) == VolumeType::Invalid ? b->GetBoundingVolume() : b->getSweptVolume();
+
 	const CollisionVolume* volA = a->GetBoundingVolume();
 	const CollisionVolume* volB = b->GetBoundingVolume();
 
@@ -206,6 +208,9 @@ bool CollisionDetection::ObjectIntersection(GameObject* a, GameObject* b, Collis
 
 	collisionInfo.a = a;
 	collisionInfo.b = b;
+
+	//Transform& transformA = (a->getSweptVolume()->type) == VolumeType::Invalid ? a->GetTransform() : a->GetSweptTransform();
+	//Transform& transformB = (b->getSweptVolume()->type) == VolumeType::Invalid ? b->GetTransform() : b->GetSweptTransform();
 
 	Transform& transformA = a->GetTransform();
 	Transform& transformB = b->GetTransform();
@@ -879,7 +884,7 @@ bool CollisionDetection::CapsuleIntersection(const CapsuleVolume& volumeA, const
 		Vector3 localA = (bestTApoint - normal * capsuleARadius) - capsuleAPos;
 		Vector3 localB = (bestTBpoint + normal * capsuleBRadius) - capsuleBPos;
 		collisionInfo.AddContactPoint(localA, localB, normal, penetration);
-		std::cout << "collision";
+		//std::cout << "collision";
 		return true;// we ’re colliding !
 	}
 

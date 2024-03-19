@@ -6,7 +6,7 @@ NetworkBase::NetworkBase()	{
 
 NetworkBase::~NetworkBase()	{
 	if (netHandle) {
-		enet_host_destroy(netHandle);
+		//enet_host_destroy(netHandle);
 	}
 }
 

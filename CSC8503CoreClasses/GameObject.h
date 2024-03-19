@@ -18,6 +18,8 @@ namespace NCL::CSC8503 {
 		GameObject(const std::string& name = "");
 		~GameObject();
 
+		void Update(float dt);
+
 		void SetBoundingVolume(CollisionVolume* vol) {
 			boundingVolume = vol;
 		}
@@ -38,6 +40,10 @@ namespace NCL::CSC8503 {
 
 		Transform& GetTransform() {
 			return transform;
+		}
+		
+		Transform& GetSweptTransform() {
+			return SweptTransform;
 		}
 
 		RenderObject* GetRenderObject() const {
@@ -70,7 +76,6 @@ namespace NCL::CSC8503 {
 
 		virtual void OnCollisionBegin(GameObject* otherObject) {
 			//std::cout << "OnCollisionBegin event occured!\n";
-			//todo
 		}
 
 		virtual void OnCollisionEnd(GameObject* otherObject) {
@@ -78,7 +83,6 @@ namespace NCL::CSC8503 {
 		}
 		virtual void OnTriggerBegin(GameObject* otherObject) {
 			//std::cout << "OnCollisionBegin event occured!\n";
-			//todo
 		}
 
 		virtual void OnTriggerEnd(GameObject* otherObject) {
@@ -89,7 +93,13 @@ namespace NCL::CSC8503 {
 
 		bool GetBroadphaseAABB(Vector3&outsize) const;
 
+		CollisionVolume* getSweptVolume() const {
+			return SweptVolume;
+		}
+
 		void UpdateBroadphaseAABB();
+
+		void UpdateSweptVolume(float dt);
 
 		void SetWorldID(int newID) {
 			worldID = newID;
@@ -106,6 +116,12 @@ namespace NCL::CSC8503 {
 		void settag(std::string ttag) {
 			tag = ttag;
 		}
+		
+		void setName(std::string inname) {
+			name = inname;
+		}
+
+
 
 		
 
@@ -116,6 +132,9 @@ namespace NCL::CSC8503 {
 		PhysicsObject*		physicsObject;
 		RenderObject*		renderObject;
 		NetworkObject*		networkObject;
+
+		CollisionVolume*	SweptVolume;
+		Transform			SweptTransform;
 
 		bool		isActive;
 		int			worldID;

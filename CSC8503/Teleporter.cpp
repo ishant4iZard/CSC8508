@@ -1,8 +1,7 @@
 #include "Teleporter.h"
 #include "Projectile.h"
 #include "PhysicsObject.h"
-
-
+#include "Event.h"
 
 NCL::CSC8503::Teleporter::Teleporter()
 {
@@ -31,6 +30,7 @@ void NCL::CSC8503::Teleporter::OnTriggerBegin(GameObject* otherObject)
 			float speed = Bullet->GetPhysicsObject()->GetLinearVelocity().Length();
 			Bullet->GetPhysicsObject()->SetLinearVelocity(outNormal * speed);
 			Bullet->setTeleport(false);
+			EventEmitter::EmitEvent(PROJECTILE_PORTAL_COLLISION);
 		}
 	}
 }

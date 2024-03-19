@@ -1,6 +1,6 @@
-^C:\USERS\C3002856\SOURCE\REPOS\CSC8503 2023 2\CSC8503 2023\CSC8503\CMAKELISTS.TXT
+^C:\USERS\C3012094\SOURCE\REPOS\CSC8508\CSC8503\CMAKELISTS.TXT
 setlocal
-"C:\Program Files\CMake\bin\cmake.exe" "-SC:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023" "-BC:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023" --check-stamp-file "C:/Users/c3002856/source/repos/CSC8503 2023 2/CSC8503 2023/CSC8503/CMakeFiles/generate.stamp"
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/c3012094/source/repos/CSC8508 -BC:/Users/c3012094/source/repos/CSC8508 --check-stamp-file C:/Users/c3012094/source/repos/CSC8508/CSC8503/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone

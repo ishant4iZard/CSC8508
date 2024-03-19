@@ -35,9 +35,11 @@ void GameWorld::ClearAndErase() {
 }
 
 void GameWorld::AddGameObject(GameObject* o) {
+	gameObjectsMutex.lock();
 	gameObjects.emplace_back(o);
 	o->SetWorldID(worldIDCounter++);
 	worldStateCounter++;
+	gameObjectsMutex.unlock();
 }
 
 void GameWorld::RemoveGameObject(GameObject* o, bool andDelete) {
@@ -68,13 +70,17 @@ void GameWorld::UpdateWorld(float dt) {
 	unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 	std::default_random_engine e(seed);
 
-	if (shuffleObjects) {
-		std::shuffle(gameObjects.begin(), gameObjects.end(), e);
+	for (GameObject* g : gameObjects) {
+		g->Update(dt);
 	}
 
-	if (shuffleConstraints) {
-		std::shuffle(constraints.begin(), constraints.end(), e);
-	}
+	//if (shuffleObjects) {
+	//	std::shuffle(gameObjects.begin(), gameObjects.end(), e);
+	//}
+
+	//if (shuffleConstraints) {
+	//	std::shuffle(constraints.begin(), constraints.end(), e);
+	//}
 }
 
 bool GameWorld::Raycast(Ray& r, RayCollision& closestCollision, bool closestObject, GameObject* ignoreThis) const {
@@ -112,6 +118,29 @@ bool GameWorld::Raycast(Ray& r, RayCollision& closestCollision, bool closestObje
 	return false;
 }
 
+bool GameWorld::FindObjectByRaycast(Ray& r, RayCollision& closestCollision, std::string tag, GameObject* ignoreThis) const {
+	RayCollision collision;
+
+	for (auto& i : gameObjects) {
+		if ( i->gettag() != tag || !i->GetBoundingVolume() || i == ignoreThis) {
+			continue;
+		}
+
+		RayCollision thisCollision;
+		if (CollisionDetection::RayIntersection(r, *i, thisCollision)) {
+			if (thisCollision.rayDistance < collision.rayDistance) {
+				thisCollision.node = i;
+				collision = thisCollision;
+			}
+		}
+	}
+	if (collision.node) {
+		closestCollision = collision;
+		closestCollision.node = collision.node;
+		return true;
+	}
+	return false;
+}
 
 /*
 Constraint Tutorial Stuff

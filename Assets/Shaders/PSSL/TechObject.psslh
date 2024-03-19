@@ -1,0 +1,7 @@
+struct ObjectState {
+		matrix modelMatrix;
+		matrix inverseModelMatrix;
+		float4 colour;
+		float2 tiling = float2(1.0, 1.0);
+		int index[4];
+};

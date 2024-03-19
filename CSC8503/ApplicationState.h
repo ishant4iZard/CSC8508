@@ -28,6 +28,6 @@ protected :
 	bool isClient		= false;
 	bool isLobbyHolder	= false;
 	bool isGamePaused	= false;
-	bool isGameOver		= false;
+	bool isGameOver		= true;
 	bool hasWonGame		= false;
 };

@@ -1,0 +1,2 @@
+RegularBuffer<ObjectState> objects							: register(t0);
+RegularBuffer<sce::Agc::Core::Buffer> bindlessBuffers		: register(t1);

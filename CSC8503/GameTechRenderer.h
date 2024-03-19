@@ -3,26 +3,29 @@
 #include "OGLShader.h"
 #include "OGLTexture.h"
 #include "OGLMesh.h"
-
+#include "Event.h"
 #include "GameWorld.h"
+#include <Vector3.h>
+#include <Vector4.h>
 
 #include "../CSC8503/UIBase.h"
 #ifdef _WIN32
 #include "../CSC8503/UIWindows.h"
-#else //_ORBIS
-#include "../CSC8503/UIPlaystation.h"
 #endif
 
 namespace NCL {
-	class Maths::Vector3;
-	class Maths::Vector4;
+	//class Maths::Vector3;
+	//class Maths::Vector4;
+
+	using namespace Maths;
+
 	namespace CSC8503 {
 		class RenderObject;
 		class DirectionalLight;
 		class OglHdrFbo;
 		class OglPostProcessingFbo;
 
-		class GameTechRenderer : public OGLRenderer	{
+		class GameTechRenderer : public OGLRenderer, public EventListener {
 		public:
 			GameTechRenderer(GameWorld& world);
 			void CreateScreenQuadMesh();
@@ -31,6 +34,8 @@ namespace NCL {
 			Mesh*		LoadMesh(const std::string& name);
 			Texture*	LoadTexture(const std::string& name);
 			Shader*		LoadShader(const std::string& vertex, const std::string& fragment);
+
+			void ReceiveEvent(EventType eventType) override;
 
 		protected:
 			void NewRenderLines();
@@ -74,6 +79,7 @@ namespace NCL {
 
 			//shadow mapping things
 			OGLShader*	shadowShader;
+			OGLShader*	testShader;
 			GLuint		shadowTex;
 			GLuint		shadowFBO;
 			Matrix4     shadowMatrix;
@@ -107,17 +113,15 @@ namespace NCL {
 
 #pragma region UI
 			UIBase* ui;
-#pragma endregion
 
-#pragma region Lights
 			DirectionalLight* directionalLight;
-#pragma endregion
 
-#pragma region FrameBuffers
 			OglHdrFbo* pbrFbo;
 			OglPostProcessingFbo* toneMappingFbo;
-#pragma endregion
 
+			float timeOfPortalCollision = 0;
+			bool wasPortalCollided;
+			const float PORTAL_BLINK_TIME = 0.5;
 		};
 	}
 }

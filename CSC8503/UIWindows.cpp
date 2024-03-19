@@ -99,7 +99,7 @@ void UIWindows::DrawButton(
     uiElements.push_back(newElement);
 }
 
-void UIWindows::RenderUI() {
+void UIWindows::RenderUI(float dt) {
     static const ImVec4 buttonColor { 0, 0.35f, 0.65f, 1.0f };
     static const ImVec4 pressColor { 0, 0.2f, 0.8f, 1.0f };
     static const ImVec4 hoverColor { 0, 0.3f, 0.7f, 1.0f };
