@@ -119,10 +119,11 @@ void PhysicsSystem::Update(float dt) {
 		iteratorCount++;
 
 	}
-	ClearForces();	//Once we've finished with the forces, reset them to zero
+	if (iteratorCount != 0) {
+		ClearForces();	//Once we've finished with the forces, reset them to zero
 
-	UpdateCollisionList(); //Remove any old collisions
-
+		UpdateCollisionList(); //Remove any old collisions
+	}
 
 	t.Tick();
 	float updateTime = t.GetTimeDeltaSeconds();
