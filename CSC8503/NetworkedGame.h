@@ -145,6 +145,9 @@ namespace NCL {
 			DebugHUD* debugHUD;
 			bool isDebuHUDActive;
 
+			std::mutex PhysicsMutex;
+			std::mutex NonPhysicsMutex;
+
 		public:
 			void NonPhysicsUpdate(float dt);
 			void PhysicsUpdate(float dt);
