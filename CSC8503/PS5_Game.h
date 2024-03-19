@@ -75,6 +75,7 @@ namespace NCL {
 			int GetPlayerScore() const;
 			int GEtPlayerBulletsNum() const;
 			powerUpType GetActivatedPowerUpType() const { return physics->GetCurrentPowerUpState(); }
+			void RotatePortals(float dt);
 		};
 	}
 }

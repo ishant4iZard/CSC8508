@@ -174,6 +174,9 @@ namespace NCL {
 			ApplicationState* appState;
 
 			std::vector<Vector3> powerUpSpawnPointList;
+
+			GameObject* teleporter1Display;
+			GameObject* teleporter2Display;
 		};
 	}
 }

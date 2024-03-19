@@ -45,9 +45,9 @@ void NCL::CSC8503::PS5_Game::StartLevel()
 {
 	InitialisePlayerAssets();
 	SpawnPlayer();
-	InitializeProjectilePool();
-	SpawnAI();
 	InitTeleporters();
+	SpawnAI();
+	InitializeProjectilePool();
 	SpawnDataDrivenLevel(GameLevelNumber::LEVEL_1);
 	physics->createStaticTree();
 	appState->SetIsGameOver(false);
@@ -113,6 +113,7 @@ void NCL::CSC8503::PS5_Game::UpdateGame(float dt)
 			}
 		}
 
+		RotatePortals(dt);
 	}
 
 	ui->RenderUI(dt);
@@ -239,7 +240,7 @@ void NCL::CSC8503::PS5_Game::SpawnPlayer()
 		.SetPosition(Vector3(0, 10, -75))
 		.SetOrientation(Quaternion::AxisAngleToQuaterion(Vector3(0, 1, 0), 180));
 
-	player->SetRenderObject(new RenderObject(&player->GetTransform(), playerMesh, nullptr, playerShader));
+	player->SetRenderObject(new RenderObject(&player->GetTransform(), playerMesh, basicTex, playerShader));
 	player->SetPhysicsObject(new PhysicsObject(&player->GetTransform(), player->GetBoundingVolume()));
 
 	player->GetPhysicsObject()->SetInverseMass(inverseMass);
@@ -294,3 +295,22 @@ int NCL::CSC8503::PS5_Game::GEtPlayerBulletsNum() const
 
 	return player->GetNumBullets();
 }
+
+void NCL::CSC8503::PS5_Game::RotatePortals(float dt)
+{
+	Quaternion currentOrientation = teleporter1Display->GetTransform().GetOrientation();
+
+	float rotationSpeed = 2000;
+	float rotationAngle = rotationSpeed * dt;
+
+	if (rotationAngle > 360) rotationAngle -= 360;
+	if (rotationAngle < 0) rotationAngle += 360;
+
+	Quaternion rotation = Quaternion::EulerAnglesToQuaternion(0, rotationAngle, 0);
+
+	Quaternion newOrientation = rotation * currentOrientation;
+
+	teleporter1Display->GetTransform().SetOrientation(newOrientation);
+	teleporter2Display->GetTransform().SetOrientation(newOrientation);
+}
+

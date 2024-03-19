@@ -186,8 +186,11 @@ void TutorialGame::InitialiseAssets() {
 	blackholeTex = renderer->LoadTexture("blackhole.jpg");
 	basicTex	= renderer->LoadTexture("checkerboard.png");
 	portalTex	= renderer->LoadTexture("PortalTex.jpg");
+#ifndef _WIN32
+	portalTex	= renderer->LoadTexture("PortalPS5.png");
+#endif
 	sandTex		= renderer->LoadTexture("sand.jpg");
-	targetTex = renderer->LoadTexture("PortalTex.jpg");
+	targetTex = renderer->LoadTexture("blackhole.jpg");
 
 	groundTextureList[(uint8_t)TextureType::ALBEDO] = renderer->LoadTexture("GrassWithRock01/albedo.png");
 	groundTextureList[(uint8_t)TextureType::NORMAL] = renderer->LoadTexture("GrassWithRock01/normal_gl.png");
@@ -419,15 +422,19 @@ void NCL::CSC8503::TutorialGame::SpawnTarget(const Vector3& inPosition, const Ve
 	hole->GetPhysicsObject()->SetInverseMass(0);
 	hole->GetPhysicsObject()->InitSphereInertia();
 
+#ifdef _WIN32
 	GameObject* targetDisplay = new GameObject();
 	targetDisplay->GetTransform()
 		.SetPosition(Vector3(inPosition.x, -3.0, inPosition.z))
 		.SetScale(Vector3(inScale.x, inScale.y, inScale.z))
 		.SetOrientation(Quaternion::EulerAnglesToQuaternion(inRotation.x, inRotation.y, inRotation.z));
 	targetDisplay->SetRenderObject(new RenderObject(&targetDisplay->GetTransform(), cubeMesh, targetTex, targetholeShader));
+	world->AddGameObject(targetDisplay);
+#else
+
+#endif
 
 	world->AddGameObject(hole);
-	world->AddGameObject(targetDisplay);
 }
 
 void NCL::CSC8503::TutorialGame::SpawnBlackHole(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling)
@@ -556,7 +563,7 @@ GameObject* NCL::CSC8503::TutorialGame::AddTeleporterToWorld(const Vector3& posi
 	teleporter1->GetPhysicsObject()->SetElasticity(elasticity);
 
 	float maxLength = std::max(dimensions.x, dimensions.z);
-	GameObject* teleporter1Display = new GameObject();
+	teleporter1Display = new GameObject();
 	teleporter1Display->GetTransform()
 		.SetPosition(position1)
 		.SetScale(Vector3(maxLength * 2, 0.01, maxLength * 2))
@@ -577,7 +584,7 @@ GameObject* NCL::CSC8503::TutorialGame::AddTeleporterToWorld(const Vector3& posi
 	teleporter2->GetPhysicsObject()->InitCubeInertia();
 	teleporter2->GetPhysicsObject()->SetElasticity(elasticity);
 
-	GameObject* teleporter2Display = new GameObject();
+	teleporter2Display = new GameObject();
 	teleporter2Display->GetTransform()
 		.SetPosition(position2)
 		.SetScale(Vector3(maxLength * 2, 0.01, maxLength * 2))
