@@ -60,7 +60,6 @@ void NCL::CSC8503::PS5_Game::EndLevel()
 	appState->SetIsGameOver(true);
 	world->ClearAndErase();
 	physics->Clear();
-	//delete player;
 	player = nullptr;
 	projectileList.clear();
 	if (AIStateObject)
@@ -80,19 +79,6 @@ void NCL::CSC8503::PS5_Game::UpdateGame(float dt)
 
 	if (!appState->GetIsGameOver())
 	{
-		/*if (timeElapsed > GAME_TIME_LIMIT) {
-			ui->DrawStringText("Game Over", Vector2(5, 5), UIBase::RED);
-			ui->DrawStringText("Score: " + std::to_string(player->GetScore()), Vector2(5, 10), UIBase::RED);
-			ui->RenderUI(dt);
-			appState->SetIsGameOver(true);
-			appState->SetIsGamePaused(true);
-			return;
-		}*/
-
-		/*ui->DrawStringText("Score: " + std::to_string(player->GetScore()), Vector2(5, 5), UIBase::RED);
-		ui->DrawStringText("Bullets: " + std::to_string(player->GetNumBullets()), Vector2(5, 10), UIBase::RED);
-		ui->DrawStringText("Time Left: " + std::to_string((int)(GAME_TIME_LIMIT - timeElapsed)), Vector2(5, 15), UIBase::RED);*/
-
 		if (!appState->GetIsGamePaused())
 		{
 			timeElapsed += dt;
@@ -105,12 +91,16 @@ void NCL::CSC8503::PS5_Game::UpdateGame(float dt)
 
 			timeSinceFire += dt;
 
-			MovePlayer(dt);
-			if (controller->GetNamedButtonAnalogue("R2") > 0.2f)
-				Fire();
 
-			player->ReplenishProjectiles(dt);
-			gravitywell->PullProjectilesWithinField(projectileList);
+			if (player) {
+				MovePlayer(dt);
+				if (controller->GetNamedButtonAnalogue("R2") > 0.2f)
+					Fire();
+				player->ReplenishProjectiles(dt);
+			}
+
+			if(gravitywell)
+				gravitywell->PullProjectilesWithinField(projectileList);
 
 			for (auto i : projectileList)
 			{
@@ -124,7 +114,6 @@ void NCL::CSC8503::PS5_Game::UpdateGame(float dt)
 		}
 
 	}
-
 
 	ui->RenderUI(dt);
 
@@ -158,7 +147,7 @@ void NCL::CSC8503::PS5_Game::InitializeProjectilePool()
 		SphereVolume* volume = new SphereVolume(radius);
 		newBullet->SetBoundingVolume((CollisionVolume*)volume);
 		newBullet->GetTransform().SetScale(sphereSize).SetPosition(Vector3(0, 0, 0));
-		newBullet->SetRenderObject(new RenderObject(&newBullet->GetTransform(), sphereMesh, basicTex, basicShader));
+		newBullet->SetRenderObject(new RenderObject(&newBullet->GetTransform(), sphereMesh, nullptr, basicShader));
 		newBullet->SetPhysicsObject(new PhysicsObject(&newBullet->GetTransform(), newBullet->GetBoundingVolume()));
 		newBullet->GetPhysicsObject()->SetInverseMass(Projectile::inverseMass);
 		newBullet->GetPhysicsObject()->InitSphereInertia();
@@ -201,14 +190,18 @@ AiStatemachineObject* NCL::CSC8503::PS5_Game::AddAiStateObjectToWorld(const Vect
 	AIStateObject->GetPhysicsObject()->InitSphereInertia();
 
 	world->AddGameObject(AIStateObject);
-	player->GetRenderObject()->SetAnimation(*playerWalkingAnimation);
 
 	return AIStateObject;
 }
 
 void NCL::CSC8503::PS5_Game::SwitchAnimations(RenderObject* renderObject, MeshAnimation* animation)
 {
-	renderObject->SetAnimation(*animation);
+	if (!animation) {
+		renderObject->ResetAnimation(8);
+		return;
+	}
+
+	renderObject->SetAnimation(animation);
 }
 
 void NCL::CSC8503::PS5_Game::SpawnProjectile(NetworkPlayer* player, Vector3 firePos, Vector3 fireDir)
@@ -233,7 +226,7 @@ void NCL::CSC8503::PS5_Game::SpawnProjectile(NetworkPlayer* player, Vector3 fire
 
 void NCL::CSC8503::PS5_Game::SpawnPlayer()
 {
-	float meshSize = 5.0f;
+	float meshSize = 10.0f;
 	float inverseMass = 1.0f / 600000.0f;
 
 	player = new NetworkPlayer(this, 0);
@@ -243,14 +236,16 @@ void NCL::CSC8503::PS5_Game::SpawnPlayer()
 
 	player->GetTransform()
 		.SetScale(Vector3(meshSize, meshSize, meshSize))
-		.SetPosition(Vector3(0, 10, -75));
+		.SetPosition(Vector3(0, 10, -75))
+		.SetOrientation(Quaternion::AxisAngleToQuaterion(Vector3(0, 1, 0), 180));
 
-	player->SetRenderObject(new RenderObject(&player->GetTransform(), playerMesh, basicTex, playerShader));
+	player->SetRenderObject(new RenderObject(&player->GetTransform(), playerMesh, nullptr, playerShader));
 	player->SetPhysicsObject(new PhysicsObject(&player->GetTransform(), player->GetBoundingVolume()));
 
 	player->GetPhysicsObject()->SetInverseMass(inverseMass);
 	player->GetPhysicsObject()->InitCubeInertia();
-
+	player->GetRenderObject()->SetAnimation(playerWalkingAnimation);
+	
 	world->AddGameObject(player);
 }
 
@@ -264,15 +259,18 @@ void NCL::CSC8503::PS5_Game::InitialisePlayerAssets()
 void NCL::CSC8503::PS5_Game::MovePlayer(float dt) {
 	float horizontalInput	= controller->GetNamedAxis("XLook");
 	float verticalInput		= controller->GetNamedAxis("YLook");
+
 	player->MovePlayerBasedOnController(dt, horizontalInput, verticalInput);
+	if (horizontalInput == 0 && verticalInput == 0) 
+		SwitchAnimations(player->GetRenderObject(), nullptr);
+	else
+		SwitchAnimations(player->GetRenderObject(), playerWalkingAnimation);
 
 	float rotationX = controller->GetNamedAxis("RightX");
 	float rotationY = -controller->GetNamedAxis("RightY");
-
+	
 	if (rotationX == 0 && rotationY == 0) return;
-
-	player->RotatePlayerBasedOnController(dt, rotationX, rotationY);
-	SwitchAnimations(player->GetRenderObject(), playerWalkingAnimation);
+	player->RotatePlayerBasedOnController(dt, -rotationX, -rotationY);
 }
 
 void NCL::CSC8503::PS5_Game::Fire()
