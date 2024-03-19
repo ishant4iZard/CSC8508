@@ -86,6 +86,9 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 
 	LoadSkybox();
 	frostTexture = this->LoadTexture("frost.png");
+	windTexture = this->LoadTexture("wind.png");
+	sandTexture = this->LoadTexture("sand.png");
+
 	glGenVertexArrays(1, &lineVAO);
 	glGenVertexArrays(1, &textVAO);
 
@@ -330,13 +333,32 @@ void NCL::CSC8503::GameTechRenderer::ApplyFrostingPostProcessing()
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, toneMappingFbo->GetColorBuffer());
+
+	// Redundancy : NOT required
 	BindTextureToShader(*(OGLTexture*)frostTexture, "blendTexture", 1);
+
+	GLint powerupType = glGetUniformLocation(frostPostProcessing->GetProgramID(), "powerupType");
+
+	switch (currentActivePowerup) {
+	case ice : 
+		BindTextureToShader(*(OGLTexture*)frostTexture, "blendTexture", 1);
+		glUniform1i(powerupType, 1);
+		break;
+	case wind:
+		BindTextureToShader(*(OGLTexture*)windTexture, "blendTexture", 1);
+		glUniform1i(powerupType, 2);
+		break;
+	case sand :
+		glUniform1i(powerupType, 3);
+		BindTextureToShader(*(OGLTexture*)sandTexture, "blendTexture", 1);
+		break;
+	}
 
 	GLint timeLocation = glGetUniformLocation(frostPostProcessing->GetProgramID(), "time");
 	GLint isActiveLoc = glGetUniformLocation(frostPostProcessing->GetProgramID(), "isActive");
 	
 	if (timeOfPowerupActivation + POST_PROCESSING_DURATION > time && currentActivePowerup != none) {
-		glUniform1f(timeLocation, ((float)(time - timeOfPowerupActivation) / (POST_PROCESSING_DURATION * 0.5)) * 5);
+		glUniform1f(timeLocation, ((float)(time - timeOfPowerupActivation) / (POST_PROCESSING_DURATION * 0.5)) * 1.25);
 		glUniform1i(isActiveLoc, 100);
 	}
 	else {

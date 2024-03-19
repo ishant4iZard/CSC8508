@@ -108,6 +108,8 @@ namespace NCL {
 
 			//Texture
 			Texture* frostTexture;
+			Texture* windTexture;
+			Texture* sandTexture;
 
 			//frost fbo
 			OglPostProcessingFbo* frostFbo;
