@@ -69,6 +69,8 @@ AiStatemachineObject::AiStatemachineObject(GameWorld* world, NavigationGrid* nav
 
 	randomMovementDirection = Vector3(rand() % 200, 5.6, rand() % 200) - transform.GetPosition();
 	randomMovementDirection = randomMovementDirection.Normalised();
+	projectileToChase = nullptr;
+	isCollidingWithProj = false;
 }
 
 AiStatemachineObject::~AiStatemachineObject() {

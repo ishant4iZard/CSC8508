@@ -55,7 +55,6 @@ _deps
 # PS5
 /sce_module
 /PS5Core
-*.gnf
 
 # Builds
 /Build

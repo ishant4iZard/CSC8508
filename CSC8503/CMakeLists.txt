@@ -61,6 +61,7 @@ if(NOT("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64"))
         "DirectionalLight.h"
         "Powerup.h"
         "DebugHUD.h"
+        "PS5MenuSystem.h"
     )
     source_group("Header Files" FILES ${Header_Files})
 
@@ -82,6 +83,7 @@ if(NOT("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64"))
         "BaseTextureManager.cpp"
         "Powerup.cpp"
         "DebugHUD.cpp"
+        "PS5MenuSystem.cpp"
     )
     source_group("Source Files" FILES ${Source_Files})
 

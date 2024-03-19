@@ -6,6 +6,7 @@ using namespace NCL::CSC8503;
 PushdownMachine::PushdownMachine(PushdownState* initialState)
 {
 	this->initialState = initialState;
+	activeState = nullptr;
 }
 
 PushdownMachine::~PushdownMachine()
