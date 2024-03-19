@@ -129,7 +129,8 @@ namespace NCL {
 			Shader* 	instancePbrShader = nullptr;
 			Shader*		blackholeShader = nullptr;
 			Shader* 	targetholeShader = nullptr;
-
+			Shader*		particleShader  = nullptr;
+				
 			Texture* groundTextureList[(uint8_t)TextureType::MAX_TYPE];
 			Texture* wallTextureList[(uint8_t)TextureType::MAX_TYPE];
 			Texture* sandTextureList[(uint8_t)TextureType::MAX_TYPE];

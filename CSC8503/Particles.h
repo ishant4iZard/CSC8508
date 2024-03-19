@@ -14,6 +14,7 @@
 
 namespace NCL {
 	namespace CSC8503 {
+        class Projectile;
         class Particle {
         public:
             Particle() : position(0.0f, 0.0f, 0.0f), velocity(0.0f, 0.0f), color(1.0f, 1.0f, 1.0f, 1.0f), life(0.0f) {}
@@ -45,12 +46,12 @@ namespace NCL {
         public:
             GenerateParticle(OGLShader* inShader, OGLTexture* inTexture, int inNum);
 
-            void Update(float dt, GameObject* otherObject, int newParticle, Vector2 offset = Vector2(0.0f, 0.0f));
+            void Update(float dt, Projectile* otherObject, int newParticle, Vector3 offset = Vector3());
             void Draw();
 
         protected:
             void init();
-            void respawnParticle(Particle* inParticle, GameObject* otherObject, Vector2 offset = Vector2(0.0f, 0.0f));
+            void respawnParticle(Particle* inParticle, Projectile* otherObject, Vector3 offset = Vector3());
             GLuint FirstUnusedParticle();
 
             GLuint VAO;

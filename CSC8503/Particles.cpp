@@ -3,12 +3,13 @@
 	Modified by Qixu Feng */
 
 #include "Particles.h"
+#include "Projectile.h"
 
 
 GenerateParticle::GenerateParticle(OGLShader* inShader, OGLTexture* inTexture, int inNum)
 	: OGLRenderer(*Window::GetWindow()), shader(inShader), texture(inTexture), num(inNum) { this->init(); }
 
-void GenerateParticle::Update(float dt, GameObject* otherObject, int newParticle, Vector2 offset) {
+void GenerateParticle::Update(float dt, Projectile* otherObject, int newParticle, Vector3 offset) {
 	for (int i = 0; i < newParticle; ++i) {
 		int spareParticle = this->FirstUnusedParticle();
 		this->respawnParticle(&(this->particles[spareParticle]), otherObject, offset);
@@ -88,12 +89,12 @@ GLuint GenerateParticle::FirstUnusedParticle() {
 	return 0;
 }
 
-void GenerateParticle::respawnParticle(Particle* inParticle, GameObject* otherObject, Vector2 offset) {
+void GenerateParticle::respawnParticle(Particle* inParticle, Projectile* otherObject, Vector3 offset) {
 	float random = ((rand() % 100) - 50) / 10.0f;
 	float randColor = 0.5 + ((rand() % 100) / 100.0f);
 
 	inParticle->SetPosition(otherObject->GetTransform().GetPosition() + Vector3(random, random, random) + offset);
 	inParticle->SetColor(Vector4(randColor, randColor, randColor, 1.0f));
-	inParticle->SetLife(1.0f);
+	inParticle->SetLife(10.0f);
 	inParticle->SetVelocity(Vector2(1.0f, 1.0f) * 0.1f); //* otherObject.GetVelocity());
 }
