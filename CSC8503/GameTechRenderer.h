@@ -4,6 +4,7 @@
 #include "OGLTexture.h"
 #include "OGLMesh.h"
 #include "Event.h"
+#include "PowerUp.h"
 #include "GameWorld.h"
 #include <Vector3.h>
 #include <Vector4.h>
@@ -111,7 +112,10 @@ namespace NCL {
 			//frost fbo
 			OglPostProcessingFbo* frostFbo;
 
-#pragma region UI
+			powerUpType currentActivePowerup = none;
+			float timeOfPowerupActivation = 0;
+			const float POST_PROCESSING_DURATION = 5; // seconds
+
 			UIBase* ui;
 
 			DirectionalLight* directionalLight;

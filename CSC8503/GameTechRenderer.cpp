@@ -109,6 +109,10 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 #endif
 
 	EventEmitter::RegisterForEvent(PROJECTILE_PORTAL_COLLISION, this);
+	EventEmitter::RegisterForEvent(ACTIVATE_NONE_POWER_UP, this);
+	EventEmitter::RegisterForEvent(ACTIVATE_ICE_POWER_UP, this);
+	EventEmitter::RegisterForEvent(ACTIVATE_SAND_POWER_UP, this);
+	EventEmitter::RegisterForEvent(ACTIVATE_WIND_POWER_UP, this);
 	timeOfPortalCollision = 0;
 	wasPortalCollided = false;
 }
@@ -327,6 +331,18 @@ void NCL::CSC8503::GameTechRenderer::ApplyFrostingPostProcessing()
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, toneMappingFbo->GetColorBuffer());
 	BindTextureToShader(*(OGLTexture*)frostTexture, "blendTexture", 1);
+
+	GLint timeLocation = glGetUniformLocation(frostPostProcessing->GetProgramID(), "time");
+	GLint isActiveLoc = glGetUniformLocation(frostPostProcessing->GetProgramID(), "isActive");
+	
+	if (timeOfPowerupActivation + POST_PROCESSING_DURATION > time && currentActivePowerup != none) {
+		glUniform1f(timeLocation, ((float)(time - timeOfPowerupActivation) / (POST_PROCESSING_DURATION * 0.5)) * 5);
+		glUniform1i(isActiveLoc, 100);
+	}
+	else {
+		glUniform1f(timeLocation, 1);
+		glUniform1i(isActiveLoc, -100);
+	}
 
 	//BindMesh(*screenQuad);
 	//DrawBoundMesh();
@@ -752,7 +768,22 @@ void NCL::CSC8503::GameTechRenderer::ReceiveEvent(EventType eventType)
 	switch (eventType)
 	{
 	case PROJECTILE_PORTAL_COLLISION:
+		currentActivePowerup = none;
 		timeOfPortalCollision = time;
+		break;
+	case ACTIVATE_NONE_POWER_UP :
+		break;
+	case ACTIVATE_ICE_POWER_UP : 
+		currentActivePowerup = ice;
+		timeOfPowerupActivation = time;
+		break;
+	case ACTIVATE_SAND_POWER_UP :
+		currentActivePowerup = sand;
+		timeOfPowerupActivation = time;
+		break;
+	case ACTIVATE_WIND_POWER_UP :
+		currentActivePowerup = wind;
+		timeOfPowerupActivation = time;
 		break;
 	default:
 		break;
