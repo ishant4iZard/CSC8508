@@ -102,6 +102,9 @@ namespace NCL {
 			//Texture
 			Texture* frostTexture;
 
+			//frost fbo
+			OglPostProcessingFbo* frostFbo;
+
 #pragma region UI
 			UIBase* ui;
 #pragma endregion
