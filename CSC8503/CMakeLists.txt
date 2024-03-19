@@ -397,6 +397,8 @@ else()
         "Light.h"
         "DirectionalLight.h"
         "DebugHUD.h"
+        "GameAnimation.h"
+        "MaleGuard.h"
         "ThreadPool.h"
     )
     source_group("Header Files" FILES ${Header_Files})
@@ -420,6 +422,8 @@ else()
         "OGLTextureManager.cpp"
         "Powerup.cpp"
         "DebugHUD.cpp"
+        "GameAnimation.cpp"
+        "MaleGuard.cpp"
     )
     source_group("Source Files" FILES ${Source_Files})
 

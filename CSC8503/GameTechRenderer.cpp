@@ -7,6 +7,9 @@
 #include "DirectionalLight.h"
 #include "OglHdrFbo.h"
 #include "OglPostProcessingFbo.h"
+#include "NetworkPlayer.h"
+#include "MaleGuard.h"
+#include "NetworkPlayer.h"
 
 using namespace NCL;
 using namespace Rendering;
@@ -17,9 +20,9 @@ using namespace CSC8503;
 
 Matrix4 biasMatrix = Matrix4::Translation(Vector3(0.5f, 0.5f, 0.5f)) * Matrix4::Scale(Vector3(0.5f, 0.5f, 0.5f));
 
-GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetWindow()), gameWorld(world)	{
+GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetWindow()), gameWorld(world) {
 	glEnable(GL_DEPTH_TEST);
-	debugShader  = new OGLShader("debug.vert", "debug.frag");
+	debugShader = new OGLShader("debug.vert", "debug.frag");
 	shadowShader = new OGLShader("shadow.vert", "shadow.frag");
 
 	toneMapperShader = new OGLShader("basic.vert", "ReinhardTonemap.frag");
@@ -31,20 +34,20 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	
+
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT,
-			     SHADOWSIZE, SHADOWSIZE, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-	
+		SHADOWSIZE, SHADOWSIZE, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_R_TO_TEXTURE);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	glGenFramebuffers(1, &shadowFBO);
 	glBindFramebuffer(GL_FRAMEBUFFER, shadowFBO);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,GL_TEXTURE_2D, shadowTex, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, shadowTex, 0);
 	glDrawBuffer(GL_NONE);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	glClearColor(0.5f,0.5f,0.5f, 1);
+	glClearColor(0.5f, 0.5f, 0.5f, 1);
 
 	//Set up the light properties
 	lightColour = Vector4(0.8f, 0.8f, 0.5f, 1.0f);
@@ -59,7 +62,7 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 	//Skybox!
 	skyboxShader = new OGLShader("skybox.vert", "skybox.frag");
 	skyboxMesh = new OGLMesh();
-	skyboxMesh->SetVertexPositions({Vector3(-1, 1,-1), Vector3(-1,-1,-1) , Vector3(1,-1,-1) , Vector3(1,1,-1) });
+	skyboxMesh->SetVertexPositions({ Vector3(-1, 1,-1), Vector3(-1,-1,-1) , Vector3(1,-1,-1) , Vector3(1,1,-1) });
 	skyboxMesh->SetVertexIndices({ 0,1,2,2,3,0 });
 	skyboxMesh->UploadToGPU();
 
@@ -80,6 +83,11 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 	SetDebugStringBufferSizes(10000);
 	SetDebugLineBufferSizes(1000);
 
+	for (int i = 0; i < 4; i++) {
+		activeAnimation[i] = nullptr;
+		animationDefault[i] = nullptr;
+		animationStateCounter[i] = 0;
+	}
 	pbrFbo = new OglHdrFbo(windowSize.x, windowSize.y);
 	toneMappingFbo = new OglPostProcessingFbo(windowSize.x, windowSize.y);
 
@@ -103,7 +111,7 @@ void GameTechRenderer::CreateScreenQuadMesh()
 	screenQuad->UploadToGPU();
 }
 
-GameTechRenderer::~GameTechRenderer()	{
+GameTechRenderer::~GameTechRenderer() {
 	EventEmitter::RemoveListner(this);
 	glDeleteTextures(1, &shadowTex);
 	glDeleteFramebuffers(1, &shadowFBO);
@@ -123,10 +131,10 @@ void GameTechRenderer::LoadSkybox() {
 		"/SpaceCubeMap/4.png"
 	};
 
-	int width[6]	= { 0 };
-	int height[6]	= { 0 };
+	int width[6] = { 0 };
+	int height[6] = { 0 };
 	int channels[6] = { 0 };
-	int flags[6]	= { 0 };
+	int flags[6] = { 0 };
 
 	vector<char*> texData(6, nullptr);
 
@@ -179,12 +187,36 @@ void GameTechRenderer::RenderFrame() {
 
 void GameTechRenderer::BuildObjectList() {
 	activeObjects.clear();
+	activeAnimatedObjects.clear();
 	instancedRenderObjectList.clear();
 
 	gameWorld.OperateOnContents(
 		[&](GameObject* o) {
 			if (o->IsActive()) {
 				const RenderObject* g = o->GetRenderObject();
+				OGLShader* currentShader;
+
+
+				//find MaleGuard and load assets, especially the animation in current frame
+				if (o->GetName() == "MaleGuard") {
+					currentShader = (OGLShader*)o->GetRenderObject()->GetShader();
+					currentShaderID = currentShader->GetProgramID();
+					NetworkPlayer* maleGuard = dynamic_cast<NetworkPlayer*>(o);
+
+					LoadCurrentAnimationAssets(currentShader, nullptr, maleGuard->GetMaleGuardAnimation(), maleGuard->GetAnimatedObjectID(), maleGuard->GetAnimationStateCounter());
+
+					activeAnimatedObjects.emplace_back(maleGuard);
+				}
+				if (o->GetName() == "MaxGuard") {
+					currentShader = (OGLShader*)o->GetRenderObject()->GetShader();
+					currentShaderID = currentShader->GetProgramID();
+					NetworkPlayer* maxGuard = dynamic_cast<NetworkPlayer*>(o);
+
+					LoadCurrentAnimationAssets(currentShader, nullptr, maxGuard->GetMaxGuardAnimation(), maxGuard->GetAnimatedObjectID(), maxGuard->GetAnimationStateCounter());
+
+					activeAnimatedObjects.emplace_back(maxGuard);
+				}
+
 				if (g) {
 					if (g->GetMesh()->GetInstanceCount() > 0)
 						instancedRenderObjectList.emplace_back(g);
@@ -211,7 +243,7 @@ void GameTechRenderer::RenderShadowMap() {
 	BindShader(*shadowShader);
 	int mvpLocation = glGetUniformLocation(shadowShader->GetProgramID(), "mvpMatrix");
 
-	Matrix4 shadowViewMatrix = Matrix4::BuildViewMatrix(lightPosition, Vector3(0, 0, 0), Vector3(0,1,0));
+	Matrix4 shadowViewMatrix = Matrix4::BuildViewMatrix(lightPosition, Vector3(0, 0, 0), Vector3(0, 1, 0));
 	Matrix4 shadowProjMatrix = Matrix4::Perspective(100.0f, 500.0f, 1, 45.0f);
 
 	Matrix4 mvMatrix = shadowProjMatrix * shadowViewMatrix;
@@ -220,7 +252,7 @@ void GameTechRenderer::RenderShadowMap() {
 
 	for (const auto& tempRenderObj : activeObjects) {
 		Matrix4 modelMatrix = (*tempRenderObj).GetTransform()->GetMatrix();
-		Matrix4 mvpMatrix	= mvMatrix * modelMatrix;
+		Matrix4 mvpMatrix = mvMatrix * modelMatrix;
 		glUniformMatrix4fv(mvpLocation, 1, false, (float*)&mvpMatrix);
 		BindMesh((OGLMesh&)*(*tempRenderObj).GetMesh());
 		size_t layerCount = (*tempRenderObj).GetMesh()->GetSubMeshCount();
@@ -248,7 +280,7 @@ void GameTechRenderer::RenderSkybox() {
 
 	int projLocation = glGetUniformLocation(skyboxShader->GetProgramID(), "projMatrix");
 	int viewLocation = glGetUniformLocation(skyboxShader->GetProgramID(), "viewMatrix");
-	int texLocation  = glGetUniformLocation(skyboxShader->GetProgramID(), "cubeTex");
+	int texLocation = glGetUniformLocation(skyboxShader->GetProgramID(), "cubeTex");
 
 	glUniformMatrix4fv(projLocation, 1, false, (float*)&projMatrix);
 	glUniformMatrix4fv(viewLocation, 1, false, (float*)&viewMatrix);
@@ -286,7 +318,7 @@ void GameTechRenderer::ApplyToneMapping()
 	int modelLocation = glGetUniformLocation(toneMapperShader->GetProgramID(), "modelMatrix");
 	int projLocation = glGetUniformLocation(toneMapperShader->GetProgramID(), "projMatrix");
 	int viewLocation = glGetUniformLocation(toneMapperShader->GetProgramID(), "viewMatrix");
-	
+
 	glUniformMatrix4fv(modelLocation, 1, false, (float*)&identityMatrix);
 	glUniformMatrix4fv(viewLocation, 1, false, (float*)&identityMatrix);
 	glUniformMatrix4fv(projLocation, 1, false, (float*)&identityMatrix);
@@ -340,6 +372,10 @@ void GameTechRenderer::RenderProcessedScene()
 	glEnable(GL_BLEND);
 }
 
+void NCL::CSC8503::GameTechRenderer::RenderAnimatedObjects()
+{
+}
+
 void GameTechRenderer::UpdatePBRUniforms(const NCL::CSC8503::RenderObject* const& inRenderObj)
 {
 	for (uint8_t tempType = 0; tempType < (uint8_t)TextureType::MAX_TYPE; tempType++)
@@ -375,16 +411,16 @@ void GameTechRenderer::RenderCamera() {
 	Matrix4 projMatrix = gameWorld.GetMainCamera().BuildProjectionMatrix(hostWindow.GetScreenAspect());
 
 	OGLShader* activeShader = nullptr;
-	int projLocation	= 0;
-	int viewLocation	= 0;
-	int modelLocation	= 0;
+	int projLocation = 0;
+	int viewLocation = 0;
+	int modelLocation = 0;
 	int tilingLocation = 0;
-	int colourLocation  = 0;
+	int colourLocation = 0;
 	int hasVColLocation = 0;
-	int hasTexLocation  = 0;
-	int shadowLocation  = 0;
+	int hasTexLocation = 0;
+	int shadowLocation = 0;
 
-	int lightPosLocation	= 0;
+	int lightPosLocation = 0;
 	int lightColourLocation = 0;
 	int lightRadiusLocation = 0;
 
@@ -394,10 +430,19 @@ void GameTechRenderer::RenderCamera() {
 	//glActiveTexture(GL_TEXTURE0 + 1);
 	//glBindTexture(GL_TEXTURE_2D, shadowTex);
 
-	for (const auto&tempRenderObj : activeObjects) {
+	for (const auto& tempRenderObj : activeObjects) {
 		OGLShader* shader = (OGLShader*)(*tempRenderObj).GetShader();
 		BindShader(*shader);
 
+		//find maleGuard's shader
+		//need to be rendered in animatedObject
+		if (shader->GetProgramID() == currentShaderID) {
+			continue;
+		}
+
+
+		// if ((*i).GetDefaultTexture()) {
+		// 	BindTextureToShader(*(OGLTexture*)(*i).GetDefaultTexture(), "mainTex", 0);
 		if ((*tempRenderObj).GetDefaultTexture()) {
 			BindTextureToShader(*(OGLTexture*)(*tempRenderObj).GetDefaultTexture(), "mainTex", 0);
 		}
@@ -442,9 +487,9 @@ void GameTechRenderer::RenderCamera() {
 			glUniformMatrix4fv(projLocation, 1, false, (float*)&projMatrix);
 			glUniformMatrix4fv(viewLocation, 1, false, (float*)&viewMatrix);
 
-			glUniform3fv(lightPosLocation	, 1, (float*)&lightPosition);
+			glUniform3fv(lightPosLocation, 1, (float*)&lightPosition);
 			glUniform4fv(lightColourLocation, 1, (float*)&lightColour);
-			glUniform1f(lightRadiusLocation , lightRadius);
+			glUniform1f(lightRadiusLocation, lightRadius);
 
 			//int shadowTexLocation = glGetUniformLocation(shader->GetProgramID(), "shadowTex");
 			//glUniform1i(shadowTexLocation, 1);
@@ -453,8 +498,8 @@ void GameTechRenderer::RenderCamera() {
 		}
 
 		Matrix4 modelMatrix = (*tempRenderObj).GetTransform()->GetMatrix();
-		glUniformMatrix4fv(modelLocation, 1, false, (float*)&modelMatrix);			
-		
+		glUniformMatrix4fv(modelLocation, 1, false, (float*)&modelMatrix);
+
 		const Vector2 tempTiling = (*tempRenderObj).GetTiling();
 		glUniform2f(tilingLocation, tempTiling.x, tempTiling.y);
 
@@ -466,16 +511,17 @@ void GameTechRenderer::RenderCamera() {
 
 		glUniform1i(hasVColLocation, !(*tempRenderObj).GetMesh()->GetColourData().empty());
 
-		glUniform1i(hasTexLocation, (OGLTexture*)(*tempRenderObj).GetDefaultTexture() ? 1:0);
+		glUniform1i(hasTexLocation, (OGLTexture*)(*tempRenderObj).GetDefaultTexture() ? 1 : 0);
 
 		BindMesh((OGLMesh&)*(*tempRenderObj).GetMesh());
 		size_t layerCount = (*tempRenderObj).GetMesh()->GetSubMeshCount();
 		for (size_t i = 0; i < layerCount; ++i) {
-			DrawBoundMesh((uint32_t)i , (*tempRenderObj).GetMesh()->GetInstanceCount());
+			DrawBoundMesh((uint32_t)i, (*tempRenderObj).GetMesh()->GetInstanceCount());
 		}
 	}
 
 	RenderInstancedRenderObject();
+	RenderAnimatedObject();
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
@@ -581,6 +627,53 @@ Mesh* GameTechRenderer::LoadMesh(const std::string& name) {
 	return mesh;
 }
 
+void GameTechRenderer::RenderAnimatedObject() {
+	for (const auto& i : activeAnimatedObjects) {
+		if (i->GetName() == "MaleGuard") {
+			MaleGuard* maleGuard = (MaleGuard*)i;
+			RenderMaleGuard(maleGuard);
+		}
+		if (i->GetName() == "MaxGuard") {
+			MaxGuard* maxGuard = (MaxGuard*)i;
+			RenderMaxGuard(maxGuard);
+		}
+	}
+}
+
+void GameTechRenderer::RenderMaleGuard(GameObject* maleGuard) {
+	RenderObject* currentRenderObject = maleGuard->GetRenderObject();
+	OGLShader* shader = (OGLShader*)currentRenderObject->GetShader();
+	BindShader(*shader);
+
+	RenderObjectMaleGuard* maleGuardRenderObject = static_cast<RenderObjectMaleGuard*>(const_cast<RenderObject*>(currentRenderObject));
+	Vector3 position = maleGuardRenderObject->GetMaleGuardPosition();
+	Vector3 scale = maleGuardRenderObject->GetMaleGuardScale();
+	Vector4 rotation = maleGuardRenderObject->GetMaleGuardRotation();
+	Quaternion orientation = maleGuardRenderObject->GetMaleGuardQuaternion();
+
+	NetworkPlayer* currentObject = (NetworkPlayer*)maleGuard;
+
+	RenderAnimation(position, scale, rotation, orientation, currentObject->GetAnimatedObjectID(), maleGuard->GetName());
+}
+
+void GameTechRenderer::RenderMaxGuard(GameObject* maxGuard) {
+	//To do
+
+	RenderObject* currentRenderObject = maxGuard->GetRenderObject();
+	OGLShader* shader = (OGLShader*)currentRenderObject->GetShader();
+	BindShader(*shader);
+
+	RenderObjectMaleGuard* maxGuardRenderObject = static_cast<RenderObjectMaleGuard*>(const_cast<RenderObject*>(currentRenderObject));
+	Vector3 position = maxGuardRenderObject->GetMaleGuardPosition();
+	Vector3 scale = maxGuardRenderObject->GetMaleGuardScale();
+	Vector4 rotation = maxGuardRenderObject->GetMaleGuardRotation();
+	Quaternion orientation = maxGuardRenderObject->GetMaleGuardQuaternion();
+
+	NetworkPlayer* currentObject = (NetworkPlayer*)maxGuard;
+	RenderAnimation(position, scale, rotation, orientation, currentObject->GetAnimatedObjectID(), maxGuard->GetName());
+}
+
+
 void GameTechRenderer::NewRenderLines() {
 	const std::vector<Debug::DebugLineEntry>& lines = Debug::GetDebugLines();
 	if (lines.empty()) {
@@ -589,8 +682,8 @@ void GameTechRenderer::NewRenderLines() {
 
 	Matrix4 viewMatrix = gameWorld.GetMainCamera().BuildViewMatrix();
 	Matrix4 projMatrix = gameWorld.GetMainCamera().BuildProjectionMatrix(hostWindow.GetScreenAspect());
-	
-	Matrix4 viewProj  = projMatrix * viewMatrix;
+
+	Matrix4 viewProj = projMatrix * viewMatrix;
 
 	BindShader(*debugShader);
 	int matSlot = glGetUniformLocation(debugShader->GetProgramID(), "viewProjMatrix");
@@ -607,7 +700,7 @@ void GameTechRenderer::NewRenderLines() {
 
 	glBindBuffer(GL_ARRAY_BUFFER, lineVertVBO);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, lines.size() * sizeof(Debug::DebugLineEntry), lines.data());
-	
+
 
 	glBindVertexArray(lineVAO);
 	glDrawArrays(GL_LINES, 0, (GLsizei)frameLineCount);
@@ -629,7 +722,7 @@ void GameTechRenderer::NewRenderText() {
 		glBindTexture(GL_TEXTURE_2D, t->GetObjectID());
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glBindTexture(GL_TEXTURE_2D, 0);	
+		glBindTexture(GL_TEXTURE_2D, 0);
 		BindTextureToShader(*t, "mainTex", 0);
 	}
 	Matrix4 proj = Matrix4::Orthographic(0.0, 100.0f, 100, 0, -1.0f, 1.0f);
@@ -666,7 +759,7 @@ void GameTechRenderer::NewRenderText() {
 	glDrawArrays(GL_TRIANGLES, 0, frameVertCount);
 	glBindVertexArray(0);
 }
- 
+
 Texture* GameTechRenderer::LoadTexture(const std::string& name) {
 	return OGLTexture::TextureFromFile(name).release();
 }
@@ -752,4 +845,325 @@ void GameTechRenderer::SetDebugLineBufferSizes(size_t newVertCount) {
 
 		glBindVertexArray(0);
 	}
+}
+
+void GameTechRenderer::LoadCurrentAnimationAssets(OGLShader* currentShader, MeshMaterial* currentMaterial, MeshAnimation* currentAnimation, int animatedObjectID, int animationState) {
+	anmShader = currentShader;
+
+	//maleGuardMaterial = currentMaterial;
+	if (maleGuardMaterial == nullptr) {
+		maleGuardMaterial = new MeshMaterial("Male_Guard.mat");
+	}
+	if (maxGuardMaterial == nullptr) {
+		maxGuardMaterial = new MeshMaterial("Rig_Maximilian.mat");
+	}
+
+
+	if (maleGuardMesh == nullptr) {
+		maleGuardMesh = LoadMesh("Male_Guard.msh");
+	}
+
+	if (maxGuardMesh == nullptr) {
+		maxGuardMesh = LoadMesh("Rig_Maximilian.msh");
+	}
+
+
+	if (!hasLoadedTextureToSubmesh) {
+		LoadTextureToMesh();
+	}
+
+	if (animationStateCounter[animatedObjectID] != animationState) {
+		animationStateCounter[animatedObjectID] = animationState;
+		currentFrame[animatedObjectID] = 0;
+	}
+
+	if (activeAnimation[animatedObjectID] == nullptr) {
+		activeAnimation[animatedObjectID] = currentAnimation;
+		animationDefault[animatedObjectID] = currentAnimation;
+	}
+	else if (activeAnimation[animatedObjectID] != currentAnimation) {
+		activeAnimation[animatedObjectID] = currentAnimation;
+
+		//reset the currentFrame
+		currentFrame[animatedObjectID] = 0;
+	}
+
+
+	if (normal == nullptr) {
+		normal = (OGLTexture*)LoadTexture("normal.png");
+	}
+	if (metallic == nullptr) {
+		metallic = (OGLTexture*)LoadTexture("metallic.png");
+	}
+	if (roughness == nullptr) {
+		roughness = (OGLTexture*)LoadTexture("roughness.png");
+	}
+	if (ao == nullptr) {
+		ao = (OGLTexture*)LoadTexture("ao.png");
+	}
+}
+
+
+
+void GameTechRenderer::LoadTextureToMesh() {
+	for (int i = 0; i < maleGuardMesh->GetSubMeshCount(); i++) {
+		const MeshMaterialEntry* matEntry = maleGuardMaterial->GetMaterialForLayer(i);
+
+		const string* diffusePath = nullptr;
+		matEntry->GetEntry("Diffuse", &diffusePath);
+		string diffuseName = *diffusePath;
+		diffuseName.erase(0, 1);
+		OGLTexture* diffuseTex = (OGLTexture*)LoadTexture(diffuseName);
+		GLuint diffuseTexID = diffuseTex->GetObjectID();
+		maleGuardMatDiffuseTextures.emplace_back(diffuseTexID);
+
+		const string* bumpPath = nullptr;
+		matEntry->GetEntry("Bump", &bumpPath);
+		string bumpName = *bumpPath;
+		bumpName.erase(0, 1);
+		OGLTexture* bumpTex = (OGLTexture*)LoadTexture(bumpName);
+		GLuint bumpTexID = bumpTex->GetObjectID();
+		maleGuardMatBumpTextures.emplace_back(bumpTexID);
+
+	}
+
+	for (int i = 0; i < maxGuardMesh->GetSubMeshCount(); i++) {
+		const MeshMaterialEntry* matEntry = maxGuardMaterial->GetMaterialForLayer(i);
+
+		const string* diffusePath = nullptr;
+		matEntry->GetEntry("Diffuse", &diffusePath);
+		string diffuseName = *diffusePath;
+		diffuseName.erase(0, 1);
+		OGLTexture* diffuseTex = (OGLTexture*)LoadTexture(diffuseName);
+		GLuint diffuseTexID = diffuseTex->GetObjectID();
+		maxGuardMatDiffuseTextures.emplace_back(diffuseTexID);
+
+		//no bump tex
+		/*const string* bumpPath = nullptr;
+		matEntry->GetEntry("Bump", &bumpPath);
+		string bumpName = *bumpPath;
+		bumpName.erase(0, 1);
+		OGLTexture* bumpTex = (OGLTexture*)LoadTexture(bumpName);
+		GLuint bumpTexID = bumpTex->GetObjectID();
+		maxGuardMatBumpTextures.emplace_back(bumpTexID);*/
+
+	}
+
+	hasLoadedTextureToSubmesh = true;
+}
+
+void GameTechRenderer::Matrix4ToIdentity(Matrix4* mat4) {
+	mat4->ToZero();
+	mat4->array[0][0] = 1.0f;
+	mat4->array[1][1] = 1.0f;
+	mat4->array[2][2] = 1.0f;
+	mat4->array[3][3] = 1.0f;
+}
+
+void GameTechRenderer::RenderAnimation(Vector3 inPos, Vector3 inScale, Vector4 inRotation, Quaternion inOrientation, int animatedObjectID, string name) {
+	//avoid transparency
+	glDisable(GL_BLEND);
+
+	BindShader(*anmShader);
+	glUniform1i(glGetUniformLocation(anmShader->GetProgramID(), "diffuseTex"), 0);
+	glUniform1i(glGetUniformLocation(anmShader->GetProgramID(), "bumpTex"), 1);
+	glUniform1i(glGetUniformLocation(anmShader->GetProgramID(), "normalTex"), 2);
+	//glUniform1i(glGetUniformLocation(anmShader->GetProgramID(), "albedoTex"), 3);
+	glUniform1i(glGetUniformLocation(anmShader->GetProgramID(), "metallicTex"), 4);
+	glUniform1i(glGetUniformLocation(anmShader->GetProgramID(), "roughnessTex"), 5);
+	glUniform1i(glGetUniformLocation(anmShader->GetProgramID(), "ambiantOccTex"), 6);
+
+	glUniform3fv(glGetUniformLocation(anmShader->GetProgramID(), "lightPos"), 1, (float*)&lightPosition);
+	glUniform4fv(glGetUniformLocation(anmShader->GetProgramID(), "lightColour"), 1, (float*)&lightColour);
+	glUniform1f(glGetUniformLocation(anmShader->GetProgramID(), "lightRadius"), lightRadius);
+
+	Vector3 camPos = gameWorld.GetMainCamera().GetPosition();
+	glUniform3fv(glGetUniformLocation(anmShader->GetProgramID(), "cameraPos"), 1, (float*)&camPos.x);
+
+	Matrix4 modelMatrix;
+	Matrix4ToIdentity(&modelMatrix);
+	/*modelMatrix =
+		Matrix4::Translation(inPos) *
+		Matrix4::Scale(inScale) *
+		Matrix4::Rotation(inRotation.x, Vector3(inRotation.y,inRotation.z,inRotation.w));*/
+	modelMatrix =
+		Matrix4::Translation(inPos) *
+		Matrix4(inOrientation) *
+		Matrix4::Scale(inScale);
+	Matrix4 viewMatrix = gameWorld.GetMainCamera().BuildViewMatrix();
+	Matrix4 projMatrix = gameWorld.GetMainCamera().BuildProjectionMatrix(hostWindow.GetScreenAspect());
+
+	glUniformMatrix4fv(glGetUniformLocation(anmShader->GetProgramID(), "modelMatrix"), 1, false, (float*)&modelMatrix);
+	glUniformMatrix4fv(glGetUniformLocation(anmShader->GetProgramID(), "viewMatrix"), 1, false, (float*)&viewMatrix);
+	glUniformMatrix4fv(glGetUniformLocation(anmShader->GetProgramID(), "projMatrix"), 1, false, (float*)&projMatrix);
+
+	//vector<Matrix4> frameMatrices;
+	//maleGuardMesh->CalculateInverseBindPose();
+	//const vector<Matrix4> invBindPoseMaleGuard = maleGuardMesh->GetInverseBindPose();
+	//maxGuardMesh->CalculateInverseBindPose();
+	//const vector<Matrix4> invBindPoseMaxGuard = maxGuardMesh->GetInverseBindPose();
+
+	//const Matrix4* frameDataAnm = activeAnimation[animatedObjectID]->GetJointData(currentFrame[animatedObjectID]);
+
+	//if (frameDataAnm != nullptr) {
+	//	if (name == "MaleGuard") {
+	//		for (GLuint i = 0; i < maleGuardMesh->GetJointCount(); i++) {
+	//			frameMatrices.emplace_back(frameDataAnm[i] * invBindPoseMaleGuard[i]);
+	//		}
+	//	}
+	//	if (name == "MaxGuard") {
+	//		for (GLuint i = 0; i < maxGuardMesh->GetJointCount(); i++) {
+	//			frameMatrices.emplace_back(frameDataAnm[i] * invBindPoseMaxGuard[i]);
+	//		}
+	//	}
+	//}
+	///*for (GLuint i = 0; i < maleGuardMesh->GetJointCount(); i++) {
+	//	frameMatrices.emplace_back(frameDataAnm[i] * invBindPose[i]);
+	//}*/
+
+	//int	shaderLocation = glGetUniformLocation(anmShader->GetProgramID(), "joints");
+	//glUniformMatrix4fv(shaderLocation, frameMatrices.size(), false, (float*)frameMatrices.data());
+
+	////use diffuseTex as albedo
+	///*glActiveTexture(GL_TEXTURE3);
+	//glBindTexture(GL_TEXTURE_2D, albedo->GetObjectID());*/
+	//glActiveTexture(GL_TEXTURE2);
+	//glBindTexture(GL_TEXTURE_2D, normal->GetObjectID());
+	//glActiveTexture(GL_TEXTURE4);
+	//glBindTexture(GL_TEXTURE_2D, metallic->GetObjectID());
+	//glActiveTexture(GL_TEXTURE5);
+	//glBindTexture(GL_TEXTURE_2D, roughness->GetObjectID());
+	//glActiveTexture(GL_TEXTURE6);
+	//glBindTexture(GL_TEXTURE_2D, ao->GetObjectID());
+
+	//if (name == "MaleGuard") {
+	//	for (int i = 0; i < maleGuardMesh->GetSubMeshCount(); i++) {
+
+	//		glActiveTexture(GL_TEXTURE0);
+	//		glBindTexture(GL_TEXTURE_2D, maleGuardMatDiffuseTextures[i]);
+
+	//		glActiveTexture(GL_TEXTURE1);
+	//		glBindTexture(GL_TEXTURE_2D, maleGuardMatBumpTextures[i]);
+
+	//		BindMesh((OGLMesh&)*maleGuardMesh);
+	//		DrawBoundMesh((uint32_t)i);
+	//	}
+	//}
+	//if (name == "MaxGuard") {
+	//	for (int i = 0; i < maxGuardMesh->GetSubMeshCount(); i++) {
+
+	//		glActiveTexture(GL_TEXTURE0);
+	//		glBindTexture(GL_TEXTURE_2D, maxGuardMatDiffuseTextures[i]);
+
+	//		/*glActiveTexture(GL_TEXTURE1);
+	//		glBindTexture(GL_TEXTURE_2D, maxGuardMatBumpTextures[i]);*/
+
+	//		BindMesh((OGLMesh&)*maxGuardMesh);
+	//		DrawBoundMesh((uint32_t)i);
+	//	}
+	//}
+
+	//test
+	//use diffuseTex as albedo
+	/*glActiveTexture(GL_TEXTURE3);
+	glBindTexture(GL_TEXTURE_2D, albedo->GetObjectID());*/
+	glActiveTexture(GL_TEXTURE2);
+	glBindTexture(GL_TEXTURE_2D, normal->GetObjectID());
+	glActiveTexture(GL_TEXTURE4);
+	glBindTexture(GL_TEXTURE_2D, metallic->GetObjectID());
+	glActiveTexture(GL_TEXTURE5);
+	glBindTexture(GL_TEXTURE_2D, roughness->GetObjectID());
+	glActiveTexture(GL_TEXTURE6);
+	glBindTexture(GL_TEXTURE_2D, ao->GetObjectID());
+
+	maleGuardMesh->CalculateInverseBindPose();
+	const vector<Matrix4> invBindPoseMaleGuard = maleGuardMesh->GetInverseBindPose();
+	maxGuardMesh->CalculateInverseBindPose();
+	const vector<Matrix4> invBindPoseMaxGuard = maxGuardMesh->GetInverseBindPose();
+
+	const Matrix4* frameDataAnm = activeAnimation[animatedObjectID]->GetJointData(currentFrame[animatedObjectID]);
+
+	const int* maleguardBindPoseIndices = maleGuardMesh->GetBindPoseIndices();
+	const int* maxguardBindPoseIndices = maxGuardMesh->GetBindPoseIndices();
+
+	int	jointsLocation = glGetUniformLocation(anmShader->GetProgramID(), "joints");
+
+	if (name == "MaleGuard") {
+		for (int i = 0; i < maleGuardMesh->GetSubMeshCount(); i++) {
+
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, maleGuardMatDiffuseTextures[i]);
+
+			glActiveTexture(GL_TEXTURE1);
+			glBindTexture(GL_TEXTURE_2D, maleGuardMatBumpTextures[i]);
+
+			SubMeshPoses pose;
+			maleGuardMesh->GetBindPoseState(i, pose);
+
+			vector<Matrix4> frameMatrices;
+
+			for (unsigned int k = 0; k < pose.count; k++) {
+				int jointID = maleguardBindPoseIndices[pose.start + k];
+				Matrix4 mat = frameDataAnm[jointID] * invBindPoseMaleGuard[pose.start + k];
+				frameMatrices.emplace_back(mat);
+			}
+
+			glUniformMatrix4fv(jointsLocation, frameMatrices.size(), false, (float*)frameMatrices.data());
+
+			BindMesh((OGLMesh&)*maleGuardMesh);
+			DrawBoundMesh((uint32_t)i);
+		}
+	}
+	if (name == "MaxGuard") {
+		for (int i = 0; i < maxGuardMesh->GetSubMeshCount(); i++) {
+
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, maxGuardMatDiffuseTextures[i]);
+
+			SubMeshPoses pose;
+			maxGuardMesh->GetBindPoseState(i, pose);
+
+			vector<Matrix4> frameMatrices;
+
+			for (unsigned int k = 0; k < pose.count; k++) {
+				int jointID = maxguardBindPoseIndices[pose.start + k];
+				Matrix4 mat = frameDataAnm[jointID] * invBindPoseMaxGuard[pose.start + k];
+				frameMatrices.emplace_back(mat);
+			}
+
+			glUniformMatrix4fv(jointsLocation, frameMatrices.size(), false, (float*)frameMatrices.data());
+
+			BindMesh((OGLMesh&)*maxGuardMesh);
+			DrawBoundMesh((uint32_t)i);
+		}
+	}
+	//test
+
+	glEnable(GL_BLEND);
+}
+
+void GameTechRenderer::Update(float dt) {
+	gameWorld.gameObjectsMutex.lock();
+
+	time += dt;
+
+	for (int i = 0; i < activeAnimatedObjects.size(); i++) {
+		frameTime[i] -= dt;
+		while (frameTime[i] < 0.0f) {
+			if (currentFrame[i] + 1 >= activeAnimation[i]->GetFrameCount()) {
+
+				if (activeAnimatedObjects[i]->GetName() == "MaleGuard") {
+					((NetworkPlayer*)activeAnimatedObjects[i])->SetMaleGuardAnimation(AnmName::MALEGUARD_STEPFORWARD);
+				}
+				else if (activeAnimatedObjects[i]->GetName() == "MaxGuard") {
+					((NetworkPlayer*)activeAnimatedObjects[i])->SetMaxGuardAnimation(AnmName::MAXGUARD_WALK);
+				}
+
+				//((NetworkPlayer*)activeAnimatedObjects[i])->SetAnimation(AnmName::STEPFORWARD);
+			}
+			currentFrame[i] = (currentFrame[i] + 1) % activeAnimation[i]->GetFrameCount();
+			frameTime[i] += 1.0f / activeAnimation[i]->GetFrameTime();
+		}
+	}
+	gameWorld.gameObjectsMutex.unlock();
 }

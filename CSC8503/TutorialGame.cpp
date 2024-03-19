@@ -177,12 +177,16 @@ void TutorialGame::InitialiseAssets() {
 	wallMesh = renderer->LoadMesh("cube.msh");
 	bouncePlatformMesh = renderer->LoadMesh("cube.msh");
 	sphereMesh	= renderer->LoadMesh("sphere.msh");
-	charMesh	= renderer->LoadMesh("goat.msh");
+	charMesh	= renderer->LoadMesh("Male_Guard.msh");
 	enemyMesh	= renderer->LoadMesh("Keeper.msh");
 	bonusMesh	= renderer->LoadMesh("sphere.msh");
 	gooseMesh	= renderer->LoadMesh("goose.msh");
 	capsuleMesh = renderer->LoadMesh("capsule.msh");
 	
+	playerWalkingAnimation = new MeshAnimation("Male_Guard_GunfireRifle.anm");
+
+	playerMaterial = new MeshMaterial("Male_Guard.mat");
+
 	blackholeTex = renderer->LoadTexture("blackhole.jpg");
 	basicTex	= renderer->LoadTexture("checkerboard.png");
 	portalTex	= renderer->LoadTexture("PortalTex.jpg");
@@ -221,6 +225,7 @@ void TutorialGame::InitialiseAssets() {
 	instancePbrShader = renderer->LoadShader("pbrInstanced.vert", "pbr.frag");
 	blackholeShader = renderer->LoadShader("blackhole.vert", "blackhole.frag");
 	targetholeShader = renderer->LoadShader("targethole.vert", "targethole.frag");
+	playerShader = renderer->LoadShader("skeletalAnimationSkinning_pbr.vert", "skeletalAnimationTexture_pbr.frag");
 
 	InitCamera();
 	InitWorld();

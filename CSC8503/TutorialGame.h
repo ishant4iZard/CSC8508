@@ -27,6 +27,8 @@
 #include "WindowsLevelLoader.h"
 #include "ApplicationState.h"
 #include "UIBase.h"
+#include "MeshMaterial.h"
+#include "MeshAnimation.h"
 
 #define USE_SHADOW = false
 
@@ -131,10 +133,14 @@ namespace NCL {
 			Shader* 	instancePbrShader = nullptr;
 			Shader*		blackholeShader = nullptr;
 			Shader* 	targetholeShader = nullptr;
+			Shader*		playerShader	= nullptr;
 
 			Texture* groundTextureList[(uint8_t)TextureType::MAX_TYPE];
 			Texture* wallTextureList[(uint8_t)TextureType::MAX_TYPE];
 			Texture* sandTextureList[(uint8_t)TextureType::MAX_TYPE];
+
+			MeshMaterial* playerMaterial = nullptr;
+			MeshAnimation* playerWalkingAnimation = nullptr;
 
 			//Coursework Meshes
 			Mesh*	charMesh	= nullptr;
