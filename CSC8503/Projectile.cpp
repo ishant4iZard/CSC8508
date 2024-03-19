@@ -13,6 +13,12 @@ Projectile::Projectile(NetworkPlayer* Owner, TutorialGame* Game)
 	this->Game = Game;
 	this->settag("Projectile");
 	timeLeft = LIFE_TIME_AMOUNT;
+	SetRenderObject(new RenderObject(&GetTransform(), Game->GetSphereMesh(), nullptr, Game->GetPbrShader()));
+
+	for (uint8_t i = (uint8_t)TextureType::ALBEDO; i < (uint8_t)TextureType::MAX_TYPE; i++)
+	{
+		GetRenderObject()->SetTexture((TextureType)i, Game->goldTextureList[i]);
+	}
 }
 
 Projectile::~Projectile()

@@ -99,8 +99,10 @@ void NCL::CSC8503::PS5_Game::UpdateGame(float dt)
 				player->ReplenishProjectiles(dt);
 			}
 
-			if(gravitywell)
-				gravitywell->PullProjectilesWithinField(projectileList);
+			for (uint8_t i = 0; i < gravitywell.size(); i++)
+			{
+				gravitywell[i]->PullProjectilesWithinField(projectileList);
+			}
 
 			for (auto i : projectileList)
 			{
