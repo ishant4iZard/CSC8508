@@ -130,6 +130,7 @@ namespace NCL {
 			void SpawnAI();
 			AiStatemachineObject* AddAiStateObjectToWorld(const Vector3& position);
 			vector <AiStatemachineObject*> AIStateObjectList;
+			int AIInitialID = 3000;
 
 			/** Power Up Spawn */
 			void SpawnPowerUp(int NetID);

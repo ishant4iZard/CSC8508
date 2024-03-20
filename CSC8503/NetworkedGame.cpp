@@ -736,6 +736,7 @@ void NetworkedGame::StartLevel() {
 	PlayersBulletNumList.clear();
 	Projectile::CurrentAvailableProjectileID = 1000;
 	PowerUpSpawnNetID = POWER_UP_INIT_NETID;
+	AIInitialID = 3000;
 	if (poolPTR) {
 		delete poolPTR;
 		poolPTR = nullptr;
@@ -989,6 +990,9 @@ AiStatemachineObject* NetworkedGame::AddAiStateObjectToWorld(const Vector3& posi
 
 	AIStateObject->SetRenderObject(new RenderObject(&AIStateObject->GetTransform(), sphereMesh, nullptr, basicShader));
 	AIStateObject->SetPhysicsObject(new PhysicsObject(&AIStateObject->GetTransform(), AIStateObject->GetBoundingVolume()));
+	AIStateObject->SetNetworkObject(new NetworkObject(*AIStateObject, AIInitialID));
+	networkObjects.insert(std::pair<int, NetworkObject*>(AIInitialID, AIStateObject->GetNetworkObject()));
+	++AIInitialID;
 
 	AIStateObject->GetPhysicsObject()->SetInverseMass(1 / 10000000.0f);
 	AIStateObject->GetPhysicsObject()->SetElasticity(0.000002);
