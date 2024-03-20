@@ -254,6 +254,7 @@ void TutorialGame::InitialiseAssets() {
 	blackholeShader = renderer->LoadShader("blackhole.vert", "blackhole.frag");
 	targetholeShader = renderer->LoadShader("targethole.vert", "targethole.frag");
 	particleShader = renderer->LoadShader("particleDefault.vert", "particleMoving.frag");
+	anmShader = renderer->LoadShader("skeletalAnimationSkinning_pbr.vert", "skeletalAnimationTexture_pbr.frag");
 
 	InitCamera();
 	InitWorld();
