@@ -63,7 +63,7 @@ namespace NCL {
 			const int PROJECTILE_POOL_SIZE = 20;
 			std::vector<Projectile*> ProjectileList;
 			void InitializeProjectilePool(NetworkPlayer* player);
-			
+
 			/** Network public function */
 			int GetConnectedClientsNum();
 			int GetLocalPlayerNumber() const;

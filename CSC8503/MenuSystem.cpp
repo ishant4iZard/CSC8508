@@ -139,43 +139,53 @@ PushdownState::PushdownResult MainMenu::OnUpdate(float dt, PushdownState** newSt
 			UIBase::WHITE,
 			KeyCodes::NUM2 // Only for PS
 		);
+
+		ui->DrawButton(
+			"Quit Game",
+			Vector2(5, 53),
+			[Game]() {
+				Game->CloseGame = true;
+			},
+			UIBase::WHITE,
+			KeyCodes::NUM2 // Only for PS
+		);
 #endif
 
 		/** for devlop only */
-		if (appState->GetIsServer())
+		/*if (appState->GetIsServer())
 		{
 			appState->SetIsGameOver(false);
 			Game->StartAsServer();
 			*newState = new PlayingHUD();
 			return PushdownResult::Push;
-		}
-		if (appState->GetIsClient())
-		{
-			appState->SetIsGameOver(false);
-			Game->StartAsClient(127, 0, 0, 1);
-			*newState = new PlayingHUD();
-			return PushdownResult::Push;
-		}
-		ui->DrawButton(
-			"Local: Play As Server",
-			Vector2(5, 53),
-			[&, Game]() {
-				Game->SetLocalPlayerIndex(0);
-				appState->SetIsServer(true);
-				Game->isDevMode = true;
-			},
-			UIBase::WHITE,
-			KeyCodes::NUM1 // Only for PS
-		);
-		ui->DrawButton(
-			"Local: Play As Client",
-			Vector2(5, 63),
-			[&, Game]() {
-				appState->SetIsClient(true);
-			},
-			UIBase::WHITE,
-			KeyCodes::NUM1 // Only for PS
-		);
+		}*/
+		//if (appState->GetIsClient())
+		//{
+		//	appState->SetIsGameOver(false);
+		//	Game->StartAsClient(127, 0, 0, 1);
+		//	*newState = new PlayingHUD();
+		//	return PushdownResult::Push;
+		//}
+		//ui->DrawButton(
+		//	"Local: Play As Server",
+		//	Vector2(5, 53),
+		//	[&, Game]() {
+		//		Game->SetLocalPlayerIndex(0);
+		//		appState->SetIsServer(true);
+		//		Game->isDevMode = true;
+		//	},
+		//	UIBase::WHITE,
+		//	KeyCodes::NUM1 // Only for PS
+		//);
+		//ui->DrawButton(
+		//	"Local: Play As Client",
+		//	Vector2(5, 63),
+		//	[&, Game]() {
+		//		appState->SetIsClient(true);
+		//	},
+		//	UIBase::WHITE,
+		//	KeyCodes::NUM1 // Only for PS
+		//);
 	}
 	return PushdownResult::NoChange;
 }
@@ -551,7 +561,7 @@ PushdownState::PushdownResult PlayingHUD::OnUpdate(float dt, PushdownState** new
 		}
 
 		/** Game going HUD */
-		if (!appState->GetIsGameOver() && !appState->GetIsGamePaused())
+		if (!appState->GetIsGameOver())
 		{
 			ShowTimeLeft(Game);
 			//ui->DrawStringText("Player    " + Game->GetPlayerNameByIndex(Game->GetLocalPlayerIndex()), Vector2(83, 30), UIBase::WHITE);
@@ -586,27 +596,16 @@ PushdownState::PushdownResult PlayingHUD::OnUpdate(float dt, PushdownState** new
 
 		if (!appState->GetIsGameOver() && appState->GetIsGamePaused())
 		{
-			ui->DrawStringText("Round Paused !!!", Vector2(40, 15), UIBase::WHITE);
-
-			ui->DrawButton(
-				"Round Pause",
-				Vector2(40, 70),
-				[&, Game]() {
-					appState->SetIsGamePaused(false);
-				},
-				UIBase::WHITE,
-				KeyCodes::S, // Only for PS
-				Vector2(150, 50)
-			);
+			ui->DrawStringText("Round Paused !!!", Vector2(40, 50), UIBase::BLUE);
 		}
 
-		if (appState->GetIsSolo() && !appState->GetIsGameOver() && !appState->GetIsGamePaused())
+		if (appState->GetIsSolo() && !appState->GetIsGameOver())
 		{
 			ui->DrawButton(
-				"Round Pause",
+				appState->GetIsGamePaused() ? "Resume" : "Round Pause",
 				Vector2(85, 80),
 				[&, Game]() {
-					appState->SetIsGamePaused(true);
+					appState->SetIsGamePaused(!appState->GetIsGamePaused());
 				},
 				UIBase::WHITE,
 				KeyCodes::S, // Only for PS
