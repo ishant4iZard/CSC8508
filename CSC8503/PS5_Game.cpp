@@ -69,10 +69,6 @@ void NCL::CSC8503::PS5_Game::EndLevel()
 
 void NCL::CSC8503::PS5_Game::UpdateGame(float dt)
 {
-	std::optional<time_point<high_resolution_clock>> frameStartTime;
-	if (isDebuHUDActive)
-		frameStartTime = high_resolution_clock::now();
-
 	TutorialGame::UpdateGame(dt);
 
 	Menu->Update(dt);
@@ -120,20 +116,12 @@ void NCL::CSC8503::PS5_Game::UpdateGame(float dt)
 
 	ui->RenderUI(dt);
 
-	std::optional<time_point<high_resolution_clock>> frameEndTime;
-	if (isDebuHUDActive)
-		frameEndTime = high_resolution_clock::now();
-
 	if (controller->GetNamedButton("Triangle"))
 	{
 		isDebuHUDActive = true;
 
-		if (!frameStartTime.has_value() || !frameEndTime.has_value()) return;
-
-		auto duration = duration_cast<microseconds>(frameEndTime.value() - frameStartTime.value());
 		debugHUD->DrawDebugHUD({
 			dt,
-			duration.count(),
 			physics->GetNumberOfCollisions(),
 			world->GetNumberOfObjects()
 		});
@@ -248,6 +236,8 @@ void NCL::CSC8503::PS5_Game::SpawnPlayer()
 	player->GetPhysicsObject()->SetInverseMass(inverseMass);
 	player->GetPhysicsObject()->InitCubeInertia();
 	player->GetRenderObject()->SetAnimation(playerWalkingAnimation);
+
+	player->GetRenderObject()->SetColour(Debug::RED);
 	
 	world->AddGameObject(player);
 }
@@ -302,7 +292,7 @@ void NCL::CSC8503::PS5_Game::RotatePortals(float dt)
 {
 	Quaternion currentOrientation = teleporter1Display->GetTransform().GetOrientation();
 
-	float rotationSpeed = 2000;
+	float rotationSpeed = 1000;
 	float rotationAngle = rotationSpeed * dt;
 
 	if (rotationAngle > 360) rotationAngle -= 360;

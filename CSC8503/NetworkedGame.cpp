@@ -196,10 +196,6 @@ void NetworkedGame::DestroyClient()
 }
 
 void NetworkedGame::UpdateGame(float dt) {
-	std::optional<time_point<high_resolution_clock>> frameStartTime;
-	if(isDebuHUDActive)
-		frameStartTime = high_resolution_clock::now();
-
 	Debug::UpdateRenderables(dt);
 	if (thisServer && !appState->GetIsGameOver()) {
 		UpdatePhysics = true;
@@ -227,10 +223,6 @@ void NetworkedGame::UpdateGame(float dt) {
 	audioEngine->Update();
 
 	TutorialGame::UpdateGame(dt);
-
-	std::optional<time_point<high_resolution_clock>> frameEndTime;
-	if (isDebuHUDActive)
-		frameEndTime = high_resolution_clock::now();
 		
 	//nonPhysicsUpdateThread.join();
 	//physicsUpdateThread.join();
@@ -239,12 +231,8 @@ void NetworkedGame::UpdateGame(float dt) {
 	{
 		isDebuHUDActive = true;
 
-		if (!frameStartTime.has_value() || !frameEndTime.has_value()) return;
-
-		auto duration = duration_cast<microseconds>(frameEndTime.value() - frameStartTime.value());
 		debugHUD->DrawDebugHUD({
 			dt,
-			duration.count(),
 			physics->GetNumberOfCollisions(),
 			world->GetNumberOfObjects()
 		});
@@ -938,6 +926,7 @@ AiStatemachineObject* NetworkedGame::AddAiStateObjectToWorld(const Vector3& posi
 		.SetPosition(Vector3(position.x, 5.6, position.z));
 
 	AIStateObject->SetRenderObject(new RenderObject(&AIStateObject->GetTransform(), sphereMesh, nullptr, basicShader));
+	//AIStateObject->SetRenderObject(new RenderObject(&AIStateObject->GetTransform(), rebellionMeshChar, nullptr, basicShader));
 	AIStateObject->SetPhysicsObject(new PhysicsObject(&AIStateObject->GetTransform(), AIStateObject->GetBoundingVolume()));
 
 	AIStateObject->GetPhysicsObject()->SetInverseMass(1 / 10000000.0f);

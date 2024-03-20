@@ -92,6 +92,13 @@ if(NOT("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64"))
     )
     source_group("AI_Files" FILES ${AI_Files})
 
+      set(UIPlaystation
+        "UIBase.h"
+        "UIPlaystation.h"
+        "UIPlaystation.cpp"
+    )
+    source_group("UIPlaystation" FILES ${UIPlaystation})
+
     set(ImGUI_Files
         "imconfig.h"
         "imgui.h"

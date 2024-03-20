@@ -1,7 +1,6 @@
 #pragma once
 struct DebugHUDParams {
 	float dt;
-	long long timeCost;
 	int numberOfCollisions;
 	int numberOfObjects;
 };

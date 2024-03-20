@@ -245,7 +245,12 @@ void NetworkPlayer::Fire()
 	if (numProjectilesAccumulated <= 0) return;
 	numProjectilesAccumulated--;
 
+#ifdef _WIN32
+	Vector3 fireDir = GetPlayerForwardVector().Normalised();
+#else
 	Vector3 fireDir = GetPlayerBackwardVector().Normalised();
+#endif
+
 	Vector3 firePos = transform.GetPosition() + fireDir * 3;
 
 #ifdef _WIN32

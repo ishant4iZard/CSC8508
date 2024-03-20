@@ -184,13 +184,18 @@ void TutorialGame::InitialiseAssets() {
 	bonusMesh	= renderer->LoadMesh("sphere.msh");
 	gooseMesh	= renderer->LoadMesh("goose.msh");
 	capsuleMesh = renderer->LoadMesh("capsule.msh");
+	rebellionMeshChar = renderer->LoadMesh("Male_Guard.msh");
 	
+#ifndef _WIN32
+	blackholeTex = renderer->LoadTexture("BlackHolePS5.png");
+	basicTex = renderer->LoadTexture("Blank.png");
+	portalTex	= renderer->LoadTexture("PortalPS5.png");
+#else
 	blackholeTex = renderer->LoadTexture("blackhole.jpg");
 	basicTex	= renderer->LoadTexture("checkerboard.png");
 	portalTex	= renderer->LoadTexture("PortalTex.jpg");
-#ifndef _WIN32
-	portalTex	= renderer->LoadTexture("PortalPS5.png");
 #endif
+
 	sandTex		= renderer->LoadTexture("sand.jpg");
 	targetTex = renderer->LoadTexture("blackhole.jpg");
 
@@ -277,8 +282,6 @@ void TutorialGame::InitPowerup()
 
 	(this->*powerupInitFunctionList[Helper::GetRandomEnumValue(powerUpType::MAX_POWERUP)])(tempPowerup, pbrShader);
 	world->AddGameObject(tempPowerup);
-
-
 }
 
 void NCL::CSC8503::TutorialGame::InitNonePowerup(PowerUp* inPowerup, Shader* inShader)
@@ -428,11 +431,11 @@ void NCL::CSC8503::TutorialGame::SpawnTarget(const Vector3& inPosition, const Ve
 
 	Hole* hole = new Hole();
 	
-	float radius = 2.0f;
+	float radius = 5.0f;
 	Vector3 sphereSize = Vector3(radius, radius, radius);
 	SphereVolume* volume = new SphereVolume(radius);
 	hole->SetBoundingVolume((CollisionVolume*)volume);
-	hole->GetTransform().SetScale(inScale).SetPosition(inPosition).SetOrientation(Quaternion::EulerAnglesToQuaternion(inRotation.x, inRotation.y, inRotation.z));
+	hole->GetTransform().SetScale(sphereSize).SetPosition(inPosition).SetOrientation(Quaternion::EulerAnglesToQuaternion(inRotation.x, inRotation.y, inRotation.z));
 	hole->SetPhysicsObject(new PhysicsObject(&hole->GetTransform(), hole->GetBoundingVolume()));
 	hole->GetPhysicsObject()->SetInverseMass(0);
 	hole->GetPhysicsObject()->InitSphereInertia();
@@ -445,12 +448,8 @@ void NCL::CSC8503::TutorialGame::SpawnTarget(const Vector3& inPosition, const Ve
 	targetDisplay->SetRenderObject(new RenderObject(&targetDisplay->GetTransform(), cubeMesh, targetTex, targetholeShader));
 	world->AddGameObject(targetDisplay);
 #else
-
-#endif
-
-	world->AddGameObject(targetDisplay);
-#else
 	hole->SetRenderObject(new RenderObject(&hole->GetTransform(), sphereMesh, targetTex, pbrShader));
+	
 	for (uint8_t i = (uint8_t)TextureType::ALBEDO; i < (uint8_t)TextureType::MAX_TYPE; i++)
 	{
 		hole->GetRenderObject()->SetTexture((TextureType)i, lavaTextureList[i]);

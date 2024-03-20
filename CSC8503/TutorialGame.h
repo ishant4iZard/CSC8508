@@ -120,6 +120,7 @@ namespace NCL {
 			Mesh*		wallMesh			= nullptr;
 			Mesh*		bouncePlatformMesh	= nullptr;
 			Mesh*		sphereMesh			= nullptr;
+			Mesh*		rebellionMeshChar	= nullptr;
 			
 			Texture*	basicTex		= nullptr;
 			Texture*	sandTex			= nullptr;

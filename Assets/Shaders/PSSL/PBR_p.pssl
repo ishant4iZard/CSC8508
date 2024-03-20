@@ -175,5 +175,5 @@ float4 main(VS_OUTPUT vertex) : S_TARGET_OUTPUT0
     float3 ambient = float3(0.33) * albedoTexSample.xyz * ao;
     float3 color = max((ambient + lOut), float3(0.0));
 
-	return float4(color,1.0f) * float4(shadow,shadow,shadow,1);  
+	return float4(color,albedoTexSample.a) * float4(shadow,shadow,shadow,1);  
 }

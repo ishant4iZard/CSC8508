@@ -433,6 +433,16 @@ void GameTechAGCRenderer::MainRenderPass() {
 
 	frameContext->m_sb.setState(depthTarget);
 
+	sce::Agc::CxBlendControl blendControl;
+	blendControl.init();
+	blendControl.setBlend(sce::Agc::CxBlendControl::Blend::kEnable)
+		.setAlphaBlendFunc(sce::Agc::CxBlendControl::AlphaBlendFunc::kAdd)
+		.setColorSourceMultiplier(sce::Agc::CxBlendControl::ColorSourceMultiplier::kSrcAlpha)
+		.setColorDestMultiplier(sce::Agc::CxBlendControl::ColorDestMultiplier::kOneMinusSrcAlpha)
+		.setColorBlendFunc(sce::Agc::CxBlendControl::ColorBlendFunc::kAdd);
+
+	frameContext->m_sb.setState(blendControl);
+
 	sce::Agc::CxDepthStencilControl depthControl;
 	depthControl.init();
 	depthControl.setDepth(sce::Agc::CxDepthStencilControl::Depth::kEnable);
