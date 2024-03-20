@@ -60,6 +60,7 @@ namespace NCL {
 			int GetPlayerNum() const { return playerNum; }
 
 			Vector3 GetPlayerForwardVector();
+			Vector3 GetPlayerBackwardVector();
 		};
 	}
 }

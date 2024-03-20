@@ -17,9 +17,12 @@
 #include <chrono>
 using namespace std::chrono;
 
-namespace NCL {
-	namespace CSC8503 {
-		class PS5_Game : public TutorialGame {
+namespace NCL
+{
+	namespace CSC8503
+	{
+		class PS5_Game : public TutorialGame
+		{
 		public:
 			PS5_Game();
 			~PS5_Game();
@@ -28,54 +31,54 @@ namespace NCL {
 
 			void StartLevel();
 			void EndLevel();
-			void SpawnProjectile(NetworkPlayer* player, Vector3 firePos, Vector3 fireDir);
+			void SpawnProjectile(NetworkPlayer *player, Vector3 firePos, Vector3 fireDir);
 
-			PS5::PS5Controller* GetController() const { return controller; }
+			PS5::PS5Controller *GetController() const { return controller; }
 
 		protected:
 			void InitialisePlayerAssets();
 			void SpawnPlayer();
 
-			NetworkPlayer*	player					= nullptr;
-			Mesh*			playerMesh				= nullptr;
-			MeshAnimation*	playerWalkingAnimation	= nullptr;
-			Shader*			playerShader			= nullptr;
-
+			NetworkPlayer *player = nullptr;
+			Mesh *playerMesh = nullptr;
+			MeshAnimation *playerWalkingAnimation = nullptr;
+			Shader *playerShader = nullptr;
 
 			void MovePlayer(float dt);
 			void Fire();
 
 			const int PROJECTILE_POOL_SIZE = 20;
-			std::vector<Projectile*> projectileList;
+			std::vector<Projectile *> projectileList;
 			void InitializeProjectilePool();
 
 			const float FIRE_RATE = 1.5;
 			float timeSinceFire = 0;
 
 			void SpawnAI();
-			AiStatemachineObject* AddAiStateObjectToWorld(const Vector3& position);
-			AiStatemachineObject* AIStateObject;
+			AiStatemachineObject *AddAiStateObjectToWorld(const Vector3 &position);
+			AiStatemachineObject *AIStateObject;
 
-			UIBase* ui;
+			UIBase *ui;
 
 			const int GAME_TIME_LIMIT = 200; // seconds
 			float timeElapsed = 0;
-			ApplicationState* appState;
+			ApplicationState *appState;
 
-			DebugHUD* debugHUD;
-			bool isDebuHUDActive;
+			DebugHUD *debugHUD;
 
-			AudioEngine* audioEngine;
+			AudioEngine *audioEngine;
 
-			class PS5MenuSystem* Menu;
+			void SwitchAnimations(RenderObject *renderObject, MeshAnimation *animation);
+			class PS5MenuSystem *Menu;
+
+			std::optional<microseconds> physicsTimeCost;
 
 		public:
 			inline float GetTimeLeft() const { return GAME_TIME_LIMIT - timeElapsed; }
 			int GetPlayerScore() const;
 			int GEtPlayerBulletsNum() const;
 			powerUpType GetActivatedPowerUpType() const { return physics->GetCurrentPowerUpState(); }
-			void SwitchAnimations(RenderObject* renderObject, MeshAnimation* animation);
+			void RotatePortals(float dt);
 		};
 	}
 }
-

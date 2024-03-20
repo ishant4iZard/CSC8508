@@ -64,8 +64,8 @@ GameTechAGCRenderer::GameTechAGCRenderer(GameWorld& world) : AGCRenderer(*Window
 	rendererModel->SetVertexShader(VertexShaderName::DEBUG_TEXT, new AGCShader("DebugText_vv.ags", allocator));
 	rendererModel->SetPixelShader(PixelShaderName::DEBUG_TEXT, new AGCShader("DebugText_p.ags", allocator));
 
-	rendererModel->SetVertexShader(VertexShaderName::PBR ,new AGCShader("Tech_vv.ags", allocator));
-	rendererModel->SetPixelShader(PixelShaderName::PBR, new AGCShader("Tech_vv.ags", allocator));
+	rendererModel->SetVertexShader(VertexShaderName::PBR ,new AGCShader("PBR_vv.ags", allocator));
+	rendererModel->SetPixelShader(PixelShaderName::PBR, new AGCShader("PBR_p.ags", allocator));
 
 	allFrames = new FrameData[FRAMES_IN_FLIGHT];
 	// Initialize framebuffer constant buffer to pass constant data among shader
@@ -94,6 +94,8 @@ GameTechAGCRenderer::GameTechAGCRenderer(GameWorld& world) : AGCRenderer(*Window
 	screenTex = CreateFrameBufferTextureSlot("Screen");
 
 	error = sce::Agc::Core::translate(screenTex->GetAGCPointer(), &screenTarget, sce::Agc::Core::RenderTargetComponent::kData);
+
+	InitPbrSamplers();
 
 	shadowSampler.init()
 		.setXyFilterMode(
@@ -237,7 +239,7 @@ void GameTechAGCRenderer::DrawObjects() {
 
 			DrawBoundMeshInstanced(*frameContext, *prevMesh, instanceCount);
 			prevMesh = objectMesh;
-			instanceCount = 1;
+			instanceCount = 0;
 			startingIndex = i;
 		}
 		if (i == activeObjects.size() - 1) {
@@ -302,6 +304,37 @@ void GameTechAGCRenderer::GPUSkinningPass() {
 	frameJobs.clear();
 
 	frameContext->setCsShader(nullptr);
+}
+
+void NCL::CSC8503::GameTechAGCRenderer::InitPbrSamplers()
+{
+	normalSampler.init()
+		.setXyFilterMode(
+			sce::Agc::Core::Sampler::FilterMode::kPoint,			//magnification
+			sce::Agc::Core::Sampler::FilterMode::kPoint		//minificaction
+		)
+		.setMipFilterMode(sce::Agc::Core::Sampler::MipFilterMode::kPoint);
+
+	roughnessSampler.init()
+		.setXyFilterMode(
+			sce::Agc::Core::Sampler::FilterMode::kPoint,			//magnification
+			sce::Agc::Core::Sampler::FilterMode::kPoint		//minificaction
+		)
+		.setMipFilterMode(sce::Agc::Core::Sampler::MipFilterMode::kPoint);
+
+	mettalicSampler.init()
+		.setXyFilterMode(
+			sce::Agc::Core::Sampler::FilterMode::kPoint,			//magnification
+			sce::Agc::Core::Sampler::FilterMode::kPoint		//minificaction
+		)
+		.setMipFilterMode(sce::Agc::Core::Sampler::MipFilterMode::kPoint);
+
+	aoSampler.init()
+		.setXyFilterMode(
+			sce::Agc::Core::Sampler::FilterMode::kPoint,			//magnification
+			sce::Agc::Core::Sampler::FilterMode::kPoint		//minificaction
+		)
+		.setMipFilterMode(sce::Agc::Core::Sampler::MipFilterMode::kPoint);
 }
 
 
@@ -386,7 +419,7 @@ void GameTechAGCRenderer::ShadowmapPass() {
 }
 
 void GameTechAGCRenderer::MainRenderPass() {
-	frameContext->setShaders(nullptr, rendererModel->GetVertexShader(VertexShaderName::DEFAULT)->GetAGCPointer(), rendererModel->GetPixelShader(PixelShaderName::DEFAULT)->GetAGCPointer(), sce::Agc::UcPrimitiveType::Type::kTriList);
+	frameContext->setShaders(nullptr, rendererModel->GetVertexShader(VertexShaderName::PBR)->GetAGCPointer(), rendererModel->GetPixelShader(PixelShaderName::PBR)->GetAGCPointer(), sce::Agc::UcPrimitiveType::Type::kTriList);
 
 	sce::Agc::CxViewport viewPort;
 	sce::Agc::Core::setViewport(&viewPort, SCREENWIDTH, SCREENHEIGHT, 0, 0, -1.0f, 1.0f);
@@ -399,6 +432,16 @@ void GameTechAGCRenderer::MainRenderPass() {
 	frameContext->m_sb.setState(screenTarget);
 
 	frameContext->m_sb.setState(depthTarget);
+
+	sce::Agc::CxBlendControl blendControl;
+	blendControl.init();
+	blendControl.setBlend(sce::Agc::CxBlendControl::Blend::kEnable)
+		.setAlphaBlendFunc(sce::Agc::CxBlendControl::AlphaBlendFunc::kAdd)
+		.setColorSourceMultiplier(sce::Agc::CxBlendControl::ColorSourceMultiplier::kSrcAlpha)
+		.setColorDestMultiplier(sce::Agc::CxBlendControl::ColorDestMultiplier::kOneMinusSrcAlpha)
+		.setColorBlendFunc(sce::Agc::CxBlendControl::ColorBlendFunc::kAdd);
+
+	frameContext->m_sb.setState(blendControl);
 
 	sce::Agc::CxDepthStencilControl depthControl;
 	depthControl.init();
@@ -417,7 +460,11 @@ void GameTechAGCRenderer::MainRenderPass() {
 		.setConstantBuffers(0, 1, &currentFrame->constantBuffer)
 		.setBuffers(0, 1, &textureBuffer)
 		.setSamplers(0, 1, &defaultSampler)
-		.setSamplers(1, 1, &shadowSampler);
+		.setSamplers(1, 1, &normalSampler)
+		.setSamplers(2, 1, &roughnessSampler)
+		.setSamplers(3, 1, &mettalicSampler)
+		.setSamplers(4, 1, &aoSampler)
+		.setSamplers(5, 1, &shadowSampler);
 	DrawObjects();
 }
 
@@ -552,11 +599,12 @@ void GameTechAGCRenderer::UpdateObjectList() {
 		[&](GameObject* o) {
 			if (o->IsActive()) {
 				RenderObject* g = o->GetRenderObject();
-				if (g) {
+				if (g) { //TODO : Remove hard code condition for PBR
 					activeObjects.push_back(g);
 
 					ObjectState state; //PSSL Header
 					state.modelMatrix = g->GetTransform()->GetMatrix();
+					state.inverseModelMatrix = g->GetTransform()->GetMatrix().Inverse();
 
 					state.colour = g->GetColour();
 					state.tiling = g->GetTiling();
@@ -619,5 +667,9 @@ void NCL::CSC8503::GameTechAGCRenderer::SetPbrTexture(ObjectState* outState, Ren
 	if (tempTex)
 	{
 		outState->index[0] = tempTex->GetAssetID();
+		outState->index[2] = inRenderObj->GetTexture(TextureType::NORMAL)->GetAssetID();
+		outState->index[3] = inRenderObj->GetTexture(TextureType::ROUGHNESS)->GetAssetID();
+		outState->index[4] = inRenderObj->GetTexture(TextureType::METAL)->GetAssetID();
+		outState->index[5] = inRenderObj->GetTexture(TextureType::AO)->GetAssetID();
 	}
 }

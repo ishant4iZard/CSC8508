@@ -89,9 +89,11 @@ namespace NCL {
 			Vector2 GetTiling() const { return tiling; }
 			void SetTiling(const Vector2& inTiling) { this->tiling = inTiling; }
 
-			void SetAnimation(MeshAnimation& inAnim)
+			void SetAnimation(MeshAnimation* inAnim)
 			{
-				anim = &inAnim;
+				anim = inAnim;
+
+				if (!anim) return;
 
 				skeleton.resize(anim->GetJointCount());
 			}
@@ -122,6 +124,23 @@ namespace NCL {
 					for (int i = 0; i < skeleton.size(); ++i) {
 						skeleton[i] = joints[i] * inverseBindPose[i];
 					}
+				}
+			}
+
+			void ResetAnimation(int idleFrame) {
+				currentAnimFrame = idleFrame;
+
+				std::vector<Matrix4>const& inverseBindPose = mesh->GetInverseBindPose();
+
+				if (inverseBindPose.size() != anim->GetJointCount()) {
+					//oh no
+					return;
+				}
+
+				const Matrix4* joints = anim->GetJointData(currentAnimFrame);
+
+				for (int i = 0; i < skeleton.size(); ++i) {
+					skeleton[i] = joints[i] * inverseBindPose[i];
 				}
 			}
 
