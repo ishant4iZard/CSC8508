@@ -1093,6 +1093,18 @@ int NetworkedGame::GetLocalPlayerBulletNum() const
 	return LocalPlayer->GetNumBullets();
 }
 
+float NetworkedGame::GetOutgoingPacketSizePerSecond() const
+{
+	float result = TotalSizeOutgoingPacket * 60.0f / 1024.0f;
+	return result;
+}
+
+float NetworkedGame::GetInComingPacketSizePerSecond() const
+{
+	float result = TotalSizeIncomingPakcet * 60.0f / 1024.0f;
+	return result;
+}
+
 
 //void NetworkedGame::DetectProjectiles(GameObject* gameObject) {
 //

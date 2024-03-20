@@ -181,6 +181,8 @@ namespace NCL {
 			inline powerUpType GetCurrentPowerUpType() const { return CurrentPowerUpType; }
 			inline NetworkPlayer* GetLocallyControlPlayer() const { return LocalPlayer; }
 			int GetLocalPlayerBulletNum() const;
+			float GetOutgoingPacketSizePerSecond() const;
+			float GetInComingPacketSizePerSecond() const;
 		};
 	}
 }
