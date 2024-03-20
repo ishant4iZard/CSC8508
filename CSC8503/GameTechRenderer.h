@@ -4,7 +4,6 @@
 #include "OGLTexture.h"
 #include "OGLMesh.h"
 #include "Event.h"
-#include "PowerUp.h"
 #include "GameWorld.h"
 #include <Vector3.h>
 #include <Vector4.h>
@@ -73,8 +72,6 @@ namespace NCL {
 			OGLShader* pbrShader;
 			OGLShader* toneMapperShader;
 			OGLShader* gammaCorrectionShader;
-
-			OGLShader* frostPostProcessing;
 			OGLMesh*	skyboxMesh;
 			OGLMesh* screenQuad;
 			GLuint		skyboxTex;
@@ -107,19 +104,6 @@ namespace NCL {
 			GLuint textColourVBO;
 			GLuint textTexVBO;
 			size_t textCount;
-
-			//Texture
-			Texture* frostTexture;
-			Texture* windTexture;
-			Texture* sandTexture;
-
-			//frost fbo
-			OglPostProcessingFbo* frostFbo;
-
-			powerUpType currentActivePowerup = none;
-			float timeOfPowerupActivation = 0;
-			const float POST_PROCESSING_DURATION = 5; // seconds
-
 			UIBase* ui;
 
 			DirectionalLight* directionalLight;

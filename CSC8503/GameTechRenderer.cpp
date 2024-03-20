@@ -25,7 +25,6 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 	toneMapperShader = new OGLShader("basic.vert", "ReinhardTonemap.frag");
 	pbrShader = new OGLShader("pbr.vert", "pbr.frag");
 	gammaCorrectionShader = new OGLShader("basic.vert", "gammaCorrection.frag");
-	frostPostProcessing = new OGLShader("frostPostProcessing.vert", "frostPostProcessing.frag");
 	particleShader = new OGLShader("particleDefault.vert", "particleMoving.frag");
 
 	glGenTextures(1, &shadowTex);
@@ -48,24 +47,6 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 
 	glClearColor(0.5f,0.5f,0.5f, 1);
 
-
-	//create frostfbo
-	frostFbo =	new OglPostProcessingFbo(windowSize.x, windowSize.y);
-	//glGenFramebuffers(1, &frostFbo);
-	//glBindFramebuffer(GL_FRAMEBUFFER, frostFbo);
-
-	unsigned int frostTextureColorbuffer;
-	glGenTextures(1, &frostTextureColorbuffer);
-	glBindTexture(GL_TEXTURE_2D, frostTextureColorbuffer);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1264, 681, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, frostTextureColorbuffer, 0);
-
-	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-		std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
 	//Set up the light properties
 	lightColour = Vector4(0.8f, 0.8f, 0.5f, 1.0f);
 	lightRadius = 1000.0f;
@@ -86,9 +67,6 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 	CreateScreenQuadMesh();
 
 	LoadSkybox();
-	frostTexture = this->LoadTexture("frost.png");
-	windTexture = this->LoadTexture("wind.png");
-	sandTexture = this->LoadTexture("sand.png");
 
 	glGenVertexArrays(1, &lineVAO);
 	glGenVertexArrays(1, &textVAO);
@@ -113,10 +91,6 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 #endif
 
 	EventEmitter::RegisterForEvent(PROJECTILE_PORTAL_COLLISION, this);
-	EventEmitter::RegisterForEvent(ACTIVATE_NONE_POWER_UP, this);
-	EventEmitter::RegisterForEvent(ACTIVATE_ICE_POWER_UP, this);
-	EventEmitter::RegisterForEvent(ACTIVATE_SAND_POWER_UP, this);
-	EventEmitter::RegisterForEvent(ACTIVATE_WIND_POWER_UP, this);
 	timeOfPortalCollision = 0;
 	wasPortalCollided = false;
 }
@@ -189,11 +163,7 @@ void GameTechRenderer::RenderFrame() {
 	//RenderSkybox();
 	RenderCamera();
 	ApplyToneMapping();
-
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	ApplyFrostingPostProcessing();	
-
+	//ApplyFrostingPostProcessing();
 	RenderProcessedScene();
 	glDisable(GL_CULL_FACE); //Todo - text indices are going the wrong way...
 	glDisable(GL_BLEND);
@@ -298,86 +268,6 @@ void GameTechRenderer::RenderSkybox() {
 
 void NCL::CSC8503::GameTechRenderer::ApplyFrostingPostProcessing()
 {
-	glBindFramebuffer(GL_FRAMEBUFFER, frostFbo->GetFbo());
-	glClear(GL_COLOR_BUFFER_BIT);
-	glDisable(GL_DEPTH_TEST);
-	glDisable(GL_CULL_FACE);
-	float quadVertices[] = {
-		// positions   // texCoords
-		-1.0f,  1.0f,  0.0f, 1.0f,
-		-1.0f, -1.0f,  0.0f, 0.0f,
-		 1.0f, -1.0f,  1.0f, 0.0f,
-
-		-1.0f,  1.0f,  0.0f, 1.0f,
-		 1.0f, -1.0f,  1.0f, 0.0f,
-		 1.0f,  1.0f,  1.0f, 1.0f
-	};
-
-	unsigned int quadVAO, quadVBO;
-	glGenVertexArrays(1, &quadVAO);
-	glGenBuffers(1, &quadVBO);
-	glBindVertexArray(quadVAO);
-	glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
-
-	glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
-
-
-	BindShader(*frostPostProcessing);
-	//int texLocation = glGetUniformLocation(frostPostProcessing->GetProgramID(), "cccTexture");
-	//glUniform1i(texLocation, 0);
-	//glActiveTexture(GL_TEXTURE0);
-	//glBindTexture(GL_TEXTURE_2D, frostTexture->GetAssetID());
-
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, toneMappingFbo->GetColorBuffer());
-
-	// Redundancy : NOT required
-	BindTextureToShader(*(OGLTexture*)frostTexture, "blendTexture", 1);
-
-	GLint powerupType = glGetUniformLocation(frostPostProcessing->GetProgramID(), "powerupType");
-
-	switch (currentActivePowerup) {
-	case ice : 
-		BindTextureToShader(*(OGLTexture*)frostTexture, "blendTexture", 1);
-		glUniform1i(powerupType, 1);
-		break;
-	case wind:
-		BindTextureToShader(*(OGLTexture*)windTexture, "blendTexture", 1);
-		glUniform1i(powerupType, 2);
-		break;
-	case sand :
-		glUniform1i(powerupType, 3);
-		BindTextureToShader(*(OGLTexture*)sandTexture, "blendTexture", 1);
-		break;
-	}
-
-	GLint timeLocation = glGetUniformLocation(frostPostProcessing->GetProgramID(), "time");
-	GLint isActiveLoc = glGetUniformLocation(frostPostProcessing->GetProgramID(), "isActive");
-	
-	if (timeOfPowerupActivation + POST_PROCESSING_DURATION > time && currentActivePowerup != none) {
-		glUniform1f(timeLocation, ((float)(time - timeOfPowerupActivation) / (POST_PROCESSING_DURATION * 0.5)) * 1.25);
-		glUniform1i(isActiveLoc, 100);
-	}
-	else {
-		glUniform1f(timeLocation, 1);
-		glUniform1i(isActiveLoc, -100);
-	}
-
-	//BindMesh(*screenQuad);
-	//DrawBoundMesh();
-	//BindTextureToShader(*(OGLTexture*)toneMappingFbo->GetColorBuffer(), "blendTexture;", 0);
-	//screenShader.use();
-	//glBindVertexArray(quadVAO);
-
-	glDrawArrays(GL_TRIANGLES, 0, 6);
-	glBindVertexArray(0);
-	glBindTexture(GL_TEXTURE_2D, 0);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
 }
 
 void GameTechRenderer::ApplyToneMapping()
@@ -441,7 +331,7 @@ void GameTechRenderer::RenderProcessedScene()
 	glUniform1i(glGetUniformLocation(toneMapperShader->GetProgramID(),
 		"diffuseTex"), 0);
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, frostFbo->GetColorBuffer());
+	glBindTexture(GL_TEXTURE_2D, toneMappingFbo->GetColorBuffer());
 
 	BindMesh(*screenQuad);
 	DrawBoundMesh();
@@ -791,22 +681,7 @@ void NCL::CSC8503::GameTechRenderer::ReceiveEvent(EventType eventType)
 	switch (eventType)
 	{
 	case PROJECTILE_PORTAL_COLLISION:
-		currentActivePowerup = none;
 		timeOfPortalCollision = time;
-		break;
-	case ACTIVATE_NONE_POWER_UP :
-		break;
-	case ACTIVATE_ICE_POWER_UP : 
-		currentActivePowerup = ice;
-		timeOfPowerupActivation = time;
-		break;
-	case ACTIVATE_SAND_POWER_UP :
-		currentActivePowerup = sand;
-		timeOfPowerupActivation = time;
-		break;
-	case ACTIVATE_WIND_POWER_UP :
-		currentActivePowerup = wind;
-		timeOfPowerupActivation = time;
 		break;
 	default:
 		break;
