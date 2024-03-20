@@ -219,11 +219,15 @@ void NetworkedGame::UpdateGame(float dt) {
 		poolPTR->enqueue([this, dt]() {this->NonPhysicsUpdate(dt); });
 	}
 
-
-	if (AIStateObject) {
+	for (auto AIStateObject : AIStateObjectList) {
 		AIStateObject->DetectProjectiles(ProjectileList);
 		AIStateObject->Update(dt);
 	}
+
+	/*if (AIStateObject) {
+		AIStateObject->DetectProjectiles(ProjectileList);
+		AIStateObject->Update(dt);
+	}*/
 
 	Menu->Update(dt);
 	audioEngine->Update();
@@ -769,8 +773,7 @@ void NetworkedGame::EndLevel()
 	networkObjects.clear();
 	gravitywell.clear();
 
-	if(AIStateObject)
-		AIStateObject = NULL;
+	AIStateObjectList.clear();
 	InitCamera();
 
 }
@@ -975,7 +978,7 @@ bool NetworkedGame::clientProcessDeltaPacket(DeltaPacket* dp)
 
 AiStatemachineObject* NetworkedGame::AddAiStateObjectToWorld(const Vector3& position) {
 	NavigationGrid* navGrid = new NavigationGrid(world);
-	AIStateObject = new AiStatemachineObject(world, navGrid);
+	AiStatemachineObject* AIStateObject = new AiStatemachineObject(world, navGrid);
 
 	float radius = 4.0f;
 	SphereVolume* volume = new SphereVolume(radius);
@@ -992,6 +995,7 @@ AiStatemachineObject* NetworkedGame::AddAiStateObjectToWorld(const Vector3& posi
 	AIStateObject->GetPhysicsObject()->InitSphereInertia();
 
 	world->AddGameObject(AIStateObject);
+	AIStateObjectList.push_back(AIStateObject);
 
 	return AIStateObject;
 }
@@ -1051,7 +1055,10 @@ void NetworkedGame::NonPhysicsUpdate(float dt)
 
 void NetworkedGame::SpawnAI() {
 	// TODO : Read from csv and load ais
-	AddAiStateObjectToWorld(Vector3(90, 5.6, 90));
+	AddAiStateObjectToWorld(Vector3(65, 5.6, 65));
+	AddAiStateObjectToWorld(Vector3(-65, 5.6, 65));
+	AddAiStateObjectToWorld(Vector3(-65, 5.6, -65));
+	AddAiStateObjectToWorld(Vector3(65, 5.6, -65));
 }
 
 void NetworkedGame::SpawnPowerUp(int NetID)

@@ -129,7 +129,7 @@ namespace NCL {
 
 			void SpawnAI();
 			AiStatemachineObject* AddAiStateObjectToWorld(const Vector3& position);
-			AiStatemachineObject* AIStateObject;
+			vector <AiStatemachineObject*> AIStateObjectList;
 
 			/** Power Up Spawn */
 			void SpawnPowerUp(int NetID);
