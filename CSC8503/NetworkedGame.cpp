@@ -764,6 +764,7 @@ void NetworkedGame::StartLevel() {
 
 	physics->createStaticTree();//this needs to be at the end of all initiations
 	appState->SetIsGameOver(false);
+	appState->SetIsGamePaused(false);
 	poolPTR = new ThreadPool(2);
 
 }
