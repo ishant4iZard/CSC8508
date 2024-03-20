@@ -98,6 +98,7 @@ namespace NCL {
 			GameObject* AddTeleporterToWorld(const Vector3& position1, const Vector3& position2, const Vector3& rotation1, const Vector3& rotation2, Vector3 dimensions, float inverseMass = 0.0f, float elasticity = 0.0f);
 
 			GameObject* capsule;
+			void ChangeRenderObjectTexture(RenderObject* inRo, Texture* inTextureList[]);
 
 #ifdef _WIN32
 		KeyboardMouseController* controller;
@@ -140,6 +141,8 @@ namespace NCL {
 			Texture* groundTextureList[(uint8_t)TextureType::MAX_TYPE];
 			Texture* wallTextureList[(uint8_t)TextureType::MAX_TYPE];
 			Texture* sandTextureList[(uint8_t)TextureType::MAX_TYPE];
+			Texture* iceTextureList[(uint8_t)TextureType::MAX_TYPE];
+			Texture* mudTextureList[(uint8_t)TextureType::MAX_TYPE];
 
 			//Coursework Meshes
 			Mesh*	charMesh	= nullptr;
@@ -179,6 +182,7 @@ namespace NCL {
 			ApplicationState* appState;
 
 			std::vector<Vector3> powerUpSpawnPointList;
+			RenderObject* outerWallRo = NULL;
 		};
 	}
 }
