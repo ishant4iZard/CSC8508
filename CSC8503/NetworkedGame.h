@@ -124,7 +124,7 @@ namespace NCL {
 
 			void SpawnAI();
 			AiStatemachineObject* AddAiStateObjectToWorld(const Vector3& position);
-			AiStatemachineObject* AIStateObject;
+			vector <AiStatemachineObject*> AIStateObjectList;
 
 			bool ServerFired;
 			bool ClientFired;
