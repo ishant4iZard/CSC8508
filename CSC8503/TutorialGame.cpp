@@ -456,7 +456,7 @@ void NCL::CSC8503::TutorialGame::SpawnBlackHole(const Vector3& inPosition, const
 
 void NCL::CSC8503::TutorialGame::SpawnInvisibleWall(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling)
 {
-	GameObject* tempWall = AddObbCubeToWorld(
+	/*GameObject* tempWall = AddObbCubeToWorld(
 		inPosition,
 		inScale,
 		0, 0.5f);
@@ -464,7 +464,7 @@ void NCL::CSC8503::TutorialGame::SpawnInvisibleWall(const Vector3& inPosition, c
 	tempWall->SetRenderObject(nullptr);
 	tempWall->GetTransform().SetOrientation(Quaternion::EulerAnglesToQuaternion(inRotation.x, inRotation.y, inRotation.z));
 	tempWall->setName("InvisbleWall");
-	tempWall->settag("InvisibleWall");
+	tempWall->settag("InvisibleWall");*/
 }
 
 void NCL::CSC8503::TutorialGame::AddPowerUpSpawnPoint(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling)
