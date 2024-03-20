@@ -282,10 +282,11 @@ void NetworkedGame::UpdateProjectiles(float dt) {
 			i->Particles->Draw();
 		}*/ //Particle system test 
 
-		if (i->GetTimeLeft() <= 0) {
+		if (i->GetTimeLeft() <= 0 && i->IsActive()) {
 			i->deactivate();
 			DeactivateProjectilePacket newPacket;
 			newPacket.NetObjectID = i->GetNetworkObject()->GetNetworkID();
+			DeactiveNetObject(i);
 			if (this->GetServer())
 			{
 				this->GetServer()->SendGlobalPacket(newPacket);
@@ -738,6 +739,7 @@ void NetworkedGame::OnRep_DeactiveProjectile(int objectID)
 {
 	if (networkObjects.find(objectID) == networkObjects.cend()) return;
 	networkObjects[objectID]->GetGameObject()->deactivate();
+	DeactiveNetObject(networkObjects[objectID]->GetGameObject());
 }
 
 void NetworkedGame::StartLevel() {
@@ -940,6 +942,15 @@ void NetworkedGame::ServerSendRoundOverMsg()
 		newPacket.isRoundOver = true;
 		thisServer->SendGlobalPacket(newPacket);
 	}
+}
+
+void NetworkedGame::DeactiveNetObject(GameObject* TargetObject)
+{
+	TargetObject->deactivate();
+	networkObjects.erase(TargetObject->GetNetworkObject()->GetNetworkID());
+	NetworkObject* targetNetObject = TargetObject->GetNetworkObject();
+	TargetObject->SetNetworkObject(nullptr);
+	delete targetNetObject;
 }
 
 bool NetworkedGame::serverProcessClientPacket(ClientPacket* cp, int source)

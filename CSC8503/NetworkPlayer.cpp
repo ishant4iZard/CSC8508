@@ -55,6 +55,9 @@ void NetworkPlayer::OnCollisionBegin(GameObject* otherObject) {
 			DeactivateProjectilePacket newPacket;
 			newPacket.NetObjectID = powerup->GetNetworkObject()->GetNetworkID();
 			NetworkedGame* tempGame = dynamic_cast<NetworkedGame*>(game);
+
+			tempGame->DeactiveNetObject(powerup);
+
 			if (tempGame->GetServer())
 			{
 				tempGame->GetServer()->SendGlobalPacket(newPacket);

@@ -28,6 +28,9 @@ void Hole::OnCollisionBegin(GameObject* otherObject) {
 		DeactivateProjectilePacket newPacket;
 		newPacket.NetObjectID = Bullet->GetNetworkObject()->GetNetworkID();
 		NetworkedGame* tempGame = dynamic_cast<NetworkedGame*>(Bullet->GetGame());
+
+		tempGame->DeactiveNetObject(Bullet);
+
 		if (tempGame->GetServer())
 		{
 			tempGame->GetServer()->SendGlobalPacket(newPacket);

@@ -71,6 +71,8 @@ namespace NCL {
 			int GetClientState();
 			void SetPlayerNameByIndexInList(const std::string& Name, int Index);
 			void ServerSendRoundOverMsg();
+			void DeactiveNetObject(GameObject* TargetObject);
+
 			// for develop mode
 			bool isDevMode = false;
 
