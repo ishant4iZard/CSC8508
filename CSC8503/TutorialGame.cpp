@@ -236,6 +236,13 @@ void TutorialGame::InitialiseAssets() {
 	lavaTextureList[(uint8_t)TextureType::ROUGHNESS] = renderer->LoadTexture("Target/roughness.png");
 	lavaTextureList[(uint8_t)TextureType::AO] = renderer->LoadTexture("Target/ao.png");
 
+	anmObjPbrTextureList[(uint8_t)TextureType::ALBEDO] = nullptr;
+	anmObjPbrTextureList[(uint8_t)TextureType::NORMAL] = nullptr;
+	anmObjPbrTextureList[(uint8_t)TextureType::METAL] = renderer->LoadTexture("AnimationPbrTexture/metallic.png");
+	anmObjPbrTextureList[(uint8_t)TextureType::ROUGHNESS] = renderer->LoadTexture("AnimationPbrTexture/roughness.png");
+	anmObjPbrTextureList[(uint8_t)TextureType::AO] = renderer->LoadTexture("AnimationPbrTexture/ao.png");
+
+
 	//load mesh material
 	maleGuardMaterial = renderer->LoadMaterial("Male_Guard.mat");
 	maxGuardMaterial = renderer->LoadMaterial("Rig_Maximilian.mat");

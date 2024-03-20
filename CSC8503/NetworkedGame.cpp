@@ -513,6 +513,11 @@ NetworkPlayer* NetworkedGame::AddNetworkPlayerToWorld(const Vector3& position, i
 		character->GetRenderObject()->SetTextureAnm("Bump", i, maleGuardBumpTextureList[i]);
 	}
 
+	for (uint8_t i = (uint8_t)TextureType::ALBEDO; i < (uint8_t)TextureType::MAX_TYPE; i++)
+	{
+		character->GetRenderObject()->SetTexture((TextureType)i, anmObjPbrTextureList[i]);
+	}
+
 
 	world->AddGameObject(character);
 

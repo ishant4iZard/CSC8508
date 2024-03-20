@@ -794,8 +794,8 @@ void GameTechRenderer::RenderAnimatedObjects() {
 		OGLShader* shader = (OGLShader*)(*tempAnimatedRenderObject).GetRenderObject()->GetShader();
 		BindShader(*shader);
 
-		glUniform1i(glGetUniformLocation(shader->GetProgramID(), "diffuseTex"), 0);
-		glUniform1i(glGetUniformLocation(shader->GetProgramID(), "bumpTex"), 1);
+		glUniform1i(glGetUniformLocation(shader->GetProgramID(), "diffuseTex"), 7);
+		glUniform1i(glGetUniformLocation(shader->GetProgramID(), "bumpTex"), 8);
 		glUniform1i(glGetUniformLocation(shader->GetProgramID(), "normalTex"), 2);
 		//glUniform1i(glGetUniformLocation(shader->GetProgramID(), "albedoTex"), 3);
 		glUniform1i(glGetUniformLocation(shader->GetProgramID(), "metallicTex"), 4);
@@ -832,6 +832,28 @@ void GameTechRenderer::RenderAnimatedObjects() {
 		glActiveTexture(GL_TEXTURE6);
 		glBindTexture(GL_TEXTURE_2D, ao->GetObjectID());*/
 
+		RenderObject* renderObject = tempAnimatedRenderObject->GetRenderObject();
+		UpdatePBRUniforms(renderObject);
+
+		//GLuint albedo		= ((OGLTexture*)renderObject->GetTexture(static_cast<TextureType>(0)))->GetObjectID();
+		//GLuint normal		= ((OGLTexture*)renderObject->GetTexture(static_cast<TextureType>(1)))->GetObjectID();
+		GLuint metallic		= ((OGLTexture*)renderObject->GetTexture(static_cast<TextureType>(2)))->GetObjectID();
+		GLuint roughness	= ((OGLTexture*)renderObject->GetTexture(static_cast<TextureType>(3)))->GetObjectID();
+		GLuint ao			= ((OGLTexture*)renderObject->GetTexture(static_cast<TextureType>(4)))->GetObjectID();
+
+		//glActiveTexture(GL_TEXTURE3);
+		//glBindTexture(GL_TEXTURE_2D, albedo);
+		//glActiveTexture(GL_TEXTURE2);
+		//glBindTexture(GL_TEXTURE_2D, normal->GetObjectID());
+		glActiveTexture(GL_TEXTURE4);
+		glBindTexture(GL_TEXTURE_2D, metallic);
+		glActiveTexture(GL_TEXTURE5);
+		glBindTexture(GL_TEXTURE_2D, roughness);
+		glActiveTexture(GL_TEXTURE6);
+		glBindTexture(GL_TEXTURE_2D, ao);
+
+
+
 		int	jointsLocation = glGetUniformLocation(shader->GetProgramID(), "joints");
 		
 		vector<Matrix4> frameMatrices = tempAnimatedRenderObject->GetRenderObject()->GetSkeleton();
@@ -852,17 +874,18 @@ void GameTechRenderer::RenderAnimatedObjects() {
 		tempAnimatedRenderObject->GetRenderObject()->GetTextureAnm("Bump", bumpTex);*/
 
 		for (int i = 0; i < tempMesh->GetSubMeshCount(); ++i) {
+
 			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, 0);
+
+			glActiveTexture(GL_TEXTURE7);
 			glBindTexture(GL_TEXTURE_2D, ((OGLTexture*)diffuseTex[i])->GetObjectID());
 
-			glActiveTexture(GL_TEXTURE1);
+			glActiveTexture(GL_TEXTURE8);
 			glBindTexture(GL_TEXTURE_2D, ((OGLTexture*)bumpTex[i])->GetObjectID());
 
 			BindMesh((OGLMesh&)*(tempMesh));
 			DrawBoundMesh((uint32_t)i);
 		}
-
-		
-
 	}
 }

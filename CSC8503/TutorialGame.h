@@ -151,6 +151,8 @@ namespace NCL {
 			Texture* maleGuardBumpTextureList[4];
 			Texture* maxGuardDiffuseTextureList[4];
 
+			Texture* anmObjPbrTextureList[(uint8_t)TextureType::MAX_TYPE];
+
 			MeshMaterial* maleGuardMaterial	= nullptr;
 			MeshMaterial* maxGuardMaterial  = nullptr;
 
