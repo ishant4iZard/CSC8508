@@ -596,13 +596,13 @@ PushdownState::PushdownResult PlayingHUD::OnUpdate(float dt, PushdownState** new
 
 		if (!appState->GetIsGameOver() && appState->GetIsGamePaused())
 		{
-			ui->DrawStringText("Round Paused !!!", Vector2(40, 50), UIBase::BLUE);
+			ui->DrawStringText("Game Paused !!!", Vector2(46, 15), UIBase::BLUE);
 		}
 
 		if (appState->GetIsSolo() && !appState->GetIsGameOver())
 		{
 			ui->DrawButton(
-				appState->GetIsGamePaused() ? "Resume" : "Round Pause",
+				appState->GetIsGamePaused() ? "Resume" : "Pause Game",
 				Vector2(85, 80),
 				[&, Game]() {
 					appState->SetIsGamePaused(!appState->GetIsGamePaused());
