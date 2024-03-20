@@ -109,9 +109,13 @@ void NCL::CSC8503::PS5_Game::UpdateGame(float dt)
 				if (i->GetTimeLeft() <= 0)
 					i->deactivate();
 			}
+
+			RotatePortals(dt);
+		
+			if (timeElapsed > GAME_TIME_LIMIT)
+				appState->SetIsGameOver(true);
 		}
 
-		RotatePortals(dt);
 	}
 
 	ui->RenderUI(dt);

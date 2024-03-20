@@ -454,8 +454,8 @@ void NCL::CSC8503::TutorialGame::SpawnTarget(const Vector3& inPosition, const Ve
 	{
 		hole->GetRenderObject()->SetTexture((TextureType)i, lavaTextureList[i]);
 	}
-	world->AddGameObject(hole);
 #endif // X64
+	world->AddGameObject(hole);
 }
 
 void NCL::CSC8503::TutorialGame::SpawnBlackHole(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling)
