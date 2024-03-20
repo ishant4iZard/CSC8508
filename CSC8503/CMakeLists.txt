@@ -15,28 +15,6 @@ if(NOT("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64"))
     )
     source_group("NetPlugins" FILES ${NetPlugins})
 
-    set(AudioEngine
-        "AudioEngine.h"
-        "AudioEngine.cpp"
-    )
-    source_group("AudioEngine" FILES ${AudioEngine})
-
-    if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
-        set(UIWindows
-            "UIBase.h"
-            "UIWindows.h"
-            "UIWindows.cpp"
-        )
-        source_group("UIWindows" FILES ${UIWindows})
-    else()
-        set(UIPlaystation
-            "UIBase.h"
-            "UIPlaystation.h"
-            "UIPlaystation.cpp"
-        )
-        source_group("UIPlaystation" FILES ${UIPlaystation})
-    endif()
-
     set(Header_Files
         #"NetworkedGame.h"
         "NetworkPlayer.h"
@@ -398,6 +376,7 @@ else()
         "DirectionalLight.h"
         "DebugHUD.h"
         "ThreadPool.h"
+        "Particles.h"
     )
     source_group("Header Files" FILES ${Header_Files})
 
@@ -420,6 +399,7 @@ else()
         "OGLTextureManager.cpp"
         "Powerup.cpp"
         "DebugHUD.cpp"
+        "Particles.cpp"
     )
     source_group("Source Files" FILES ${Source_Files})
 
