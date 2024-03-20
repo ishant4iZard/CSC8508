@@ -54,8 +54,8 @@ void DebugHUD::DrawDebugHUD(DebugHUDParams p)
 	ui->DrawStringText("Number Of Objects: " + std::to_string(p.numberOfObjects), Vector2(2, 87));
 
 #ifdef _WIN32
-	ui->DrawStringText("Outgoing packet size: " + std::to_string(p.outgoingPacketSize) + " kb/s", Vector2(2, 90));
-	ui->DrawStringText("Incoming packet size: " + std::to_string(p.incomingPacketSize) + " kb/s", Vector2(2, 93));
+	ui->DrawStringText("Outgoing packets: " + std::to_string(p.outgoingPacketSize) + " kb/s", Vector2(2, 90));
+	ui->DrawStringText("Incoming packets: " + std::to_string(p.incomingPacketSize) + " kb/s", Vector2(2, 93));
 #endif
 
 

@@ -252,8 +252,8 @@ void NetworkedGame::UpdateGame(float dt) {
 			(renderTimeCost.has_value() ? renderTimeCost.value().count() : 0),
 			physics->GetNumberOfCollisions(),
 			world->GetNumberOfObjects(),
-			0,
-			0
+			GetOutgoingPacketSizePerSecond(),
+			GetInComingPacketSizePerSecond()
 		});
 
 	}
