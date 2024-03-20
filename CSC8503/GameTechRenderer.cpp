@@ -676,6 +676,10 @@ Shader* GameTechRenderer::LoadShader(const std::string& vertex, const std::strin
 	return new OGLShader(vertex, fragment);
 }
 
+MeshMaterial* GameTechRenderer::LoadMaterial(const std::string& name) {
+	return new MeshMaterial(name);
+}
+
 void NCL::CSC8503::GameTechRenderer::ReceiveEvent(EventType eventType)
 {
 	switch (eventType)

@@ -28,6 +28,8 @@
 #include "ApplicationState.h"
 #include "UIBase.h"
 
+#include "MeshMaterial.h"
+
 #define USE_SHADOW = false
 
 enum class level {
@@ -97,6 +99,8 @@ namespace NCL {
 
 			GameObject* capsule;
 
+			void LoadTextureToMesh();
+
 #ifdef _WIN32
 		KeyboardMouseController* controller;
 		OGLTextureManager* bm;
@@ -140,6 +144,15 @@ namespace NCL {
 			Texture* wallTextureList[(uint8_t)TextureType::MAX_TYPE];
 			Texture* sandTextureList[(uint8_t)TextureType::MAX_TYPE];
 			Texture* lavaTextureList[(uint8_t)TextureType::MAX_TYPE];
+
+			//maleGuard and maxGuard both have 4 submeshes
+			Texture* maleGuardDiffuseTextureList[4];
+			Texture* maleGuardBumpTextureList[4];
+			Texture* maxGuardDiffuseTextureList[4];
+
+			MeshMaterial* maleGuardMaterial	= nullptr;
+			MeshMaterial* maxGuardMaterial  = nullptr;
+
 
 			//Coursework Meshes
 			Mesh*	charMesh	= nullptr;

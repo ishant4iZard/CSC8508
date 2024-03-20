@@ -7,6 +7,7 @@
 #include "GameWorld.h"
 #include <Vector3.h>
 #include <Vector4.h>
+#include "MeshMaterial.h"
 
 #include "../CSC8503/UIBase.h"
 #ifdef _WIN32
@@ -34,6 +35,8 @@ namespace NCL {
 			Mesh*		LoadMesh(const std::string& name);
 			Texture*	LoadTexture(const std::string& name);
 			Shader*		LoadShader(const std::string& vertex, const std::string& fragment);
+			
+			MeshMaterial* LoadMaterial(const std::string& name);
 
 			void ReceiveEvent(EventType eventType) override;
 			OGLShader* GetShader() const { return particleShader; }

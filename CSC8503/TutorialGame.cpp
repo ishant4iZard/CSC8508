@@ -26,6 +26,7 @@ using namespace CSC8503;
 #define POWER_UP_SPAWN_TIME 30.0f
 #define MAX_POWER_UP_COUNT 3
 #define SAFE_DELETE_PBR_TEXTURE(a) for (uint8_t i = 0; i < (uint8_t)TextureType::MAX_TYPE; i++){ if (a[i] != NULL) delete a[i]; a[i] = NULL; }
+#define SAFE_DELETE_ANIMATION_TEXTURE(a) for (int i = 0; i < 4; ++i){ if (a[i]!=NULL) delete a[i]; a[i] = NULL;}
 
 TutorialGame::TutorialGame() {
 	world		= new GameWorld();
@@ -125,6 +126,9 @@ TutorialGame::~TutorialGame()	{
 	SAFE_DELETE_PBR_TEXTURE(sandTextureList)
 	SAFE_DELETE_PBR_TEXTURE(goldTextureList)
 
+	SAFE_DELETE_ANIMATION_TEXTURE(maleGuardDiffuseTextureList)
+	SAFE_DELETE_ANIMATION_TEXTURE(maleGuardBumpTextureList)
+	SAFE_DELETE_ANIMATION_TEXTURE(maxGuardDiffuseTextureList)
 }
 
 void NCL::CSC8503::TutorialGame::BindEvents()
@@ -179,7 +183,8 @@ void TutorialGame::InitialiseAssets() {
 	wallMesh = renderer->LoadMesh("cube.msh");
 	bouncePlatformMesh = renderer->LoadMesh("cube.msh");
 	sphereMesh	= renderer->LoadMesh("sphere.msh");
-	charMesh	= renderer->LoadMesh("goat.msh");
+	//charMesh	= renderer->LoadMesh("goat.msh");
+	charMesh = renderer->LoadMesh("Male_Guard.msh");
 	enemyMesh	= renderer->LoadMesh("Keeper.msh");
 	bonusMesh	= renderer->LoadMesh("sphere.msh");
 	gooseMesh	= renderer->LoadMesh("goose.msh");
@@ -228,6 +233,14 @@ void TutorialGame::InitialiseAssets() {
 	lavaTextureList[(uint8_t)TextureType::METAL] = renderer->LoadTexture("Target/metallic.png");
 	lavaTextureList[(uint8_t)TextureType::ROUGHNESS] = renderer->LoadTexture("Target/roughness.png");
 	lavaTextureList[(uint8_t)TextureType::AO] = renderer->LoadTexture("Target/ao.png");
+
+	//load mesh material
+	maleGuardMaterial = renderer->LoadMaterial("Male_Guard.mat");
+	maxGuardMaterial = renderer->LoadMaterial("Rig_Maximilian.mat");
+
+	//load submeshes texture
+	LoadTextureToMesh();
+
 
 #ifdef defined(USE_SHADOW)
 	basicShader = renderer->LoadShader("scene.vert", "scene.frag");
@@ -637,6 +650,26 @@ void TutorialGame::TestAddStaticObjectsToWorld() {
 	}
 }
 
+void TutorialGame::LoadTextureToMesh() {
+	for (int i = 0; i < charMesh->GetSubMeshCount(); ++i) {
+		const MeshMaterialEntry* matEntry = maleGuardMaterial->GetMaterialForLayer(i);
+		const string* diffusePath = nullptr;
+		matEntry->GetEntry("Diffuse", &diffusePath);
+		string diffuseName = *diffusePath;
+		diffuseName.erase(0, 1);
+		OGLTexture* diffuseTex = (OGLTexture*)(renderer->LoadTexture(diffuseName));
+		//GLuint diffuseTexID = diffuseTex->GetObjectID();
+		maleGuardDiffuseTextureList[i] = diffuseTex;
+
+		const string* bumpPath = nullptr;
+		matEntry->GetEntry("Bump", &bumpPath);
+		string bumpName = *bumpPath;
+		bumpName.erase(0, 1);
+		OGLTexture* bumpTex = (OGLTexture*)(renderer->LoadTexture(bumpName));
+		maleGuardBumpTextureList[i] = bumpTex;
+		//((OGLTexture*)maxGuardTextureList[i])->GetObjectID();
+	}
+}
 
 
 
