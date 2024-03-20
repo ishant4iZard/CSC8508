@@ -2,29 +2,144 @@
 
 struct VS_OUTPUT
 {
-	float4 Position		: S_POSITION;
-	float2 UV			: TEXCOORD0;
-	float4 Colour		: TEXCOORD1;
-	int	texID			: TEXCOORD2;
-	float4 ShadowClip	: TEXCOORD2;
+    float4 Position : S_POSITION;
+    float4 Colour : TEXCOORD1;
+    float2 UV : TEXCOORD2;
+    float4 ShadowProj : TEXCOORD3;
+    float3 Normal : TEXCOORD4;
+    float3 Tangent : TEXCOORD5;
+    float3 BiNormal : TEXCOORD6;
+    float3 WorldPos : TEXCOORD7;
+    int albedoTexId : TEXCOORD8;
+	int normalTexId : TEXCOORD9;
+    int roughnessTexId : TEXCOORD10;
+	int metalicTexId : TEXCOORD11;
+    int aoTexId : TEXCOORD12;
 };
 
-SamplerState sampler			: register(s0);
-SamplerState shadowSampler		: register(s1);
+SamplerState sampler: register(s0);
+SamplerState normalSampler: register(s1);
+SamplerState mettalicSampler: register(s2);
+SamplerState roughnessSampler: register(s3);
+SamplerState aoSampler: register(s4);
+SamplerState shadowSampler : register(s5);
 
 RegularBuffer<sce::Agc::Core::Texture> textures : register(t0);
 
-[CxxSymbol("TestShader::ps")]
-float4 main(VS_OUTPUT vertex) : S_TARGET_OUTPUT
+float3 GetNormalFromTexture(float3 inTangent, float3 inBiNormal, float3 inNormal, int inNormalTexId, float2 inUV)
 {
-	Texture2D<float4> tex = Texture2D<float4>(textures[NonUniformResourceIndex(vertex.texID)]);
+    float3x3 TBN = float3x3(
+		normalize(inTangent),
+		normalize(inBiNormal),
+		normalize(inNormal));
 
-	float4 texSample = tex.Sample(sampler, vertex.UV) * vertex.Colour;
+	Texture2D<float4> normalTex = Texture2D<float4>(textures[NonUniformResourceIndex(inNormalTexId)]);
+	float3 normalTexSample = normalTex.Sample(normalSampler, inUV).xyz;
+    return normalize(mul(TBN, normalize(normalTexSample * 2.0 - 1.0)));  
+}
+
+float3 BaseReflectivity(float3 inAlbedo, float inMetallicFactor)
+{
+    return lerp(float3(0.04, 0.04, 0.04), inAlbedo, inMetallicFactor);
+}
+
+float3 FresnelSchlick(float inCosTheta, float3 inF0)
+{
+    return inF0 + (1.0f - inF0) * pow(saturate(1.0f - inCosTheta), 5.0f);
+}
+
+//Based on observations by Disney and adopted by Epic Games, the lighting looks more correct squaring the roughness in both the geometry and normal distribution function.
+float DistributionGGX(float3 inN, float3 inH, float inRoughness)
+{
+    float tempA = inRoughness * inRoughness;
+    float tempA2 = tempA * tempA;
+
+    float tempNDotH = max(dot(inN, inH), 0.0);
+    float tempNDotHSqaure = tempNDotH * tempNDotH;
+
+    float tempDemon = (tempNDotHSqaure * (tempA2 - 1.0) + 1.0);
+    return tempA2 / (Constants.PI * tempDemon * tempDemon);
+}
+
+float GeometrySchlickGGX(float inNdotV, float inRoughness)
+{
+    float tempR = (inRoughness + 1.0);
+    float tempK = (tempR * tempR) / 8.0; // Epic suggests using this roughness remapping for analytic lights.
+
+    float tempDenom = inNdotV * (1.0 - tempK) + tempK;
+	
+    return inNdotV / tempDenom;
+}
+
+
+float GeometrySmith(float3 inN, float3 inV, float inL, float inRoughness)
+{
+    float tempNdotV = max(dot(inN, inV), 0.0);
+    float tempNdotL = max(dot(inN, inL), 0.0);
+
+    float tempGgx2 = GeometrySchlickGGX(tempNdotV, inRoughness);
+    float tempGgx1 = GeometrySchlickGGX(tempNdotL, inRoughness);
+
+    return (tempGgx1 * tempGgx2);
+}
+
+float3 DirectionalLightPbr(float3 inDirection, float3 inWorldPos, float3 inColor, float3 inNormal, float inRoughness, float inMetallic, float3 inAlbedo, float3 inCameraPos)
+{
+    // Calculate light radiance
+    float3 wi = normalize(-inDirection); // direction vector from sun to world
+    float3 wo = normalize(inCameraPos - inWorldPos); // Direction vector from fragment to camera
+    float3 halfVector = normalize(wi + wo);
+    
+    //TODO : Pass global intensity from c++, currently hard coded : 
+    float3 radiance = inColor * 0.02f;
+
+    // Cook-Torrance BRDF
+    float NDF = DistributionGGX(inNormal, halfVector, inRoughness);       
+    float G = GeometrySmith(inNormal, wo, wi, inRoughness);
+    float3 F0 = float3(0.04f);
+    float3 F = FresnelSchlick(max(dot(halfVector, wo), 0.0), F0);
+
+    float3 kS = F;
+    float3 kD = float3(1.0f) - kS;
+    kD *= (1.0f - inMetallic);
+
+    float3 numerator = NDF * G * F;
+    float denominator = 4.0f * max(dot(inNormal, wo), 0.0f) * max(dot(inNormal, wi), 0.0f) + 0.0001f; // We add 0.0001 to the denominator to prevent a divide by zero in case any dot product ends up 0.0.
+    float3 specular = (numerator / denominator);
+
+    // Add to outgoing radiance lOut
+    float NdotL = max(dot(inNormal, wi), 0.0f);  
+    return ((kD * inAlbedo / Constants.PI + specular) * radiance * NdotL); 
+}
+
+
+
+[CxxSymbol("TestShader::ps")]
+float4 main(VS_OUTPUT vertex) : S_TARGET_OUTPUT0
+{
+	//Albedo
+	Texture2D<float4> albedoTex = Texture2D<float4>(textures[NonUniformResourceIndex(vertex.albedoTexId)]);
+	float4 albedoTexSample = albedoTex.Sample(sampler, vertex.UV) * vertex.Colour;
+
+    //Normal
+	float3 normal = GetNormalFromTexture(vertex.Tangent, vertex.BiNormal, vertex.Normal, vertex.normalTexId, vertex.UV);
+
+	//Roughness
+	Texture2D<float4> roughgnessTex = Texture2D<float4>(textures[NonUniformResourceIndex(vertex.roughnessTexId)]);
+	float3 roughness = roughgnessTex.Sample(roughnessSampler, vertex.UV).xyz;
+	//Mettalic
+	Texture2D<float4> metalicTex = Texture2D<float4>(textures[NonUniformResourceIndex(vertex.metalicTexId)]);
+	float3 metalic = metalicTex.Sample(mettalicSampler, vertex.UV).xyz;
+	//AO
+	Texture2D<float4> aoTex = Texture2D<float4>(textures[NonUniformResourceIndex(vertex.aoTexId)]);
+	float3 ao = aoTex.Sample(aoSampler, vertex.UV).xyz;
+
+	float3 F0 = BaseReflectivity(albedoTexSample.xyz, metalic); //surface reflection at zero incidence 
 
 	//Shadow mapping		
 	Texture2D<float> shadowTex = Texture2D<float>(textures[Constants.shadowID]);
 
-	float3 shadowNDC		= vertex.ShadowClip.xyz / vertex.ShadowClip.w;
+	float3 shadowNDC		= vertex.ShadowProj.xyz / vertex.ShadowProj.w;
 
 	shadowNDC.xy = (shadowNDC.xy * 0.5f) + float2(0.5f);
 	shadowNDC.y = 1.0f - shadowNDC.y;
@@ -40,7 +155,25 @@ float4 main(VS_OUTPUT vertex) : S_TARGET_OUTPUT
         if(shadowSample < shadowNDC.z + offset) {
             shadow = 0.5f;
         }
-    } 
+    }
 	
-	return texSample * float4(shadow,shadow,shadow,1);  
+	// reflectance equation
+    float3 lOut = float3(0.0);
+
+    /*
+    	directionalLight = new DirectionalLight(
+		float3(-0.2f, -220.0f, -100.0f),
+		0.02f,
+		float3(247.0f, 149.0f, 64.0f));
+    */
+	lOut += DirectionalLightPbr(
+    float3(-0.2f, -220.0f, -100.0f),
+    vertex.WorldPos,
+    float3(247.0f, 149.0f, 64.0f),
+    normal, roughness, metalic, albedoTexSample.xyz, Constants.cameraPos);
+
+    float3 ambient = float3(0.33) * albedoTexSample.xyz * ao;
+    float3 color = max((ambient + lOut), float3(0.0));
+
+	return float4(color,1.0f) * float4(shadow,shadow,shadow,1);  
 }

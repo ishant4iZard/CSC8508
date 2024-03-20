@@ -54,7 +54,7 @@ namespace NCL {
 			virtual void UpdateGame(float dt);
 			void UpdatePowerUpSpawnTimer(float dt);
 
-			GravityWell* gravitywell;
+			vector<GravityWell*> gravitywell;
 
 			powerUpType getActivePowerup() {
 				return activePowerUp;
@@ -64,7 +64,9 @@ namespace NCL {
 			}
 
 			bool CloseGame = false;
-
+			Texture* goldTextureList[(uint8_t)TextureType::MAX_TYPE];
+			Shader* GetPbrShader() const { return pbrShader; }
+			Mesh* GetSphereMesh() const { return sphereMesh; }
 		protected:
 			void InitialiseAssets();
 			void InitCamera();
@@ -135,6 +137,7 @@ namespace NCL {
 			Texture* groundTextureList[(uint8_t)TextureType::MAX_TYPE];
 			Texture* wallTextureList[(uint8_t)TextureType::MAX_TYPE];
 			Texture* sandTextureList[(uint8_t)TextureType::MAX_TYPE];
+			Texture* lavaTextureList[(uint8_t)TextureType::MAX_TYPE];
 
 			//Coursework Meshes
 			Mesh*	charMesh	= nullptr;

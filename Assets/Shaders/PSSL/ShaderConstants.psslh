@@ -16,6 +16,8 @@ struct ShaderConstants
 	float4 lightColour;
 	float3 cameraPos;
 	uint32_t shadowID;
+
+	float PI = 3.14159265359;
 };
 
 #ifndef __cplusplus 

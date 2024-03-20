@@ -123,6 +123,8 @@ TutorialGame::~TutorialGame()	{
 	SAFE_DELETE_PBR_TEXTURE(groundTextureList)
 	SAFE_DELETE_PBR_TEXTURE(wallTextureList)
 	SAFE_DELETE_PBR_TEXTURE(sandTextureList)
+	SAFE_DELETE_PBR_TEXTURE(goldTextureList)
+
 }
 
 void NCL::CSC8503::TutorialGame::BindEvents()
@@ -209,6 +211,18 @@ void TutorialGame::InitialiseAssets() {
 	sandTextureList[(uint8_t)TextureType::METAL] = renderer->LoadTexture("GroundTile11/metallic.png");
 	sandTextureList[(uint8_t)TextureType::ROUGHNESS] = renderer->LoadTexture("GroundTile11/roughness.png");
 	sandTextureList[(uint8_t)TextureType::AO] = renderer->LoadTexture("GroundTile11/ao.png");
+
+	goldTextureList[(uint8_t)TextureType::ALBEDO] = renderer->LoadTexture("Projectile/albedo.png");
+	goldTextureList[(uint8_t)TextureType::NORMAL] = renderer->LoadTexture("Projectile/normal_gl.png");
+	goldTextureList[(uint8_t)TextureType::METAL] = renderer->LoadTexture("Projectile/metallic.png");
+	goldTextureList[(uint8_t)TextureType::ROUGHNESS] = renderer->LoadTexture("Projectile/roughness.png");
+	goldTextureList[(uint8_t)TextureType::AO] = renderer->LoadTexture("Projectile/ao.png");
+
+	lavaTextureList[(uint8_t)TextureType::ALBEDO] = renderer->LoadTexture("Target/albedo.png");
+	lavaTextureList[(uint8_t)TextureType::NORMAL] = renderer->LoadTexture("Target/normal_gl.png");
+	lavaTextureList[(uint8_t)TextureType::METAL] = renderer->LoadTexture("Target/metallic.png");
+	lavaTextureList[(uint8_t)TextureType::ROUGHNESS] = renderer->LoadTexture("Target/roughness.png");
+	lavaTextureList[(uint8_t)TextureType::AO] = renderer->LoadTexture("Target/ao.png");
 
 #ifdef defined(USE_SHADOW)
 	basicShader = renderer->LoadShader("scene.vert", "scene.frag");
@@ -412,7 +426,7 @@ void NCL::CSC8503::TutorialGame::SpawnTarget(const Vector3& inPosition, const Ve
 {
 
 	Hole* hole = new Hole();
-
+	
 	float radius = 2.0f;
 	Vector3 sphereSize = Vector3(radius, radius, radius);
 	SphereVolume* volume = new SphereVolume(radius);
@@ -421,7 +435,6 @@ void NCL::CSC8503::TutorialGame::SpawnTarget(const Vector3& inPosition, const Ve
 	hole->SetPhysicsObject(new PhysicsObject(&hole->GetTransform(), hole->GetBoundingVolume()));
 	hole->GetPhysicsObject()->SetInverseMass(0);
 	hole->GetPhysicsObject()->InitSphereInertia();
-
 #ifdef _WIN32
 	GameObject* targetDisplay = new GameObject();
 	targetDisplay->GetTransform()
@@ -434,24 +447,31 @@ void NCL::CSC8503::TutorialGame::SpawnTarget(const Vector3& inPosition, const Ve
 
 #endif
 
+	world->AddGameObject(targetDisplay);
+#else
+	hole->SetRenderObject(new RenderObject(&hole->GetTransform(), sphereMesh, targetTex, pbrShader));
+	for (uint8_t i = (uint8_t)TextureType::ALBEDO; i < (uint8_t)TextureType::MAX_TYPE; i++)
+	{
+		hole->GetRenderObject()->SetTexture((TextureType)i, lavaTextureList[i]);
+	}
 	world->AddGameObject(hole);
+#endif // X64
 }
 
 void NCL::CSC8503::TutorialGame::SpawnBlackHole(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling)
 {
 	//GravityWell
-
-	GravityWell* gravityWell = new GravityWell();
+	GravityWell* newgravityWell = new GravityWell();
 
 	float radius = 1.5f;
 	Vector3 sphereSize = Vector3(radius, radius, radius);
 	SphereVolume* volume = new SphereVolume(radius);
-	gravityWell->SetBoundingVolume((CollisionVolume*)volume);
-	gravityWell->GetTransform().SetScale(inScale).SetPosition(inPosition).SetOrientation(Quaternion::EulerAnglesToQuaternion(inRotation.x, inRotation.y, inRotation.z));
+	newgravityWell->SetBoundingVolume((CollisionVolume*)volume);
+	newgravityWell->GetTransform().SetScale(inScale).SetPosition(inPosition).SetOrientation(Quaternion::EulerAnglesToQuaternion(inRotation.x, inRotation.y, inRotation.z));
 	
-	gravityWell->SetPhysicsObject(new PhysicsObject(&gravityWell->GetTransform(), gravityWell->GetBoundingVolume()));
-	gravityWell->GetPhysicsObject()->SetInverseMass(0);
-	gravityWell->GetPhysicsObject()->InitSphereInertia(); 
+	newgravityWell->SetPhysicsObject(new PhysicsObject(&newgravityWell->GetTransform(), newgravityWell->GetBoundingVolume()));
+	newgravityWell->GetPhysicsObject()->SetInverseMass(0);
+	newgravityWell->GetPhysicsObject()->InitSphereInertia();
 	
 	GameObject* blackholeDisplay = new GameObject();
 	blackholeDisplay->GetTransform()
@@ -460,9 +480,8 @@ void NCL::CSC8503::TutorialGame::SpawnBlackHole(const Vector3& inPosition, const
 		.SetOrientation(Quaternion::EulerAnglesToQuaternion(inRotation.x, inRotation.y, inRotation.z));
 	blackholeDisplay->SetRenderObject(new RenderObject(&blackholeDisplay->GetTransform(), sphereMesh, blackholeTex, blackholeShader));
 
-	gravitywell = gravityWell;
-	world->AddGameObject(gravityWell);
-
+	gravitywell.push_back(newgravityWell);
+	world->AddGameObject(newgravityWell);
 	world->AddGameObject(blackholeDisplay);
 }
 
