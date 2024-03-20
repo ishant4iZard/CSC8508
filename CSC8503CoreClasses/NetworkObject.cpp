@@ -27,6 +27,7 @@ bool NetworkObject::WritePacket(GamePacket** p, bool deltaFrame, int stateID) {
 		if (!WriteDeltaPacket(p, stateID)) {
 			return WriteFullPacket(p);
 		}
+		return true;
 	}
 	return WriteFullPacket(p);
 }
@@ -72,6 +73,7 @@ bool NetworkObject::WriteDeltaPacket(GamePacket**p, int stateID) {
 	DeltaPacket* dp = new DeltaPacket();
 	NetworkState state;
 	if (!GetNetworkState(stateID, state)) {
+		delete dp;
 		return false; // can ’t delta !
 	}
 	dp -> fullID = stateID;
