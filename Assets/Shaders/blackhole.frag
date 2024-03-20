@@ -27,10 +27,8 @@ mat2 rotateBlackhole(float speed, float radius) {
 }
 
 void main(void) {
-	//vec2 uv = gl_FragCoord.xy / iResolution.xy;
 	vec2 uv = IN.texCoord;
 	vec2 center = (iResolution.xy * 0.5f) / iResolution.xy;
-	//vec2 center = vec2(0.5f);
 	vec2 dir = normalize(uv - center);
 	vec3 blackholeColor = vec3(0.8f, 0.4f, 0.2f);
 
@@ -77,6 +75,7 @@ void main(void) {
 	vec3 finalSampler = sp;
 	vec3 col = blackholeColor * pow(1.0 - distUVPC, 7.0f);
 	float ring = pow(smoothstep(0.32f, 0.08f, distUVPC * 1.5f) * 4.0f, 2.8f) + 1.0f;
+	float alpha = smoothstep(0.72f, 0.95f, idistUVPC);
 
-	fragColor = vec4(finalSampler * front + 1.2f * ring * front * finalSampler * col, 1.0f);
+	fragColor = vec4(finalSampler * front + 1.2f * ring * front * finalSampler * col, alpha);
 }

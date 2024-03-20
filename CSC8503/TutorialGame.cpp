@@ -187,6 +187,7 @@ void TutorialGame::InitialiseAssets() {
 	basicTex	= renderer->LoadTexture("checkerboard.png");
 	portalTex	= renderer->LoadTexture("PortalTex.jpg");
 	sandTex		= renderer->LoadTexture("sand.jpg");
+	targetTex = renderer->LoadTexture("blackhole.png");
 
 	groundTextureList[(uint8_t)TextureType::ALBEDO] = renderer->LoadTexture("GrassWithRock01/albedo.png");
 	groundTextureList[(uint8_t)TextureType::NORMAL] = renderer->LoadTexture("GrassWithRock01/normal_gl.png");
@@ -216,6 +217,8 @@ void TutorialGame::InitialiseAssets() {
 	portalShader = renderer->LoadShader("scene.vert", "portal.frag");
 	instancePbrShader = renderer->LoadShader("pbrInstanced.vert", "pbr.frag");
 	blackholeShader = renderer->LoadShader("blackhole.vert", "blackhole.frag");
+	targetholeShader = renderer->LoadShader("targethole.vert", "targethole.frag");
+	particleShader = renderer->LoadShader("particleDefault.vert", "particleMoving.frag");
 
 	InitCamera();
 	InitWorld();
@@ -299,10 +302,6 @@ void NCL::CSC8503::TutorialGame::InitWindPowerup(PowerUp* inPowerup, Shader* inS
 	}
 }
 
-void NCL::CSC8503::TutorialGame::InitTeleporters()
-{
-	AddTeleporterToWorld((Vector3(48, 5.6f, 0)), (Vector3(-48, 5.6f, 45)), Vector3(0, -45, 0), Vector3(0, 90, 0) , Vector3(10, 10, 3.5));
-}
 
 GameObject* TutorialGame::AddFloorToWorld(const Vector3& position, const Vector3& size) {
 
@@ -395,17 +394,14 @@ void NCL::CSC8503::TutorialGame::SpawnFloor(const Vector3& inPosition, const Vec
 
 void NCL::CSC8503::TutorialGame::SpawnBouncingPad(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling)
 {
-
-	BouncePad* tempBouncePad = new BouncePad(bouncePlatformMesh, basicTex, instancePbrShader);
+	BouncePad* tempBouncePad = new BouncePad(bouncePlatformMesh, basicTex, instancePbrShader, inScale * 2);
 	for (size_t i = 0; i < (uint8_t)TextureType::MAX_TYPE; i++)
 	{
 		tempBouncePad->GetRenderObject()->SetTexture((TextureType)i, groundTextureList[i]);
 	}
 	tempBouncePad->GetRenderObject()->SetTiling(inTiling);
 	world->AddGameObject(tempBouncePad);
-
-	tempBouncePad->GetTransform().SetPosition(inPosition);
-
+	tempBouncePad->GetTransform().SetPosition(inPosition).SetOrientation(Quaternion::EulerAnglesToQuaternion(inRotation.x, inRotation.y, inRotation.z));
 	bouncePlatformMesh->AddInstanceModelMatrices(tempBouncePad->GetTransform().GetMatrix());
 
 }
@@ -419,37 +415,47 @@ void NCL::CSC8503::TutorialGame::SpawnTarget(const Vector3& inPosition, const Ve
 	Vector3 sphereSize = Vector3(radius, radius, radius);
 	SphereVolume* volume = new SphereVolume(radius);
 	hole->SetBoundingVolume((CollisionVolume*)volume);
-	hole->GetTransform().SetScale(sphereSize).SetPosition(inPosition);
-	hole->SetRenderObject(new RenderObject(&hole->GetTransform(), sphereMesh, basicTex, basicShader));
+	hole->GetTransform().SetScale(inScale).SetPosition(inPosition).SetOrientation(Quaternion::EulerAnglesToQuaternion(inRotation.x, inRotation.y, inRotation.z));
 	hole->SetPhysicsObject(new PhysicsObject(&hole->GetTransform(), hole->GetBoundingVolume()));
 	hole->GetPhysicsObject()->SetInverseMass(0);
 	hole->GetPhysicsObject()->InitSphereInertia();
 
-	hole->GetRenderObject()->SetColour(Vector4(0, 0, 0, 1));
-	hole->GetRenderObject()->SetTiling(inTiling);
-	world->AddGameObject(hole);
+	GameObject* targetDisplay = new GameObject();
+	targetDisplay->GetTransform()
+		.SetPosition(Vector3(inPosition.x, -3.0, inPosition.z))
+		.SetScale(Vector3(inScale.x, inScale.y, inScale.z))
+		.SetOrientation(Quaternion::EulerAnglesToQuaternion(inRotation.x, inRotation.y, inRotation.z));
+	targetDisplay->SetRenderObject(new RenderObject(&targetDisplay->GetTransform(), cubeMesh, targetTex, targetholeShader));
 
+	world->AddGameObject(hole);
+	world->AddGameObject(targetDisplay);
 }
 
 void NCL::CSC8503::TutorialGame::SpawnBlackHole(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling)
 {
 	//GravityWell
-
-	GravityWell* gravityWell = new GravityWell();
+	GravityWell* newgravityWell = new GravityWell();
 
 	float radius = 1.5f;
 	Vector3 sphereSize = Vector3(radius, radius, radius);
 	SphereVolume* volume = new SphereVolume(radius);
-	gravityWell->SetBoundingVolume((CollisionVolume*)volume);
-	gravityWell->GetTransform().SetScale(inScale).SetPosition(inPosition).SetOrientation(Quaternion::EulerAnglesToQuaternion(inRotation.x, inRotation.y, inRotation.z));
-	gravityWell->SetRenderObject(new RenderObject(&gravityWell->GetTransform(), sphereMesh, blackholeTex, blackholeShader));
-	gravityWell->SetPhysicsObject(new PhysicsObject(&gravityWell->GetTransform(), gravityWell->GetBoundingVolume()));
-	gravityWell->GetPhysicsObject()->SetInverseMass(0);
-	gravityWell->GetPhysicsObject()->InitSphereInertia(); 
+	newgravityWell->SetBoundingVolume((CollisionVolume*)volume);
+	newgravityWell->GetTransform().SetScale(inScale).SetPosition(inPosition).SetOrientation(Quaternion::EulerAnglesToQuaternion(inRotation.x, inRotation.y, inRotation.z));
 	
-	gravitywell = gravityWell;
-	world->AddGameObject(gravityWell);
+	newgravityWell->SetPhysicsObject(new PhysicsObject(&newgravityWell->GetTransform(), newgravityWell->GetBoundingVolume()));
+	newgravityWell->GetPhysicsObject()->SetInverseMass(0);
+	newgravityWell->GetPhysicsObject()->InitSphereInertia();
+	
+	GameObject* blackholeDisplay = new GameObject();
+	blackholeDisplay->GetTransform()
+		.SetPosition(Vector3(inPosition.x, -2.0, inPosition.z))
+		.SetScale(Vector3(inScale.x, inScale.y, inScale.z))
+		.SetOrientation(Quaternion::EulerAnglesToQuaternion(inRotation.x, inRotation.y, inRotation.z));
+	blackholeDisplay->SetRenderObject(new RenderObject(&blackholeDisplay->GetTransform(), sphereMesh, blackholeTex, blackholeShader));
 
+	gravitywell.push_back(newgravityWell);
+	world->AddGameObject(newgravityWell);
+	world->AddGameObject(blackholeDisplay);
 }
 
 void NCL::CSC8503::TutorialGame::AddPowerUpSpawnPoint(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling)
@@ -586,6 +592,11 @@ GameObject* NCL::CSC8503::TutorialGame::AddTeleporterToWorld(const Vector3& posi
 	world->AddGameObject(teleporter2Display);
 
 	return teleporter1;
+}
+
+void NCL::CSC8503::TutorialGame::InitTeleporters()
+{
+	AddTeleporterToWorld((Vector3(60, 5.0f, -41)), (Vector3(-61, 5.0f, 40)), Vector3(0, -45, 0), Vector3(0, 90, 0) , Vector3(10, 10, 3.5));
 }
 
 void TutorialGame::TestAddStaticObjectsToWorld() {

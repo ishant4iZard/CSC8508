@@ -36,6 +36,7 @@ namespace NCL {
 			Shader*		LoadShader(const std::string& vertex, const std::string& fragment);
 
 			void ReceiveEvent(EventType eventType) override;
+			OGLShader* GetShader() const { return particleShader; }
 
 		protected:
 			void NewRenderLines();
@@ -74,9 +75,11 @@ namespace NCL {
 			OGLMesh*	skyboxMesh;
 			OGLMesh* screenQuad;
 			GLuint		skyboxTex;
+			OGLShader* particleShader;
 
 			//shadow mapping things
 			OGLShader*	shadowShader;
+			OGLShader*	testShader;
 			GLuint		shadowTex;
 			GLuint		shadowFBO;
 			Matrix4     shadowMatrix;

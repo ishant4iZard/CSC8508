@@ -201,8 +201,14 @@ AiStatemachineObject* NCL::CSC8503::PS5_Game::AddAiStateObjectToWorld(const Vect
 	AIStateObject->GetPhysicsObject()->InitSphereInertia();
 
 	world->AddGameObject(AIStateObject);
+	player->GetRenderObject()->SetAnimation(*playerWalkingAnimation);
 
 	return AIStateObject;
+}
+
+void NCL::CSC8503::PS5_Game::SwitchAnimations(RenderObject* renderObject, MeshAnimation* animation)
+{
+	renderObject->SetAnimation(*animation);
 }
 
 void NCL::CSC8503::PS5_Game::SpawnProjectile(NetworkPlayer* player, Vector3 firePos, Vector3 fireDir)
@@ -245,16 +251,14 @@ void NCL::CSC8503::PS5_Game::SpawnPlayer()
 	player->GetPhysicsObject()->SetInverseMass(inverseMass);
 	player->GetPhysicsObject()->InitCubeInertia();
 
-	player->GetRenderObject()->SetAnimation(*playerAnimation);
-
 	world->AddGameObject(player);
 }
 
 void NCL::CSC8503::PS5_Game::InitialisePlayerAssets()
 {
-	playerMesh		= renderer->LoadMesh("Role_T.msh");
-	playerAnimation = new MeshAnimation("Role_T.anm");
-	playerShader	= renderer->LoadShader("scene.vert", "scene.frag");
+	playerMesh				= renderer->LoadMesh("Role_T.msh");
+	playerWalkingAnimation	= new MeshAnimation("Role_T.anm");
+	playerShader			= renderer->LoadShader("scene.vert", "scene.frag");
 }
 
 void NCL::CSC8503::PS5_Game::MovePlayer(float dt) {
@@ -268,6 +272,7 @@ void NCL::CSC8503::PS5_Game::MovePlayer(float dt) {
 	if (rotationX == 0 && rotationY == 0) return;
 
 	player->RotatePlayerBasedOnController(dt, rotationX, rotationY);
+	SwitchAnimations(player->GetRenderObject(), playerWalkingAnimation);
 }
 
 void NCL::CSC8503::PS5_Game::Fire()

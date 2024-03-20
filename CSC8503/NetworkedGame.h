@@ -4,6 +4,8 @@
 #include "PushdownState.h"
 #include "Projectile.h"
 
+#include "ThreadPool.h"
+
 #include "GameClient.h"
 #include "ApplicationState.h"
 
@@ -136,16 +138,19 @@ namespace NCL {
 			int fireSFX = -1;
 			bool UpdatePhysics = false;
 
-			/** Round going on state */
-			powerUpType CurrentPowerUpType;
 
-			void PhysicsUpdate(float dt);
-			void NonPhysicsUpdate(float dt);
+			powerUpType CurrentPowerUpType;
+			ThreadPool* poolPTR;
 
 			DebugHUD* debugHUD;
 			bool isDebuHUDActive;
 
+			std::mutex PhysicsMutex;
+			std::mutex NonPhysicsMutex;
+
 		public:
+			void NonPhysicsUpdate(float dt);
+			void PhysicsUpdate(float dt);
 			inline bool IsServer() { return thisServer != nullptr ? true : false; }
 			inline bool IsClient() { return thisClient != nullptr ? true : false; }
 			inline GameServer* GetServer() const { return thisServer; }
