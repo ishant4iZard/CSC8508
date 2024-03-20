@@ -28,6 +28,9 @@ namespace NCL {
 
 			void UpdateClient(float dt);
 
+			int OutgoingPacketSize = 0;
+			int IncomingPacketSize = 0;
+
 		protected:	
 			_ENetPeer*	netPeer;
 			int CurrentConnetNetID;

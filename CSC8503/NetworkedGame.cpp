@@ -333,6 +333,12 @@ void NetworkedGame::UpdateAsServer(float dt) {
 	ServerUpdateScoreList();
 	ServerUpdateBulletNumList();
 
+	/** Server network footstep */
+	TotalSizeOutgoingPacket = thisServer->OutgoingPacketSize;
+	TotalSizeIncomingPakcet = thisServer->IncomingPacketSize;
+	thisServer->OutgoingPacketSize = 0;
+	thisServer->IncomingPacketSize = 0;
+
 	if (LocalPlayer)
 	{
 		Vector3 PointerPos;
@@ -364,6 +370,12 @@ void NetworkedGame::UpdateAsClient(float dt) {
 		std::cout << "Client Disconnected!";
 		EventEmitter::EmitEvent(EventType::ROUND_OVER);
 	}
+
+	/** Client network footprint */
+	TotalSizeOutgoingPacket = thisClient->OutgoingPacketSize;
+	TotalSizeIncomingPakcet = thisClient->IncomingPacketSize;
+	thisClient->OutgoingPacketSize = 0;
+	thisClient->IncomingPacketSize = 0;
 
 	ClientPacket newPacket;
 
@@ -864,16 +876,7 @@ void NetworkedGame::ReceivePacket(int type, GamePacket* payload, int source) {
 }
 
 void NetworkedGame::OnPlayerCollision(NetworkPlayer* a, NetworkPlayer* b) {
-	if (thisServer) { //detected a collision between players!
-		MessagePacket newPacket;
-		newPacket.messageID = COLLISION_MSG;
-		newPacket.playerID  = a->GetPlayerNum();
-
-		//thisClient->SendPacket(newPacket);
-
-		newPacket.playerID = b->GetPlayerNum();
-		//thisClient->SendPacket(newPacket);
-	}
+	
 }
 
 int NetworkedGame::GetConnectedClientsNum()

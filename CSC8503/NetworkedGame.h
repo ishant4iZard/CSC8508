@@ -111,6 +111,11 @@ namespace NCL {
 			int packetsToSnapshot;
 			ApplicationState* appState;
 
+			/** Network footprint */
+			int TotalSizeOutgoingPacket = 0;
+			int TotalSizeIncomingPakcet = 0;
+			
+
 			std::map<int, NetworkObject*> networkObjects;
 
 			/*std::map<int, GameObject*> serverPlayers;
