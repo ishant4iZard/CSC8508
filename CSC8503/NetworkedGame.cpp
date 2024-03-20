@@ -203,7 +203,7 @@ void NetworkedGame::UpdateGame(float dt) {
 		frameStartTime = high_resolution_clock::now();
 
 	Debug::UpdateRenderables(dt);
-	if (thisServer && !appState->GetIsGameOver()) {
+	if (thisServer && !appState->GetIsGameOver() && !appState->GetIsGamePaused()) {
 		UpdatePhysics = true;
 		//PhysicsUpdate(dt);
 		timer += dt;
@@ -230,6 +230,12 @@ void NetworkedGame::UpdateGame(float dt) {
 	}*/
 
 	Menu->Update(dt);
+	if (appState->GetIsGamePaused()) {
+		//audioEngine->Pause();
+	}
+	else {
+		//audioEngine->UnPause();
+	}
 	audioEngine->Update();
 
 	TutorialGame::UpdateGame(dt);
@@ -320,6 +326,7 @@ void NetworkedGame::UpdateAsServer(float dt) {
 		BroadcastSnapshot(true);
 	}
 	UpdateMinimumState();
+
 
 	ServerUpdatePlayersList();
 	CheckPlayerListAndSpawnPlayers();
@@ -1006,7 +1013,7 @@ AiStatemachineObject* NetworkedGame::AddAiStateObjectToWorld(const Vector3& posi
 
 void NetworkedGame::PhysicsUpdate(float dt)
 {
-	if (UpdatePhysics) {
+	if (UpdatePhysics/* && !appState->GetIsGamePaused()*/) {
 		PhysicsMutex.lock();
 		physics->Update(dt);
 		CurrentPowerUpType = physics->GetCurrentPowerUpState();
@@ -1020,7 +1027,7 @@ void NetworkedGame::NonPhysicsUpdate(float dt)
 	//Debug::UpdateRenderables(dt);
 	NonPhysicsMutex.lock();
 
-	if (!appState->GetIsGameOver()/*true*/) {
+	if (!appState->GetIsGameOver()&& !appState->GetIsGamePaused()) {
 		timeToNextPacket -= dt;
 		if (timeToNextPacket <= 0) {
 			if (thisServer) {
@@ -1035,19 +1042,23 @@ void NetworkedGame::NonPhysicsUpdate(float dt)
 		// Server and Client Receive and process there packet
 		if (thisServer) {
 			thisServer->UpdateServer();
-			HandleInputAsServer();
-			UpdatePlayerState(dt);
-			UpdateProjectiles(dt);
-			UpdatePowerUpSpawnTimer(dt);
 
-			for(auto i: gravitywell)
-				i->PullProjectilesWithinField(ProjectileList);
+			if (!appState->GetIsGamePaused()) {
+				HandleInputAsServer();
+				UpdatePlayerState(dt);
+				UpdateProjectiles(dt);
+				UpdatePowerUpSpawnTimer(dt);
+				for (auto i : gravitywell)
+					i->PullProjectilesWithinField(ProjectileList);
+			}
 			//physics->Update(dt);
 			//UpdatePhysics = true;
 		}
 		if (thisClient) {
 			thisClient->UpdateClient(dt);
-			HandleInputAsClient();
+			if (!appState->GetIsGamePaused()) {
+				HandleInputAsClient();
+			}
 		}
 	}
 

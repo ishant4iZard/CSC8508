@@ -78,11 +78,12 @@ PushdownState::PushdownResult MainMenu::OnUpdate(float dt, PushdownState** newSt
 			isSoloGameBtnPressed = false;
 			Game->SetLocalPlayerIndex(0);
 			appState->SetIsServer(true);
-			Game->isDevMode = true;
+			appState->SetIsSolo(true);
 		}
 		if (isLobbyCreated)
 		{
 			Game->isDevMode = false;
+			appState->SetIsSolo(false);
 			*newState = new MultiPlayerLobby();
 			isCreatingLobby = false;
 			isLobbyCreated = false;
@@ -92,6 +93,7 @@ PushdownState::PushdownResult MainMenu::OnUpdate(float dt, PushdownState** newSt
 		if (isSearchLobbyBtnPressed)
 		{
 			Game->isDevMode = false;
+			appState->SetIsSolo(false);
 			isSearchLobbyBtnPressed = false;
 			*newState = new MultiplayerSearchMenu();
 			return Push;
@@ -549,7 +551,7 @@ PushdownState::PushdownResult PlayingHUD::OnUpdate(float dt, PushdownState** new
 		}
 
 		/** Game going HUD */
-		if (!appState->GetIsGameOver())
+		if (!appState->GetIsGameOver() && !appState->GetIsGamePaused())
 		{
 			ShowTimeLeft(Game);
 			//ui->DrawStringText("Player    " + Game->GetPlayerNameByIndex(Game->GetLocalPlayerIndex()), Vector2(83, 30), UIBase::WHITE);
@@ -573,7 +575,38 @@ PushdownState::PushdownResult PlayingHUD::OnUpdate(float dt, PushdownState** new
 				Vector2(85, 85),
 				[&, Game]() {
 					Game->ServerSendRoundOverMsg();
+					appState->SetIsGamePaused(false);
 					EventEmitter::EmitEvent(EventType::ROUND_OVER);
+				},
+				UIBase::WHITE,
+				KeyCodes::S, // Only for PS
+				Vector2(150, 50)
+			);
+		}
+
+		if (!appState->GetIsGameOver() && appState->GetIsGamePaused())
+		{
+			ui->DrawStringText("Round Paused !!!", Vector2(40, 15), UIBase::WHITE);
+
+			ui->DrawButton(
+				"Round Pause",
+				Vector2(40, 70),
+				[&, Game]() {
+					appState->SetIsGamePaused(false);
+				},
+				UIBase::WHITE,
+				KeyCodes::S, // Only for PS
+				Vector2(150, 50)
+			);
+		}
+
+		if (appState->GetIsSolo() && !appState->GetIsGameOver() && !appState->GetIsGamePaused())
+		{
+			ui->DrawButton(
+				"Round Pause",
+				Vector2(85, 80),
+				[&, Game]() {
+					appState->SetIsGamePaused(true);
 				},
 				UIBase::WHITE,
 				KeyCodes::S, // Only for PS
