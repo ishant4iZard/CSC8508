@@ -158,10 +158,11 @@ namespace NCL {
 			ThreadPool* poolPTR;
 
 			DebugHUD* debugHUD;
-			bool isDebuHUDActive;
 
 			std::mutex PhysicsMutex;
 			std::mutex NonPhysicsMutex;
+
+			std::optional<microseconds> physicsTimeCost;
 
 		public:
 			void NonPhysicsUpdate(float dt);

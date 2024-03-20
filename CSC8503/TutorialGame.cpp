@@ -119,6 +119,8 @@ TutorialGame::~TutorialGame()	{
 	SAFE_DELETE_PBR_TEXTURE(groundTextureList)
 	SAFE_DELETE_PBR_TEXTURE(wallTextureList)
 	SAFE_DELETE_PBR_TEXTURE(sandTextureList)
+	SAFE_DELETE_PBR_TEXTURE(goldTextureList)
+
 }
 
 void NCL::CSC8503::TutorialGame::BindEvents()
@@ -148,8 +150,21 @@ void NCL::CSC8503::TutorialGame::ReceiveEvent(EventType T)
 
 void TutorialGame::UpdateGame(float dt) {
 	world->UpdateWorld(dt);
+
+	std::optional<time_point<high_resolution_clock>> frameStartTime;
+	if (isDebuHUDActive)
+		frameStartTime = high_resolution_clock::now();
+	
 	renderer->Render();
 	renderer->Update(dt);
+
+	std::optional<time_point<high_resolution_clock>> frameEndTime;
+	if (isDebuHUDActive) {
+		frameEndTime = high_resolution_clock::now();
+		if (!frameStartTime.has_value() || !frameEndTime.has_value()) return;
+		renderTimeCost = duration_cast<microseconds>(frameEndTime.value() - frameStartTime.value());
+	}
+
 	
 	/*UpdatePowerUpSpawnTimer(dt);*/
 }
@@ -178,12 +193,20 @@ void TutorialGame::InitialiseAssets() {
 	bonusMesh	= renderer->LoadMesh("sphere.msh");
 	gooseMesh	= renderer->LoadMesh("goose.msh");
 	capsuleMesh = renderer->LoadMesh("capsule.msh");
+	rebellionMeshChar = renderer->LoadMesh("Male_Guard.msh");
 	
+#ifndef _WIN32
+	blackholeTex = renderer->LoadTexture("BlackHolePS5.png");
+	basicTex = renderer->LoadTexture("Blank.png");
+	portalTex	= renderer->LoadTexture("PortalPS5.png");
+#else
 	blackholeTex = renderer->LoadTexture("blackhole.jpg");
 	basicTex	= renderer->LoadTexture("checkerboard.png");
 	portalTex	= renderer->LoadTexture("PortalTex.jpg");
+#endif
+
 	sandTex		= renderer->LoadTexture("sand.jpg");
-	targetTex = renderer->LoadTexture("blackhole.png");
+	targetTex = renderer->LoadTexture("blackhole.jpg");
 
 	groundTextureList[(uint8_t)TextureType::ALBEDO] = renderer->LoadTexture("GrassWithRock01/albedo.png");
 	groundTextureList[(uint8_t)TextureType::NORMAL] = renderer->LoadTexture("GrassWithRock01/normal_gl.png");
@@ -202,6 +225,18 @@ void TutorialGame::InitialiseAssets() {
 	sandTextureList[(uint8_t)TextureType::METAL] = renderer->LoadTexture("GroundTile11/metallic.png");
 	sandTextureList[(uint8_t)TextureType::ROUGHNESS] = renderer->LoadTexture("GroundTile11/roughness.png");
 	sandTextureList[(uint8_t)TextureType::AO] = renderer->LoadTexture("GroundTile11/ao.png");
+
+	goldTextureList[(uint8_t)TextureType::ALBEDO] = renderer->LoadTexture("Projectile/albedo.png");
+	goldTextureList[(uint8_t)TextureType::NORMAL] = renderer->LoadTexture("Projectile/normal_gl.png");
+	goldTextureList[(uint8_t)TextureType::METAL] = renderer->LoadTexture("Projectile/metallic.png");
+	goldTextureList[(uint8_t)TextureType::ROUGHNESS] = renderer->LoadTexture("Projectile/roughness.png");
+	goldTextureList[(uint8_t)TextureType::AO] = renderer->LoadTexture("Projectile/ao.png");
+
+	lavaTextureList[(uint8_t)TextureType::ALBEDO] = renderer->LoadTexture("Target/albedo.png");
+	lavaTextureList[(uint8_t)TextureType::NORMAL] = renderer->LoadTexture("Target/normal_gl.png");
+	lavaTextureList[(uint8_t)TextureType::METAL] = renderer->LoadTexture("Target/metallic.png");
+	lavaTextureList[(uint8_t)TextureType::ROUGHNESS] = renderer->LoadTexture("Target/roughness.png");
+	lavaTextureList[(uint8_t)TextureType::AO] = renderer->LoadTexture("Target/ao.png");
 
 #ifdef defined(USE_SHADOW)
 	basicShader = renderer->LoadShader("scene.vert", "scene.frag");
@@ -406,25 +441,32 @@ void NCL::CSC8503::TutorialGame::SpawnTarget(const Vector3& inPosition, const Ve
 {
 
 	Hole* hole = new Hole();
-
-	float radius = 2.0f;
+	
+	float radius = 5.0f;
 	Vector3 sphereSize = Vector3(radius, radius, radius);
 	SphereVolume* volume = new SphereVolume(radius);
 	hole->SetBoundingVolume((CollisionVolume*)volume);
-	hole->GetTransform().SetScale(inScale).SetPosition(inPosition).SetOrientation(Quaternion::EulerAnglesToQuaternion(inRotation.x, inRotation.y, inRotation.z));
+	hole->GetTransform().SetScale(sphereSize).SetPosition(inPosition).SetOrientation(Quaternion::EulerAnglesToQuaternion(inRotation.x, inRotation.y, inRotation.z));
 	hole->SetPhysicsObject(new PhysicsObject(&hole->GetTransform(), hole->GetBoundingVolume()));
 	hole->GetPhysicsObject()->SetInverseMass(0);
 	hole->GetPhysicsObject()->InitSphereInertia();
-
+#ifdef _WIN32
 	GameObject* targetDisplay = new GameObject();
 	targetDisplay->GetTransform()
 		.SetPosition(Vector3(inPosition.x, -3.0, inPosition.z))
 		.SetScale(Vector3(inScale.x, inScale.y, inScale.z))
 		.SetOrientation(Quaternion::EulerAnglesToQuaternion(inRotation.x, inRotation.y, inRotation.z));
 	targetDisplay->SetRenderObject(new RenderObject(&targetDisplay->GetTransform(), cubeMesh, targetTex, targetholeShader));
-
-	world->AddGameObject(hole);
 	world->AddGameObject(targetDisplay);
+#else
+	hole->SetRenderObject(new RenderObject(&hole->GetTransform(), sphereMesh, targetTex, pbrShader));
+	
+	for (uint8_t i = (uint8_t)TextureType::ALBEDO; i < (uint8_t)TextureType::MAX_TYPE; i++)
+	{
+		hole->GetRenderObject()->SetTexture((TextureType)i, lavaTextureList[i]);
+	}
+#endif // X64
+	world->AddGameObject(hole);
 }
 
 void NCL::CSC8503::TutorialGame::SpawnBlackHole(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling)
@@ -564,7 +606,7 @@ GameObject* NCL::CSC8503::TutorialGame::AddTeleporterToWorld(const Vector3& posi
 	teleporter1->GetPhysicsObject()->SetElasticity(elasticity);
 
 	float maxLength = std::max(dimensions.x, dimensions.z);
-	GameObject* teleporter1Display = new GameObject();
+	teleporter1Display = new GameObject();
 	teleporter1Display->GetTransform()
 		.SetPosition(position1)
 		.SetScale(Vector3(maxLength * 2, 0.01, maxLength * 2))
@@ -585,7 +627,7 @@ GameObject* NCL::CSC8503::TutorialGame::AddTeleporterToWorld(const Vector3& posi
 	teleporter2->GetPhysicsObject()->InitCubeInertia();
 	teleporter2->GetPhysicsObject()->SetElasticity(elasticity);
 
-	GameObject* teleporter2Display = new GameObject();
+	teleporter2Display = new GameObject();
 	teleporter2Display->GetTransform()
 		.SetPosition(position2)
 		.SetScale(Vector3(maxLength * 2, 0.01, maxLength * 2))

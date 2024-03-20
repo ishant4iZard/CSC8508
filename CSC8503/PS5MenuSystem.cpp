@@ -1,4 +1,3 @@
-#include "C:/c8503/CSC8508/CSC8503/CMakeFiles/CSC8503.dir/Debug/cmake_pch.hxx"
 #include "PS5MenuSystem.h"
 #include "PS5_Game.h"
 #include "PushdownMachine.h"
@@ -87,7 +86,7 @@ PushdownState::PushdownResult PS5PlayingHUD::OnUpdate(float dt, PushdownState** 
 				ui->DrawStringText("Round Paused !", Vector2(40, 15), UIBase::WHITE);
 
 				ui->DrawStringText("Press Circle: Unpause", Vector2(30, 55), UIBase::WHITE);
-				ui->DrawStringText("Press Triangle: End Round", Vector2(30, 65), UIBase::WHITE);
+				ui->DrawStringText("Press Cross: End Round", Vector2(30, 65), UIBase::WHITE);
 
 
 				if (Game->GetController()->GetNamedButton("Circle"))
@@ -95,7 +94,7 @@ PushdownState::PushdownResult PS5PlayingHUD::OnUpdate(float dt, PushdownState** 
 					appState->SetIsGamePaused(false);
 				}
 
-				if (Game->GetController()->GetNamedButton("Triangle"))
+				if (Game->GetController()->GetNamedButton("Cross"))
 				{
 					appState->SetIsGameOver(true);
 				}

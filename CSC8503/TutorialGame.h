@@ -28,6 +28,9 @@
 #include "ApplicationState.h"
 #include "UIBase.h"
 
+#include <chrono>
+using namespace std::chrono;
+
 #define USE_SHADOW = false
 #define POWER_UP_SPAWN_TIME 30.0f
 #define MAX_POWER_UP_COUNT 3
@@ -67,7 +70,9 @@ namespace NCL {
 			}
 
 			bool CloseGame = false;
-
+			Texture* goldTextureList[(uint8_t)TextureType::MAX_TYPE];
+			Shader* GetPbrShader() const { return pbrShader; }
+			Mesh* GetSphereMesh() const { return sphereMesh; }
 		protected:
 			void InitialiseAssets();
 			void InitCamera();
@@ -122,6 +127,7 @@ namespace NCL {
 			Mesh*		wallMesh			= nullptr;
 			Mesh*		bouncePlatformMesh	= nullptr;
 			Mesh*		sphereMesh			= nullptr;
+			Mesh*		rebellionMeshChar	= nullptr;
 			
 			Texture*	basicTex		= nullptr;
 			Texture*	sandTex			= nullptr;
@@ -140,6 +146,7 @@ namespace NCL {
 			Texture* groundTextureList[(uint8_t)TextureType::MAX_TYPE];
 			Texture* wallTextureList[(uint8_t)TextureType::MAX_TYPE];
 			Texture* sandTextureList[(uint8_t)TextureType::MAX_TYPE];
+			Texture* lavaTextureList[(uint8_t)TextureType::MAX_TYPE];
 
 			//Coursework Meshes
 			Mesh*	charMesh	= nullptr;
@@ -175,10 +182,16 @@ namespace NCL {
 			powerupInitFunction powerupInitFunctionList[powerUpType::MAX_POWERUP] = { &TutorialGame::InitNonePowerup, &TutorialGame::InitIcePowerup , &TutorialGame::InitSandPowerup, &TutorialGame::InitWindPowerup };
 #pragma endregion
 
+			std::optional<microseconds> renderTimeCost;
+			bool isDebuHUDActive = false;
+
 			UIBase* ui;
 			ApplicationState* appState;
 
 			std::vector<Vector3> powerUpSpawnPointList;
+
+			GameObject* teleporter1Display;
+			GameObject* teleporter2Display;
 		};
 	}
 }

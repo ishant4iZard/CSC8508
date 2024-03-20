@@ -198,10 +198,6 @@ void NetworkedGame::DestroyClient()
 }
 
 void NetworkedGame::UpdateGame(float dt) {
-	std::optional<time_point<high_resolution_clock>> frameStartTime;
-	if(isDebuHUDActive)
-		frameStartTime = high_resolution_clock::now();
-
 	Debug::UpdateRenderables(dt);
 	if (thisServer && !appState->GetIsGameOver() && !appState->GetIsGamePaused()) {
 		UpdatePhysics = true;
@@ -239,26 +235,25 @@ void NetworkedGame::UpdateGame(float dt) {
 	audioEngine->Update();
 
 	TutorialGame::UpdateGame(dt);
-
-	std::optional<time_point<high_resolution_clock>> frameEndTime;
-	if (isDebuHUDActive)
-		frameEndTime = high_resolution_clock::now();
 		
 	//nonPhysicsUpdateThread.join();
 	//physicsUpdateThread.join();
 
 	if (Window::GetKeyboard()->KeyHeld(KeyCodes::Type::I))
 	{
+		static long long prevPhysicsTimeCost = 0;
+		prevPhysicsTimeCost = physicsTimeCost.has_value() && physicsTimeCost.value().count() > 10 ? physicsTimeCost.value().count() : prevPhysicsTimeCost;
+		
 		isDebuHUDActive = true;
 
-		if (!frameStartTime.has_value() || !frameEndTime.has_value()) return;
-
-		auto duration = duration_cast<microseconds>(frameEndTime.value() - frameStartTime.value());
 		debugHUD->DrawDebugHUD({
 			dt,
-			duration.count(),
+			prevPhysicsTimeCost,
+			(renderTimeCost.has_value() ? renderTimeCost.value().count() : 0),
 			physics->GetNumberOfCollisions(),
-			world->GetNumberOfObjects()
+			world->GetNumberOfObjects(),
+			0,
+			0
 		});
 
 	}
@@ -1000,6 +995,7 @@ AiStatemachineObject* NetworkedGame::AddAiStateObjectToWorld(const Vector3& posi
 		.SetPosition(Vector3(position.x, 5.6, position.z));
 
 	AIStateObject->SetRenderObject(new RenderObject(&AIStateObject->GetTransform(), sphereMesh, nullptr, basicShader));
+	//AIStateObject->SetRenderObject(new RenderObject(&AIStateObject->GetTransform(), rebellionMeshChar, nullptr, basicShader));
 	AIStateObject->SetPhysicsObject(new PhysicsObject(&AIStateObject->GetTransform(), AIStateObject->GetBoundingVolume()));
 	AIStateObject->SetNetworkObject(new NetworkObject(*AIStateObject, AIInitialID));
 	networkObjects.insert(std::pair<int, NetworkObject*>(AIInitialID, AIStateObject->GetNetworkObject()));
@@ -1017,12 +1013,23 @@ AiStatemachineObject* NetworkedGame::AddAiStateObjectToWorld(const Vector3& posi
 
 void NetworkedGame::PhysicsUpdate(float dt)
 {
-	if (UpdatePhysics/* && !appState->GetIsGamePaused()*/) {
+	if (UpdatePhysics) {
+		std::optional<time_point<high_resolution_clock>> frameStartTime;
+		if (isDebuHUDActive)
+			frameStartTime = high_resolution_clock::now();
+		
 		PhysicsMutex.lock();
 		physics->Update(dt);
 		CurrentPowerUpType = physics->GetCurrentPowerUpState();
 		UpdatePhysics = false;
 		PhysicsMutex.unlock();
+		
+		std::optional<time_point<high_resolution_clock>> frameEndTime;
+		if (isDebuHUDActive) {
+			frameEndTime = high_resolution_clock::now();
+			if (!frameStartTime.has_value() || !frameEndTime.has_value()) return;
+			physicsTimeCost = duration_cast<microseconds>(frameEndTime.value() - frameStartTime.value());
+		}
 	}
 }
 
