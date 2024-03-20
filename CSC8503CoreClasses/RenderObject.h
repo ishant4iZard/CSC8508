@@ -22,6 +22,19 @@ namespace NCL {
 			AO,
 			MAX_TYPE
 		};
+		
+		enum class AnimationType : uint8_t
+		{
+			MALEGUARD_IDLE,
+			MALEGUARD_GUNFIRE,
+			MALEGUARD_STEPFORWARD,
+
+			MAXGUARD_IDLE,
+			MAXGUARD_GUNFIRE,
+			MAXGUARD_WALK,
+
+			MAX_ANM
+		};
 
 		class RenderObject
 		{
@@ -82,6 +95,25 @@ namespace NCL {
 				textureList[(uint8_t)inType] = inTex;
 			}
 
+			void SetTextureAnm(const std::string& texType, int index, Texture* inTex) {
+				if (texType == "Diffuse") {
+					anmObjDiffuseTextureList[index] = inTex;
+				}
+				if (texType == "Bump") {
+					anmObjBumpTextureList[index] = inTex;
+				}
+			}
+
+			Texture* GetTextureAnm(const std::string& texType, int index) {
+				if (texType == "Diffuse") {
+					return anmObjDiffuseTextureList[index];
+				}
+				if (texType == "Bump") {
+					return anmObjBumpTextureList[index];
+				}
+				return nullptr;
+			}
+
 			Vector4 GetColour() const {
 				return colour;
 			}
@@ -112,11 +144,13 @@ namespace NCL {
 					animTime += anim->GetFrameTime();
 					currentAnimFrame = (currentAnimFrame++) % anim->GetFrameCount();
 
+					//To do...
+					//each submesh may have its own matrix
 					std::vector<Matrix4>const& inverseBindPose = mesh->GetInverseBindPose();
 
 					if (inverseBindPose.size() != anim->GetJointCount()) {
 						//oh no
-						return;
+						//return;
 					}
 
 					const Matrix4* joints = anim->GetJointData(currentAnimFrame);
@@ -169,6 +203,9 @@ namespace NCL {
 			std::vector<Matrix4> skeleton;
 			float	animTime = 0.0f;
 			int currentAnimFrame = 0;
+
+			Texture* anmObjDiffuseTextureList[4];
+			Texture* anmObjBumpTextureList[4];
 		};
 	}
 }

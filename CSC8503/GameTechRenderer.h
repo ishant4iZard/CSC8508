@@ -8,6 +8,8 @@
 #include <Vector3.h>
 #include <Vector4.h>
 #include "MeshMaterial.h"
+#include "MeshAnimation.h"
+#include "NetworkPlayer.h"
 
 #include "../CSC8503/UIBase.h"
 #ifdef _WIN32
@@ -37,6 +39,7 @@ namespace NCL {
 			Shader*		LoadShader(const std::string& vertex, const std::string& fragment);
 			
 			MeshMaterial* LoadMaterial(const std::string& name);
+			MeshAnimation* LoadAnimation(const std::string& name);
 
 			void ReceiveEvent(EventType eventType) override;
 			OGLShader* GetShader() const { return particleShader; }
@@ -63,12 +66,16 @@ namespace NCL {
 			void ApplyToneMapping();
 			void RenderProcessedScene();
 			void LoadSkybox();
+			void RenderAnimatedObjects();
+			void Matrix4ToIdentity(Matrix4* mat4);
 
 			void SetDebugStringBufferSizes(size_t newVertCount);
 			void SetDebugLineBufferSizes(size_t newVertCount);
 
 			vector<const RenderObject*> activeObjects;
 			vector<const RenderObject*> instancedRenderObjectList;
+			//Animation
+			vector<const GameObject*> activeAnimatedObjects;
 
 			OGLShader*  debugShader;
 			OGLShader*  skyboxShader;

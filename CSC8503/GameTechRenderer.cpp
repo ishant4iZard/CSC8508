@@ -181,12 +181,22 @@ void GameTechRenderer::RenderFrame() {
 void GameTechRenderer::BuildObjectList() {
 	activeObjects.clear();
 	instancedRenderObjectList.clear();
+	activeAnimatedObjects.clear();
 
 	gameWorld.OperateOnContents(
 		[&](GameObject* o) {
 			if (o && o->IsActive()) {
 				const RenderObject* g = o->GetRenderObject();
+
+				if (o->gettag() == "Player") {
+					activeAnimatedObjects.emplace_back(o);
+				}
+
 				if (g) {
+					/*if (o->gettag() == "Player") {
+						activeAnimatedObjects.emplace_back(g);
+					}*/
+
 					if (g->GetMesh()->GetInstanceCount() > 0)
 						instancedRenderObjectList.emplace_back(g);
 					else
@@ -477,6 +487,7 @@ void GameTechRenderer::RenderCamera() {
 	}
 
 	RenderInstancedRenderObject();
+	RenderAnimatedObjects();
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
@@ -680,6 +691,10 @@ MeshMaterial* GameTechRenderer::LoadMaterial(const std::string& name) {
 	return new MeshMaterial(name);
 }
 
+MeshAnimation* GameTechRenderer::LoadAnimation(const std::string& name) {
+	return new MeshAnimation(name);
+}
+
 void NCL::CSC8503::GameTechRenderer::ReceiveEvent(EventType eventType)
 {
 	switch (eventType)
@@ -756,5 +771,98 @@ void GameTechRenderer::SetDebugLineBufferSizes(size_t newVertCount) {
 		glEnableVertexAttribArray(1);
 
 		glBindVertexArray(0);
+	}
+}
+
+void GameTechRenderer::Matrix4ToIdentity(Matrix4* mat4) {
+	mat4->ToZero();
+	mat4->array[0][0] = 1.0f;
+	mat4->array[1][1] = 1.0f;
+	mat4->array[2][2] = 1.0f;
+	mat4->array[3][3] = 1.0f;
+}
+
+void GameTechRenderer::RenderAnimatedObjects() {
+	glDisable(GL_BLEND);
+
+	OGLShader* activeShader = nullptr;
+
+	Matrix4 viewMatrix = gameWorld.GetMainCamera().BuildViewMatrix();
+	Matrix4 projMatrix = gameWorld.GetMainCamera().BuildProjectionMatrix(hostWindow.GetScreenAspect());
+
+	for (const auto& tempAnimatedRenderObject : activeAnimatedObjects) {
+		OGLShader* shader = (OGLShader*)(*tempAnimatedRenderObject).GetRenderObject()->GetShader();
+		BindShader(*shader);
+
+		glUniform1i(glGetUniformLocation(shader->GetProgramID(), "diffuseTex"), 0);
+		glUniform1i(glGetUniformLocation(shader->GetProgramID(), "bumpTex"), 1);
+		glUniform1i(glGetUniformLocation(shader->GetProgramID(), "normalTex"), 2);
+		//glUniform1i(glGetUniformLocation(shader->GetProgramID(), "albedoTex"), 3);
+		glUniform1i(glGetUniformLocation(shader->GetProgramID(), "metallicTex"), 4);
+		glUniform1i(glGetUniformLocation(shader->GetProgramID(), "roughnessTex"), 5);
+		glUniform1i(glGetUniformLocation(shader->GetProgramID(), "ambiantOccTex"), 6);
+
+		glUniform3fv(glGetUniformLocation(shader->GetProgramID(), "lightPos"), 1, (float*)&lightPosition);
+		glUniform4fv(glGetUniformLocation(shader->GetProgramID(), "lightColour"), 1, (float*)&lightColour);
+		glUniform1f(glGetUniformLocation(shader->GetProgramID(), "lightRadius"), lightRadius);
+
+		Vector3 camPos = gameWorld.GetMainCamera().GetPosition();
+		glUniform3fv(glGetUniformLocation(shader->GetProgramID(), "cameraPos"), 1, (float*)&camPos.x);
+
+		Matrix4 modelMatrix;
+		Matrix4ToIdentity(&modelMatrix);
+		/*modelMatrix =
+			Matrix4::Translation(inPos) *
+			Matrix4(inOrientation) *
+			Matrix4::Scale(inScale);*/
+
+		glUniformMatrix4fv(glGetUniformLocation(shader->GetProgramID(), "modelMatrix"), 1, false, (float*)&modelMatrix);
+		glUniformMatrix4fv(glGetUniformLocation(shader->GetProgramID(), "viewMatrix"), 1, false, (float*)&viewMatrix);
+		glUniformMatrix4fv(glGetUniformLocation(shader->GetProgramID(), "projMatrix"), 1, false, (float*)&projMatrix);
+
+		//use diffuseTex as albedo
+		/*glActiveTexture(GL_TEXTURE3);
+		glBindTexture(GL_TEXTURE_2D, albedo->GetObjectID());
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, normal->GetObjectID());
+		glActiveTexture(GL_TEXTURE4);
+		glBindTexture(GL_TEXTURE_2D, metallic->GetObjectID());
+		glActiveTexture(GL_TEXTURE5);
+		glBindTexture(GL_TEXTURE_2D, roughness->GetObjectID());
+		glActiveTexture(GL_TEXTURE6);
+		glBindTexture(GL_TEXTURE_2D, ao->GetObjectID());*/
+
+		int	jointsLocation = glGetUniformLocation(shader->GetProgramID(), "joints");
+		
+		vector<Matrix4> frameMatrices = tempAnimatedRenderObject->GetRenderObject()->GetSkeleton();
+
+		glUniformMatrix4fv(jointsLocation, frameMatrices.size(), false, (float*)frameMatrices.data());
+
+		Mesh* tempMesh = tempAnimatedRenderObject->GetRenderObject()->GetMesh();
+
+		Texture* diffuseTex[4];
+		Texture* bumpTex[4];
+
+		for (int i = 0; i < 4; ++i) {
+			diffuseTex[i] = tempAnimatedRenderObject->GetRenderObject()->GetTextureAnm("Diffuse", i);
+			bumpTex[i] = tempAnimatedRenderObject->GetRenderObject()->GetTextureAnm("Bump", i);
+		}
+
+		/*tempAnimatedRenderObject->GetRenderObject()->GetTextureAnm("Diffuse", diffuseTex);
+		tempAnimatedRenderObject->GetRenderObject()->GetTextureAnm("Bump", bumpTex);*/
+
+		for (int i = 0; i < tempMesh->GetSubMeshCount(); ++i) {
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, ((OGLTexture*)diffuseTex[i])->GetObjectID());
+
+			glActiveTexture(GL_TEXTURE1);
+			glBindTexture(GL_TEXTURE_2D, ((OGLTexture*)bumpTex[i])->GetObjectID());
+
+			BindMesh((OGLMesh&)*(tempMesh));
+			DrawBoundMesh((uint32_t)i);
+		}
+
+		
+
 	}
 }

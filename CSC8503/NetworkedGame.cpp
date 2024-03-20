@@ -486,7 +486,7 @@ void NetworkedGame::CheckPlayerListAndSpawnPlayers()
 
 NetworkPlayer* NetworkedGame::AddNetworkPlayerToWorld(const Vector3& position, int playerNum)
 {
-	float meshSize = 2.0f;
+	float meshSize = 2.0f * 5;
 	Vector3 volumeSize = Vector3(1.0, 1.6, 1.0);
 	float inverseMass = 1.0f / 600000.0f;
 
@@ -499,12 +499,19 @@ NetworkPlayer* NetworkedGame::AddNetworkPlayerToWorld(const Vector3& position, i
 		.SetScale(Vector3(meshSize, meshSize, meshSize))
 		.SetPosition(position);
 
-	character->SetRenderObject(new RenderObject(&character->GetTransform(), charMesh, nullptr, basicShader));
+	character->SetRenderObject(new RenderObject(&character->GetTransform(), charMesh, nullptr, anmShader));
 	character->SetPhysicsObject(new PhysicsObject(&character->GetTransform(), character->GetBoundingVolume()));
 	character->SetNetworkObject(new NetworkObject(*character, playerNum));
 
 	character->GetPhysicsObject()->SetInverseMass(inverseMass);
 	character->GetPhysicsObject()->InitCubeInertia();
+
+	character->GetRenderObject()->SetAnimation(animationList[(uint8_t)AnimationType::MALEGUARD_IDLE]);
+
+	for (int i = 0; i < 4; ++i) {
+		character->GetRenderObject()->SetTextureAnm("Diffuse", i, maleGuardDiffuseTextureList[i]);
+		character->GetRenderObject()->SetTextureAnm("Bump", i, maleGuardBumpTextureList[i]);
+	}
 
 
 	world->AddGameObject(character);

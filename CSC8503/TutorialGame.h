@@ -154,6 +154,8 @@ namespace NCL {
 			MeshMaterial* maleGuardMaterial	= nullptr;
 			MeshMaterial* maxGuardMaterial  = nullptr;
 
+			MeshAnimation* animationList[(uint8_t)AnimationType::MAX_ANM];
+
 
 			//Coursework Meshes
 			Mesh*	charMesh	= nullptr;

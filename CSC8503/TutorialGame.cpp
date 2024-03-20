@@ -27,6 +27,7 @@ using namespace CSC8503;
 #define MAX_POWER_UP_COUNT 3
 #define SAFE_DELETE_PBR_TEXTURE(a) for (uint8_t i = 0; i < (uint8_t)TextureType::MAX_TYPE; i++){ if (a[i] != NULL) delete a[i]; a[i] = NULL; }
 #define SAFE_DELETE_ANIMATION_TEXTURE(a) for (int i = 0; i < 4; ++i){ if (a[i]!=NULL) delete a[i]; a[i] = NULL;}
+#define SAFE_DELETE_ANIMATION(a) for (uint8_t i = 0; i < (uint8_t)AnimationType::MAX_ANM; ++i){ if (a[i] != NULL) delete a[i]; a[i] = NULL; }
 
 TutorialGame::TutorialGame() {
 	world		= new GameWorld();
@@ -129,6 +130,7 @@ TutorialGame::~TutorialGame()	{
 	SAFE_DELETE_ANIMATION_TEXTURE(maleGuardDiffuseTextureList)
 	SAFE_DELETE_ANIMATION_TEXTURE(maleGuardBumpTextureList)
 	SAFE_DELETE_ANIMATION_TEXTURE(maxGuardDiffuseTextureList)
+	SAFE_DELETE_ANIMATION(animationList)
 }
 
 void NCL::CSC8503::TutorialGame::BindEvents()
@@ -241,6 +243,14 @@ void TutorialGame::InitialiseAssets() {
 	//load submeshes texture
 	LoadTextureToMesh();
 
+	//load animation
+	animationList[(uint8_t)AnimationType::MALEGUARD_IDLE] = renderer->LoadAnimation("Male_Guard_Idle.anm");
+	animationList[(uint8_t)AnimationType::MALEGUARD_GUNFIRE] = renderer->LoadAnimation("Male_Guard_GunfireRifle.anm");
+	animationList[(uint8_t)AnimationType::MALEGUARD_STEPFORWARD] = renderer->LoadAnimation("Male_Guard_StepForwardRifle.anm");
+
+	animationList[(uint8_t)AnimationType::MAXGUARD_IDLE] = renderer->LoadAnimation("Rig_Maximilian_Idle.anm");
+	animationList[(uint8_t)AnimationType::MAXGUARD_GUNFIRE] = renderer->LoadAnimation("Rig_Maximilian_SingleShot.anm");
+	animationList[(uint8_t)AnimationType::MAXGUARD_WALK] = renderer->LoadAnimation("Rig_Maximilian_Walk2.anm");
 
 #ifdef defined(USE_SHADOW)
 	basicShader = renderer->LoadShader("scene.vert", "scene.frag");
@@ -671,6 +681,3 @@ void TutorialGame::LoadTextureToMesh() {
 		//((OGLTexture*)maxGuardTextureList[i])->GetObjectID();
 	}
 }
-
-
-
