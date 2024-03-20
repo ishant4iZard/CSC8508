@@ -175,6 +175,8 @@ bool NetworkedGame::StartAsClient(char a, char b, char c, char d) {
 	thisClient->RegisterPacketHandler(Projectile_Deactivate, this);
 	thisClient->RegisterPacketHandler(Round_Over, this);
 	thisClient->RegisterPacketHandler(Player_Score, this);
+	thisClient->RegisterPacketHandler(Player_BulletNum, this);
+	thisClient->RegisterPacketHandler(PowerUp_Spawn, this);
 
 	StartLevel();
 }
@@ -287,6 +289,23 @@ void NetworkedGame::UpdateProjectiles(float dt) {
 	}
 }
 
+void NetworkedGame::UpdatePowerUpSpawnTimer(float dt)
+{
+	if (appState->GetIsGameOver() || appState->GetIsGamePaused()) return;
+
+	powerUpSpawnTimer += dt;
+	if (powerUpSpawnTimer >= POWER_UP_SPAWN_TIME
+		&& activePowerUpCount <= MAX_POWER_UP_COUNT
+		)
+	{
+		powerUpSpawnTimer = 0.0f;
+		SpawnPowerUp(PowerUpSpawnNetID);
+		SpawnPowerUpPacket spPacket(PowerUpSpawnNetID);
+		if (thisServer) { thisServer->SendGlobalPacket(spPacket); }
+		++PowerUpSpawnNetID;
+	}
+}
+
 void NetworkedGame::UpdateAsServer(float dt) {
 	packetsToSnapshot--;
 	if (packetsToSnapshot < 0) {
@@ -301,6 +320,7 @@ void NetworkedGame::UpdateAsServer(float dt) {
 	ServerUpdatePlayersList();
 	CheckPlayerListAndSpawnPlayers();
 	ServerUpdateScoreList();
+	ServerUpdateBulletNumList();
 
 	if (LocalPlayer)
 	{
@@ -443,6 +463,19 @@ void NetworkedGame::ServerUpdateScoreList()
 	PlayersScorePacket psPacket(PlayersScoreList);
 	psPacket.PowerUpState = CurrentPowerUpType;
 	thisServer->SendGlobalPacket(psPacket);
+}
+
+void NetworkedGame::ServerUpdateBulletNumList()
+{
+	for (int i = 0; i < 4; ++i)
+	{
+		if (ControledPlayersList[i] != nullptr)
+		{
+			PlayersBulletNumList[i] = ControledPlayersList[i]->GetNumBullets();
+		}
+	}
+	PlayersBulletNumPacket bnPacket(PlayersBulletNumList);
+	thisServer->SendGlobalPacket(bnPacket);
 }
 
 void NetworkedGame::CheckPlayerListAndSpawnPlayers()
@@ -696,6 +729,9 @@ void NetworkedGame::StartLevel() {
 	PlayersList.clear();
 	ControledPlayersList.clear();
 	PlayersScoreList.clear();
+	PlayersBulletNumList.clear();
+	Projectile::CurrentAvailableProjectileID = 1000;
+	PowerUpSpawnNetID = POWER_UP_INIT_NETID;
 	if (poolPTR) {
 		delete poolPTR;
 		poolPTR = nullptr;
@@ -706,6 +742,7 @@ void NetworkedGame::StartLevel() {
 		ControledPlayersList.push_back(nullptr);
 		//PlayersNameList.push_back(std::string(" "));
 		PlayersScoreList.push_back(-1);
+		PlayersBulletNumList.push_back(-1);
 	}
 	ProjectileList.clear();
 	
@@ -771,6 +808,16 @@ void NetworkedGame::ReceivePacket(int type, GamePacket* payload, int source) {
 		PlayersScorePacket* realPacket = (PlayersScorePacket*)payload;
 		realPacket->GetPlayerScore(PlayersScoreList);
 		CurrentPowerUpType = powerUpType(realPacket->PowerUpState);
+		break;
+	}
+	case BasicNetworkMessages::Player_BulletNum: {
+		PlayersBulletNumPacket* realPacket = (PlayersBulletNumPacket*)payload;
+		realPacket->GetPlayerBulletNum(PlayersBulletNumList);
+		break;
+	}
+	case BasicNetworkMessages::PowerUp_Spawn: {
+		SpawnPowerUpPacket* realPacket = (SpawnPowerUpPacket*)payload;
+		SpawnPowerUp(realPacket->NetObjectID);
 		break;
 	}
 	case BasicNetworkMessages::Full_State: {
@@ -983,6 +1030,7 @@ void NetworkedGame::NonPhysicsUpdate(float dt)
 			HandleInputAsServer();
 			UpdatePlayerState(dt);
 			UpdateProjectiles(dt);
+			UpdatePowerUpSpawnTimer(dt);
 
 			for(auto i: gravitywell)
 				i->PullProjectilesWithinField(ProjectileList);
@@ -1005,6 +1053,20 @@ void NetworkedGame::SpawnAI() {
 	// TODO : Read from csv and load ais
 	AddAiStateObjectToWorld(Vector3(90, 5.6, 90));
 }
+
+void NetworkedGame::SpawnPowerUp(int NetID)
+{
+	PowerUp* NewPowerUp = InitPowerup();
+	NewPowerUp->SetNetworkObject(new NetworkObject(*NewPowerUp, NetID));
+	networkObjects.insert(std::pair<int, NetworkObject*>(NetID, NewPowerUp->GetNetworkObject()));
+}
+
+int NetworkedGame::GetLocalPlayerBulletNum() const
+{
+	if (!LocalPlayer) return 0;
+	return LocalPlayer->GetNumBullets();
+}
+
 
 //void NetworkedGame::DetectProjectiles(GameObject* gameObject) {
 //

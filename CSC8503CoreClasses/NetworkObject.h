@@ -25,6 +25,16 @@ namespace NCL::CSC8503 {
 		}
 	};
 
+	struct SpawnPowerUpPacket : public GamePacket {
+		int NetObjectID;
+
+		SpawnPowerUpPacket(int NetObjectID){
+			type = PowerUp_Spawn;
+			size = sizeof(SpawnPowerUpPacket);
+			this->NetObjectID = NetObjectID;
+		}
+	};
+
 	struct DeactivateProjectilePacket : public GamePacket {
 		int   NetObjectID;
 
@@ -100,6 +110,30 @@ namespace NCL::CSC8503 {
 			for (int i = 0; i < 4; ++i)
 			{
 				ClientScoreList[i] = ScoreList[i];
+			}
+		}
+	};
+
+	struct PlayersBulletNumPacket : public GamePacket
+	{
+		char BulletNumList[4];
+
+		PlayersBulletNumPacket(std::vector<int>& ServerBulletNumList)
+		{
+			type = Player_BulletNum;
+			size = sizeof(PlayersBulletNumPacket);
+
+			for (int i = 0; i < 4; ++i)
+			{
+				BulletNumList[i] = ServerBulletNumList[i];
+			}
+		}
+
+		void GetPlayerBulletNum(std::vector<int>& ClientBulletNumList)
+		{
+			for (int i = 0; i < 4; ++i)
+			{
+				ClientBulletNumList[i] = BulletNumList[i];
 			}
 		}
 	};

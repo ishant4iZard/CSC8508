@@ -2,6 +2,7 @@
 #include "TutorialGame.h"
 #include "NetworkedGame.h"
 #include "PushdownMachine.h"
+#include "NetworkPlayer.h"
 
 #include "OnlineSubsystemBase.h"
 #include "steam.h"
@@ -552,11 +553,12 @@ PushdownState::PushdownResult PlayingHUD::OnUpdate(float dt, PushdownState** new
 		{
 			ShowTimeLeft(Game);
 			//ui->DrawStringText("Player    " + Game->GetPlayerNameByIndex(Game->GetLocalPlayerIndex()), Vector2(83, 30), UIBase::WHITE);
-			ui->DrawStringText("Player    " + Subsystem->GetCurrentUserName(), Vector2(83, 30), UIBase::WHITE);
-			ui->DrawStringText("Your Score     " + std::to_string(Game->GetPlayerScoreByIndex(Game->GetLocalPlayerIndex())), Vector2(83, 40), UIBase::WHITE);
-			ui->DrawStringText("PowerUp State:  " + GetRoundPowerUpState(Game), Vector2(83, 50), UIBase::WHITE);		
-			ui->DrawStringText("Hold TAB To", Vector2(83, 60), UIBase::WHITE);
-			ui->DrawStringText("Show Score Table", Vector2(83, 65), UIBase::WHITE);
+			ui->DrawStringText("Player    " + Subsystem->GetCurrentUserName(), Vector2(83, 25), UIBase::WHITE);
+			ui->DrawStringText("Your Score:    " + std::to_string(Game->GetPlayerScoreByIndex(Game->GetLocalPlayerIndex())), Vector2(83, 35), UIBase::WHITE);
+			ui->DrawStringText("Bullet Num:    " + std::to_string(Game->GetPlayerBulletNumByIndex(Game->GetLocalPlayerIndex())), Vector2(83, 45), UIBase::WHITE);
+			ui->DrawStringText("PowerUp State: " + GetRoundPowerUpState(Game), Vector2(83, 55), UIBase::WHITE);		
+			ui->DrawStringText("Hold TAB To", Vector2(83, 65), UIBase::WHITE);
+			ui->DrawStringText("Show Score Table", Vector2(83, 70), UIBase::WHITE);
 
 			if (Window::GetKeyboard()->KeyHeld(KeyCodes::Type::TAB))
 			{

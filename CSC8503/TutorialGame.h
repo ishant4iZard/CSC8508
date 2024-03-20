@@ -29,6 +29,9 @@
 #include "UIBase.h"
 
 #define USE_SHADOW = false
+#define POWER_UP_SPAWN_TIME 30.0f
+#define MAX_POWER_UP_COUNT 3
+#define SAFE_DELETE_PBR_TEXTURE(a) for (uint8_t i = 0; i < (uint8_t)TextureType::MAX_TYPE; i++){ if (a[i] != NULL) delete a[i]; a[i] = NULL; }
 
 enum class level {
 	level1 = 1,
@@ -52,7 +55,7 @@ namespace NCL {
 			void ReceiveEvent(EventType) override;
 
 			virtual void UpdateGame(float dt);
-			void UpdatePowerUpSpawnTimer(float dt);
+			/*void UpdatePowerUpSpawnTimer(float dt);*/
 
 			vector<GravityWell*> gravitywell;
 
@@ -70,7 +73,7 @@ namespace NCL {
 			void InitCamera();
 			void InitWorld();
 			void InitTeleporters();
-			void InitPowerup();
+			PowerUp* InitPowerup();
 			void InitNonePowerup(PowerUp* inPowerup, Shader* inShader);
 			void InitIcePowerup(PowerUp* inPowerup, Shader* inShader);
 			void InitSandPowerup(PowerUp* inPowerup, Shader* inShader);

@@ -23,10 +23,6 @@
 using namespace NCL;
 using namespace CSC8503;
 
-#define POWER_UP_SPAWN_TIME 30.0f
-#define MAX_POWER_UP_COUNT 3
-#define SAFE_DELETE_PBR_TEXTURE(a) for (uint8_t i = 0; i < (uint8_t)TextureType::MAX_TYPE; i++){ if (a[i] != NULL) delete a[i]; a[i] = NULL; }
-
 TutorialGame::TutorialGame() {
 	world		= new GameWorld();
 	world->ClearAndErase();
@@ -155,22 +151,22 @@ void TutorialGame::UpdateGame(float dt) {
 	renderer->Render();
 	renderer->Update(dt);
 	
-	UpdatePowerUpSpawnTimer(dt);
+	/*UpdatePowerUpSpawnTimer(dt);*/
 }
 
-void NCL::CSC8503::TutorialGame::UpdatePowerUpSpawnTimer(float dt)
-{
-	if (appState->GetIsGameOver() || appState->GetIsGamePaused()) return;
-
-	powerUpSpawnTimer += dt;
-	if (powerUpSpawnTimer >= POWER_UP_SPAWN_TIME
-		&& activePowerUpCount <= MAX_POWER_UP_COUNT
-		)
-	{
-		powerUpSpawnTimer = 0.0f;
-		InitPowerup();
-	}
-}
+//void NCL::CSC8503::TutorialGame::UpdatePowerUpSpawnTimer(float dt)
+//{
+//	if (appState->GetIsGameOver() || appState->GetIsGamePaused()) return;
+//
+//	powerUpSpawnTimer += dt;
+//	if (powerUpSpawnTimer >= POWER_UP_SPAWN_TIME
+//		&& activePowerUpCount <= MAX_POWER_UP_COUNT
+//		)
+//	{
+//		powerUpSpawnTimer = 0.0f;
+//		InitPowerup();
+//	}
+//}
 
 void TutorialGame::InitialiseAssets() {
 	cubeMesh	= renderer->LoadMesh("cube.msh");
@@ -241,7 +237,7 @@ void TutorialGame::InitWorld() {
 	timer = 0;
 }
 
-void TutorialGame::InitPowerup()
+PowerUp* TutorialGame::InitPowerup()
 {
 	PowerUp* tempPowerup = new PowerUp();
 
@@ -261,7 +257,7 @@ void TutorialGame::InitPowerup()
 	(this->*powerupInitFunctionList[Helper::GetRandomEnumValue(powerUpType::MAX_POWERUP)])(tempPowerup, pbrShader);
 	world->AddGameObject(tempPowerup);
 
-
+	return tempPowerup;
 }
 
 void NCL::CSC8503::TutorialGame::InitNonePowerup(PowerUp* inPowerup, Shader* inShader)

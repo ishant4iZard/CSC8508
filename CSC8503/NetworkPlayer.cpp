@@ -2,6 +2,8 @@
 #include "TutorialGame.h"
 #ifdef _WIN32
 #include "NetworkedGame.h"
+#include "NetworkObject.h"
+#include "GameServer.h"
 #else
 #include "PS5_Game.h"
 #endif
@@ -49,6 +51,15 @@ void NetworkPlayer::OnCollisionBegin(GameObject* otherObject) {
 				break;
 			}
 			powerup->deactivate();
+#ifdef _WIN32
+			DeactivateProjectilePacket newPacket;
+			newPacket.NetObjectID = powerup->GetNetworkObject()->GetNetworkID();
+			NetworkedGame* tempGame = dynamic_cast<NetworkedGame*>(game);
+			if (tempGame->GetServer())
+			{
+				tempGame->GetServer()->SendGlobalPacket(newPacket);
+			}
+#endif
 		}
 		
 	}

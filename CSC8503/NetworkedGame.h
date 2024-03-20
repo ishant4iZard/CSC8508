@@ -23,6 +23,8 @@
 #include <chrono>
 using namespace std::chrono;
 
+#define POWER_UP_INIT_NETID 2000;
+
 namespace NCL {
 	namespace CSC8503 {
 		class GameServer;
@@ -81,12 +83,14 @@ namespace NCL {
 
 			void UpdatePlayerState(float dt);
 			void UpdateProjectiles(float dt);
+			void UpdatePowerUpSpawnTimer(float dt);
 
 			void BroadcastSnapshot(bool deltaFrame);
 			void UpdateMinimumState();
 
 			void ServerUpdatePlayersList();
 			void ServerUpdateScoreList();
+			void ServerUpdateBulletNumList();
 			void CheckPlayerListAndSpawnPlayers();
 
 			NetworkPlayer* AddNetworkPlayerToWorld(const Vector3& position, int playerNum);
@@ -120,11 +124,16 @@ namespace NCL {
 			std::vector<NetworkPlayer*> ControledPlayersList;
 			std::vector<std::string> PlayersNameList;
 			std::vector<int> PlayersScoreList;
+			std::vector<int> PlayersBulletNumList;
 			int localPlayerIndex;
 
 			void SpawnAI();
 			AiStatemachineObject* AddAiStateObjectToWorld(const Vector3& position);
 			AiStatemachineObject* AIStateObject;
+
+			/** Power Up Spawn */
+			void SpawnPowerUp(int NetID);
+			int PowerUpSpawnNetID = POWER_UP_INIT_NETID;
 
 			bool ServerFired;
 			bool ClientFired;
@@ -160,12 +169,13 @@ namespace NCL {
 			inline void SetLocalPlayerIndex(int val) { localPlayerIndex = val; }
 			inline std::string GetPlayerNameByIndex(int index) { return PlayersNameList[index]; }
 			inline int GetPlayerScoreByIndex(int index) { return PlayersScoreList[index]; }
+			inline int GetPlayerBulletNumByIndex(int index) { return PlayersBulletNumList[index]; }
 			inline float GetRoundTimer() const { return timer; }
 			inline int GetRoundTimeLimit() const { return TIME_LIMIT; }
 			inline powerUpType GetCurrentPowerUpType() const { return CurrentPowerUpType; }
+			inline NetworkPlayer* GetLocallyControlPlayer() const { return LocalPlayer; }
+			int GetLocalPlayerBulletNum() const;
 		};
-
-
 	}
 }
 
