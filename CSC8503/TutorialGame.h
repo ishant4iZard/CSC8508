@@ -28,6 +28,9 @@
 #include "ApplicationState.h"
 #include "UIBase.h"
 
+#include <chrono>
+using namespace std::chrono;
+
 #define USE_SHADOW = false
 
 enum class level {
@@ -174,6 +177,9 @@ namespace NCL {
 			typedef void (TutorialGame::* powerupInitFunction) (PowerUp* inPowerup, Shader* inShader);
 			powerupInitFunction powerupInitFunctionList[powerUpType::MAX_POWERUP] = { &TutorialGame::InitNonePowerup, &TutorialGame::InitIcePowerup , &TutorialGame::InitSandPowerup, &TutorialGame::InitWindPowerup };
 #pragma endregion
+
+			std::optional<microseconds> renderTimeCost;
+			bool isDebuHUDActive = false;
 
 			UIBase* ui;
 			ApplicationState* appState;

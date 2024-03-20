@@ -229,12 +229,19 @@ void NetworkedGame::UpdateGame(float dt) {
 
 	if (Window::GetKeyboard()->KeyHeld(KeyCodes::Type::I))
 	{
+		static long long prevPhysicsTimeCost = 0;
+		prevPhysicsTimeCost = physicsTimeCost.has_value() && physicsTimeCost.value().count() > 10 ? physicsTimeCost.value().count() : prevPhysicsTimeCost;
+		
 		isDebuHUDActive = true;
 
 		debugHUD->DrawDebugHUD({
 			dt,
+			prevPhysicsTimeCost,
+			(renderTimeCost.has_value() ? renderTimeCost.value().count() : 0),
 			physics->GetNumberOfCollisions(),
-			world->GetNumberOfObjects()
+			world->GetNumberOfObjects(),
+			0,
+			0
 		});
 
 	}
@@ -941,11 +948,22 @@ AiStatemachineObject* NetworkedGame::AddAiStateObjectToWorld(const Vector3& posi
 void NetworkedGame::PhysicsUpdate(float dt)
 {
 	if (UpdatePhysics) {
+		std::optional<time_point<high_resolution_clock>> frameStartTime;
+		if (isDebuHUDActive)
+			frameStartTime = high_resolution_clock::now();
+		
 		PhysicsMutex.lock();
 		physics->Update(dt);
 		CurrentPowerUpType = physics->GetCurrentPowerUpState();
 		UpdatePhysics = false;
 		PhysicsMutex.unlock();
+		
+		std::optional<time_point<high_resolution_clock>> frameEndTime;
+		if (isDebuHUDActive) {
+			frameEndTime = high_resolution_clock::now();
+			if (!frameStartTime.has_value() || !frameEndTime.has_value()) return;
+			physicsTimeCost = duration_cast<microseconds>(frameEndTime.value() - frameStartTime.value());
+		}
 	}
 }
 

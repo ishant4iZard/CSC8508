@@ -154,8 +154,21 @@ void NCL::CSC8503::TutorialGame::ReceiveEvent(EventType T)
 
 void TutorialGame::UpdateGame(float dt) {
 	world->UpdateWorld(dt);
+
+	std::optional<time_point<high_resolution_clock>> frameStartTime;
+	if (isDebuHUDActive)
+		frameStartTime = high_resolution_clock::now();
+	
 	renderer->Render();
 	renderer->Update(dt);
+
+	std::optional<time_point<high_resolution_clock>> frameEndTime;
+	if (isDebuHUDActive) {
+		frameEndTime = high_resolution_clock::now();
+		if (!frameStartTime.has_value() || !frameEndTime.has_value()) return;
+		renderTimeCost = duration_cast<microseconds>(frameEndTime.value() - frameStartTime.value());
+	}
+
 	
 	UpdatePowerUpSpawnTimer(dt);
 }
