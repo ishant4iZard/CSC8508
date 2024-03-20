@@ -184,7 +184,7 @@ void GameTechRenderer::BuildObjectList() {
 
 	gameWorld.OperateOnContents(
 		[&](GameObject* o) {
-			if (o->IsActive()) {
+			if (o && o->IsActive()) {
 				const RenderObject* g = o->GetRenderObject();
 				if (g) {
 					if (g->GetMesh()->GetInstanceCount() > 0)
