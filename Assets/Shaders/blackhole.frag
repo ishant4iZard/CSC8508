@@ -27,10 +27,8 @@ mat2 rotateBlackhole(float speed, float radius) {
 }
 
 void main(void) {
-	//vec2 uv = gl_FragCoord.xy / iResolution.xy;
 	vec2 uv = IN.texCoord;
 	vec2 center = (iResolution.xy * 0.5f) / iResolution.xy;
-	//vec2 center = vec2(0.5f);
 	vec2 dir = normalize(uv - center);
 	vec3 blackholeColor = vec3(0.8f, 0.4f, 0.2f);
 

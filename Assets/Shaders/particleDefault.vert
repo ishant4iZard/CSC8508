@@ -1,9 +1,14 @@
-#version 400 core
+// Shader tutorial inspired from https://learnopengl.com/In-Practice/2D-Game/Particles
+// Modified by Qixu Feng
+
+#version 330 core
 
 uniform mat4 modelMatrix 	= mat4(1.0f);
 uniform mat4 viewMatrix 	= mat4(1.0f);
 uniform mat4 projMatrix 	= mat4(1.0f);
 uniform mat4 shadowMatrix 	= mat4(1.0f);
+uniform vec3 offset;
+uniform vec4 color;
 
 layout(location = 0) in vec3 position;
 layout(location = 1) in vec4 colour;
@@ -21,22 +26,13 @@ out Vertex
 	vec4 shadowProj;
 	vec3 normal;
 	vec3 worldPos;
+	vec4 color;
 } OUT;
 
 void main(void)
 {
-	mat4 mvp 		  = (projMatrix * viewMatrix * modelMatrix);
-	mat3 normalMatrix = transpose ( inverse ( mat3 ( modelMatrix )));
-
-	OUT.shadowProj 	=  shadowMatrix * vec4 ( position,1);
-	OUT.worldPos 	= ( modelMatrix * vec4 ( position ,1)). xyz ;
-	OUT.normal 		= normalize ( normalMatrix * normalize ( normal ));
-	
-	OUT.texCoord	= texCoord;
-	OUT.colour		= objectColour;
-
-	if(hasVertexColours) {
-		OUT.colour		= objectColour * colour;
-	}
-	gl_Position		= mvp * vec4(position, 1.0);
+	float scale = 10.0f;
+	OUT.texCoord = texCoord;
+	OUT.color = color;
+	gl_Position = projMatrix * vec4((position * scale) + offset, 1.0);
 }

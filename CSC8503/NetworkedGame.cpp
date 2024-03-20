@@ -13,6 +13,7 @@
 #include "Hole.h"
 #include "GravityWell.h"
 #include "NavigationGrid.h"
+#include "Particles.h"
 #include <cmath>
 
 #define COLLISION_MSG 30
@@ -269,6 +270,10 @@ void NetworkedGame::UpdateProjectiles(float dt) {
 		if (i == nullptr) continue;
 
 		i->ReduceTimeLeft(dt);
+		/*if (i->IsActive()) {
+			i->Particles->Update(dt, i, 2, i->GetTransform().GetScale()/2);
+			i->Particles->Draw();
+		}*/ //Particle system test 
 
 		if (i->GetTimeLeft() <= 0) {
 			i->deactivate();
@@ -594,6 +599,8 @@ void NetworkedGame::SpawnProjectile(NetworkPlayer* owner, Vector3 firePos, Vecto
 	newBullet->SetPhysicsObject(new PhysicsObject(&newBullet->GetTransform(), newBullet->GetBoundingVolume()));
 	newBullet->GetPhysicsObject()->SetInverseMass(Projectile::inverseMass);
 	newBullet->GetPhysicsObject()->InitSphereInertia();
+
+	//newBullet->Particles = new GenerateParticle((OGLShader*)particleShader, (OGLTexture*)basicTex, 10);
 
 	int playerNum = owner->GetPlayerNum();
 	Vector4 colour;

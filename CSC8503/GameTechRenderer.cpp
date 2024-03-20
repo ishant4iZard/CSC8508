@@ -26,6 +26,7 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 	pbrShader = new OGLShader("pbr.vert", "pbr.frag");
 	gammaCorrectionShader = new OGLShader("basic.vert", "gammaCorrection.frag");
 	frostPostProcessing = new OGLShader("frostPostProcessing.vert", "frostPostProcessing.frag");
+	particleShader = new OGLShader("particleDefault.vert", "particleMoving.frag");
 
 	glGenTextures(1, &shadowTex);
 	glBindTexture(GL_TEXTURE_2D, shadowTex);

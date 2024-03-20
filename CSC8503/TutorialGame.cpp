@@ -214,6 +214,7 @@ void TutorialGame::InitialiseAssets() {
 	instancePbrShader = renderer->LoadShader("pbrInstanced.vert", "pbr.frag");
 	blackholeShader = renderer->LoadShader("blackhole.vert", "blackhole.frag");
 	targetholeShader = renderer->LoadShader("targethole.vert", "targethole.frag");
+	particleShader = renderer->LoadShader("particleDefault.vert", "particleMoving.frag");
 
 	InitCamera();
 	InitWorld();
