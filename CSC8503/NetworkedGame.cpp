@@ -633,8 +633,8 @@ void NetworkedGame::SpawnProjectile(NetworkPlayer* owner, Vector3 firePos, Vecto
 	networkObjects.insert(std::pair<int, NetworkObject*>(bulletID, newBullet->GetNetworkObject()));
 
 	newBullet->GetPhysicsObject()->SetElasticity(1.0f);
-	newBullet->GetPhysicsObject()->SetFriction(1.0f);
-	newBullet->GetPhysicsObject()->SetFriction(1.0f);
+	newBullet->GetPhysicsObject()->SetFriction(0.3f);
+	//newBullet->GetPhysicsObject()->SetFriction(1.0f);
 
 	Vector3 force = fireDir * Projectile::FireForce;
 	//newBullet->GetPhysicsObject()->SetLinearVelocity(fireDir);
@@ -1007,10 +1007,10 @@ void NetworkedGame::NonPhysicsUpdate(float dt)
 
 void NetworkedGame::SpawnAI() {
 	// TODO : Read from csv and load ais
-	AddAiStateObjectToWorld(Vector3(65, 5.6, 65));
-	AddAiStateObjectToWorld(Vector3(-65, 5.6, 65));
-	AddAiStateObjectToWorld(Vector3(-65, 5.6, -65));
-	AddAiStateObjectToWorld(Vector3(65, 5.6, -65));
+	AddAiStateObjectToWorld(Vector3(60, 5.6, 60));
+	AddAiStateObjectToWorld(Vector3(-60, 5.6, 60));
+	AddAiStateObjectToWorld(Vector3(-60, 5.6, -60));
+	AddAiStateObjectToWorld(Vector3(60, 5.6, -60));
 }
 
 //void NetworkedGame::DetectProjectiles(GameObject* gameObject) {
