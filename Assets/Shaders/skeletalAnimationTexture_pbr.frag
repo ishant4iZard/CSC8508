@@ -105,12 +105,12 @@ void main(void){
     //Attenuation
     //The other attenuation methods would make the characters appear very dim.
 
-    float attenuation = 1.0f / (distance * distance);
+    //float attenuation = 1.0f / (distance * distance);
     //float attenuation = 1.0f / distance;
     //float attenuation = 1.0f / (1.0f + (0.22f * distance));
     //float attenuation = 1.0f / (1.0f + (0.22f * distance) + 0.20f * distance * distance);
 
-    //float attenuation = 1.0f - clamp(distance/lightRadius , 0.0f, 1.0f);
+    float attenuation = 1.0f - clamp(distance/lightRadius , 0.0f, 1.0f);
 
     vec3 radiance = vec3(lightColour) * attenuation;
 
@@ -159,8 +159,9 @@ void main(void){
     bumpColor+=(lightColour.rgb * specFactor) * attenuation * 0.33f;
     //bumpColor+=surface * ambient;
 
-    //fragColour.rgb +=bumpColor;
+    fragColour.rgb +=bumpColor;
     //fragColour.rgb *=0.5f;
 
     //fragColour = vec4(IN.tangent,1);
+    //fragColour = vec4(IN.normal,1);
 }

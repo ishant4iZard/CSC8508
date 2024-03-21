@@ -252,8 +252,8 @@ void TutorialGame::InitialiseAssets() {
 
 	//load animation
 	animationList[(uint8_t)AnimationType::MALEGUARD_IDLE] = renderer->LoadAnimation("Male_Guard_Idle.anm");
-	animationList[(uint8_t)AnimationType::MALEGUARD_GUNFIRE] = renderer->LoadAnimation("Male_Guard_GunfireRifle.anm");
-	animationList[(uint8_t)AnimationType::MALEGUARD_STEPFORWARD] = renderer->LoadAnimation("Male_Guard_StepForwardRifle.anm");
+	animationList[(uint8_t)AnimationType::MALEGUARD_GUNFIRE] = renderer->LoadAnimation("Male_Guard_Gunfire.anm");
+	animationList[(uint8_t)AnimationType::MALEGUARD_STEPFORWARD] = renderer->LoadAnimation("Male_Guard_StepForwardGun.anm");
 
 	animationList[(uint8_t)AnimationType::MAXGUARD_IDLE] = renderer->LoadAnimation("Rig_Maximilian_Idle.anm");
 	animationList[(uint8_t)AnimationType::MAXGUARD_GUNFIRE] = renderer->LoadAnimation("Rig_Maximilian_SingleShot.anm");

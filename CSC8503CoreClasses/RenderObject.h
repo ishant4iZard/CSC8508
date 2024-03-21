@@ -127,6 +127,11 @@ namespace NCL {
 
 				if (!anim) return;
 
+				if (animDefault == nullptr) {
+					animDefault = anim;
+				}
+				currentAnimFrame = 0.0f;
+
 				skeleton.resize(anim->GetJointCount());
 			}
 
@@ -137,12 +142,20 @@ namespace NCL {
 				if (!mesh || !anim) {
 					return;
 				}
-				animTime -= dt * ANIMATION_SPEED;
+				//animTime -= dt * ANIMATION_SPEED;
+				animTime -= dt;
 
 				if (animTime <= 0) {
-					currentAnimFrame++;
-					animTime += anim->GetFrameTime();
-					currentAnimFrame = (currentAnimFrame++) % anim->GetFrameCount();
+
+					if (currentAnimFrame + 1 >= anim->GetFrameCount()) {
+						SetAnimation(animDefault);
+					}
+
+					//currentAnimFrame++;
+					animTime += 1.0f / anim->GetFrameTime();
+					currentAnimFrame = (++currentAnimFrame) % anim->GetFrameCount();
+					
+					
 
 					//To do...
 					//each submesh may have its own matrix
@@ -199,6 +212,7 @@ namespace NCL {
 				"ambiantOccTex" };
 
 			MeshAnimation* anim = nullptr;
+			MeshAnimation* animDefault = nullptr;
 
 			std::vector<Matrix4> skeleton;
 			float	animTime = 0.0f;

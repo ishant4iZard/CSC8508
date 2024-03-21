@@ -309,6 +309,8 @@ void NetworkedGame::UpdateAsServer(float dt) {
 			{
 				i->Fire();
 				i->isFire = false;
+
+				i->GetRenderObject()->SetAnimation(animationList[(uint8_t)AnimationType::MALEGUARD_GUNFIRE]);
 			}
 		}
 	}
@@ -506,7 +508,7 @@ NetworkPlayer* NetworkedGame::AddNetworkPlayerToWorld(const Vector3& position, i
 	character->GetPhysicsObject()->SetInverseMass(inverseMass);
 	character->GetPhysicsObject()->InitCubeInertia();
 
-	character->GetRenderObject()->SetAnimation(animationList[(uint8_t)AnimationType::MALEGUARD_IDLE]);
+	character->GetRenderObject()->SetAnimation(animationList[(uint8_t)AnimationType::MALEGUARD_STEPFORWARD]);
 
 	for (int i = 0; i < 4; ++i) {
 		character->GetRenderObject()->SetTextureAnm("Diffuse", i, maleGuardDiffuseTextureList[i]);

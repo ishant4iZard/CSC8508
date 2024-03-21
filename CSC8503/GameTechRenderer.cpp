@@ -794,13 +794,13 @@ void GameTechRenderer::RenderAnimatedObjects() {
 		OGLShader* shader = (OGLShader*)(*tempAnimatedRenderObject).GetRenderObject()->GetShader();
 		BindShader(*shader);
 
-		glUniform1i(glGetUniformLocation(shader->GetProgramID(), "diffuseTex"), 7);
-		glUniform1i(glGetUniformLocation(shader->GetProgramID(), "bumpTex"), 8);
+		glUniform1i(glGetUniformLocation(shader->GetProgramID(), "diffuseTex"), 6);
+		glUniform1i(glGetUniformLocation(shader->GetProgramID(), "bumpTex"), 7);
 		glUniform1i(glGetUniformLocation(shader->GetProgramID(), "normalTex"), 2);
 		//glUniform1i(glGetUniformLocation(shader->GetProgramID(), "albedoTex"), 3);
-		glUniform1i(glGetUniformLocation(shader->GetProgramID(), "metallicTex"), 4);
-		glUniform1i(glGetUniformLocation(shader->GetProgramID(), "roughnessTex"), 5);
-		glUniform1i(glGetUniformLocation(shader->GetProgramID(), "ambiantOccTex"), 6);
+		glUniform1i(glGetUniformLocation(shader->GetProgramID(), "metallicTex"), 3);
+		glUniform1i(glGetUniformLocation(shader->GetProgramID(), "roughnessTex"), 4);
+		glUniform1i(glGetUniformLocation(shader->GetProgramID(), "ambiantOccTex"), 5);
 
 		glUniform3fv(glGetUniformLocation(shader->GetProgramID(), "lightPos"), 1, (float*)&lightPosition);
 		glUniform4fv(glGetUniformLocation(shader->GetProgramID(), "lightColour"), 1, (float*)&lightColour);
@@ -821,16 +821,6 @@ void GameTechRenderer::RenderAnimatedObjects() {
 		glUniformMatrix4fv(glGetUniformLocation(shader->GetProgramID(), "projMatrix"), 1, false, (float*)&projMatrix);
 
 		//use diffuseTex as albedo
-		/*glActiveTexture(GL_TEXTURE3);
-		glBindTexture(GL_TEXTURE_2D, albedo->GetObjectID());
-		glActiveTexture(GL_TEXTURE2);
-		glBindTexture(GL_TEXTURE_2D, normal->GetObjectID());
-		glActiveTexture(GL_TEXTURE4);
-		glBindTexture(GL_TEXTURE_2D, metallic->GetObjectID());
-		glActiveTexture(GL_TEXTURE5);
-		glBindTexture(GL_TEXTURE_2D, roughness->GetObjectID());
-		glActiveTexture(GL_TEXTURE6);
-		glBindTexture(GL_TEXTURE_2D, ao->GetObjectID());*/
 
 		RenderObject* renderObject = tempAnimatedRenderObject->GetRenderObject();
 		UpdatePBRUniforms(renderObject);
@@ -845,11 +835,11 @@ void GameTechRenderer::RenderAnimatedObjects() {
 		//glBindTexture(GL_TEXTURE_2D, albedo);
 		//glActiveTexture(GL_TEXTURE2);
 		//glBindTexture(GL_TEXTURE_2D, normal->GetObjectID());
-		glActiveTexture(GL_TEXTURE4);
+		glActiveTexture(GL_TEXTURE3);
 		glBindTexture(GL_TEXTURE_2D, metallic);
-		glActiveTexture(GL_TEXTURE5);
+		glActiveTexture(GL_TEXTURE4);
 		glBindTexture(GL_TEXTURE_2D, roughness);
-		glActiveTexture(GL_TEXTURE6);
+		glActiveTexture(GL_TEXTURE5);
 		glBindTexture(GL_TEXTURE_2D, ao);
 
 
@@ -874,18 +864,16 @@ void GameTechRenderer::RenderAnimatedObjects() {
 		tempAnimatedRenderObject->GetRenderObject()->GetTextureAnm("Bump", bumpTex);*/
 
 		for (int i = 0; i < tempMesh->GetSubMeshCount(); ++i) {
-
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, 0);
-
-			glActiveTexture(GL_TEXTURE7);
+			glActiveTexture(GL_TEXTURE6);
 			glBindTexture(GL_TEXTURE_2D, ((OGLTexture*)diffuseTex[i])->GetObjectID());
 
-			glActiveTexture(GL_TEXTURE8);
+			glActiveTexture(GL_TEXTURE7);
 			glBindTexture(GL_TEXTURE_2D, ((OGLTexture*)bumpTex[i])->GetObjectID());
 
 			BindMesh((OGLMesh&)*(tempMesh));
 			DrawBoundMesh((uint32_t)i);
 		}
 	}
+
+	glEnable(GL_BLEND);
 }
