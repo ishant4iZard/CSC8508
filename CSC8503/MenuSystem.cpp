@@ -105,10 +105,12 @@ PushdownState::PushdownResult MainMenu::OnUpdate(float dt, PushdownState** newSt
 			*newState = new PlayingHUD();
 			return PushdownResult::Push;
 		}
+
 		ui->DrawStringText(
 			"Team 5 - Project T",
-			Vector2(45, 20),
-			UIBase::WHITE
+			Vector2(41, 25),
+			UIBase::WHITE,
+			BIG
 		);
 
 		ui->DrawButton(
