@@ -850,6 +850,20 @@ void NetworkedGame::ReceivePacket(int type, GamePacket* payload, int source) {
 		PlayersScorePacket* realPacket = (PlayersScorePacket*)payload;
 		realPacket->GetPlayerScore(PlayersScoreList);
 		CurrentPowerUpType = powerUpType(realPacket->PowerUpState);
+		switch (CurrentPowerUpType) {
+		case ice :
+			EventEmitter::EmitEvent(ACTIVATE_ICE_POWER_UP);
+			break;
+		case wind :
+			EventEmitter::EmitEvent(ACTIVATE_WIND_POWER_UP);
+			break;
+		case sand :
+			EventEmitter::EmitEvent(ACTIVATE_SAND_POWER_UP);
+			break;
+		case none:
+			EventEmitter::EmitEvent(ACTIVATE_NONE_POWER_UP);
+			break;
+		}
 		break;
 	}
 	case BasicNetworkMessages::Player_BulletNum: {
