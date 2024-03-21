@@ -32,7 +32,7 @@ std::multimap<EventType, EventListener*> EventEmitter::listeners;
 
 int main() {
 
-	Window* w = Window::CreateGameWindow("CSC8503 Game technology!", 1920, 1080, false);
+	Window* w = Window::CreateGameWindow("CSC8503 Game technology!", 1920, 1080, true);
 	if (!w->HasInitialised()) return -1;
 
 	bool bIsNetSystemInitSuccess = false;
