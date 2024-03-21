@@ -12,7 +12,7 @@ struct VS_Output
     float2 UV : TEXCOORD2;
     float4 ShadowProj : TEXCOORD3;
     float3 Normal : TEXCOORD4;
-    float3 Tangent : TEXCOORD5;
+    float4 Tangent : TEXCOORD5;
     float3 BiNormal : TEXCOORD6;
     float3 WorldPos : TEXCOORD7;
     int albedoTexId : TEXCOORD8;
@@ -33,7 +33,7 @@ VS_Output main(uint vertID : S_VERTEX_ID, uint objID : S_SRT_DATA, uint instance
 
     float4 tempPosition;
 	float3 tempNormal;
-	float3 tangent;
+	float4 tangent;
 	float3 tempBiTangent;
 
 	TransformVertexToWorld(objState, vertID, tempPosition, tempNormal, tangent, tempBiTangent);

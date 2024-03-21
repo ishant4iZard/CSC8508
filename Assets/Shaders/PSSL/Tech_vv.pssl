@@ -30,7 +30,7 @@ VS_OUTPUT main(uint vertID : S_VERTEX_ID, uint objID : S_SRT_DATA, uint instance
 
 	float4 position;
 	float3 normal;
-	float3 tangent;
+	float4 tangent;
 	float3 bitangent;
 
 	TransformVertexToWorld(s, vertID, position, normal, tangent, bitangent);

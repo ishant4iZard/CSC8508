@@ -7,7 +7,7 @@ struct VS_OUTPUT
     float2 UV : TEXCOORD2;
     float4 ShadowProj : TEXCOORD3;
     float3 Normal : TEXCOORD4;
-    float3 Tangent : TEXCOORD5;
+    float4 Tangent : TEXCOORD5;
     float3 BiNormal : TEXCOORD6;
     float3 WorldPos : TEXCOORD7;
     int albedoTexId : TEXCOORD8;
@@ -29,12 +29,12 @@ RegularBuffer<sce::Agc::Core::Texture> textures : register(t0);
 float3 GetNormalFromTexture(float3 inTangent, float3 inBiNormal, float3 inNormal, int inNormalTexId, float2 inUV)
 {
     float3x3 TBN = float3x3(
-		normalize(inTangent),
-		normalize(inBiNormal),
+        normalize(inTangent),
+        normalize(inBiNormal),
 		normalize(inNormal));
 
 	Texture2D<float4> normalTex = Texture2D<float4>(textures[NonUniformResourceIndex(inNormalTexId)]);
-	float3 normalTexSample = normalTex.Sample(normalSampler, inUV).xyz;
+	float3 normalTexSample = pow(normalTex.Sample(normalSampler, inUV).xyz, 1.0f/2.2f);
     return normalize(mul(TBN, normalize(normalTexSample * 2.0 - 1.0)));  
 }
 
@@ -91,7 +91,7 @@ float3 DirectionalLightPbr(float3 inDirection, float3 inWorldPos, float3 inColor
     float3 halfVector = normalize(wi + wo);
     
     //TODO : Pass global intensity from c++, currently hard coded : 
-    float3 radiance = inColor * 0.02f;
+    float3 radiance = inColor * 0.1f;
 
     // Cook-Torrance BRDF
     float NDF = DistributionGGX(inNormal, halfVector, inRoughness);       
@@ -118,12 +118,12 @@ float3 DirectionalLightPbr(float3 inDirection, float3 inWorldPos, float3 inColor
 float4 main(VS_OUTPUT vertex) : S_TARGET_OUTPUT0
 {
 	//Albedo
+    const float gamma = 2.2;
 	Texture2D<float4> albedoTex = Texture2D<float4>(textures[NonUniformResourceIndex(vertex.albedoTexId)]);
-	float4 albedoTexSample = albedoTex.Sample(sampler, vertex.UV) * vertex.Colour;
-
+	float4 albedoTexSample = pow(albedoTex.Sample(sampler, vertex.UV) * vertex.Colour, gamma);
     //Normal
 	float3 normal = GetNormalFromTexture(vertex.Tangent, vertex.BiNormal, vertex.Normal, vertex.normalTexId, vertex.UV);
-
+    //normal.y = normal.y * -1.0f;
 	//Roughness
 	Texture2D<float4> roughgnessTex = Texture2D<float4>(textures[NonUniformResourceIndex(vertex.roughnessTexId)]);
 	float3 roughness = roughgnessTex.Sample(roughnessSampler, vertex.UV).xyz;

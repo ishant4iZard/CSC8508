@@ -1,4 +1,4 @@
-void TransformVertexToWorld(ObjectState s, uint vertID, out float4 position, out float3 normal, out float3 tangent, out float3 bitangent) {
+void TransformVertexToWorld(ObjectState s, uint vertID, out float4 position, out float3 normal, out float4 tangent, out float3 bitangent) {
 	float3 vPos;
 	float3 vNormal;
 	float4 vTangent;
@@ -21,7 +21,8 @@ void TransformVertexToWorld(ObjectState s, uint vertID, out float4 position, out
     
 	float3x3 normalMatrix = transpose(s.inverseModelMatrix);
 	normal = normalize(mul(normalMatrix, normalize(vNormal))); // World normal;
-	tangent = normalize(mul(normalMatrix, normalize(vTangent.xyz))); // World tangent
+	tangent.xyz = normalize(mul(normalMatrix, normalize(vTangent.xyz))); // World tangent
+	tangent.w = vTangent.w;
 	bitangent = cross(tangent, normal) * vTangent.w;
 }
 

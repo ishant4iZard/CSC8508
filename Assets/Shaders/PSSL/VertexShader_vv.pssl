@@ -22,7 +22,7 @@ VS_OUTPUT main(Vertex v, uint id : S_VERTEX_ID)
 	VS_OUTPUT Output;
 
 	Output.Position = mul(m_WorldViewProj, float4(v.pos.xy, 0, 1));
-	Output.UV		= v.uv;;
+	Output.UV		= v.uv;
 
 	return Output;
 }
