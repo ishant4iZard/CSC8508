@@ -75,7 +75,7 @@ AiStatemachineObject::AiStatemachineObject(GameWorld* world, NavigationGrid* nav
 
 AiStatemachineObject::~AiStatemachineObject() {
 	if (stateMachine) {
-		delete stateMachine;
+		//delete stateMachine;
 		stateMachine = NULL;
 	}
 }
@@ -104,7 +104,7 @@ void AiStatemachineObject::DetectProjectiles(std::vector<Projectile*> Projectile
 	float shortestDistance = INT_MAX;
 
 	for (auto proj : ProjectileList) {
-		if (!proj->IsActive()) continue;
+		if (!proj && !proj->IsActive()) continue;
 
 		Vector3 projPos = proj->GetTransform().GetPosition();
 		float distance = (projPos - objectPosition).Length();

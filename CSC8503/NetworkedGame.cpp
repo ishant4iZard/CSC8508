@@ -215,15 +215,15 @@ void NetworkedGame::UpdateGame(float dt) {
 		poolPTR->enqueue([this, dt]() {this->NonPhysicsUpdate(dt); });
 	}
 
-	for (auto AIStateObject : AIStateObjectList) {
-		AIStateObject->DetectProjectiles(ProjectileList);
-		AIStateObject->Update(dt);
-	}
-
-	/*if (AIStateObject) {
+	/*for (auto AIStateObject : AIStateObjectList) {
 		AIStateObject->DetectProjectiles(ProjectileList);
 		AIStateObject->Update(dt);
 	}*/
+
+	if (AIStateObject) {
+		AIStateObject->DetectProjectiles(ProjectileList);
+		AIStateObject->Update(dt);
+	}
 
 	Menu->Update(dt);
 	if (appState->GetIsGamePaused()) {
@@ -274,7 +274,7 @@ void NetworkedGame::UpdatePlayerState(float dt) {
 
 void NetworkedGame::UpdateProjectiles(float dt) {
 	for (auto i : ProjectileList) {
-		if (i == nullptr) continue;
+		if (i == nullptr || !i->IsActive())  continue;
 
 		i->ReduceTimeLeft(dt);
 		/*if (i->IsActive()) {
@@ -791,7 +791,11 @@ void NetworkedGame::EndLevel()
 	networkObjects.clear();
 	gravitywell.clear();
 
-	AIStateObjectList.clear();
+	//AIStateObjectList.clear();
+
+	AIStateObject = nullptr;
+	
+
 	InitCamera();
 
 }
@@ -996,7 +1000,7 @@ bool NetworkedGame::clientProcessDeltaPacket(DeltaPacket* dp)
 
 AiStatemachineObject* NetworkedGame::AddAiStateObjectToWorld(const Vector3& position) {
 	NavigationGrid* navGrid = new NavigationGrid(world);
-	AiStatemachineObject* AIStateObject = new AiStatemachineObject(world, navGrid);
+	AIStateObject = new AiStatemachineObject(world, navGrid);
 
 	float radius = 4.0f;
 	SphereVolume* volume = new SphereVolume(radius);
@@ -1017,7 +1021,7 @@ AiStatemachineObject* NetworkedGame::AddAiStateObjectToWorld(const Vector3& posi
 	AIStateObject->GetPhysicsObject()->InitSphereInertia();
 
 	world->AddGameObject(AIStateObject);
-	AIStateObjectList.push_back(AIStateObject);
+	//AIStateObjectList.push_back(AIStateObject);
 
 	return AIStateObject;
 }
@@ -1083,17 +1087,15 @@ void NetworkedGame::NonPhysicsUpdate(float dt)
 			}
 		}
 	}
-
-	
 	NonPhysicsMutex.unlock();
 }
 
 void NetworkedGame::SpawnAI() {
 	// TODO : Read from csv and load ais
 	AddAiStateObjectToWorld(Vector3(60, 5.6, 60));
-	AddAiStateObjectToWorld(Vector3(-60, 5.6, 60));
-	AddAiStateObjectToWorld(Vector3(-60, 5.6, -60));
-	AddAiStateObjectToWorld(Vector3(60, 5.6, -60));
+	//AddAiStateObjectToWorld(Vector3(-60, 5.6, 60));
+	//AddAiStateObjectToWorld(Vector3(-60, 5.6, -60));
+	//AddAiStateObjectToWorld(Vector3(60, 5.6, -60));
 }
 
 void NetworkedGame::SpawnPowerUp(int NetID)
