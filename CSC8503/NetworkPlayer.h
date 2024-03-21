@@ -2,6 +2,9 @@
 #include "GameObject.h"
 #include "GameClient.h"
 #include <iostream>
+
+#include "RenderObject.h"
+
 namespace NCL {
 	namespace CSC8503 {
 		class TutorialGame;
@@ -43,6 +46,12 @@ namespace NCL {
 				return numProjectilesAccumulated;
 			}
 
+			void InitAnimation(const AnimationType& inType, MeshAnimation* inAnimation) {
+				if (inType != AnimationType::MAX_ANM) {
+					animations[(uint8_t)inType] = inAnimation;
+				}
+			}
+
 		protected:
 			TutorialGame* game;
 			int playerNum;
@@ -55,6 +64,8 @@ namespace NCL {
 			const int MAX_PROJECTILE_CAPACITY = 10;
 			int numProjectilesAccumulated;
 			float projectileReplenishTimer;
+
+			MeshAnimation* animations[(uint8_t)AnimationType::MAX_ANM];
 
 		public:
 			int GetPlayerNum() const { return playerNum; }

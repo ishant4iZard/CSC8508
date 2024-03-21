@@ -24,6 +24,11 @@ NetworkPlayer::NetworkPlayer(TutorialGame* game, int num)	{
 	timeElapsed = projectileReplenishTimer = 0.0f;
 	numProjectilesAccumulated = MAX_PROJECTILE_CAPACITY;
 	movementSpeed = 35;
+
+	for (uint8_t i = (uint8_t)AnimationType::MALEGUARD_IDLE; i < (uint8_t)AnimationType::MAX_ANM; i++)
+	{
+		animations[i] = nullptr;
+	}
 }
 
 NetworkPlayer::~NetworkPlayer()	{
@@ -274,6 +279,8 @@ void NetworkPlayer::Fire()
 #endif
 
 	tempGame->SpawnProjectile(this, firePos, fireDir);
+
+	GetRenderObject()->SetAnimation(animations[(uint8_t)AnimationType::MALEGUARD_GUNFIRE]);
 }
 
 Vector3 NetworkPlayer::GetPlayerForwardVector()

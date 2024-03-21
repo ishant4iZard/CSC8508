@@ -357,8 +357,6 @@ void NetworkedGame::UpdateAsServer(float dt) {
 			{
 				i->Fire();
 				i->isFire = false;
-
-				i->GetRenderObject()->SetAnimation(animationList[(uint8_t)AnimationType::MALEGUARD_GUNFIRE]);
 			}
 		}
 	}
@@ -574,6 +572,15 @@ NetworkPlayer* NetworkedGame::AddNetworkPlayerToWorld(const Vector3& position, i
 
 	character->GetPhysicsObject()->SetInverseMass(inverseMass);
 	character->GetPhysicsObject()->InitCubeInertia();
+
+	//init animations
+	int maxNum = static_cast<int>(AnimationType::MAX_ANM) / 2;
+	int useAnimation = (playerNum % 2) * maxNum;
+	int currentAnimationID = 0;
+	for (int i = 0; i < maxNum; ++i) {
+		currentAnimationID = i + useAnimation;
+		character->InitAnimation(static_cast<AnimationType>(currentAnimationID), animationList[currentAnimationID]);//static_cast<AnimationType>(currentAnimationID)
+	}
 
 	character->GetRenderObject()->SetAnimation(animationList[(uint8_t)AnimationType::MALEGUARD_STEPFORWARD]);
 
