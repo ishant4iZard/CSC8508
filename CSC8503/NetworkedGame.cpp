@@ -62,7 +62,7 @@ NetworkedGame::NetworkedGame()	{
 	fireSFX = audioEngine->CreateSound("../../Assets/Audio/jump.mp3", false);
 
 	debugHUD = new DebugHUD();
-	poolPTR = new ThreadPool(2);
+	poolPTR = new ThreadPool(3);
 }
 
 NetworkedGame::~NetworkedGame()	{
@@ -213,7 +213,10 @@ void NetworkedGame::UpdateGame(float dt) {
 	if (poolPTR) {
 		poolPTR->enqueue([this, dt]() {this->PhysicsUpdate(dt); });
 		poolPTR->enqueue([this, dt]() {this->NonPhysicsUpdate(dt); });
+		poolPTR->enqueue([this, dt]() {this->UpdateAnimations(dt); });
 	}
+
+	//UpdateAnimations(dt);
 
 	/*for (auto AIStateObject : AIStateObjectList) {
 		AIStateObject->DetectProjectiles(ProjectileList);
@@ -788,7 +791,7 @@ void NetworkedGame::StartLevel() {
 	physics->createStaticTree();//this needs to be at the end of all initiations
 	appState->SetIsGameOver(false);
 	appState->SetIsGamePaused(false);
-	poolPTR = new ThreadPool(2);
+	poolPTR = new ThreadPool(3);
 
 }
 
@@ -1135,6 +1138,18 @@ float NetworkedGame::GetInComingPacketSizePerSecond() const
 {
 	float result = TotalSizeIncomingPakcet * 60.0f / 1024.0f;
 	return result;
+}
+
+void NetworkedGame::UpdateAnimations(float dt)
+{
+	world->gameObjectsMutex.lock();
+
+	for (auto i : ControledPlayersList) {
+		if (!i || !i->IsActive() || !i->GetRenderObject()) continue;
+		i->Update(dt);
+	}
+
+	world->gameObjectsMutex.unlock();
 }
 
 

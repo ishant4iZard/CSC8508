@@ -95,6 +95,8 @@ namespace NCL {
 			void ServerUpdateBulletNumList();
 			void CheckPlayerListAndSpawnPlayers();
 
+			void UpdateAnimations(float dt);
+
 			NetworkPlayer* AddNetworkPlayerToWorld(const Vector3& position, int playerNum);
 
 			void findOSpointerWorldPosition(Vector3& position);

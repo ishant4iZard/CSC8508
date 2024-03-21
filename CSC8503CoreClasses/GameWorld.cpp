@@ -59,9 +59,13 @@ void GameWorld::GetObjectIterators(
 }
 
 void GameWorld::OperateOnContents(GameObjectFunc f) {
+	gameObjectsMutex.lock();
+
 	for (GameObject* g : gameObjects) {
 		f(g);
 	}
+
+	gameObjectsMutex.unlock();
 }
 
 void GameWorld::UpdateWorld(float dt) {
@@ -71,7 +75,9 @@ void GameWorld::UpdateWorld(float dt) {
 	std::default_random_engine e(seed);
 
 	for (GameObject* g : gameObjects) {
-		g->Update(dt);
+		
+
+		//g->Update(dt);
 	}
 
 	//if (shuffleObjects) {
