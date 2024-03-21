@@ -1142,6 +1142,8 @@ float NetworkedGame::GetInComingPacketSizePerSecond() const
 
 void NetworkedGame::UpdateAnimations(float dt)
 {
+	if (appState->GetIsGamePaused()) return;
+
 	world->gameObjectsMutex.lock();
 
 	for (auto i : ControledPlayersList) {
