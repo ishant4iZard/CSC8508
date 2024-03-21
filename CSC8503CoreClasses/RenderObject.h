@@ -130,7 +130,8 @@ namespace NCL {
 				if (animDefault == nullptr) {
 					animDefault = anim;
 				}
-				currentAnimFrame = 0.0f;
+				//currentAnimFrame = 0.0f;
+				AnimFrame[objID] = 0.0f;
 
 				skeleton.resize(anim->GetJointCount());
 			}
@@ -147,13 +148,18 @@ namespace NCL {
 
 				if (animTime <= 0) {
 
-					if (currentAnimFrame + 1 >= anim->GetFrameCount()) {
+					/*if (currentAnimFrame + 1 >= anim->GetFrameCount()) {
+						SetAnimation(animDefault);
+					}*/
+					if (AnimFrame[objID] + 1 >= anim->GetFrameCount()) {
+						//SetID(0);
 						SetAnimation(animDefault);
 					}
 
 					//currentAnimFrame++;
 					animTime += 1.0f / anim->GetFrameTime();
-					currentAnimFrame = (++currentAnimFrame) % anim->GetFrameCount();
+					//currentAnimFrame = (++currentAnimFrame) % anim->GetFrameCount();
+					AnimFrame[objID] = (++AnimFrame[objID]) % anim->GetFrameCount();
 					
 					
 
@@ -166,7 +172,8 @@ namespace NCL {
 						//return;
 					}
 
-					const Matrix4* joints = anim->GetJointData(currentAnimFrame);
+					//const Matrix4* joints = anim->GetJointData(currentAnimFrame);
+					const Matrix4* joints = anim->GetJointData(AnimFrame[objID]);
 
 					for (int i = 0; i < skeleton.size(); ++i) {
 						skeleton[i] = joints[i] * inverseBindPose[i];
@@ -195,6 +202,8 @@ namespace NCL {
 				return skeleton;
 			}
 
+			void SetID(int id) { objID = id; }
+
 		protected:
 			Buffer* buffer;
 			Mesh*		mesh;
@@ -217,6 +226,9 @@ namespace NCL {
 			std::vector<Matrix4> skeleton;
 			float	animTime = 0.0f;
 			int currentAnimFrame = 0;
+
+			int AnimFrame[4] = {0};
+			int objID = 0;
 
 			Texture* anmObjDiffuseTextureList[4];
 			Texture* anmObjBumpTextureList[4];

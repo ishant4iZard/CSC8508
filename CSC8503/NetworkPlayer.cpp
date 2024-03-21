@@ -265,21 +265,25 @@ void NetworkPlayer::Fire()
 	numProjectilesAccumulated--;
 
 	//GetRenderObject()->SetAnimation(animations[(uint8_t)AnimationType::MALEGUARD_GUNFIRE]);
-	switch (playerNum)
+	/*switch (playerNum)
 	{
 	case(0):
+		GetRenderObject()->SetID(0);
 		GetRenderObject()->SetAnimation(animations[(uint8_t)AnimationType::MALEGUARD_GUNFIRE]);
 		break;
 	case(1):
-		GetRenderObject()->SetAnimation(animations[(uint8_t)AnimationType::MAXGUARD_GUNFIRE]); 
+		GetRenderObject()->SetID(1);
+		GetRenderObject()->SetAnimation(animations[(uint8_t)AnimationType::MALEGUARD_GUNFIRE]); 
 		break;
 	case(2):
+		GetRenderObject()->SetID(2);
 		GetRenderObject()->SetAnimation(animations[(uint8_t)AnimationType::MALEGUARD_GUNFIRE]); 
 		break;
 	case(3):
+		GetRenderObject()->SetID(3);
 		GetRenderObject()->SetAnimation(animations[(uint8_t)AnimationType::MALEGUARD_GUNFIRE]);
 		break;
-	}
+	}*/
 
 #ifdef _WIN32
 	Vector3 fireDir = GetPlayerForwardVector().Normalised();

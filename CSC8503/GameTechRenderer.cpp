@@ -205,14 +205,19 @@ void GameTechRenderer::BuildObjectList() {
 								bumpTex[i] = o->GetRenderObject()->GetTextureAnm("Bump", i);
 							}
 						}
-						if (o->GetName() == "MaxGuard") {
-							if (diffuseTex2[i] == nullptr) {
-								diffuseTex2[i] = o->GetRenderObject()->GetTextureAnm("Diffuse", i);
-							}
-						}
 						//diffuseTex[i] = o->GetRenderObject()->GetTextureAnm("Diffuse", i);
 						//bumpTex[i] = o->GetRenderObject()->GetTextureAnm("Bump", i);
 					}
+				}
+
+				if (o->GetName() == "MaxGuard") {
+					if (diffuseTex2[0] == nullptr) {
+						diffuseTex2[0] = o->GetRenderObject()->GetTextureAnm("Diffuse", 0);
+						diffuseTex2[1] = o->GetRenderObject()->GetTextureAnm("Diffuse", 1);
+						diffuseTex2[2] = o->GetRenderObject()->GetTextureAnm("Diffuse", 2);
+						diffuseTex2[3] = o->GetRenderObject()->GetTextureAnm("Diffuse", 3);
+					}
+					activeAnimatedObjects.emplace_back(o);
 				}
 
 				if (g) {
@@ -512,7 +517,8 @@ void GameTechRenderer::RenderCamera() {
 		for (size_t i = 0; i < layerCount; ++i) {
 			int num = (*tempRenderObj).GetMesh()->GetVertexCount();
 			if (shader == playerShader) {
-				if (num == 7306 && i == 1)continue;
+				if (num == 7306 && i == 1)
+					continue;
 				
 				if (num == 7306) {
 					glActiveTexture(GL_TEXTURE0);
@@ -908,16 +914,16 @@ void GameTechRenderer::RenderAnimatedObjects() {
 		/*tempAnimatedRenderObject->GetRenderObject()->GetTextureAnm("Diffuse", diffuseTex);
 		tempAnimatedRenderObject->GetRenderObject()->GetTextureAnm("Bump", bumpTex);*/
 
-		for (int i = 0; i < tempMesh->GetSubMeshCount(); ++i) {
-			glActiveTexture(GL_TEXTURE0);
+		//for (int i = 0; i < tempMesh->GetSubMeshCount(); ++i) {
+			//glActiveTexture(GL_TEXTURE0);
 			//glBindTexture(GL_TEXTURE_2D, ((OGLTexture*)diffuseTex[i])->GetObjectID());
-			glBindTexture(GL_TEXTURE_2D, 0);
+			//glBindTexture(GL_TEXTURE_2D, 0);
 			//glActiveTexture(GL_TEXTURE7);
 			//glBindTexture(GL_TEXTURE_2D, ((OGLTexture*)bumpTex[i])->GetObjectID());
 
 			//BindMesh((OGLMesh&)*(tempMesh));
 			//DrawBoundMesh((uint32_t)i);
-		}
+		//}
 	}
 
 	glEnable(GL_BLEND);

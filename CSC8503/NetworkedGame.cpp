@@ -570,24 +570,28 @@ NetworkPlayer* NetworkedGame::AddNetworkPlayerToWorld(const Vector3& position, i
 	switch (playerNum) {
 	case (0):
 		character->SetRenderObject(new RenderObject(&character->GetTransform(), charMesh, nullptr, anmShader));
+		character->GetRenderObject()->SetID(0);
 		character->GetRenderObject()->SetAnimation(animationList[(uint8_t)AnimationType::MALEGUARD_STEPFORWARD]);
 		character->setName("MaleGuard");
 		useAnimation = 0;
 		break;
 	case (1):
 		character->SetRenderObject(new RenderObject(&character->GetTransform(), charMesh2, nullptr, anmShader));
+		character->GetRenderObject()->SetID(1);
 		character->GetRenderObject()->SetAnimation(animationList[(uint8_t)AnimationType::MALEGUARD_STEPFORWARD]);
 		character->setName("MaleGuard");
 		useAnimation = 0;
 		break;
 	case (2):
 		character->SetRenderObject(new RenderObject(&character->GetTransform(), charMesh3, nullptr, anmShader));
+		character->GetRenderObject()->SetID(2);
 		character->GetRenderObject()->SetAnimation(animationList[(uint8_t)AnimationType::MALEGUARD_STEPFORWARD]);
 		character->setName("MaleGuard");
 		useAnimation = 0;
 		break;
 	case (3):
 		character->SetRenderObject(new RenderObject(&character->GetTransform(), charMesh4, nullptr, anmShader));
+		character->GetRenderObject()->SetID(3);
 		character->GetRenderObject()->SetAnimation(animationList[(uint8_t)AnimationType::MALEGUARD_STEPFORWARD]);
 		character->setName("MaleGuard");
 		useAnimation = 0;
@@ -739,6 +743,7 @@ void NetworkedGame::SpawnProjectile(NetworkPlayer* owner, Vector3 firePos, Vecto
 
 	newBullet->GetRenderObject()->SetColour(colour);
 
+	owner->GetRenderObject()->SetID(playerNum);
 	owner->GetRenderObject()->SetAnimation(animationList[(uint8_t)AnimationType::MALEGUARD_GUNFIRE]);
 
 	int bulletID = Projectile::CurrentAvailableProjectileID++;
@@ -798,6 +803,7 @@ void NetworkedGame::OnRep_SpawnProjectile(int PlayerNum, int NetObjectID)
 
 	if (ControledPlayersList[PlayerNum])
 	{
+		ControledPlayersList[PlayerNum]->GetRenderObject()->SetID(PlayerNum);
 		ControledPlayersList[PlayerNum]->GetRenderObject()->SetAnimation(animationList[(uint8_t)AnimationType::MALEGUARD_GUNFIRE]);
 	}
 
@@ -1084,6 +1090,21 @@ AiStatemachineObject* NetworkedGame::AddAiStateObjectToWorld(const Vector3& posi
 		.SetPosition(Vector3(position.x, 5.6, position.z));
 
 	AIStateObject->SetRenderObject(new RenderObject(&AIStateObject->GetTransform(), sphereMesh, nullptr, basicShader));
+	/*AIStateObject->SetRenderObject(new RenderObject(&AIStateObject->GetTransform(), charMesh5, nullptr, anmShader));
+	AIStateObject->GetRenderObject()->SetID(5);
+	AIStateObject->GetRenderObject()->SetAnimation(animationList[(uint8_t)AnimationType::MAXGUARD_WALK]);
+	AIStateObject->setName("MaxGuard");
+	AIStateObject->GetRenderObject()->SetTextureAnm("Diffuse", 0, maxGuardDiffuseTextureList[0]);
+	AIStateObject->GetRenderObject()->SetTextureAnm("Diffuse", 1, maxGuardDiffuseTextureList[1]);
+	AIStateObject->GetRenderObject()->SetTextureAnm("Diffuse", 2, maxGuardDiffuseTextureList[2]);
+	AIStateObject->GetRenderObject()->SetTextureAnm("Diffuse", 3, maxGuardDiffuseTextureList[3]);
+
+	for (uint8_t i = (uint8_t)TextureType::ALBEDO; i < (uint8_t)TextureType::MAX_TYPE; i++)
+	{
+		AIStateObject->GetRenderObject()->SetTexture((TextureType)i, anmObjPbrTextureList[i]);
+	}*/
+	
+	
 	//AIStateObject->SetRenderObject(new RenderObject(&AIStateObject->GetTransform(), rebellionMeshChar, nullptr, basicShader));
 	AIStateObject->SetPhysicsObject(new PhysicsObject(&AIStateObject->GetTransform(), AIStateObject->GetBoundingVolume()));
 	AIStateObject->SetNetworkObject(new NetworkObject(*AIStateObject, AIInitialID));
