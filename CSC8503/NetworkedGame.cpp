@@ -227,10 +227,10 @@ void NetworkedGame::UpdateGame(float dt) {
 
 	Menu->Update(dt);
 	if (appState->GetIsGamePaused()) {
-		//audioEngine->Pause();
+		audioEngine->PauseAll();
 	}
 	else {
-		//audioEngine->UnPause();
+		audioEngine->UnPauseAll();
 	}
 	audioEngine->Update();
 

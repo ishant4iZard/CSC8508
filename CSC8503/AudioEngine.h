@@ -48,8 +48,8 @@ public :
 	void PlaySound(int indx, bool isLooped);
 	float GetVolume() {	return volume; };
 	void SetVolume(float val);
-	void Pause();
-	void UnPause();
+	void PauseAll();
+	void UnPauseAll();
 
 	void Update() {	system->update(); }
 
