@@ -105,9 +105,15 @@ PushdownState::PushdownResult MainMenu::OnUpdate(float dt, PushdownState** newSt
 			*newState = new PlayingHUD();
 			return PushdownResult::Push;
 		}
+		ui->DrawStringText(
+			"Team 5 - Project T",
+			Vector2(45, 20),
+			UIBase::WHITE
+		);
+
 		ui->DrawButton(
 			"Solo Game",
-			Vector2(5, 23),
+			Vector2(40, 33),
 			[&]() {
 				isSoloGameBtnPressed = true;
 			},
@@ -118,7 +124,7 @@ PushdownState::PushdownResult MainMenu::OnUpdate(float dt, PushdownState** newSt
 #ifdef _WIN32
 		ui->DrawButton(
 			"Create Lobby",
-			Vector2(5, 33),
+			Vector2(40, 40),
 			[&, Subsystem]() {
 				if (!isCreatingLobby)
 				{
@@ -132,7 +138,7 @@ PushdownState::PushdownResult MainMenu::OnUpdate(float dt, PushdownState** newSt
 
 		ui->DrawButton(
 			"Search Lobby",
-			Vector2(5, 43),
+			Vector2(40, 47),
 			[&]() {
 				isSearchLobbyBtnPressed = true;
 			},
@@ -142,7 +148,7 @@ PushdownState::PushdownResult MainMenu::OnUpdate(float dt, PushdownState** newSt
 
 		ui->DrawButton(
 			"Quit Game",
-			Vector2(5, 53),
+			Vector2(40, 54),
 			[Game]() {
 				Game->CloseGame = true;
 			},
@@ -234,7 +240,7 @@ PushdownState::PushdownResult MultiPlayerLobby::OnUpdate(float dt, PushdownState
 		}
 		ui->DrawButton(
 			"Leave Lobby",
-			Vector2(47, 75),
+			Vector2(32, 75),
 			[Subsystem]() {
 				Subsystem->LeaveLobby();
 				EventEmitter::EmitEvent(LOBBY_LEAVE);
@@ -386,7 +392,7 @@ PushdownState::PushdownResult MultiplayerSearchMenu::OnUpdate(float dt, Pushdown
 
 		ui->DrawButton(
 			"Main Menu",
-			Vector2(48,75),
+			Vector2(32,75),
 			[&]() {
 				isMainMenuPressed = true;
 			},
@@ -396,7 +402,7 @@ PushdownState::PushdownResult MultiplayerSearchMenu::OnUpdate(float dt, Pushdown
 
 		ui->DrawButton(
 			"Refresh Lobby List",
-			Vector2(48, 13),
+			Vector2(32, 28),
 			[&, Subsystem]() {
 				if (!isSearchingLobbies)
 				{
@@ -415,17 +421,19 @@ PushdownState::PushdownResult MultiplayerSearchMenu::OnUpdate(float dt, Pushdown
 				ChangeCurrentSelectLobbyByAmount(Subsystem, -1);
 			},
 			UIBase::WHITE,
-			KeyCodes::UP // Only for PS
+			KeyCodes::UP, // Only for PS
+			Vector2(100, 50)
 		);
 
 		ui->DrawButton(
 			"=>",
-			Vector2(48, 28),
+			Vector2(11, 28),
 			[&, Subsystem]() {
 				ChangeCurrentSelectLobbyByAmount(Subsystem, 1);
 			},
 			UIBase::WHITE,
-			KeyCodes::DOWN // Only for PS
+			KeyCodes::DOWN, // Only for PS
+			Vector2(100, 50)
 		);
 
 		if (isJoiningLobby)
