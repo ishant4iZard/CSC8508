@@ -274,7 +274,7 @@ void NCL::CSC8503::PS5_Game::MovePlayer(float dt) {
 
 	player->MovePlayerBasedOnController(dt, horizontalInput, verticalInput);
 	if (horizontalInput == 0 && verticalInput == 0) {
-		//SwitchAnimations(player->GetRenderObject(), nullptr);
+		SwitchAnimations(player->GetRenderObject(), nullptr);
 	}
 	else
 		player->Update(dt);
@@ -321,5 +321,9 @@ void NCL::CSC8503::PS5_Game::RotatePortals(float dt)
 
 	teleporter1Display->GetTransform().SetOrientation(newOrientation);
 	teleporter2Display->GetTransform().SetOrientation(newOrientation);
+
+	for (auto i : blackHoleDisplays) {
+		i->GetTransform().SetOrientation(newOrientation);
+	}
 }
 

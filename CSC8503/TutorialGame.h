@@ -213,6 +213,7 @@ namespace NCL {
 
 			GameObject* teleporter1Display;
 			GameObject* teleporter2Display;
+			std::vector<GameObject*> blackHoleDisplays;
 		};
 	}
 }

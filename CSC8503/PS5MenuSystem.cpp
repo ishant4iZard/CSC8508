@@ -84,10 +84,8 @@ PushdownState::PushdownResult PS5PlayingHUD::OnUpdate(float dt, PushdownState** 
 			if (appState->GetIsGamePaused())
 			{
 				ui->DrawStringText("Round Paused !", Vector2(40, 15), UIBase::WHITE);
-
-				ui->DrawStringText("Press Circle: Unpause", Vector2(30, 55), UIBase::WHITE);
-				ui->DrawStringText("Press Cross: End Round", Vector2(30, 65), UIBase::WHITE);
-
+				ui->DrawStringText("Press Circle: Unpause", Vector2(30, 45), UIBase::WHITE);
+				ui->DrawStringText("Press Cross: End Round", Vector2(30, 55), UIBase::WHITE);
 
 				if (Game->GetController()->GetNamedButton("Circle"))
 				{
@@ -103,10 +101,8 @@ PushdownState::PushdownResult PS5PlayingHUD::OnUpdate(float dt, PushdownState** 
 		else
 		{
 			ui->DrawStringText("Round Over !", Vector2(40, 15), UIBase::WHITE);
-
-			ui->DrawStringText("Your Score: " + std::to_string(Game->GetPlayerScore()), Vector2(25, 40), UIBase::WHITE);
-
-			ui->DrawStringText("Press R1: Main Menu ", Vector2(25,60), UIBase::WHITE);
+			ui->DrawStringText("Your Score: " + std::to_string(Game->GetPlayerScore()), Vector2(25, 45), UIBase::WHITE);
+			ui->DrawStringText("Press R1: Main Menu ", Vector2(25,55), UIBase::WHITE);
 
 			if (Game->GetController()->GetNamedButton("R1"))
 			{

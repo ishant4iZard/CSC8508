@@ -206,7 +206,7 @@ void TutorialGame::InitialiseAssets() {
 	rebellionMeshChar = renderer->LoadMesh("Male_Guard.msh");
 	
 #ifndef _WIN32
-	blackholeTex = renderer->LoadTexture("BlackHolePS5.png");
+	blackholeTex = renderer->LoadTexture("1.jpg");
 	basicTex = renderer->LoadTexture("Blank.png");
 	portalTex	= renderer->LoadTexture("PortalPS5.png");
 #else
@@ -530,6 +530,8 @@ void NCL::CSC8503::TutorialGame::SpawnBlackHole(const Vector3& inPosition, const
 	gravitywell.push_back(newgravityWell);
 	world->AddGameObject(newgravityWell);
 	world->AddGameObject(blackholeDisplay);
+
+	blackHoleDisplays.push_back(blackholeDisplay);
 }
 
 void NCL::CSC8503::TutorialGame::SpawnInvisibleWall(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling)
