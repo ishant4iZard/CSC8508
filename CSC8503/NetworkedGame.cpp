@@ -62,7 +62,7 @@ NetworkedGame::NetworkedGame()	{
 	fireSFX = audioEngine->CreateSound("../../Assets/Audio/jump.mp3", false);
 
 	debugHUD = new DebugHUD();
-	poolPTR = new ThreadPool(2);
+	poolPTR = new ThreadPool(3);
 }
 
 NetworkedGame::~NetworkedGame()	{
@@ -198,10 +198,6 @@ void NetworkedGame::DestroyClient()
 }
 
 void NetworkedGame::UpdateGame(float dt) {
-	std::optional<time_point<high_resolution_clock>> frameStartTime;
-	if(isDebuHUDActive)
-		frameStartTime = high_resolution_clock::now();
-
 	Debug::UpdateRenderables(dt);
 	if (thisServer && !appState->GetIsGameOver() && !appState->GetIsGamePaused()) {
 		UpdatePhysics = true;
@@ -217,7 +213,10 @@ void NetworkedGame::UpdateGame(float dt) {
 	if (poolPTR) {
 		poolPTR->enqueue([this, dt]() {this->PhysicsUpdate(dt); });
 		poolPTR->enqueue([this, dt]() {this->NonPhysicsUpdate(dt); });
+		poolPTR->enqueue([this, dt]() {this->UpdateAnimations(dt); });
 	}
+
+	//UpdateAnimations(dt);
 
 	/*for (auto AIStateObject : AIStateObjectList) {
 		AIStateObject->DetectProjectiles(ProjectileList);
@@ -239,26 +238,25 @@ void NetworkedGame::UpdateGame(float dt) {
 	audioEngine->Update();
 
 	TutorialGame::UpdateGame(dt);
-
-	std::optional<time_point<high_resolution_clock>> frameEndTime;
-	if (isDebuHUDActive)
-		frameEndTime = high_resolution_clock::now();
 		
 	//nonPhysicsUpdateThread.join();
 	//physicsUpdateThread.join();
 
 	if (Window::GetKeyboard()->KeyHeld(KeyCodes::Type::I))
 	{
+		static long long prevPhysicsTimeCost = 0;
+		prevPhysicsTimeCost = physicsTimeCost.has_value() && physicsTimeCost.value().count() > 10 ? physicsTimeCost.value().count() : prevPhysicsTimeCost;
+		
 		isDebuHUDActive = true;
 
-		if (!frameStartTime.has_value() || !frameEndTime.has_value()) return;
-
-		auto duration = duration_cast<microseconds>(frameEndTime.value() - frameStartTime.value());
 		debugHUD->DrawDebugHUD({
 			dt,
-			duration.count(),
+			prevPhysicsTimeCost,
+			(renderTimeCost.has_value() ? renderTimeCost.value().count() : 0),
 			physics->GetNumberOfCollisions(),
-			world->GetNumberOfObjects()
+			world->GetNumberOfObjects(),
+			GetOutgoingPacketSizePerSecond(),
+			GetInComingPacketSizePerSecond()
 		});
 
 	}
@@ -287,10 +285,11 @@ void NetworkedGame::UpdateProjectiles(float dt) {
 			i->Particles->Draw();
 		}*/ //Particle system test 
 
-		if (i->GetTimeLeft() <= 0) {
+		if (i->GetTimeLeft() <= 0 && i->IsActive()) {
 			i->deactivate();
 			DeactivateProjectilePacket newPacket;
 			newPacket.NetObjectID = i->GetNetworkObject()->GetNetworkID();
+			DeactiveNetObject(i);
 			if (this->GetServer())
 			{
 				this->GetServer()->SendGlobalPacket(newPacket);
@@ -333,6 +332,12 @@ void NetworkedGame::UpdateAsServer(float dt) {
 	ServerUpdateScoreList();
 	ServerUpdateBulletNumList();
 
+	/** Server network footstep */
+	TotalSizeOutgoingPacket = thisServer->OutgoingPacketSize;
+	TotalSizeIncomingPakcet = thisServer->IncomingPacketSize;
+	thisServer->OutgoingPacketSize = 0;
+	thisServer->IncomingPacketSize = 0;
+
 	if (LocalPlayer)
 	{
 		Vector3 PointerPos;
@@ -352,6 +357,8 @@ void NetworkedGame::UpdateAsServer(float dt) {
 			{
 				i->Fire();
 				i->isFire = false;
+
+				i->GetRenderObject()->SetAnimation(animationList[(uint8_t)AnimationType::MALEGUARD_GUNFIRE]);
 			}
 		}
 	}
@@ -364,6 +371,12 @@ void NetworkedGame::UpdateAsClient(float dt) {
 		std::cout << "Client Disconnected!";
 		EventEmitter::EmitEvent(EventType::ROUND_OVER);
 	}
+
+	/** Client network footprint */
+	TotalSizeOutgoingPacket = thisClient->OutgoingPacketSize;
+	TotalSizeIncomingPakcet = thisClient->IncomingPacketSize;
+	thisClient->OutgoingPacketSize = 0;
+	thisClient->IncomingPacketSize = 0;
 
 	ClientPacket newPacket;
 
@@ -542,7 +555,7 @@ void NetworkedGame::CheckPlayerListAndSpawnPlayers()
 
 NetworkPlayer* NetworkedGame::AddNetworkPlayerToWorld(const Vector3& position, int playerNum)
 {
-	float meshSize = 2.0f;
+	float meshSize = 2.0f * 5;
 	Vector3 volumeSize = Vector3(1.0, 1.6, 1.0);
 	float inverseMass = 1.0f / 600000.0f;
 
@@ -555,12 +568,24 @@ NetworkPlayer* NetworkedGame::AddNetworkPlayerToWorld(const Vector3& position, i
 		.SetScale(Vector3(meshSize, meshSize, meshSize))
 		.SetPosition(position);
 
-	character->SetRenderObject(new RenderObject(&character->GetTransform(), charMesh, nullptr, basicShader));
+	character->SetRenderObject(new RenderObject(&character->GetTransform(), charMesh, nullptr, anmShader));
 	character->SetPhysicsObject(new PhysicsObject(&character->GetTransform(), character->GetBoundingVolume()));
 	character->SetNetworkObject(new NetworkObject(*character, playerNum));
 
 	character->GetPhysicsObject()->SetInverseMass(inverseMass);
 	character->GetPhysicsObject()->InitCubeInertia();
+
+	character->GetRenderObject()->SetAnimation(animationList[(uint8_t)AnimationType::MALEGUARD_STEPFORWARD]);
+
+	for (int i = 0; i < 4; ++i) {
+		character->GetRenderObject()->SetTextureAnm("Diffuse", i, maleGuardDiffuseTextureList[i]);
+		character->GetRenderObject()->SetTextureAnm("Bump", i, maleGuardBumpTextureList[i]);
+	}
+
+	for (uint8_t i = (uint8_t)TextureType::ALBEDO; i < (uint8_t)TextureType::MAX_TYPE; i++)
+	{
+		character->GetRenderObject()->SetTexture((TextureType)i, anmObjPbrTextureList[i]);
+	}
 
 
 	world->AddGameObject(character);
@@ -731,6 +756,7 @@ void NetworkedGame::OnRep_DeactiveProjectile(int objectID)
 {
 	if (networkObjects.find(objectID) == networkObjects.cend()) return;
 	networkObjects[objectID]->GetGameObject()->deactivate();
+	DeactiveNetObject(networkObjects[objectID]->GetGameObject());
 }
 
 void NetworkedGame::StartLevel() {
@@ -765,7 +791,7 @@ void NetworkedGame::StartLevel() {
 	physics->createStaticTree();//this needs to be at the end of all initiations
 	appState->SetIsGameOver(false);
 	appState->SetIsGamePaused(false);
-	poolPTR = new ThreadPool(2);
+	poolPTR = new ThreadPool(3);
 
 }
 
@@ -868,16 +894,7 @@ void NetworkedGame::ReceivePacket(int type, GamePacket* payload, int source) {
 }
 
 void NetworkedGame::OnPlayerCollision(NetworkPlayer* a, NetworkPlayer* b) {
-	if (thisServer) { //detected a collision between players!
-		MessagePacket newPacket;
-		newPacket.messageID = COLLISION_MSG;
-		newPacket.playerID  = a->GetPlayerNum();
-
-		//thisClient->SendPacket(newPacket);
-
-		newPacket.playerID = b->GetPlayerNum();
-		//thisClient->SendPacket(newPacket);
-	}
+	
 }
 
 int NetworkedGame::GetConnectedClientsNum()
@@ -948,6 +965,15 @@ void NetworkedGame::ServerSendRoundOverMsg()
 	}
 }
 
+void NetworkedGame::DeactiveNetObject(GameObject* TargetObject)
+{
+	TargetObject->deactivate();
+	networkObjects.erase(TargetObject->GetNetworkObject()->GetNetworkID());
+	NetworkObject* targetNetObject = TargetObject->GetNetworkObject();
+	TargetObject->SetNetworkObject(nullptr);
+	delete targetNetObject;
+}
+
 bool NetworkedGame::serverProcessClientPacket(ClientPacket* cp, int source)
 {
 	int playerID = GetPlayerNumberFromNetID(source);
@@ -1001,6 +1027,7 @@ AiStatemachineObject* NetworkedGame::AddAiStateObjectToWorld(const Vector3& posi
 		.SetPosition(Vector3(position.x, 5.6, position.z));
 
 	AIStateObject->SetRenderObject(new RenderObject(&AIStateObject->GetTransform(), sphereMesh, nullptr, basicShader));
+	//AIStateObject->SetRenderObject(new RenderObject(&AIStateObject->GetTransform(), rebellionMeshChar, nullptr, basicShader));
 	AIStateObject->SetPhysicsObject(new PhysicsObject(&AIStateObject->GetTransform(), AIStateObject->GetBoundingVolume()));
 	AIStateObject->SetNetworkObject(new NetworkObject(*AIStateObject, AIInitialID));
 	networkObjects.insert(std::pair<int, NetworkObject*>(AIInitialID, AIStateObject->GetNetworkObject()));
@@ -1018,12 +1045,23 @@ AiStatemachineObject* NetworkedGame::AddAiStateObjectToWorld(const Vector3& posi
 
 void NetworkedGame::PhysicsUpdate(float dt)
 {
-	if (UpdatePhysics/* && !appState->GetIsGamePaused()*/) {
+	if (UpdatePhysics) {
+		std::optional<time_point<high_resolution_clock>> frameStartTime;
+		if (isDebuHUDActive)
+			frameStartTime = high_resolution_clock::now();
+		
 		PhysicsMutex.lock();
 		physics->Update(dt);
 		CurrentPowerUpType = physics->GetCurrentPowerUpState();
 		UpdatePhysics = false;
 		PhysicsMutex.unlock();
+		
+		std::optional<time_point<high_resolution_clock>> frameEndTime;
+		if (isDebuHUDActive) {
+			frameEndTime = high_resolution_clock::now();
+			if (!frameStartTime.has_value() || !frameEndTime.has_value()) return;
+			physicsTimeCost = duration_cast<microseconds>(frameEndTime.value() - frameStartTime.value());
+		}
 	}
 }
 
@@ -1066,11 +1104,7 @@ void NetworkedGame::NonPhysicsUpdate(float dt)
 			}
 		}
 	}
-
-	
 	NonPhysicsMutex.unlock();
-
-
 }
 
 void NetworkedGame::SpawnAI() {
@@ -1092,6 +1126,32 @@ int NetworkedGame::GetLocalPlayerBulletNum() const
 {
 	if (!LocalPlayer) return 0;
 	return LocalPlayer->GetNumBullets();
+}
+
+float NetworkedGame::GetOutgoingPacketSizePerSecond() const
+{
+	float result = TotalSizeOutgoingPacket * 60.0f / 1024.0f;
+	return result;
+}
+
+float NetworkedGame::GetInComingPacketSizePerSecond() const
+{
+	float result = TotalSizeIncomingPakcet * 60.0f / 1024.0f;
+	return result;
+}
+
+void NetworkedGame::UpdateAnimations(float dt)
+{
+	if (appState->GetIsGamePaused()) return;
+
+	world->gameObjectsMutex.lock();
+
+	for (auto i : ControledPlayersList) {
+		if (!i || !i->IsActive() || !i->GetRenderObject()) continue;
+		i->Update(dt);
+	}
+
+	world->gameObjectsMutex.unlock();
 }
 
 

@@ -49,3 +49,13 @@ void AudioEngine::SetVolume(float volume) {
 	channel->setVolume(volume);
 	channel->setPaused(false);
 }
+
+void AudioEngine::Pause()
+{
+	channel->setPaused(true);
+}
+
+void AudioEngine::UnPause()
+{
+	channel->setPaused(false);
+}

@@ -22,6 +22,9 @@ namespace NCL {
 			void SetClientList(int index, int ID);
 			void AddConnectClient(int peerID);
 
+			int OutgoingPacketSize = 0;
+			int IncomingPacketSize = 0;
+
 		protected:
 			void DeleteClient(int peerID);
 			void ClearClientsArray();

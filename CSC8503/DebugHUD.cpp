@@ -46,10 +46,18 @@ DebugHUD::~DebugHUD()
 
 void DebugHUD::DrawDebugHUD(DebugHUDParams p)
 {
-	ui->DrawStringText("Frame Rate: " + std::to_string(1.0f / p.dt), Vector2(2, 84));
-	ui->DrawStringText("Time Cost: " + std::to_string(p.timeCost) + " micro seconds", Vector2(2, 87));
-	ui->DrawStringText("Number Of Collisions: " + std::to_string(p.numberOfCollisions), Vector2(2, 90));
-	ui->DrawStringText("Number Of Objects: " + std::to_string(p.numberOfObjects), Vector2(2, 93));
+	ui->DrawStringText("FPS: " + std::to_string(1.0f / p.dt), Vector2(2, 72));
+	ui->DrawStringText("Frame Rate: " + std::to_string(p.dt), Vector2(2, 75));
+	ui->DrawStringText("Physics Time Cost: " + std::to_string(p.physicsTimeCost) + " micro seconds", Vector2(2, 78));
+	ui->DrawStringText("Render Time Cost: " + std::to_string(p.renderTimeCost) + " micro seconds", Vector2(2, 81));
+	ui->DrawStringText("Number Of Collisions: " + std::to_string(p.numberOfCollisions), Vector2(2, 84));
+	ui->DrawStringText("Number Of Objects: " + std::to_string(p.numberOfObjects), Vector2(2, 87));
+
+#ifdef _WIN32
+	ui->DrawStringText("Outgoing packets: " + std::to_string(p.outgoingPacketSize) + " kb/s", Vector2(2, 90));
+	ui->DrawStringText("Incoming packets: " + std::to_string(p.incomingPacketSize) + " kb/s", Vector2(2, 93));
+#endif
+
 
 #ifdef _WIN32
 	ui->DrawStringText("Memory Footprint: " + getMemoryUsageMB() + " mb", Vector2(2, 96));

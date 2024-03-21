@@ -22,6 +22,19 @@ namespace NCL {
 			AO,
 			MAX_TYPE
 		};
+		
+		enum class AnimationType : uint8_t
+		{
+			MALEGUARD_IDLE,
+			MALEGUARD_GUNFIRE,
+			MALEGUARD_STEPFORWARD,
+
+			MAXGUARD_IDLE,
+			MAXGUARD_GUNFIRE,
+			MAXGUARD_WALK,
+
+			MAX_ANM
+		};
 
 		class RenderObject
 		{
@@ -82,6 +95,25 @@ namespace NCL {
 				textureList[(uint8_t)inType] = inTex;
 			}
 
+			void SetTextureAnm(const std::string& texType, int index, Texture* inTex) {
+				if (texType == "Diffuse") {
+					anmObjDiffuseTextureList[index] = inTex;
+				}
+				if (texType == "Bump") {
+					anmObjBumpTextureList[index] = inTex;
+				}
+			}
+
+			Texture* GetTextureAnm(const std::string& texType, int index) {
+				if (texType == "Diffuse") {
+					return anmObjDiffuseTextureList[index];
+				}
+				if (texType == "Bump") {
+					return anmObjBumpTextureList[index];
+				}
+				return nullptr;
+			}
+
 			Vector4 GetColour() const {
 				return colour;
 			}
@@ -89,9 +121,16 @@ namespace NCL {
 			Vector2 GetTiling() const { return tiling; }
 			void SetTiling(const Vector2& inTiling) { this->tiling = inTiling; }
 
-			void SetAnimation(MeshAnimation& inAnim)
+			void SetAnimation(MeshAnimation* inAnim)
 			{
-				anim = &inAnim;
+				anim = inAnim;
+
+				if (!anim) return;
+
+				if (animDefault == nullptr) {
+					animDefault = anim;
+				}
+				currentAnimFrame = 0.0f;
 
 				skeleton.resize(anim->GetJointCount());
 			}
@@ -103,18 +142,28 @@ namespace NCL {
 				if (!mesh || !anim) {
 					return;
 				}
-				animTime -= dt * ANIMATION_SPEED;
+				//animTime -= dt * ANIMATION_SPEED;
+				animTime -= dt;
 
 				if (animTime <= 0) {
-					currentAnimFrame++;
-					animTime += anim->GetFrameTime();
-					currentAnimFrame = (currentAnimFrame++) % anim->GetFrameCount();
 
+					if (currentAnimFrame + 1 >= anim->GetFrameCount()) {
+						SetAnimation(animDefault);
+					}
+
+					//currentAnimFrame++;
+					animTime += 1.0f / anim->GetFrameTime();
+					currentAnimFrame = (++currentAnimFrame) % anim->GetFrameCount();
+					
+					
+
+					//To do...
+					//each submesh may have its own matrix
 					std::vector<Matrix4>const& inverseBindPose = mesh->GetInverseBindPose();
 
 					if (inverseBindPose.size() != anim->GetJointCount()) {
 						//oh no
-						return;
+						//return;
 					}
 
 					const Matrix4* joints = anim->GetJointData(currentAnimFrame);
@@ -122,6 +171,23 @@ namespace NCL {
 					for (int i = 0; i < skeleton.size(); ++i) {
 						skeleton[i] = joints[i] * inverseBindPose[i];
 					}
+				}
+			}
+
+			void ResetAnimation(int idleFrame) {
+				currentAnimFrame = idleFrame;
+
+				std::vector<Matrix4>const& inverseBindPose = mesh->GetInverseBindPose();
+
+				if (inverseBindPose.size() != anim->GetJointCount()) {
+					//oh no
+					return;
+				}
+
+				const Matrix4* joints = anim->GetJointData(currentAnimFrame);
+
+				for (int i = 0; i < skeleton.size(); ++i) {
+					skeleton[i] = joints[i] * inverseBindPose[i];
 				}
 			}
 
@@ -146,10 +212,14 @@ namespace NCL {
 				"ambiantOccTex" };
 
 			MeshAnimation* anim = nullptr;
+			MeshAnimation* animDefault = nullptr;
 
 			std::vector<Matrix4> skeleton;
 			float	animTime = 0.0f;
 			int currentAnimFrame = 0;
+
+			Texture* anmObjDiffuseTextureList[4];
+			Texture* anmObjBumpTextureList[4];
 		};
 	}
 }

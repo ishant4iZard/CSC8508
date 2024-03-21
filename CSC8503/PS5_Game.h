@@ -63,18 +63,20 @@ namespace NCL {
 			ApplicationState* appState;
 
 			DebugHUD* debugHUD;
-			bool isDebuHUDActive;
 
 			AudioEngine* audioEngine;
 
+			void SwitchAnimations(RenderObject* renderObject, MeshAnimation* animation);
 			class PS5MenuSystem* Menu;
+
+			std::optional<microseconds> physicsTimeCost;
 
 		public:
 			inline float GetTimeLeft() const { return GAME_TIME_LIMIT - timeElapsed; }
 			int GetPlayerScore() const;
 			int GEtPlayerBulletsNum() const;
 			powerUpType GetActivatedPowerUpType() const { return physics->GetCurrentPowerUpState(); }
-			void SwitchAnimations(RenderObject* renderObject, MeshAnimation* animation);
+			void RotatePortals(float dt);
 		};
 	}
 }

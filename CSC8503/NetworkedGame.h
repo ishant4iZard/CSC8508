@@ -71,6 +71,8 @@ namespace NCL {
 			int GetClientState();
 			void SetPlayerNameByIndexInList(const std::string& Name, int Index);
 			void ServerSendRoundOverMsg();
+			void DeactiveNetObject(GameObject* TargetObject);
+
 			// for develop mode
 			bool isDevMode = false;
 
@@ -93,6 +95,8 @@ namespace NCL {
 			void ServerUpdateBulletNumList();
 			void CheckPlayerListAndSpawnPlayers();
 
+			void UpdateAnimations(float dt);
+
 			NetworkPlayer* AddNetworkPlayerToWorld(const Vector3& position, int playerNum);
 
 			void findOSpointerWorldPosition(Vector3& position);
@@ -110,6 +114,11 @@ namespace NCL {
 			float timeToNextPacket;
 			int packetsToSnapshot;
 			ApplicationState* appState;
+
+			/** Network footprint */
+			int TotalSizeOutgoingPacket = 0;
+			int TotalSizeIncomingPakcet = 0;
+			
 
 			std::map<int, NetworkObject*> networkObjects;
 
@@ -154,10 +163,11 @@ namespace NCL {
 			ThreadPool* poolPTR;
 
 			DebugHUD* debugHUD;
-			bool isDebuHUDActive;
 
 			std::mutex PhysicsMutex;
 			std::mutex NonPhysicsMutex;
+
+			std::optional<microseconds> physicsTimeCost;
 
 		public:
 			void NonPhysicsUpdate(float dt);
@@ -177,6 +187,8 @@ namespace NCL {
 			inline powerUpType GetCurrentPowerUpType() const { return CurrentPowerUpType; }
 			inline NetworkPlayer* GetLocallyControlPlayer() const { return LocalPlayer; }
 			int GetLocalPlayerBulletNum() const;
+			float GetOutgoingPacketSizePerSecond() const;
+			float GetInComingPacketSizePerSecond() const;
 		};
 	}
 }

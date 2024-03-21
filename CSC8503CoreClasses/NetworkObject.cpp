@@ -28,7 +28,7 @@ bool NetworkObject::WritePacket(GamePacket** p, bool deltaFrame, int stateID) {
 //Client objects recieve these packets
 bool NetworkObject::ReadDeltaPacket(DeltaPacket& p) {
 	if (p.fullID != lastFullState.stateID) {
-		return false; // can ’t delta this frame
+		return false; // can ï¿½t delta this frame
 
 	}
 	UpdateStateHistory(p.fullID);
@@ -52,7 +52,7 @@ bool NetworkObject::ReadDeltaPacket(DeltaPacket& p) {
 
 bool NetworkObject::ReadFullPacket(FullPacket &p) {
 	if (p.fullState.stateID < lastFullState.stateID) {
-		return false; // received an ’ old ’ packet , ignore !
+		return false; // received an ï¿½ old ï¿½ packet , ignore !
 	}
 	lastFullState = p.fullState;
 	object.GetTransform().SetPosition(lastFullState.position);
@@ -68,7 +68,7 @@ bool NetworkObject::WriteDeltaPacket(GamePacket**p, int stateID) {
 	NetworkState state;
 	if (!GetNetworkState(stateID, state)) {
 		delete dp;
-		return false; // can ’t delta !
+		return false; // can ï¿½t delta !
 	}
 	dp -> fullID = stateID;
 	dp -> objectID = networkID;
