@@ -59,6 +59,8 @@ bool GameServer::SendGlobalPacket(GamePacket& packet) {
 		std::cout << "server not valid!" << std::endl;
 	}
 
+	OutgoingPacketSize += packet.size;
+
 	ENetPacket* dataPacket = enet_packet_create(&packet,
 		packet.GetTotalSize(), 0);
 	enet_host_broadcast(netHandle, 0, dataPacket);
@@ -87,6 +89,7 @@ void GameServer::UpdateServer()
 		else if (type == ENetEventType::ENET_EVENT_TYPE_RECEIVE) {
 			GamePacket* packet = (GamePacket*)event.packet -> data;
 			ProcessPacket(packet, peer);
+			IncomingPacketSize += packet->size;
 
 		}
 		enet_packet_destroy(event.packet);

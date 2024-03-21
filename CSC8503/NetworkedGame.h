@@ -23,6 +23,8 @@
 #include <chrono>
 using namespace std::chrono;
 
+#define POWER_UP_INIT_NETID 2000;
+
 namespace NCL {
 	namespace CSC8503 {
 		class GameServer;
@@ -61,7 +63,7 @@ namespace NCL {
 			const int PROJECTILE_POOL_SIZE = 20;
 			std::vector<Projectile*> ProjectileList;
 			void InitializeProjectilePool(NetworkPlayer* player);
-			
+
 			/** Network public function */
 			int GetConnectedClientsNum();
 			int GetLocalPlayerNumber() const;
@@ -69,6 +71,8 @@ namespace NCL {
 			int GetClientState();
 			void SetPlayerNameByIndexInList(const std::string& Name, int Index);
 			void ServerSendRoundOverMsg();
+			void DeactiveNetObject(GameObject* TargetObject);
+
 			// for develop mode
 			bool isDevMode = false;
 
@@ -81,12 +85,14 @@ namespace NCL {
 
 			void UpdatePlayerState(float dt);
 			void UpdateProjectiles(float dt);
+			void UpdatePowerUpSpawnTimer(float dt);
 
 			void BroadcastSnapshot(bool deltaFrame);
 			void UpdateMinimumState();
 
 			void ServerUpdatePlayersList();
 			void ServerUpdateScoreList();
+			void ServerUpdateBulletNumList();
 			void CheckPlayerListAndSpawnPlayers();
 
 			NetworkPlayer* AddNetworkPlayerToWorld(const Vector3& position, int playerNum);
@@ -107,6 +113,11 @@ namespace NCL {
 			int packetsToSnapshot;
 			ApplicationState* appState;
 
+			/** Network footprint */
+			int TotalSizeOutgoingPacket = 0;
+			int TotalSizeIncomingPakcet = 0;
+			
+
 			std::map<int, NetworkObject*> networkObjects;
 
 			/*std::map<int, GameObject*> serverPlayers;
@@ -120,11 +131,18 @@ namespace NCL {
 			std::vector<NetworkPlayer*> ControledPlayersList;
 			std::vector<std::string> PlayersNameList;
 			std::vector<int> PlayersScoreList;
+			std::vector<int> PlayersBulletNumList;
 			int localPlayerIndex;
 
 			void SpawnAI();
 			AiStatemachineObject* AddAiStateObjectToWorld(const Vector3& position);
+			//vector <AiStatemachineObject*> AIStateObjectList;
 			AiStatemachineObject* AIStateObject;
+			int AIInitialID = 10;
+
+			/** Power Up Spawn */
+			void SpawnPowerUp(int NetID);
+			int PowerUpSpawnNetID = POWER_UP_INIT_NETID;
 
 			bool ServerFired;
 			bool ClientFired;
@@ -143,10 +161,11 @@ namespace NCL {
 			ThreadPool* poolPTR;
 
 			DebugHUD* debugHUD;
-			bool isDebuHUDActive;
 
 			std::mutex PhysicsMutex;
 			std::mutex NonPhysicsMutex;
+
+			std::optional<microseconds> physicsTimeCost;
 
 		public:
 			void NonPhysicsUpdate(float dt);
@@ -160,12 +179,15 @@ namespace NCL {
 			inline void SetLocalPlayerIndex(int val) { localPlayerIndex = val; }
 			inline std::string GetPlayerNameByIndex(int index) { return PlayersNameList[index]; }
 			inline int GetPlayerScoreByIndex(int index) { return PlayersScoreList[index]; }
+			inline int GetPlayerBulletNumByIndex(int index) { return PlayersBulletNumList[index]; }
 			inline float GetRoundTimer() const { return timer; }
 			inline int GetRoundTimeLimit() const { return TIME_LIMIT; }
 			inline powerUpType GetCurrentPowerUpType() const { return CurrentPowerUpType; }
+			inline NetworkPlayer* GetLocallyControlPlayer() const { return LocalPlayer; }
+			int GetLocalPlayerBulletNum() const;
+			float GetOutgoingPacketSizePerSecond() const;
+			float GetInComingPacketSizePerSecond() const;
 		};
-
-
 	}
 }
 

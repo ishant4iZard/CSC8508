@@ -2,6 +2,7 @@
 #include "TutorialGame.h"
 #include "NetworkedGame.h"
 #include "PushdownMachine.h"
+#include "NetworkPlayer.h"
 
 #include "OnlineSubsystemBase.h"
 #include "steam.h"
@@ -77,11 +78,12 @@ PushdownState::PushdownResult MainMenu::OnUpdate(float dt, PushdownState** newSt
 			isSoloGameBtnPressed = false;
 			Game->SetLocalPlayerIndex(0);
 			appState->SetIsServer(true);
-			Game->isDevMode = true;
+			appState->SetIsSolo(true);
 		}
 		if (isLobbyCreated)
 		{
 			Game->isDevMode = false;
+			appState->SetIsSolo(false);
 			*newState = new MultiPlayerLobby();
 			isCreatingLobby = false;
 			isLobbyCreated = false;
@@ -91,6 +93,7 @@ PushdownState::PushdownResult MainMenu::OnUpdate(float dt, PushdownState** newSt
 		if (isSearchLobbyBtnPressed)
 		{
 			Game->isDevMode = false;
+			appState->SetIsSolo(false);
 			isSearchLobbyBtnPressed = false;
 			*newState = new MultiplayerSearchMenu();
 			return Push;
@@ -136,43 +139,53 @@ PushdownState::PushdownResult MainMenu::OnUpdate(float dt, PushdownState** newSt
 			UIBase::WHITE,
 			KeyCodes::NUM2 // Only for PS
 		);
+
+		ui->DrawButton(
+			"Quit Game",
+			Vector2(5, 53),
+			[Game]() {
+				Game->CloseGame = true;
+			},
+			UIBase::WHITE,
+			KeyCodes::NUM2 // Only for PS
+		);
 #endif
 
 		/** for devlop only */
-		if (appState->GetIsServer())
+		/*if (appState->GetIsServer())
 		{
 			appState->SetIsGameOver(false);
 			Game->StartAsServer();
 			*newState = new PlayingHUD();
 			return PushdownResult::Push;
-		}
-		if (appState->GetIsClient())
-		{
-			appState->SetIsGameOver(false);
-			Game->StartAsClient(127, 0, 0, 1);
-			*newState = new PlayingHUD();
-			return PushdownResult::Push;
-		}
-		ui->DrawButton(
-			"Local: Play As Server",
-			Vector2(5, 53),
-			[&, Game]() {
-				Game->SetLocalPlayerIndex(0);
-				appState->SetIsServer(true);
-				Game->isDevMode = true;
-			},
-			UIBase::WHITE,
-			KeyCodes::NUM1 // Only for PS
-		);
-		ui->DrawButton(
-			"Local: Play As Client",
-			Vector2(5, 63),
-			[&, Game]() {
-				appState->SetIsClient(true);
-			},
-			UIBase::WHITE,
-			KeyCodes::NUM1 // Only for PS
-		);
+		}*/
+		//if (appState->GetIsClient())
+		//{
+		//	appState->SetIsGameOver(false);
+		//	Game->StartAsClient(127, 0, 0, 1);
+		//	*newState = new PlayingHUD();
+		//	return PushdownResult::Push;
+		//}
+		//ui->DrawButton(
+		//	"Local: Play As Server",
+		//	Vector2(5, 53),
+		//	[&, Game]() {
+		//		Game->SetLocalPlayerIndex(0);
+		//		appState->SetIsServer(true);
+		//		Game->isDevMode = true;
+		//	},
+		//	UIBase::WHITE,
+		//	KeyCodes::NUM1 // Only for PS
+		//);
+		//ui->DrawButton(
+		//	"Local: Play As Client",
+		//	Vector2(5, 63),
+		//	[&, Game]() {
+		//		appState->SetIsClient(true);
+		//	},
+		//	UIBase::WHITE,
+		//	KeyCodes::NUM1 // Only for PS
+		//);
 	}
 	return PushdownResult::NoChange;
 }
@@ -552,11 +565,12 @@ PushdownState::PushdownResult PlayingHUD::OnUpdate(float dt, PushdownState** new
 		{
 			ShowTimeLeft(Game);
 			//ui->DrawStringText("Player    " + Game->GetPlayerNameByIndex(Game->GetLocalPlayerIndex()), Vector2(83, 30), UIBase::WHITE);
-			ui->DrawStringText("Player    " + Subsystem->GetCurrentUserName(), Vector2(83, 30), UIBase::WHITE);
-			ui->DrawStringText("Your Score     " + std::to_string(Game->GetPlayerScoreByIndex(Game->GetLocalPlayerIndex())), Vector2(83, 40), UIBase::WHITE);
-			ui->DrawStringText("PowerUp State:  " + GetRoundPowerUpState(Game), Vector2(83, 50), UIBase::WHITE);		
-			ui->DrawStringText("Hold TAB To", Vector2(83, 60), UIBase::WHITE);
-			ui->DrawStringText("Show Score Table", Vector2(83, 65), UIBase::WHITE);
+			ui->DrawStringText("Player    " + Subsystem->GetCurrentUserName(), Vector2(83, 25), UIBase::WHITE);
+			ui->DrawStringText("Your Score:    " + std::to_string(Game->GetPlayerScoreByIndex(Game->GetLocalPlayerIndex())), Vector2(83, 35), UIBase::WHITE);
+			ui->DrawStringText("Bullet Num:    " + std::to_string(Game->GetPlayerBulletNumByIndex(Game->GetLocalPlayerIndex())), Vector2(83, 45), UIBase::WHITE);
+			ui->DrawStringText("PowerUp State: " + GetRoundPowerUpState(Game), Vector2(83, 55), UIBase::WHITE);		
+			ui->DrawStringText("Hold TAB To", Vector2(83, 65), UIBase::WHITE);
+			ui->DrawStringText("Show Score Table", Vector2(83, 70), UIBase::WHITE);
 
 			if (Window::GetKeyboard()->KeyHeld(KeyCodes::Type::TAB))
 			{
@@ -571,7 +585,27 @@ PushdownState::PushdownResult PlayingHUD::OnUpdate(float dt, PushdownState** new
 				Vector2(85, 85),
 				[&, Game]() {
 					Game->ServerSendRoundOverMsg();
+					appState->SetIsGamePaused(false);
 					EventEmitter::EmitEvent(EventType::ROUND_OVER);
+				},
+				UIBase::WHITE,
+				KeyCodes::S, // Only for PS
+				Vector2(150, 50)
+			);
+		}
+
+		if (!appState->GetIsGameOver() && appState->GetIsGamePaused())
+		{
+			ui->DrawStringText("Game Paused !!!", Vector2(46, 15), UIBase::BLUE);
+		}
+
+		if (appState->GetIsSolo() && !appState->GetIsGameOver())
+		{
+			ui->DrawButton(
+				appState->GetIsGamePaused() ? "Resume" : "Pause Game",
+				Vector2(85, 80),
+				[&, Game]() {
+					appState->SetIsGamePaused(!appState->GetIsGamePaused());
 				},
 				UIBase::WHITE,
 				KeyCodes::S, // Only for PS

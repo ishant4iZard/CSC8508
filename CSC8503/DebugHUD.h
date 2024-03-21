@@ -1,8 +1,12 @@
 #pragma once
 struct DebugHUDParams {
 	float dt;
+	long long physicsTimeCost;
+	long long renderTimeCost;
 	int numberOfCollisions;
 	int numberOfObjects;
+	float outgoingPacketSize;
+	float incomingPacketSize;
 };
 
 class UIBase;

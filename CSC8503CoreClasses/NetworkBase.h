@@ -16,7 +16,10 @@ enum BasicNetworkMessages {
 	Player_Disconnected,
 	Player_Fire,
 	Player_Score,
+	Player_BulletNum,
 	Projectile_Deactivate,
+	PowerUp_Spawn,
+	PowerUp_Deactivate,
 	Round_Over,
 	Shutdown
 };

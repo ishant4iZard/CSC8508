@@ -60,6 +60,7 @@ void GameClient::UpdateClient(float dt) {
 			//std::cout << "Client: Packet recieved ..." << std::endl;
 			GamePacket* packet = (GamePacket*)event.packet -> data;
 			ProcessPacket(packet);
+			IncomingPacketSize += packet->GetTotalSize();
 		}
 		enet_packet_destroy(event.packet);
 		timeGap = 0;
@@ -75,5 +76,8 @@ void GameClient::UpdateClient(float dt) {
 void GameClient::SendPacket(GamePacket&  payload) {
 	ENetPacket* dataPacket = enet_packet_create(&payload,
 		payload.GetTotalSize(), 0);
+
+	OutgoingPacketSize += payload.GetTotalSize();
+
 	enet_peer_send(netPeer, 0, dataPacket);
 }

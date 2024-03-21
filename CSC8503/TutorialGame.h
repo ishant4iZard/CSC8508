@@ -29,8 +29,13 @@
 #include "UIBase.h"
 
 #include "MeshMaterial.h"
+#include <chrono>
+using namespace std::chrono;
 
 #define USE_SHADOW = false
+#define POWER_UP_SPAWN_TIME 30.0f
+#define MAX_POWER_UP_COUNT 3
+#define SAFE_DELETE_PBR_TEXTURE(a) for (uint8_t i = 0; i < (uint8_t)TextureType::MAX_TYPE; i++){ if (a[i] != NULL) delete a[i]; a[i] = NULL; }
 
 enum class level {
 	level1 = 1,
@@ -54,7 +59,7 @@ namespace NCL {
 			void ReceiveEvent(EventType) override;
 
 			virtual void UpdateGame(float dt);
-			void UpdatePowerUpSpawnTimer(float dt);
+			/*void UpdatePowerUpSpawnTimer(float dt);*/
 
 			vector<GravityWell*> gravitywell;
 
@@ -74,7 +79,7 @@ namespace NCL {
 			void InitCamera();
 			void InitWorld();
 			void InitTeleporters();
-			void InitPowerup();
+			PowerUp* InitPowerup();
 			void InitNonePowerup(PowerUp* inPowerup, Shader* inShader);
 			void InitIcePowerup(PowerUp* inPowerup, Shader* inShader);
 			void InitSandPowerup(PowerUp* inPowerup, Shader* inShader);
@@ -84,12 +89,13 @@ namespace NCL {
 			
 			void TestAddStaticObjectsToWorld();
 			void AddPowerUpSpawnPoint(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling);
-			
+
 			void SpawnWall(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling);
 			void SpawnFloor(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling);
 			void SpawnBouncingPad(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling);
 			void SpawnTarget(const Vector3 & inPosition, const Vector3 & inRotation, const Vector3 & inScale, const Vector2& inTiling);
 			void SpawnBlackHole(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling);
+			void SpawnInvisibleWall(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling);
 
 			GameObject* AddFloorToWorld(const Vector3& position, const Vector3& size = Vector3(128,2,128));
 			GameObject* AddObbCubeToWorld(const Vector3& position, Vector3 dimensions, float inverseMass = 10.0f, float elasticity = 0.81f);
@@ -188,11 +194,14 @@ namespace NCL {
 
 #pragma region Function Pointers
 			typedef void (TutorialGame::*dataSpawnFunction) (const Vector3&, const Vector3&, const Vector3&, const Vector2&);
-			dataSpawnFunction levelObjectSpawnFunctionList[static_cast<int>(LevelObjectEnum::MAX_OBJECT_TYPE)] = { &TutorialGame::SpawnWall , &TutorialGame::SpawnFloor , &TutorialGame::SpawnBouncingPad, &TutorialGame::SpawnTarget , &TutorialGame::SpawnBlackHole, &TutorialGame::AddPowerUpSpawnPoint };
+			dataSpawnFunction levelObjectSpawnFunctionList[static_cast<int>(LevelObjectEnum::MAX_OBJECT_TYPE)] = { &TutorialGame::SpawnWall , &TutorialGame::SpawnFloor , &TutorialGame::SpawnBouncingPad, &TutorialGame::SpawnTarget , &TutorialGame::SpawnBlackHole, &TutorialGame::AddPowerUpSpawnPoint, &TutorialGame::SpawnInvisibleWall };
 
 			typedef void (TutorialGame::* powerupInitFunction) (PowerUp* inPowerup, Shader* inShader);
 			powerupInitFunction powerupInitFunctionList[powerUpType::MAX_POWERUP] = { &TutorialGame::InitNonePowerup, &TutorialGame::InitIcePowerup , &TutorialGame::InitSandPowerup, &TutorialGame::InitWindPowerup };
 #pragma endregion
+
+			std::optional<microseconds> renderTimeCost;
+			bool isDebuHUDActive = false;
 
 			UIBase* ui;
 			ApplicationState* appState;

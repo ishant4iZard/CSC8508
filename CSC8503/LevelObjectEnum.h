@@ -8,5 +8,6 @@ enum class LevelObjectEnum : int
     TARGET,
     BLACK_HOLE,
     POWER_UP_SPAWN_POINT,
+    INVISIBLE_WALL,
     MAX_OBJECT_TYPE
 };

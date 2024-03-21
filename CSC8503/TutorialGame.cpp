@@ -23,9 +23,6 @@
 using namespace NCL;
 using namespace CSC8503;
 
-#define POWER_UP_SPAWN_TIME 30.0f
-#define MAX_POWER_UP_COUNT 3
-#define SAFE_DELETE_PBR_TEXTURE(a) for (uint8_t i = 0; i < (uint8_t)TextureType::MAX_TYPE; i++){ if (a[i] != NULL) delete a[i]; a[i] = NULL; }
 #define SAFE_DELETE_ANIMATION_TEXTURE(a) for (int i = 0; i < 4; ++i){ if (a[i]!=NULL) delete a[i]; a[i] = NULL;}
 #define SAFE_DELETE_ANIMATION(a) for (uint8_t i = 0; i < (uint8_t)AnimationType::MAX_ANM; ++i){ if (a[i] != NULL) delete a[i]; a[i] = NULL; }
 
@@ -161,25 +158,38 @@ void NCL::CSC8503::TutorialGame::ReceiveEvent(EventType T)
 
 void TutorialGame::UpdateGame(float dt) {
 	world->UpdateWorld(dt);
+
+	std::optional<time_point<high_resolution_clock>> frameStartTime;
+	if (isDebuHUDActive)
+		frameStartTime = high_resolution_clock::now();
+	
 	renderer->Render();
 	renderer->Update(dt);
-	
-	UpdatePowerUpSpawnTimer(dt);
-}
 
-void NCL::CSC8503::TutorialGame::UpdatePowerUpSpawnTimer(float dt)
-{
-	if (appState->GetIsGameOver() || appState->GetIsGamePaused()) return;
-
-	powerUpSpawnTimer += dt;
-	if (powerUpSpawnTimer >= POWER_UP_SPAWN_TIME
-		&& activePowerUpCount <= MAX_POWER_UP_COUNT
-		)
-	{
-		powerUpSpawnTimer = 0.0f;
-		InitPowerup();
+	std::optional<time_point<high_resolution_clock>> frameEndTime;
+	if (isDebuHUDActive) {
+		frameEndTime = high_resolution_clock::now();
+		if (!frameStartTime.has_value() || !frameEndTime.has_value()) return;
+		renderTimeCost = duration_cast<microseconds>(frameEndTime.value() - frameStartTime.value());
 	}
+
+	
+	/*UpdatePowerUpSpawnTimer(dt);*/
 }
+
+//void NCL::CSC8503::TutorialGame::UpdatePowerUpSpawnTimer(float dt)
+//{
+//	if (appState->GetIsGameOver() || appState->GetIsGamePaused()) return;
+//
+//	powerUpSpawnTimer += dt;
+//	if (powerUpSpawnTimer >= POWER_UP_SPAWN_TIME
+//		&& activePowerUpCount <= MAX_POWER_UP_COUNT
+//		)
+//	{
+//		powerUpSpawnTimer = 0.0f;
+//		InitPowerup();
+//	}
+//}
 
 void TutorialGame::InitialiseAssets() {
 	cubeMesh	= renderer->LoadMesh("cube.msh");
@@ -296,7 +306,7 @@ void TutorialGame::InitWorld() {
 	timer = 0;
 }
 
-void TutorialGame::InitPowerup()
+PowerUp* TutorialGame::InitPowerup()
 {
 	PowerUp* tempPowerup = new PowerUp();
 
@@ -315,6 +325,8 @@ void TutorialGame::InitPowerup()
 
 	(this->*powerupInitFunctionList[Helper::GetRandomEnumValue(powerUpType::MAX_POWERUP)])(tempPowerup, pbrShader);
 	world->AddGameObject(tempPowerup);
+
+	return tempPowerup;
 }
 
 void NCL::CSC8503::TutorialGame::InitNonePowerup(PowerUp* inPowerup, Shader* inShader)
@@ -516,6 +528,19 @@ void NCL::CSC8503::TutorialGame::SpawnBlackHole(const Vector3& inPosition, const
 	gravitywell.push_back(newgravityWell);
 	world->AddGameObject(newgravityWell);
 	world->AddGameObject(blackholeDisplay);
+}
+
+void NCL::CSC8503::TutorialGame::SpawnInvisibleWall(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling)
+{
+	/*GameObject* tempWall = AddObbCubeToWorld(
+		inPosition,
+		inScale,
+		0, 0.5f);
+	delete tempWall->GetRenderObject();
+	tempWall->SetRenderObject(nullptr);
+	tempWall->GetTransform().SetOrientation(Quaternion::EulerAnglesToQuaternion(inRotation.x, inRotation.y, inRotation.z));
+	tempWall->setName("InvisbleWall");
+	tempWall->settag("InvisibleWall");*/
 }
 
 void NCL::CSC8503::TutorialGame::AddPowerUpSpawnPoint(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling)

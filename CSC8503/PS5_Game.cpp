@@ -45,10 +45,10 @@ void NCL::CSC8503::PS5_Game::StartLevel()
 {
 	InitialisePlayerAssets();
 	SpawnPlayer();
-	InitTeleporters();
 	SpawnAI();
 	InitializeProjectilePool();
 	SpawnDataDrivenLevel(GameLevelNumber::LEVEL_1);
+	InitTeleporters();
 	physics->createStaticTree();
 	appState->SetIsGameOver(false);
 	appState->SetIsGamePaused(false);
@@ -73,13 +73,25 @@ void NCL::CSC8503::PS5_Game::UpdateGame(float dt)
 
 	Menu->Update(dt);
 
+	physicsTimeCost = static_cast<microseconds>(0);
+
 	if (!appState->GetIsGameOver())
 	{
 		if (!appState->GetIsGamePaused())
 		{
 			timeElapsed += dt;
 
+			std::optional<time_point<high_resolution_clock>> frameStartTime;
+			if (isDebuHUDActive)
+				frameStartTime = high_resolution_clock::now();
 			physics->Update(dt);
+			std::optional<time_point<high_resolution_clock>> frameEndTime;
+			if (isDebuHUDActive) {
+				frameEndTime = high_resolution_clock::now();
+				if (!frameStartTime.has_value() || !frameEndTime.has_value()) return;
+				physicsTimeCost = duration_cast<microseconds>(frameEndTime.value() - frameStartTime.value());
+			}
+
 			if (AIStateObject) {
 				AIStateObject->DetectProjectiles(projectileList);
 				AIStateObject->Update(dt);
@@ -126,8 +138,12 @@ void NCL::CSC8503::PS5_Game::UpdateGame(float dt)
 
 		debugHUD->DrawDebugHUD({
 			dt,
+			(physicsTimeCost.has_value() ? physicsTimeCost.value().count() : 0),
+			(renderTimeCost.has_value() ? renderTimeCost.value().count() : 0),
 			physics->GetNumberOfCollisions(),
-			world->GetNumberOfObjects()
+			world->GetNumberOfObjects(),
+			0,
+			0
 		});
 	}
 }
@@ -153,8 +169,7 @@ void NCL::CSC8503::PS5_Game::InitializeProjectilePool()
 		world->AddGameObject(newBullet);
 
 		newBullet->GetPhysicsObject()->SetElasticity(1.0f);
-		newBullet->GetPhysicsObject()->SetFriction(1.0f);
-		newBullet->GetPhysicsObject()->SetFriction(1.0f);
+		newBullet->GetPhysicsObject()->SetFriction(0.3f);
 
 		projectileList.push_back(newBullet);
 		newBullet->deactivate();

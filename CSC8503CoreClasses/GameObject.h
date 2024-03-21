@@ -3,6 +3,7 @@
 #include "CollisionVolume.h"
 
 using std::vector;
+#define SAFE_DELETE(a) if( (a) != nullptr ) delete (a); (a) = nullptr;
 
 namespace NCL::CSC8503 {
 	class NetworkObject;
