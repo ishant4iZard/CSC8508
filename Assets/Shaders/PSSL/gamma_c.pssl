@@ -5,9 +5,12 @@ RW_Texture2D<float4> output	: register(t1);
 void main(uint2 id : S_DISPATCH_THREAD_ID) {
 	float4 inSample = input.Load(uint3(id, 0));
 
-	inSample.xyz = pow(inSample.xyz, 1.0f / 2.2f);
+	// reinhard tone mapping
+    float4 mapped = inSample / (inSample + float4(1.0));
+	//Gamma Correction
+	mapped = pow(mapped, 1.0f / 2.2f);
 
-	output[id] = inSample;
+	output[id] = mapped;
 
 	//output[id].xy = float2(id) / float2(1920.0f, 1080.0f);
 }

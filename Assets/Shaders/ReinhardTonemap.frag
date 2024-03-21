@@ -15,5 +15,5 @@ void main()
     // reinhard tone mapping
     vec3 mapped = hdrColor / (hdrColor + vec3(1.0));
   
-    fragColour = vec4(hdrColor, 1.0);
+    fragColour = vec4(mapped, 1.0);
 }
