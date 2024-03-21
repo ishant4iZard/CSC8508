@@ -9,6 +9,11 @@ enum ElementTypes {
 	Text
 };
 
+enum FontSize {
+	SMALL = 0,
+	BIG
+};
+
 struct UIElementProps {
 	ElementTypes elementType;
 	std::string text;
@@ -17,6 +22,7 @@ struct UIElementProps {
 	NCL::Maths::Vector4 color;
 	NCL::KeyCodes::Type keyCode; // Only for buttons
 	NCL::Maths::Vector2 size; // Only for buttons
+	FontSize fontSize;
 };
 
 class UIBase {
@@ -25,7 +31,8 @@ public:
 	virtual void DrawStringText(
 		const std::string& text,
 		const NCL::Maths::Vector2& position,
-		const NCL::Maths::Vector4& color = WHITE
+		const NCL::Maths::Vector4& color = WHITE,
+		const FontSize s = SMALL
 	) = 0;
 	virtual void DrawButton(
 		const std::string& text,

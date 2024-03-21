@@ -34,7 +34,8 @@ void UIPlaystation::Destroy()
 void UIPlaystation::DrawStringText(
     const std::string& text,
     const NCL::Maths::Vector2& position,
-    const NCL::Maths::Vector4& color
+    const NCL::Maths::Vector4& color,
+    const FontSize s
 )
 {
     UIElementProps* newElement = new UIElementProps();

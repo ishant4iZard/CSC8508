@@ -53,12 +53,6 @@ NetworkedGame::NetworkedGame()	{
 	}
 
 	audioEngine = new AudioEngine();
-
-	// Looping background music
-	backGroundMusic = audioEngine->CreateSound("../../Assets/Audio/abc.mp3", true);
-	audioEngine->PlaySound(backGroundMusic, true);
-
-	// Trigger music
 	fireSFX = audioEngine->CreateSound("../../Assets/Audio/jump.mp3", false);
 
 	debugHUD = new DebugHUD();
@@ -230,10 +224,10 @@ void NetworkedGame::UpdateGame(float dt) {
 
 	Menu->Update(dt);
 	if (appState->GetIsGamePaused()) {
-		//audioEngine->Pause();
+		audioEngine->PauseAll();
 	}
 	else {
-		//audioEngine->UnPause();
+		audioEngine->UnPauseAll();
 	}
 	audioEngine->Update();
 
@@ -554,7 +548,7 @@ void NetworkedGame::CheckPlayerListAndSpawnPlayers()
 NetworkPlayer* NetworkedGame::AddNetworkPlayerToWorld(const Vector3& position, int playerNum)
 {
 	float meshSize = 2.0f * 5;
-	Vector3 volumeSize = Vector3(1.0, 1.6, 1.0);
+	Vector3 volumeSize = Vector3(meshSize, meshSize, meshSize);
 	float inverseMass = 1.0f / 600000.0f;
 
 	NetworkPlayer* character = new NetworkPlayer(this, playerNum);
@@ -856,10 +850,13 @@ void NetworkedGame::StartLevel() {
 	appState->SetIsGamePaused(false);
 	poolPTR = new ThreadPool(3);
 
+	backGroundMusic = audioEngine->CreateSound("../../Assets/Audio/abc.mp3", true);
+	audioEngine->PlaySound(backGroundMusic, true);
 }
 
 void NetworkedGame::EndLevel()
 {
+	audioEngine->RemoveMusic(backGroundMusic);
 
 	if (poolPTR) {
 		delete poolPTR;
@@ -870,12 +867,8 @@ void NetworkedGame::EndLevel()
 	ControledPlayersList.clear();
 	networkObjects.clear();
 	gravitywell.clear();
-
 	//AIStateObjectList.clear();
-
 	AIStateObject = nullptr;
-	
-
 	InitCamera();
 
 }
@@ -913,6 +906,20 @@ void NetworkedGame::ReceivePacket(int type, GamePacket* payload, int source) {
 		PlayersScorePacket* realPacket = (PlayersScorePacket*)payload;
 		realPacket->GetPlayerScore(PlayersScoreList);
 		CurrentPowerUpType = powerUpType(realPacket->PowerUpState);
+		switch (CurrentPowerUpType) {
+		case ice :
+			EventEmitter::EmitEvent(ACTIVATE_ICE_POWER_UP);
+			break;
+		case wind :
+			EventEmitter::EmitEvent(ACTIVATE_WIND_POWER_UP);
+			break;
+		case sand :
+			EventEmitter::EmitEvent(ACTIVATE_SAND_POWER_UP);
+			break;
+		case none:
+			EventEmitter::EmitEvent(ACTIVATE_NONE_POWER_UP);
+			break;
+		}
 		break;
 	}
 	case BasicNetworkMessages::Player_BulletNum: {

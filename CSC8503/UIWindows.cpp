@@ -32,7 +32,8 @@ UIWindows::UIWindows(){
     ImGui_ImplOpenGL3_Init();
 
     // Fonts
-    font = io.Fonts->AddFontFromFileTTF("../../Assets/Fonts/Roboto-Medium.ttf", 25);
+    smallfont = io.Fonts->AddFontFromFileTTF("../../Assets/Fonts/Roboto-Medium.ttf", 25);
+    bigFont = io.Fonts->AddFontFromFileTTF("../../Assets/Fonts/Roboto-Medium.ttf", 45);
     //font = io.Fonts->AddFontFromFileTTF("../../Assets/Fonts/PLANK___.ttf", 35);
     io.Fonts->Build();
 }
@@ -61,13 +62,15 @@ void UIWindows::Destroy() {
 void UIWindows::DrawStringText(
     const std::string& text,
     const NCL::Maths::Vector2& position,
-    const NCL::Maths::Vector4& color
+    const NCL::Maths::Vector4& color,
+    const FontSize s
 ){
     UIElementProps* newElement = new UIElementProps();
     newElement->elementType = Text;
     newElement->text = text;
     newElement->color = color;
     newElement->position = position;
+    newElement->fontSize = s;
 
     NCL::Maths::Vector2i windowSize = NCL::Window::GetWindow()->GetScreenSize();
     newElement->position.x *= (windowSize.x/100.0f);
@@ -107,7 +110,6 @@ void UIWindows::RenderUI(float dt) {
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
-    ImGui::PushFont(font);
 
     // Next window to be created will cover the entire screen
     NCL::Maths::Vector2i windowSize = NCL::Window::GetWindow()->GetScreenSize();
@@ -125,40 +127,46 @@ void UIWindows::RenderUI(float dt) {
     );
     
     for (auto uiElement : uiElements) {
+        if(uiElement->fontSize == SMALL)
+            ImGui::PushFont(smallfont);
+        else
+            ImGui::PushFont(bigFont);
+
         switch (uiElement->elementType) {
-        case Button :
-            ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(uiElement->color.x, uiElement->color.y, uiElement->color.z, 255));
-            ImGui::PushStyleColor(ImGuiCol_Button, buttonColor);
-            ImGui::PushStyleColor(ImGuiCol_ButtonActive, pressColor);
-            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, hoverColor);
-            ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 10.0f);
-            ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1.0f);
-            ImGui::SetCursorScreenPos(ImVec2(uiElement->position.x, uiElement->position.y));
-            if (ImGui::Button(uiElement->text.c_str(), ImVec2(uiElement->size.x, uiElement->size.y))) {
-                // DO STUFF
-                if (uiElement->callback != nullptr)
-                    uiElement->callback();
+            case Button :
+                ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(uiElement->color.x, uiElement->color.y, uiElement->color.z, 255));
+                ImGui::PushStyleColor(ImGuiCol_Button, buttonColor);
+                ImGui::PushStyleColor(ImGuiCol_ButtonActive, pressColor);
+                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, hoverColor);
+                ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 10.0f);
+                ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1.0f);
+                ImGui::SetCursorScreenPos(ImVec2(uiElement->position.x, uiElement->position.y));
+                if (ImGui::Button(uiElement->text.c_str(), ImVec2(uiElement->size.x, uiElement->size.y))) {
+                    // DO STUFF
+                    if (uiElement->callback != nullptr)
+                        uiElement->callback();
+                }
+                ImGui::PopStyleVar();
+                ImGui::PopStyleVar();
+                ImGui::PopStyleColor(4);
+                break;
+            case Text:
+                ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(uiElement->color.x, uiElement->color.y, uiElement->color.z, 255));
+                ImGui::SetCursorScreenPos(ImVec2(uiElement->position.x, uiElement->position.y));
+                ImGui::Text(uiElement->text.c_str());
+                ImGui::PopStyleColor();
+                break;
+            default :
+                break;
             }
-            ImGui::PopStyleVar();
-            ImGui::PopStyleVar();
-            ImGui::PopStyleColor(4);
-            break;
-        case Text:
-            ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(uiElement->color.x, uiElement->color.y, uiElement->color.z, 255));
-            ImGui::SetCursorScreenPos(ImVec2(uiElement->position.x, uiElement->position.y));
-            ImGui::Text(uiElement->text.c_str());
-            ImGui::PopStyleColor();
-            break;
-        default :
-            break;
-        }
+
+        ImGui::PopFont();
     }
 
     ImGui::End();
     
     //ImGui::ShowDemoWindow(); // Only for testing
 
-    ImGui::PopFont();
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 

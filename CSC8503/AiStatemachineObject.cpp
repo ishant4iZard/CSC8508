@@ -54,7 +54,10 @@ AiStatemachineObject::AiStatemachineObject(GameWorld* world, NavigationGrid* nav
 	stateMachine->AddTransition(new StateTransition(PatrolState, ChaseState,
 		[&]() -> bool
 		{		
-			return (distanceToNearestProj < DETECTION_RADIUS);
+			return (
+				distanceToNearestProj < DETECTION_RADIUS && 
+				projectileToChase && 
+				projectileToChase->IsActive());
 		}
 	));
 
@@ -62,8 +65,9 @@ AiStatemachineObject::AiStatemachineObject(GameWorld* world, NavigationGrid* nav
 		[&]() -> bool
 		{
 			return (
-				distanceToNearestProj >= DETECTION_RADIUS + 300 && 
-				projectileToChase->GetPhysicsObject()->GetLinearVelocity().Length() > 5);
+				!projectileToChase ||
+				!projectileToChase->IsActive() ||
+				distanceToNearestProj >= DETECTION_RADIUS + 5);
 		}
 	));
 
@@ -84,9 +88,7 @@ void AiStatemachineObject::Update(float dt) {
 	stateMachine->Update(dt);
 	//if(navGrid) navGrid->PrintGrid();
 	if (isCollidingWithProj && projectileToChase)
-		projectileToChase->ReduceTimeLeft(dt * 5);
-
-	//std::cout << transform.GetPosition().y << "\n";
+		projectileToChase->ReduceTimeLeft(dt * 15);
 }
 
 void AiStatemachineObject::MoveRandomly(float dt) {
@@ -98,6 +100,8 @@ void AiStatemachineObject::MoveRandomly(float dt) {
 }
 
 void AiStatemachineObject::DetectProjectiles(std::vector<Projectile*> ProjectileList) {
+	if (!projectileToChase || !projectileToChase->IsActive()) projectileToChase = nullptr;
+
 	Vector3 objectPosition = this->GetTransform().GetPosition();
 	Vector3 objectForward = this->GetTransform().GetOrientation() * Vector3(0, 0, 1);
 	bool projFound = false;
