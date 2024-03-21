@@ -565,28 +565,28 @@ NetworkPlayer* NetworkedGame::AddNetworkPlayerToWorld(const Vector3& position, i
 	case (0):
 		character->SetRenderObject(new RenderObject(&character->GetTransform(), charMesh, nullptr, anmShader));
 		character->GetRenderObject()->SetID(0);
-		character->GetRenderObject()->SetAnimation(animationList[(uint8_t)AnimationType::MALEGUARD_STEPFORWARD]);
+		character->GetRenderObject()->SetAnimation(animationList[(uint8_t)AnimationType::MALEGUARD_IDLE]);
 		character->setName("MaleGuard");
 		useAnimation = 0;
 		break;
 	case (1):
 		character->SetRenderObject(new RenderObject(&character->GetTransform(), charMesh2, nullptr, anmShader));
 		character->GetRenderObject()->SetID(1);
-		character->GetRenderObject()->SetAnimation(animationList[(uint8_t)AnimationType::MALEGUARD_STEPFORWARD]);
+		character->GetRenderObject()->SetAnimation(animationList[(uint8_t)AnimationType::MALEGUARD_IDLE]);
 		character->setName("MaleGuard");
 		useAnimation = 0;
 		break;
 	case (2):
 		character->SetRenderObject(new RenderObject(&character->GetTransform(), charMesh3, nullptr, anmShader));
 		character->GetRenderObject()->SetID(2);
-		character->GetRenderObject()->SetAnimation(animationList[(uint8_t)AnimationType::MALEGUARD_STEPFORWARD]);
+		character->GetRenderObject()->SetAnimation(animationList[(uint8_t)AnimationType::MALEGUARD_IDLE]);
 		character->setName("MaleGuard");
 		useAnimation = 0;
 		break;
 	case (3):
 		character->SetRenderObject(new RenderObject(&character->GetTransform(), charMesh4, nullptr, anmShader));
 		character->GetRenderObject()->SetID(3);
-		character->GetRenderObject()->SetAnimation(animationList[(uint8_t)AnimationType::MALEGUARD_STEPFORWARD]);
+		character->GetRenderObject()->SetAnimation(animationList[(uint8_t)AnimationType::MALEGUARD_IDLE]);
 		character->setName("MaleGuard");
 		useAnimation = 0;
 		break;
