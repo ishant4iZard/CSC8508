@@ -173,7 +173,10 @@ namespace NCL {
 
 			//Coursework Meshes
 			Mesh*	charMesh	= nullptr;
-			Mesh*   charMesh2nd = nullptr;
+			Mesh*   charMesh2 = nullptr;
+			Mesh*   charMesh3 = nullptr;
+			Mesh*   charMesh4 = nullptr;
+			Mesh*   charMesh5 = nullptr;
 			Mesh*	enemyMesh	= nullptr;
 			Mesh*	bonusMesh	= nullptr;
 			Mesh*	gooseMesh	= nullptr;

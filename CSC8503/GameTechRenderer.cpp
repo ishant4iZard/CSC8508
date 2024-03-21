@@ -93,6 +93,12 @@ GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetW
 	EventEmitter::RegisterForEvent(PROJECTILE_PORTAL_COLLISION, this);
 	timeOfPortalCollision = 0;
 	wasPortalCollided = false;
+
+	for (int i = 0; i < 4; i++) {
+		diffuseTex[i] = nullptr;
+		diffuseTex2[i] = nullptr;
+		bumpTex[i] = nullptr;
+	}
 }
 
 void GameTechRenderer::CreateScreenQuadMesh()
@@ -189,6 +195,28 @@ void GameTechRenderer::BuildObjectList() {
 				const RenderObject* g = o->GetRenderObject();
 
 				if (o->gettag() == "Player") {
+					activeAnimatedObjects.emplace_back(o);
+					playerShader = (OGLShader*)(o->GetRenderObject()->GetShader());
+
+					for (int i = 0; i < 4; ++i) {
+						if (o->GetName() == "MaleGuard") {
+							if (diffuseTex[i] == nullptr) {
+								diffuseTex[i] = o->GetRenderObject()->GetTextureAnm("Diffuse", i);
+								bumpTex[i] = o->GetRenderObject()->GetTextureAnm("Bump", i);
+							}
+						}
+						//diffuseTex[i] = o->GetRenderObject()->GetTextureAnm("Diffuse", i);
+						//bumpTex[i] = o->GetRenderObject()->GetTextureAnm("Bump", i);
+					}
+				}
+
+				if (o->GetName() == "MaxGuard") {
+					if (diffuseTex2[0] == nullptr) {
+						diffuseTex2[0] = o->GetRenderObject()->GetTextureAnm("Diffuse", 0);
+						diffuseTex2[1] = o->GetRenderObject()->GetTextureAnm("Diffuse", 1);
+						diffuseTex2[2] = o->GetRenderObject()->GetTextureAnm("Diffuse", 2);
+						diffuseTex2[3] = o->GetRenderObject()->GetTextureAnm("Diffuse", 3);
+					}
 					activeAnimatedObjects.emplace_back(o);
 				}
 
@@ -479,9 +507,32 @@ void GameTechRenderer::RenderCamera() {
 
 		glUniform1i(hasTexLocation, (OGLTexture*)(*tempRenderObj).GetDefaultTexture() ? 1:0);
 
+		if (shader == playerShader) {
+			glUniform1i(glGetUniformLocation(shader->GetProgramID(), "animationTex"), 0);
+			glUniform1i(glGetUniformLocation(shader->GetProgramID(), "bumpTex"), 1);
+		}
+
 		BindMesh((OGLMesh&)*(*tempRenderObj).GetMesh());
 		size_t layerCount = (*tempRenderObj).GetMesh()->GetSubMeshCount();
 		for (size_t i = 0; i < layerCount; ++i) {
+			int num = (*tempRenderObj).GetMesh()->GetVertexCount();
+			if (shader == playerShader) {
+				if (num == 7306 && i == 1)
+					continue;
+				
+				if (num == 7306) {
+					glActiveTexture(GL_TEXTURE0);
+					glBindTexture(GL_TEXTURE_2D, ((OGLTexture*)diffuseTex2[i])->GetObjectID());
+				}
+				else {
+					glActiveTexture(GL_TEXTURE0);
+					glBindTexture(GL_TEXTURE_2D, ((OGLTexture*)diffuseTex[i])->GetObjectID());
+					glActiveTexture(GL_TEXTURE1);
+					glBindTexture(GL_TEXTURE_2D, ((OGLTexture*)bumpTex[i])->GetObjectID());
+				}
+				
+			}
+			
 			DrawBoundMesh((uint32_t)i , (*tempRenderObj).GetMesh()->GetInstanceCount());
 		}
 	}
@@ -794,8 +845,8 @@ void GameTechRenderer::RenderAnimatedObjects() {
 		OGLShader* shader = (OGLShader*)(*tempAnimatedRenderObject).GetRenderObject()->GetShader();
 		BindShader(*shader);
 
-		glUniform1i(glGetUniformLocation(shader->GetProgramID(), "diffuseTex"), 6);
-		glUniform1i(glGetUniformLocation(shader->GetProgramID(), "bumpTex"), 7);
+		glUniform1i(glGetUniformLocation(shader->GetProgramID(), "animationTex"), 0);
+		glUniform1i(glGetUniformLocation(shader->GetProgramID(), "bumpTex"), 1);
 		glUniform1i(glGetUniformLocation(shader->GetProgramID(), "normalTex"), 2);
 		//glUniform1i(glGetUniformLocation(shader->GetProgramID(), "albedoTex"), 3);
 		glUniform1i(glGetUniformLocation(shader->GetProgramID(), "metallicTex"), 3);
@@ -863,16 +914,16 @@ void GameTechRenderer::RenderAnimatedObjects() {
 		/*tempAnimatedRenderObject->GetRenderObject()->GetTextureAnm("Diffuse", diffuseTex);
 		tempAnimatedRenderObject->GetRenderObject()->GetTextureAnm("Bump", bumpTex);*/
 
-		for (int i = 0; i < tempMesh->GetSubMeshCount(); ++i) {
-			glActiveTexture(GL_TEXTURE6);
-			glBindTexture(GL_TEXTURE_2D, ((OGLTexture*)diffuseTex[i])->GetObjectID());
+		//for (int i = 0; i < tempMesh->GetSubMeshCount(); ++i) {
+			//glActiveTexture(GL_TEXTURE0);
+			//glBindTexture(GL_TEXTURE_2D, ((OGLTexture*)diffuseTex[i])->GetObjectID());
+			//glBindTexture(GL_TEXTURE_2D, 0);
+			//glActiveTexture(GL_TEXTURE7);
+			//glBindTexture(GL_TEXTURE_2D, ((OGLTexture*)bumpTex[i])->GetObjectID());
 
-			glActiveTexture(GL_TEXTURE7);
-			glBindTexture(GL_TEXTURE_2D, ((OGLTexture*)bumpTex[i])->GetObjectID());
-
-			BindMesh((OGLMesh&)*(tempMesh));
-			DrawBoundMesh((uint32_t)i);
-		}
+			//BindMesh((OGLMesh&)*(tempMesh));
+			//DrawBoundMesh((uint32_t)i);
+		//}
 	}
 
 	glEnable(GL_BLEND);

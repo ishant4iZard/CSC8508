@@ -124,6 +124,12 @@ namespace NCL {
 			float timeOfPortalCollision = 0;
 			bool wasPortalCollided;
 			const float PORTAL_BLINK_TIME = 0.5;
+
+			OGLShader* playerShader = nullptr;
+
+			Texture* diffuseTex[4];
+			Texture* bumpTex[4];
+			Texture* diffuseTex2[4];
 		};
 	}
 }

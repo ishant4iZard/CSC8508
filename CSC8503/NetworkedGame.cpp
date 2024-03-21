@@ -351,8 +351,6 @@ void NetworkedGame::UpdateAsServer(float dt) {
 			{
 				i->Fire();
 				i->isFire = false;
-
-				i->GetRenderObject()->SetAnimation(animationList[(uint8_t)AnimationType::MALEGUARD_GUNFIRE]);
 			}
 		}
 	}
@@ -562,18 +560,72 @@ NetworkPlayer* NetworkedGame::AddNetworkPlayerToWorld(const Vector3& position, i
 		.SetScale(Vector3(meshSize, meshSize, meshSize))
 		.SetPosition(position);
 
-	character->SetRenderObject(new RenderObject(&character->GetTransform(), charMesh, nullptr, anmShader));
+	int useAnimation = 0;
+	switch (playerNum) {
+	case (0):
+		character->SetRenderObject(new RenderObject(&character->GetTransform(), charMesh, nullptr, anmShader));
+		character->GetRenderObject()->SetID(0);
+		character->GetRenderObject()->SetAnimation(animationList[(uint8_t)AnimationType::MALEGUARD_IDLE]);
+		character->setName("MaleGuard");
+		useAnimation = 0;
+		break;
+	case (1):
+		character->SetRenderObject(new RenderObject(&character->GetTransform(), charMesh2, nullptr, anmShader));
+		character->GetRenderObject()->SetID(1);
+		character->GetRenderObject()->SetAnimation(animationList[(uint8_t)AnimationType::MALEGUARD_IDLE]);
+		character->setName("MaleGuard");
+		useAnimation = 0;
+		break;
+	case (2):
+		character->SetRenderObject(new RenderObject(&character->GetTransform(), charMesh3, nullptr, anmShader));
+		character->GetRenderObject()->SetID(2);
+		character->GetRenderObject()->SetAnimation(animationList[(uint8_t)AnimationType::MALEGUARD_IDLE]);
+		character->setName("MaleGuard");
+		useAnimation = 0;
+		break;
+	case (3):
+		character->SetRenderObject(new RenderObject(&character->GetTransform(), charMesh4, nullptr, anmShader));
+		character->GetRenderObject()->SetID(3);
+		character->GetRenderObject()->SetAnimation(animationList[(uint8_t)AnimationType::MALEGUARD_IDLE]);
+		character->setName("MaleGuard");
+		useAnimation = 0;
+		break;
+	}
+
+	//character->SetRenderObject(new RenderObject(&character->GetTransform(), charMesh, nullptr, anmShader));
 	character->SetPhysicsObject(new PhysicsObject(&character->GetTransform(), character->GetBoundingVolume()));
 	character->SetNetworkObject(new NetworkObject(*character, playerNum));
 
 	character->GetPhysicsObject()->SetInverseMass(inverseMass);
 	character->GetPhysicsObject()->InitCubeInertia();
 
-	character->GetRenderObject()->SetAnimation(animationList[(uint8_t)AnimationType::MALEGUARD_STEPFORWARD]);
+	//init animations
+	int maxNum = static_cast<int>(AnimationType::MAX_ANM) / 2;
+	//int useAnimation = (playerNum % 2) * maxNum;
+	
+	int currentAnimationID = 0;
+	for (int i = 0; i < maxNum; ++i) {
+		currentAnimationID = i + useAnimation;
+		character->InitAnimation(static_cast<AnimationType>(currentAnimationID), animationList[currentAnimationID]);//static_cast<AnimationType>(currentAnimationID)
+	}
+
+	//character->GetRenderObject()->SetAnimation(animationList[(uint8_t)AnimationType::MALEGUARD_STEPFORWARD]);
 
 	for (int i = 0; i < 4; ++i) {
 		character->GetRenderObject()->SetTextureAnm("Diffuse", i, maleGuardDiffuseTextureList[i]);
 		character->GetRenderObject()->SetTextureAnm("Bump", i, maleGuardBumpTextureList[i]);
+
+		if (playerNum == 5) {
+			character->GetRenderObject()->SetTextureAnm("Diffuse", i, maxGuardDiffuseTextureList[i]);
+		}
+
+		/*if (playerNum % 2 == 1) {
+			character->GetRenderObject()->SetTextureAnm("Diffuse", i, maleGuardDiffuseTextureList[i]);
+			character->GetRenderObject()->SetTextureAnm("Bump", i, maleGuardBumpTextureList[i]);
+		}
+		else {
+			character->GetRenderObject()->SetTextureAnm("Diffuse", i, maxGuardDiffuseTextureList[i]);
+		}*/
 	}
 
 	for (uint8_t i = (uint8_t)TextureType::ALBEDO; i < (uint8_t)TextureType::MAX_TYPE; i++)
@@ -685,6 +737,9 @@ void NetworkedGame::SpawnProjectile(NetworkPlayer* owner, Vector3 firePos, Vecto
 
 	newBullet->GetRenderObject()->SetColour(colour);
 
+	owner->GetRenderObject()->SetID(playerNum);
+	owner->GetRenderObject()->SetAnimation(animationList[(uint8_t)AnimationType::MALEGUARD_GUNFIRE]);
+
 	int bulletID = Projectile::CurrentAvailableProjectileID++;
 	newBullet->SetNetworkObject(new NetworkObject(*newBullet, bulletID));
 
@@ -739,6 +794,14 @@ void NetworkedGame::OnRep_SpawnProjectile(int PlayerNum, int NetObjectID)
 		break;
 	}
 	newBullet->GetRenderObject()->SetColour(colour);
+
+	if (ControledPlayersList[PlayerNum])
+	{
+		ControledPlayersList[PlayerNum]->GetRenderObject()->SetID(PlayerNum);
+		ControledPlayersList[PlayerNum]->GetRenderObject()->SetAnimation(animationList[(uint8_t)AnimationType::MALEGUARD_GUNFIRE]);
+	}
+
+	//ControledPlayersList[PlayerNum]->GetRenderObject()->SetAnimation(animationList[(uint8_t)AnimationType::MALEGUARD_GUNFIRE]);
 
 	newBullet->SetNetworkObject(new NetworkObject(*newBullet, NetObjectID));
 
@@ -1034,6 +1097,21 @@ AiStatemachineObject* NetworkedGame::AddAiStateObjectToWorld(const Vector3& posi
 		.SetPosition(Vector3(position.x, 5.6, position.z));
 
 	AIStateObject->SetRenderObject(new RenderObject(&AIStateObject->GetTransform(), sphereMesh, nullptr, basicShader));
+	/*AIStateObject->SetRenderObject(new RenderObject(&AIStateObject->GetTransform(), charMesh5, nullptr, anmShader));
+	AIStateObject->GetRenderObject()->SetID(5);
+	AIStateObject->GetRenderObject()->SetAnimation(animationList[(uint8_t)AnimationType::MAXGUARD_WALK]);
+	AIStateObject->setName("MaxGuard");
+	AIStateObject->GetRenderObject()->SetTextureAnm("Diffuse", 0, maxGuardDiffuseTextureList[0]);
+	AIStateObject->GetRenderObject()->SetTextureAnm("Diffuse", 1, maxGuardDiffuseTextureList[1]);
+	AIStateObject->GetRenderObject()->SetTextureAnm("Diffuse", 2, maxGuardDiffuseTextureList[2]);
+	AIStateObject->GetRenderObject()->SetTextureAnm("Diffuse", 3, maxGuardDiffuseTextureList[3]);
+
+	for (uint8_t i = (uint8_t)TextureType::ALBEDO; i < (uint8_t)TextureType::MAX_TYPE; i++)
+	{
+		AIStateObject->GetRenderObject()->SetTexture((TextureType)i, anmObjPbrTextureList[i]);
+	}*/
+	
+	
 	//AIStateObject->SetRenderObject(new RenderObject(&AIStateObject->GetTransform(), rebellionMeshChar, nullptr, basicShader));
 	AIStateObject->SetPhysicsObject(new PhysicsObject(&AIStateObject->GetTransform(), AIStateObject->GetBoundingVolume()));
 	AIStateObject->SetNetworkObject(new NetworkObject(*AIStateObject, AIInitialID));

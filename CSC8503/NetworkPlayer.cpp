@@ -24,6 +24,11 @@ NetworkPlayer::NetworkPlayer(TutorialGame* game, int num)	{
 	timeElapsed = projectileReplenishTimer = 0.0f;
 	numProjectilesAccumulated = MAX_PROJECTILE_CAPACITY;
 	movementSpeed = 35;
+
+	for (uint8_t i = (uint8_t)AnimationType::MALEGUARD_IDLE; i < (uint8_t)AnimationType::MAX_ANM; i++)
+	{
+		animations[i] = nullptr;
+	}
 }
 
 NetworkPlayer::~NetworkPlayer()	{
@@ -259,6 +264,27 @@ void NetworkPlayer::Fire()
 	if (numProjectilesAccumulated <= 0) return;
 	numProjectilesAccumulated--;
 
+	//GetRenderObject()->SetAnimation(animations[(uint8_t)AnimationType::MALEGUARD_GUNFIRE]);
+	/*switch (playerNum)
+	{
+	case(0):
+		GetRenderObject()->SetID(0);
+		GetRenderObject()->SetAnimation(animations[(uint8_t)AnimationType::MALEGUARD_GUNFIRE]);
+		break;
+	case(1):
+		GetRenderObject()->SetID(1);
+		GetRenderObject()->SetAnimation(animations[(uint8_t)AnimationType::MALEGUARD_GUNFIRE]); 
+		break;
+	case(2):
+		GetRenderObject()->SetID(2);
+		GetRenderObject()->SetAnimation(animations[(uint8_t)AnimationType::MALEGUARD_GUNFIRE]); 
+		break;
+	case(3):
+		GetRenderObject()->SetID(3);
+		GetRenderObject()->SetAnimation(animations[(uint8_t)AnimationType::MALEGUARD_GUNFIRE]);
+		break;
+	}*/
+
 #ifdef _WIN32
 	Vector3 fireDir = GetPlayerForwardVector().Normalised();
 #else
@@ -274,6 +300,8 @@ void NetworkPlayer::Fire()
 #endif
 
 	tempGame->SpawnProjectile(this, firePos, fireDir);
+
+	
 }
 
 Vector3 NetworkPlayer::GetPlayerForwardVector()
