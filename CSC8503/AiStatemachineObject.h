@@ -30,7 +30,7 @@ namespace NCL {
         protected:
             StateMachine* stateMachine;
             NavigationGrid* navGrid;
-            const float DETECTION_RADIUS = 50.0f;
+            const float DETECTION_RADIUS = 80.0f;
             const int SPEED = 35;
             const float DEACTIVATION_DISTANCE = 1.0f;
             Vector3 randomMovementDirection;
