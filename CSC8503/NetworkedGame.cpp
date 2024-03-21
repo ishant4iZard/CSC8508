@@ -698,6 +698,8 @@ void NetworkedGame::SpawnProjectile(NetworkPlayer* owner, Vector3 firePos, Vecto
 
 	newBullet->GetRenderObject()->SetColour(colour);
 
+	owner->GetRenderObject()->SetAnimation(animationList[(uint8_t)AnimationType::MALEGUARD_GUNFIRE]);
+
 	int bulletID = Projectile::CurrentAvailableProjectileID++;
 	newBullet->SetNetworkObject(new NetworkObject(*newBullet, bulletID));
 
@@ -752,6 +754,11 @@ void NetworkedGame::OnRep_SpawnProjectile(int PlayerNum, int NetObjectID)
 		break;
 	}
 	newBullet->GetRenderObject()->SetColour(colour);
+
+	if (ControledPlayersList[PlayerNum])
+	{
+		ControledPlayersList[PlayerNum]->GetRenderObject()->SetAnimation(animationList[(uint8_t)AnimationType::MALEGUARD_GUNFIRE]);
+	}
 
 	newBullet->SetNetworkObject(new NetworkObject(*newBullet, NetObjectID));
 

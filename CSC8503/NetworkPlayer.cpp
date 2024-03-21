@@ -264,6 +264,8 @@ void NetworkPlayer::Fire()
 	if (numProjectilesAccumulated <= 0) return;
 	numProjectilesAccumulated--;
 
+	//GetRenderObject()->SetAnimation(animations[(uint8_t)AnimationType::MALEGUARD_GUNFIRE]);
+
 #ifdef _WIN32
 	Vector3 fireDir = GetPlayerForwardVector().Normalised();
 #else
@@ -280,7 +282,7 @@ void NetworkPlayer::Fire()
 
 	tempGame->SpawnProjectile(this, firePos, fireDir);
 
-	GetRenderObject()->SetAnimation(animations[(uint8_t)AnimationType::MALEGUARD_GUNFIRE]);
+	
 }
 
 Vector3 NetworkPlayer::GetPlayerForwardVector()
