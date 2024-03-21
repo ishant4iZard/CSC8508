@@ -123,6 +123,8 @@ TutorialGame::~TutorialGame()	{
 	SAFE_DELETE_PBR_TEXTURE(groundTextureList)
 	SAFE_DELETE_PBR_TEXTURE(wallTextureList)
 	SAFE_DELETE_PBR_TEXTURE(sandTextureList)
+	SAFE_DELETE_PBR_TEXTURE(iceTextureList)
+	SAFE_DELETE_PBR_TEXTURE(mudTextureList)
 	SAFE_DELETE_PBR_TEXTURE(goldTextureList)
 
 	SAFE_DELETE_ANIMATION_TEXTURE(maleGuardDiffuseTextureList)
@@ -133,6 +135,7 @@ TutorialGame::~TutorialGame()	{
 
 void NCL::CSC8503::TutorialGame::BindEvents()
 {
+	EventEmitter::RegisterForEvent(ACTIVATE_NONE_POWER_UP, this);
 	EventEmitter::RegisterForEvent(ACTIVATE_ICE_POWER_UP, this);
 	EventEmitter::RegisterForEvent(ACTIVATE_WIND_POWER_UP, this);
 	EventEmitter::RegisterForEvent(ACTIVATE_SAND_POWER_UP, this);
@@ -142,14 +145,20 @@ void NCL::CSC8503::TutorialGame::ReceiveEvent(EventType T)
 {
 	switch (T)
 	{
+	case ACTIVATE_NONE_POWER_UP:
+		ChangeRenderObjectTexture(outerWallRo, sandTextureList);
+		break;
 	case ACTIVATE_ICE_POWER_UP:
 		activePowerUpCount = Helper::Clamp(--activePowerUpCount, static_cast<unsigned int>(0), static_cast<unsigned int>(MAX_POWER_UP_COUNT));
+		ChangeRenderObjectTexture(outerWallRo, iceTextureList);
 		break;
 	case ACTIVATE_SAND_POWER_UP:
 		activePowerUpCount = Helper::Clamp(--activePowerUpCount, static_cast<unsigned int>(0), static_cast<unsigned int>(MAX_POWER_UP_COUNT));
+		ChangeRenderObjectTexture(outerWallRo, mudTextureList);
 		break;
 	case ACTIVATE_WIND_POWER_UP:
 		activePowerUpCount = Helper::Clamp(--activePowerUpCount, static_cast<unsigned int>(0), static_cast<unsigned int>(MAX_POWER_UP_COUNT));
+		ChangeRenderObjectTexture(outerWallRo, iceTextureList);
 		break;
 	default:
 		break;
@@ -236,6 +245,17 @@ void TutorialGame::InitialiseAssets() {
 	sandTextureList[(uint8_t)TextureType::ROUGHNESS] = renderer->LoadTexture("GroundTile11/roughness.png");
 	sandTextureList[(uint8_t)TextureType::AO] = renderer->LoadTexture("GroundTile11/ao.png");
 
+	iceTextureList[(uint8_t)TextureType::ALBEDO] = renderer->LoadTexture("Ice/albedo.jpg");
+	iceTextureList[(uint8_t)TextureType::NORMAL] = renderer->LoadTexture("Ice/normal_gl.jpg");
+	iceTextureList[(uint8_t)TextureType::METAL] = renderer->LoadTexture("Ice/metallic.jpg");
+	iceTextureList[(uint8_t)TextureType::ROUGHNESS] = renderer->LoadTexture("Ice/roughness.jpg");
+	iceTextureList[(uint8_t)TextureType::AO] = renderer->LoadTexture("Ice/ao.jpg");
+
+	mudTextureList[(uint8_t)TextureType::ALBEDO] = renderer->LoadTexture("Sand_02/albedo.png");
+	mudTextureList[(uint8_t)TextureType::NORMAL] = renderer->LoadTexture("Sand_02/normal_gl.png");
+	mudTextureList[(uint8_t)TextureType::METAL] = renderer->LoadTexture("Sand_02/metallic.png");
+	mudTextureList[(uint8_t)TextureType::ROUGHNESS] = renderer->LoadTexture("Sand_02/roughness.png");
+	mudTextureList[(uint8_t)TextureType::AO] = renderer->LoadTexture("Sand_02/ao.png");
 	goldTextureList[(uint8_t)TextureType::ALBEDO] = renderer->LoadTexture("Projectile/albedo.png");
 	goldTextureList[(uint8_t)TextureType::NORMAL] = renderer->LoadTexture("Projectile/normal_gl.png");
 	goldTextureList[(uint8_t)TextureType::METAL] = renderer->LoadTexture("Projectile/metallic.png");
@@ -342,7 +362,7 @@ void NCL::CSC8503::TutorialGame::InitIcePowerup(PowerUp* inPowerup, Shader* inSh
 	activePowerUpCount = Helper::Clamp(++activePowerUpCount, static_cast<unsigned int>(0), static_cast<unsigned int>(MAX_POWER_UP_COUNT));
 	for (size_t i = 0; i < (uint8_t)TextureType::MAX_TYPE; i++)
 	{
-		inPowerup->GetRenderObject()->SetTexture((TextureType)i, groundTextureList[i]);
+		inPowerup->GetRenderObject()->SetTexture((TextureType)i, iceTextureList[i]);
 	}
 }
 
@@ -457,6 +477,7 @@ void NCL::CSC8503::TutorialGame::SpawnFloor(const Vector3& inPosition, const Vec
 	{
 		tempFloor->GetRenderObject()->SetTexture((TextureType)i, sandTextureList[i]);
 	}
+	outerWallRo = tempFloor->GetRenderObject();
 }
 
 void NCL::CSC8503::TutorialGame::SpawnBouncingPad(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling)
@@ -681,6 +702,12 @@ GameObject* NCL::CSC8503::TutorialGame::AddTeleporterToWorld(const Vector3& posi
 	world->AddGameObject(teleporter2Display);
 
 	return teleporter1;
+}
+
+void NCL::CSC8503::TutorialGame::ChangeRenderObjectTexture(RenderObject* inRo, Texture* inTextureList[])
+{
+	for (size_t i = (uint8_t)TextureType::ALBEDO; i < (uint8_t)TextureType::MAX_TYPE; i++)
+		inRo->SetTexture((TextureType)i, inTextureList[i]);
 }
 
 void NCL::CSC8503::TutorialGame::InitTeleporters()
