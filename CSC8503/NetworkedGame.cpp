@@ -1086,8 +1086,6 @@ void NetworkedGame::NonPhysicsUpdate(float dt)
 
 	
 	NonPhysicsMutex.unlock();
-
-
 }
 
 void NetworkedGame::SpawnAI() {
