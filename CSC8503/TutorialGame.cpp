@@ -255,10 +255,11 @@ void TutorialGame::InitialiseAssets() {
 	anmObjPbrTextureList[(uint8_t)TextureType::AO] = renderer->LoadTexture("AnimationPbrTexture/ao.png");
 
 
+#ifdef _WIN32
 	//load mesh material
 	maleGuardMaterial = renderer->LoadMaterial("Male_Guard.mat");
 	maxGuardMaterial = renderer->LoadMaterial("Rig_Maximilian.mat");
-
+	
 	//load submeshes texture
 	LoadTextureToMesh();
 
@@ -270,6 +271,7 @@ void TutorialGame::InitialiseAssets() {
 	animationList[(uint8_t)AnimationType::MAXGUARD_IDLE] = renderer->LoadAnimation("Rig_Maximilian_Idle.anm");
 	animationList[(uint8_t)AnimationType::MAXGUARD_GUNFIRE] = renderer->LoadAnimation("Rig_Maximilian_SingleShot.anm");
 	animationList[(uint8_t)AnimationType::MAXGUARD_WALK] = renderer->LoadAnimation("Rig_Maximilian_Walk2.anm");
+#endif
 
 #ifdef defined(USE_SHADOW)
 	basicShader = renderer->LoadShader("scene.vert", "scene.frag");
@@ -696,6 +698,7 @@ void TutorialGame::TestAddStaticObjectsToWorld() {
 }
 
 void TutorialGame::LoadTextureToMesh() {
+#ifdef _WIN32
 	for (int i = 0; i < charMesh->GetSubMeshCount(); ++i) {
 		const MeshMaterialEntry* matEntry = maleGuardMaterial->GetMaterialForLayer(i);
 		const string* diffusePath = nullptr;
@@ -724,4 +727,5 @@ void TutorialGame::LoadTextureToMesh() {
 		OGLTexture* diffuseTex = (OGLTexture*)(renderer->LoadTexture(diffuseName));
 		maxGuardDiffuseTextureList[i] = diffuseTex;
 	}
+#endif
 }

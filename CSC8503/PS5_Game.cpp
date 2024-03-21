@@ -273,10 +273,11 @@ void NCL::CSC8503::PS5_Game::MovePlayer(float dt) {
 	float verticalInput		= controller->GetNamedAxis("YLook");
 
 	player->MovePlayerBasedOnController(dt, horizontalInput, verticalInput);
-	if (horizontalInput == 0 && verticalInput == 0) 
-		SwitchAnimations(player->GetRenderObject(), nullptr);
+	if (horizontalInput == 0 && verticalInput == 0) {
+		//SwitchAnimations(player->GetRenderObject(), nullptr);
+	}
 	else
-		SwitchAnimations(player->GetRenderObject(), playerWalkingAnimation);
+		player->Update(dt);
 
 	float rotationX = controller->GetNamedAxis("RightX");
 	float rotationY = -controller->GetNamedAxis("RightY");
@@ -313,9 +314,6 @@ void NCL::CSC8503::PS5_Game::RotatePortals(float dt)
 
 	float rotationSpeed = 1000;
 	float rotationAngle = rotationSpeed * dt;
-
-	if (rotationAngle > 360) rotationAngle -= 360;
-	if (rotationAngle < 0) rotationAngle += 360;
 
 	Quaternion rotation = Quaternion::EulerAnglesToQuaternion(0, rotationAngle, 0);
 
