@@ -575,14 +575,13 @@ PushdownState::PushdownResult PlayingHUD::OnUpdate(float dt, PushdownState** new
 		{
 			ShowTimeLeft(Game);
 			//ui->DrawStringText("Player    " + Game->GetPlayerNameByIndex(Game->GetLocalPlayerIndex()), Vector2(83, 30), UIBase::WHITE);
-			ui->DrawStringText("Player    " + Subsystem->GetCurrentUserName(), Vector2(83, 25), UIBase::WHITE);
-			ui->DrawStringText("Your Score:    " + std::to_string(Game->GetPlayerScoreByIndex(Game->GetLocalPlayerIndex())), Vector2(83, 35), UIBase::WHITE);
-			ui->DrawStringText("Bullet Num:    " + std::to_string(Game->GetPlayerBulletNumByIndex(Game->GetLocalPlayerIndex())), Vector2(83, 45), UIBase::WHITE);
-			ui->DrawStringText("PowerUp State: " + GetRoundPowerUpState(Game), Vector2(83, 55), UIBase::WHITE);		
-			ui->DrawStringText("Hold TAB To", Vector2(83, 65), UIBase::WHITE);
-			ui->DrawStringText("Show Score Table", Vector2(83, 70), UIBase::WHITE);
+			ui->DrawStringText("Player: " + Subsystem->GetCurrentUserName(), Vector2(83, 18), UIBase::WHITE);
+			ui->DrawStringText("Your Score: " + std::to_string(Game->GetPlayerScoreByIndex(Game->GetLocalPlayerIndex())), Vector2(83, 21), UIBase::WHITE);
+			ui->DrawStringText("Bullet Num: " + std::to_string(Game->GetPlayerBulletNumByIndex(Game->GetLocalPlayerIndex())), Vector2(83, 24), UIBase::WHITE);
+			ui->DrawStringText("Active Powerup: " + GetRoundPowerUpState(Game), Vector2(83, 27), UIBase::WHITE);		
+			ui->DrawStringText("SPACE - Score Table", Vector2(83, 30), UIBase::WHITE);
 
-			if (Window::GetKeyboard()->KeyHeld(KeyCodes::Type::TAB))
+			if (Window::GetKeyboard()->KeyHeld(KeyCodes::Type::SPACE))
 			{
 				ShowScoreTable(Game);
 			}
@@ -606,7 +605,7 @@ PushdownState::PushdownResult PlayingHUD::OnUpdate(float dt, PushdownState** new
 
 		if (!appState->GetIsGameOver() && appState->GetIsGamePaused())
 		{
-			ui->DrawStringText("Game Paused !!!", Vector2(46, 15), UIBase::BLUE);
+			ui->DrawStringText("Game Paused !!!", Vector2(43, 48), UIBase::BLUE, BIG);
 		}
 
 		if (appState->GetIsSolo() && !appState->GetIsGameOver())
@@ -657,12 +656,10 @@ void PlayingHUD::ShowTimeLeft(TutorialGame* Game)
 	//TODO dynamic cast game
 	NetworkedGame* tempGame = dynamic_cast<NetworkedGame*> (Game);
 
-	ui->DrawStringText("Timeleft:", Vector2(83, 15), UIBase::WHITE);
-
 	float timeLeft = tempGame->GetRoundTimeLimit() - tempGame->GetRoundTimer();
 	int time = (int)timeLeft + 1;
 	
-	ui->DrawStringText(std::to_string(time), Vector2(90, 15), UIBase::WHITE);
+	ui->DrawStringText("Timeleft: " + std::to_string(time), Vector2(83, 15), UIBase::WHITE);
 }
 
 void PlayingHUD::CheckRoundTime(TutorialGame* Game)
@@ -718,7 +715,7 @@ void PlayingHUD::ShowGameResult(TutorialGame* Game)
 	default:
 		break;
 	}
-	ui->DrawStringText(RoundResult, Vector2(40, 15), UIBase::RED);
+	ui->DrawStringText(RoundResult, Vector2(40, 15), UIBase::RED, BIG);
 	ui->DrawStringText("Press Enter To Continue!...", Vector2(25, 60), UIBase::YELLOW);
 }
 

@@ -550,7 +550,7 @@ void NetworkedGame::CheckPlayerListAndSpawnPlayers()
 NetworkPlayer* NetworkedGame::AddNetworkPlayerToWorld(const Vector3& position, int playerNum)
 {
 	float meshSize = 2.0f * 5;
-	Vector3 volumeSize = Vector3(1.0, 1.6, 1.0);
+	Vector3 volumeSize = Vector3(meshSize, meshSize, meshSize);
 	float inverseMass = 1.0f / 600000.0f;
 
 	NetworkPlayer* character = new NetworkPlayer(this, playerNum);
