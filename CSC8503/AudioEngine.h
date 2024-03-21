@@ -48,8 +48,19 @@ public :
 	void PlaySound(int indx, bool isLooped);
 	float GetVolume() {	return volume; };
 	void SetVolume(float val);
+
 	void PauseAll();
 	void UnPauseAll();
+
+	void RemoveMusic(int indx) {
+		FMOD::Sound* soundToRemove = loopedSounds[indx];
+
+		loopedSounds.erase(indx);
+
+		if (soundToRemove != nullptr) {
+			soundToRemove->release();
+		}
+	}
 
 	void Update() {	system->update(); }
 

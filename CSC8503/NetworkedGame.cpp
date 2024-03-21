@@ -53,12 +53,6 @@ NetworkedGame::NetworkedGame()	{
 	}
 
 	audioEngine = new AudioEngine();
-
-	// Looping background music
-	backGroundMusic = audioEngine->CreateSound("../../Assets/Audio/abc.mp3", true);
-	audioEngine->PlaySound(backGroundMusic, true);
-
-	// Trigger music
 	fireSFX = audioEngine->CreateSound("../../Assets/Audio/jump.mp3", false);
 
 	debugHUD = new DebugHUD();
@@ -776,10 +770,13 @@ void NetworkedGame::StartLevel() {
 	appState->SetIsGamePaused(false);
 	poolPTR = new ThreadPool(2);
 
+	backGroundMusic = audioEngine->CreateSound("../../Assets/Audio/abc.mp3", true);
+	audioEngine->PlaySound(backGroundMusic, true);
 }
 
 void NetworkedGame::EndLevel()
 {
+	audioEngine->RemoveMusic(backGroundMusic);
 
 	if (poolPTR) {
 		delete poolPTR;
@@ -790,12 +787,8 @@ void NetworkedGame::EndLevel()
 	ControledPlayersList.clear();
 	networkObjects.clear();
 	gravitywell.clear();
-
 	//AIStateObjectList.clear();
-
 	AIStateObject = nullptr;
-	
-
 	InitCamera();
 
 }

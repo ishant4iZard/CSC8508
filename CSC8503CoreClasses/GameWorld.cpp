@@ -70,9 +70,9 @@ void GameWorld::UpdateWorld(float dt) {
 	unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 	std::default_random_engine e(seed);
 
-	for (GameObject* g : gameObjects) {
-		g->Update(dt);
-	}
+	//for (GameObject* g : gameObjects) {
+		//g->Update(dt);
+	//}
 
 	//if (shuffleObjects) {
 	//	std::shuffle(gameObjects.begin(), gameObjects.end(), e);
