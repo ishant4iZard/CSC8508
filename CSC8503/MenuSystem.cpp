@@ -105,9 +105,17 @@ PushdownState::PushdownResult MainMenu::OnUpdate(float dt, PushdownState** newSt
 			*newState = new PlayingHUD();
 			return PushdownResult::Push;
 		}
+
+		ui->DrawStringText(
+			"Team 5 - Project T",
+			Vector2(41, 25),
+			UIBase::WHITE,
+			BIG
+		);
+
 		ui->DrawButton(
 			"Solo Game",
-			Vector2(5, 23),
+			Vector2(40, 33),
 			[&]() {
 				isSoloGameBtnPressed = true;
 			},
@@ -118,7 +126,7 @@ PushdownState::PushdownResult MainMenu::OnUpdate(float dt, PushdownState** newSt
 #ifdef _WIN32
 		ui->DrawButton(
 			"Create Lobby",
-			Vector2(5, 33),
+			Vector2(40, 40),
 			[&, Subsystem]() {
 				if (!isCreatingLobby)
 				{
@@ -132,7 +140,7 @@ PushdownState::PushdownResult MainMenu::OnUpdate(float dt, PushdownState** newSt
 
 		ui->DrawButton(
 			"Search Lobby",
-			Vector2(5, 43),
+			Vector2(40, 47),
 			[&]() {
 				isSearchLobbyBtnPressed = true;
 			},
@@ -142,7 +150,7 @@ PushdownState::PushdownResult MainMenu::OnUpdate(float dt, PushdownState** newSt
 
 		ui->DrawButton(
 			"Quit Game",
-			Vector2(5, 53),
+			Vector2(40, 54),
 			[Game]() {
 				Game->CloseGame = true;
 			},
@@ -234,7 +242,7 @@ PushdownState::PushdownResult MultiPlayerLobby::OnUpdate(float dt, PushdownState
 		}
 		ui->DrawButton(
 			"Leave Lobby",
-			Vector2(47, 75),
+			Vector2(32, 75),
 			[Subsystem]() {
 				Subsystem->LeaveLobby();
 				EventEmitter::EmitEvent(LOBBY_LEAVE);
@@ -386,7 +394,7 @@ PushdownState::PushdownResult MultiplayerSearchMenu::OnUpdate(float dt, Pushdown
 
 		ui->DrawButton(
 			"Main Menu",
-			Vector2(48,75),
+			Vector2(32,75),
 			[&]() {
 				isMainMenuPressed = true;
 			},
@@ -396,7 +404,7 @@ PushdownState::PushdownResult MultiplayerSearchMenu::OnUpdate(float dt, Pushdown
 
 		ui->DrawButton(
 			"Refresh Lobby List",
-			Vector2(48, 13),
+			Vector2(32, 28),
 			[&, Subsystem]() {
 				if (!isSearchingLobbies)
 				{
@@ -415,17 +423,19 @@ PushdownState::PushdownResult MultiplayerSearchMenu::OnUpdate(float dt, Pushdown
 				ChangeCurrentSelectLobbyByAmount(Subsystem, -1);
 			},
 			UIBase::WHITE,
-			KeyCodes::UP // Only for PS
+			KeyCodes::UP, // Only for PS
+			Vector2(100, 50)
 		);
 
 		ui->DrawButton(
 			"=>",
-			Vector2(48, 28),
+			Vector2(11, 28),
 			[&, Subsystem]() {
 				ChangeCurrentSelectLobbyByAmount(Subsystem, 1);
 			},
 			UIBase::WHITE,
-			KeyCodes::DOWN // Only for PS
+			KeyCodes::DOWN, // Only for PS
+			Vector2(100, 50)
 		);
 
 		if (isJoiningLobby)
@@ -565,14 +575,13 @@ PushdownState::PushdownResult PlayingHUD::OnUpdate(float dt, PushdownState** new
 		{
 			ShowTimeLeft(Game);
 			//ui->DrawStringText("Player    " + Game->GetPlayerNameByIndex(Game->GetLocalPlayerIndex()), Vector2(83, 30), UIBase::WHITE);
-			ui->DrawStringText("Player    " + Subsystem->GetCurrentUserName(), Vector2(83, 25), UIBase::WHITE);
-			ui->DrawStringText("Your Score:    " + std::to_string(Game->GetPlayerScoreByIndex(Game->GetLocalPlayerIndex())), Vector2(83, 35), UIBase::WHITE);
-			ui->DrawStringText("Bullet Num:    " + std::to_string(Game->GetPlayerBulletNumByIndex(Game->GetLocalPlayerIndex())), Vector2(83, 45), UIBase::WHITE);
-			ui->DrawStringText("PowerUp State: " + GetRoundPowerUpState(Game), Vector2(83, 55), UIBase::WHITE);		
-			ui->DrawStringText("Hold TAB To", Vector2(83, 65), UIBase::WHITE);
-			ui->DrawStringText("Show Score Table", Vector2(83, 70), UIBase::WHITE);
+			ui->DrawStringText("Player: " + Subsystem->GetCurrentUserName(), Vector2(83, 18), UIBase::WHITE);
+			ui->DrawStringText("Your Score: " + std::to_string(Game->GetPlayerScoreByIndex(Game->GetLocalPlayerIndex())), Vector2(83, 21), UIBase::WHITE);
+			ui->DrawStringText("Bullet Num: " + std::to_string(Game->GetPlayerBulletNumByIndex(Game->GetLocalPlayerIndex())), Vector2(83, 24), UIBase::WHITE);
+			ui->DrawStringText("Active Powerup: " + GetRoundPowerUpState(Game), Vector2(83, 27), UIBase::WHITE);		
+			ui->DrawStringText("SPACE - Score Table", Vector2(83, 30), UIBase::WHITE);
 
-			if (Window::GetKeyboard()->KeyHeld(KeyCodes::Type::TAB))
+			if (Window::GetKeyboard()->KeyHeld(KeyCodes::Type::SPACE))
 			{
 				ShowScoreTable(Game);
 			}
@@ -596,7 +605,7 @@ PushdownState::PushdownResult PlayingHUD::OnUpdate(float dt, PushdownState** new
 
 		if (!appState->GetIsGameOver() && appState->GetIsGamePaused())
 		{
-			ui->DrawStringText("Game Paused !!!", Vector2(46, 15), UIBase::BLUE);
+			ui->DrawStringText("Game Paused !!!", Vector2(43, 48), UIBase::BLUE, BIG);
 		}
 
 		if (appState->GetIsSolo() && !appState->GetIsGameOver())
@@ -647,12 +656,10 @@ void PlayingHUD::ShowTimeLeft(TutorialGame* Game)
 	//TODO dynamic cast game
 	NetworkedGame* tempGame = dynamic_cast<NetworkedGame*> (Game);
 
-	ui->DrawStringText("Timeleft:", Vector2(83, 15), UIBase::WHITE);
-
 	float timeLeft = tempGame->GetRoundTimeLimit() - tempGame->GetRoundTimer();
 	int time = (int)timeLeft + 1;
 	
-	ui->DrawStringText(std::to_string(time), Vector2(90, 15), UIBase::WHITE);
+	ui->DrawStringText("Timeleft: " + std::to_string(time), Vector2(83, 15), UIBase::WHITE);
 }
 
 void PlayingHUD::CheckRoundTime(TutorialGame* Game)
@@ -708,7 +715,7 @@ void PlayingHUD::ShowGameResult(TutorialGame* Game)
 	default:
 		break;
 	}
-	ui->DrawStringText(RoundResult, Vector2(40, 15), UIBase::RED);
+	ui->DrawStringText(RoundResult, Vector2(40, 15), UIBase::RED, BIG);
 	ui->DrawStringText("Press Enter To Continue!...", Vector2(25, 60), UIBase::YELLOW);
 }
 

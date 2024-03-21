@@ -50,12 +50,14 @@ void AudioEngine::SetVolume(float volume) {
 	channel->setPaused(false);
 }
 
-void AudioEngine::Pause()
-{
-	channel->setPaused(true);
+void AudioEngine::PauseAll() {
+	FMOD::ChannelGroup* masterGroup;
+	system->getMasterChannelGroup(&masterGroup);
+	masterGroup->setPaused(true);
 }
 
-void AudioEngine::UnPause()
-{
-	channel->setPaused(false);
+void AudioEngine::UnPauseAll() {
+	FMOD::ChannelGroup* masterGroup;
+	system->getMasterChannelGroup(&masterGroup);
+	masterGroup->setPaused(false);
 }

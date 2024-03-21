@@ -99,6 +99,9 @@ namespace NCL {
 
 			std::vector<SkinningJob> frameJobs;
 
+			NCL::PS5::AGCShader* defaultVertexShader;
+			NCL::PS5::AGCShader* defaultPixelShader;
+
 			sce::Agc::Core::Sampler normalSampler;
 			sce::Agc::Core::Sampler mettalicSampler;
 			sce::Agc::Core::Sampler roughnessSampler;

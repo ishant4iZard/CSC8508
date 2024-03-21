@@ -46,6 +46,9 @@ GameTechAGCRenderer::GameTechAGCRenderer(GameWorld& world) : AGCRenderer(*Window
 	CreateQuad(quadMesh);
 	quadMesh->UploadToGPU(this);
 
+	defaultVertexShader = new AGCShader("Tech_vv.ags", allocator);
+	defaultPixelShader = new AGCShader("Tech_p.ags", allocator);
+
 	rendererModel->SetComputeShader(ComputeShaderName::SKINNING, new AGCShader("Skinning_c.ags", allocator));
 	rendererModel->SetComputeShader(ComputeShaderName::GAMMA, new AGCShader("Gamma_c.ags", allocator));
 
@@ -192,8 +195,8 @@ This method builds a struct that
 void GameTechAGCRenderer::WriteRenderPassConstants() {
 	ShaderConstants tempConstantFrameData;
 	tempConstantFrameData.lightColour = Vector4(0.8f, 0.8f, 0.5f, 1.0f);
-	tempConstantFrameData.lightRadius = 1000.0f;
-	tempConstantFrameData.lightPosition = Vector3(0.0f, 100.0f, 0.0f);
+	tempConstantFrameData.lightRadius = 40.0f;
+	tempConstantFrameData.lightPosition = Vector3(0.0f, 10.0f, 0.0f);
 	tempConstantFrameData.cameraPos = gameWorld.GetMainCamera().GetPosition();
 
 	tempConstantFrameData.viewMatrix = gameWorld.GetMainCamera().BuildViewMatrix();
@@ -337,7 +340,6 @@ void NCL::CSC8503::GameTechAGCRenderer::InitPbrSamplers()
 		.setMipFilterMode(sce::Agc::Core::Sampler::MipFilterMode::kPoint);
 }
 
-
 void GameTechAGCRenderer::SkyboxPass() {
 	frameContext->setShaders(nullptr,
 		rendererModel->GetVertexShader(VertexShaderName::SKY_BOX)->GetAGCPointer(),
@@ -419,7 +421,14 @@ void GameTechAGCRenderer::ShadowmapPass() {
 }
 
 void GameTechAGCRenderer::MainRenderPass() {
-	frameContext->setShaders(nullptr, rendererModel->GetVertexShader(VertexShaderName::PBR)->GetAGCPointer(), rendererModel->GetPixelShader(PixelShaderName::PBR)->GetAGCPointer(), sce::Agc::UcPrimitiveType::Type::kTriList);
+	frameContext->setShaders(nullptr, 
+		defaultVertexShader->GetAGCPointer(), 
+		defaultPixelShader->GetAGCPointer(),
+		/*
+		rendererModel->GetVertexShader(VertexShaderName::PBR)->GetAGCPointer(), 
+		rendererModel->GetPixelShader(PixelShaderName::PBR)->GetAGCPointer(),
+		*/ 
+		sce::Agc::UcPrimitiveType::Type::kTriList);
 
 	sce::Agc::CxViewport viewPort;
 	sce::Agc::Core::setViewport(&viewPort, SCREENWIDTH, SCREENHEIGHT, 0, 0, -1.0f, 1.0f);

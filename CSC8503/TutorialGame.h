@@ -107,6 +107,7 @@ namespace NCL {
 			GameObject* AddTeleporterToWorld(const Vector3& position1, const Vector3& position2, const Vector3& rotation1, const Vector3& rotation2, Vector3 dimensions, float inverseMass = 0.0f, float elasticity = 0.0f);
 
 			GameObject* capsule;
+			void ChangeRenderObjectTexture(RenderObject* inRo, Texture* inTextureList[]);
 
 			void LoadTextureToMesh();
 
@@ -153,6 +154,8 @@ namespace NCL {
 			Texture* groundTextureList[(uint8_t)TextureType::MAX_TYPE];
 			Texture* wallTextureList[(uint8_t)TextureType::MAX_TYPE];
 			Texture* sandTextureList[(uint8_t)TextureType::MAX_TYPE];
+			Texture* iceTextureList[(uint8_t)TextureType::MAX_TYPE];
+			Texture* mudTextureList[(uint8_t)TextureType::MAX_TYPE];
 			Texture* lavaTextureList[(uint8_t)TextureType::MAX_TYPE];
 
 			//maleGuard and maxGuard both have 4 submeshes
@@ -213,9 +216,11 @@ namespace NCL {
 			ApplicationState* appState;
 
 			std::vector<Vector3> powerUpSpawnPointList;
+			RenderObject* outerWallRo = NULL;
 
 			GameObject* teleporter1Display;
 			GameObject* teleporter2Display;
+			std::vector<GameObject*> blackHoleDisplays;
 		};
 	}
 }

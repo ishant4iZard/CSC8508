@@ -17,7 +17,8 @@ public :
 	void DrawStringText(
 		const std::string& text,
 		const NCL::Maths::Vector2& position,
-		const NCL::Maths::Vector4& color = WHITE
+		const NCL::Maths::Vector4& color = WHITE,
+		const FontSize s = SMALL
 	)  override;
 	virtual void DrawButton(
 		const std::string& text,
@@ -32,7 +33,8 @@ public :
 protected :
 	UIWindows();
 	~UIWindows();
-	ImFont* font;
+	ImFont* smallfont;
+	ImFont* bigFont;
 	static UIWindows* ui;  
 	std::vector<UIElementProps*> uiElements;
 };
