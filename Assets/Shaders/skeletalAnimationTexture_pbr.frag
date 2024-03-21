@@ -1,6 +1,6 @@
 #version 330 core
 
-uniform sampler2D diffuseTex;
+uniform sampler2D animationTex;
 uniform sampler2D bumpTex;
 uniform sampler2D normalTex;
 uniform sampler2D albedoTex;
@@ -83,7 +83,7 @@ vec3 BaseReflectivity(const vec3 inAlbedo, const float inMetallicFactor)
 
 void main(void){
 	const float gamma = 2.2;
-    vec3 albedo = pow(texture(diffuseTex, IN.texCoord).rgb, vec3(gamma));
+    vec3 albedo = pow(texture(animationTex, IN.texCoord).rgb, vec3(gamma));
     vec3 normal = GetNormalFromTexture();
     float metallic = texture(metallicTex, IN.texCoord).r;
     float roughness = texture(roughnessTex, IN.texCoord).r;
@@ -147,7 +147,7 @@ void main(void){
 
     //start to mix with bump
     mat3 bumpTBN = mat3( normalize(IN.tangent),normalize(IN.binormal), normalize(IN.normal));
-    vec4 diffuse = texture(diffuseTex , IN.texCoord);
+    vec4 diffuse = texture(animationTex , IN.texCoord);
     vec3 bumpNormal = texture(bumpTex, IN.texCoord).rgb;
 	bumpNormal = normalize(bumpTBN * normalize(bumpNormal * 2.0 - 1.0));
     float lambert = max(dot(wi , IN.normal), 0.0f);
@@ -161,6 +161,7 @@ void main(void){
 
     fragColour.rgb +=bumpColor;
     //fragColour.rgb *=0.5f;
+    //fragColour.rgb *= vec4(1,0,0,1);
 
     //fragColour = vec4(IN.tangent,1);
     //fragColour = vec4(IN.normal,1);

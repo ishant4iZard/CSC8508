@@ -106,7 +106,9 @@ TutorialGame::~TutorialGame()	{
 	delete bouncePlatformMesh;
 	delete sphereMesh;
 	delete charMesh;
-	delete charMesh2nd;
+	delete charMesh2;
+	delete charMesh3;
+	delete charMesh4;
 	delete enemyMesh;
 	delete bonusMesh;
 	delete basicTex;
@@ -198,7 +200,11 @@ void TutorialGame::InitialiseAssets() {
 	sphereMesh	= renderer->LoadMesh("sphere.msh");
 	//charMesh	= renderer->LoadMesh("goat.msh");
 	charMesh = renderer->LoadMesh("Male_Guard.msh");
-	charMesh2nd = renderer->LoadMesh("Rig_Maximilian.msh");
+	charMesh2 = renderer->LoadMesh("Male_Guard.msh");
+	charMesh3 = renderer->LoadMesh("Male_Guard.msh");
+	charMesh4 = renderer->LoadMesh("Male_Guard.msh");
+	charMesh5 = renderer->LoadMesh("Rig_Maximilian.msh");
+	
 	enemyMesh	= renderer->LoadMesh("Keeper.msh");
 	bonusMesh	= renderer->LoadMesh("sphere.msh");
 	gooseMesh	= renderer->LoadMesh("goose.msh");
@@ -715,7 +721,7 @@ void TutorialGame::LoadTextureToMesh() {
 		//((OGLTexture*)maxGuardTextureList[i])->GetObjectID();
 	}
 
-	for (int i = 0; i < charMesh2nd->GetSubMeshCount(); ++i) {
+	for (int i = 0; i < charMesh2->GetSubMeshCount(); ++i) {
 		const MeshMaterialEntry* matEntry = maxGuardMaterial->GetMaterialForLayer(i);
 		const string* diffusePath = nullptr;
 		matEntry->GetEntry("Diffuse", &diffusePath);

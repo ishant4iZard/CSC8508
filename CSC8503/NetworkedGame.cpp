@@ -566,22 +566,31 @@ NetworkPlayer* NetworkedGame::AddNetworkPlayerToWorld(const Vector3& position, i
 		.SetScale(Vector3(meshSize, meshSize, meshSize))
 		.SetPosition(position);
 
+	int useAnimation = 0;
 	switch (playerNum) {
 	case (0):
 		character->SetRenderObject(new RenderObject(&character->GetTransform(), charMesh, nullptr, anmShader));
 		character->GetRenderObject()->SetAnimation(animationList[(uint8_t)AnimationType::MALEGUARD_STEPFORWARD]);
+		character->setName("MaleGuard");
+		useAnimation = 0;
 		break;
 	case (1):
-		character->SetRenderObject(new RenderObject(&character->GetTransform(), charMesh2nd, nullptr, anmShader));
-		character->GetRenderObject()->SetAnimation(animationList[(uint8_t)AnimationType::MAXGUARD_WALK]);
+		character->SetRenderObject(new RenderObject(&character->GetTransform(), charMesh2, nullptr, anmShader));
+		character->GetRenderObject()->SetAnimation(animationList[(uint8_t)AnimationType::MALEGUARD_STEPFORWARD]);
+		character->setName("MaleGuard");
+		useAnimation = 0;
 		break;
 	case (2):
-		character->SetRenderObject(new RenderObject(&character->GetTransform(), charMesh, nullptr, anmShader));
+		character->SetRenderObject(new RenderObject(&character->GetTransform(), charMesh3, nullptr, anmShader));
 		character->GetRenderObject()->SetAnimation(animationList[(uint8_t)AnimationType::MALEGUARD_STEPFORWARD]);
+		character->setName("MaleGuard");
+		useAnimation = 0;
 		break;
 	case (3):
-		character->SetRenderObject(new RenderObject(&character->GetTransform(), charMesh2nd, nullptr, anmShader));
-		character->GetRenderObject()->SetAnimation(animationList[(uint8_t)AnimationType::MAXGUARD_WALK]);
+		character->SetRenderObject(new RenderObject(&character->GetTransform(), charMesh4, nullptr, anmShader));
+		character->GetRenderObject()->SetAnimation(animationList[(uint8_t)AnimationType::MALEGUARD_STEPFORWARD]);
+		character->setName("MaleGuard");
+		useAnimation = 0;
 		break;
 	}
 
@@ -594,7 +603,8 @@ NetworkPlayer* NetworkedGame::AddNetworkPlayerToWorld(const Vector3& position, i
 
 	//init animations
 	int maxNum = static_cast<int>(AnimationType::MAX_ANM) / 2;
-	int useAnimation = (playerNum % 2) * maxNum;
+	//int useAnimation = (playerNum % 2) * maxNum;
+	
 	int currentAnimationID = 0;
 	for (int i = 0; i < maxNum; ++i) {
 		currentAnimationID = i + useAnimation;
@@ -604,13 +614,20 @@ NetworkPlayer* NetworkedGame::AddNetworkPlayerToWorld(const Vector3& position, i
 	//character->GetRenderObject()->SetAnimation(animationList[(uint8_t)AnimationType::MALEGUARD_STEPFORWARD]);
 
 	for (int i = 0; i < 4; ++i) {
-		if (playerNum % 2 == 0) {
+		character->GetRenderObject()->SetTextureAnm("Diffuse", i, maleGuardDiffuseTextureList[i]);
+		character->GetRenderObject()->SetTextureAnm("Bump", i, maleGuardBumpTextureList[i]);
+
+		if (playerNum == 5) {
+			character->GetRenderObject()->SetTextureAnm("Diffuse", i, maxGuardDiffuseTextureList[i]);
+		}
+
+		/*if (playerNum % 2 == 1) {
 			character->GetRenderObject()->SetTextureAnm("Diffuse", i, maleGuardDiffuseTextureList[i]);
 			character->GetRenderObject()->SetTextureAnm("Bump", i, maleGuardBumpTextureList[i]);
 		}
 		else {
 			character->GetRenderObject()->SetTextureAnm("Diffuse", i, maxGuardDiffuseTextureList[i]);
-		}
+		}*/
 	}
 
 	for (uint8_t i = (uint8_t)TextureType::ALBEDO; i < (uint8_t)TextureType::MAX_TYPE; i++)
@@ -722,7 +739,7 @@ void NetworkedGame::SpawnProjectile(NetworkPlayer* owner, Vector3 firePos, Vecto
 
 	newBullet->GetRenderObject()->SetColour(colour);
 
-	//owner->GetRenderObject()->SetAnimation(animationList[(uint8_t)AnimationType::MALEGUARD_GUNFIRE]);
+	owner->GetRenderObject()->SetAnimation(animationList[(uint8_t)AnimationType::MALEGUARD_GUNFIRE]);
 
 	int bulletID = Projectile::CurrentAvailableProjectileID++;
 	newBullet->SetNetworkObject(new NetworkObject(*newBullet, bulletID));
@@ -779,10 +796,12 @@ void NetworkedGame::OnRep_SpawnProjectile(int PlayerNum, int NetObjectID)
 	}
 	newBullet->GetRenderObject()->SetColour(colour);
 
-	/*if (ControledPlayersList[PlayerNum])
+	if (ControledPlayersList[PlayerNum])
 	{
 		ControledPlayersList[PlayerNum]->GetRenderObject()->SetAnimation(animationList[(uint8_t)AnimationType::MALEGUARD_GUNFIRE]);
-	}*/
+	}
+
+	//ControledPlayersList[PlayerNum]->GetRenderObject()->SetAnimation(animationList[(uint8_t)AnimationType::MALEGUARD_GUNFIRE]);
 
 	newBullet->SetNetworkObject(new NetworkObject(*newBullet, NetObjectID));
 

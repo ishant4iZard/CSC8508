@@ -277,7 +277,7 @@ void NetworkPlayer::Fire()
 		GetRenderObject()->SetAnimation(animations[(uint8_t)AnimationType::MALEGUARD_GUNFIRE]); 
 		break;
 	case(3):
-		GetRenderObject()->SetAnimation(animations[(uint8_t)AnimationType::MAXGUARD_GUNFIRE]); 
+		GetRenderObject()->SetAnimation(animations[(uint8_t)AnimationType::MALEGUARD_GUNFIRE]);
 		break;
 	}
 
