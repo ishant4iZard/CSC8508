@@ -28,6 +28,7 @@
 #include "ApplicationState.h"
 #include "UIBase.h"
 
+#include "MeshMaterial.h"
 #include <chrono>
 using namespace std::chrono;
 
@@ -35,6 +36,9 @@ using namespace std::chrono;
 #define POWER_UP_SPAWN_TIME 30.0f
 #define MAX_POWER_UP_COUNT 3
 #define SAFE_DELETE_PBR_TEXTURE(a) for (uint8_t i = 0; i < (uint8_t)TextureType::MAX_TYPE; i++){ if (a[i] != NULL) delete a[i]; a[i] = NULL; }
+#define SAFE_DELETE_ANIMATION_TEXTURE(a) for (int i = 0; i < 4; ++i){ if (a[i]!=NULL) delete a[i]; a[i] = NULL;}
+#define SAFE_DELETE_ANIMATION(a) for (uint8_t i = 0; i < (uint8_t)AnimationType::MAX_ANM; ++i){ if (a[i] != NULL) delete a[i]; a[i] = NULL; }
+
 
 enum class level {
 	level1 = 1,
@@ -104,6 +108,8 @@ namespace NCL {
 
 			GameObject* capsule;
 
+			void LoadTextureToMesh();
+
 #ifdef _WIN32
 		KeyboardMouseController* controller;
 		OGLTextureManager* bm;
@@ -142,14 +148,29 @@ namespace NCL {
 			Shader*		blackholeShader = nullptr;
 			Shader* 	targetholeShader = nullptr;
 			Shader*		particleShader  = nullptr;
+			Shader*		anmShader		= nullptr;
 				
 			Texture* groundTextureList[(uint8_t)TextureType::MAX_TYPE];
 			Texture* wallTextureList[(uint8_t)TextureType::MAX_TYPE];
 			Texture* sandTextureList[(uint8_t)TextureType::MAX_TYPE];
 			Texture* lavaTextureList[(uint8_t)TextureType::MAX_TYPE];
 
+			//maleGuard and maxGuard both have 4 submeshes
+			Texture* maleGuardDiffuseTextureList[4];
+			Texture* maleGuardBumpTextureList[4];
+			Texture* maxGuardDiffuseTextureList[4];
+
+			Texture* anmObjPbrTextureList[(uint8_t)TextureType::MAX_TYPE];
+
+			MeshMaterial* maleGuardMaterial	= nullptr;
+			MeshMaterial* maxGuardMaterial  = nullptr;
+
+			MeshAnimation* animationList[(uint8_t)AnimationType::MAX_ANM];
+
+
 			//Coursework Meshes
 			Mesh*	charMesh	= nullptr;
+			Mesh*   charMesh2nd = nullptr;
 			Mesh*	enemyMesh	= nullptr;
 			Mesh*	bonusMesh	= nullptr;
 			Mesh*	gooseMesh	= nullptr;

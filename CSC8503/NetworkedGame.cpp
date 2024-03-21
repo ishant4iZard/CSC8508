@@ -56,7 +56,7 @@ NetworkedGame::NetworkedGame()	{
 	fireSFX = audioEngine->CreateSound("../../Assets/Audio/jump.mp3", false);
 
 	debugHUD = new DebugHUD();
-	poolPTR = new ThreadPool(2);
+	poolPTR = new ThreadPool(3);
 }
 
 NetworkedGame::~NetworkedGame()	{
@@ -207,7 +207,10 @@ void NetworkedGame::UpdateGame(float dt) {
 	if (poolPTR) {
 		poolPTR->enqueue([this, dt]() {this->PhysicsUpdate(dt); });
 		poolPTR->enqueue([this, dt]() {this->NonPhysicsUpdate(dt); });
+		poolPTR->enqueue([this, dt]() {this->UpdateAnimations(dt); });
 	}
+
+	//UpdateAnimations(dt);
 
 	/*for (auto AIStateObject : AIStateObjectList) {
 		AIStateObject->DetectProjectiles(ProjectileList);
@@ -348,6 +351,8 @@ void NetworkedGame::UpdateAsServer(float dt) {
 			{
 				i->Fire();
 				i->isFire = false;
+
+				i->GetRenderObject()->SetAnimation(animationList[(uint8_t)AnimationType::MALEGUARD_GUNFIRE]);
 			}
 		}
 	}
@@ -544,7 +549,7 @@ void NetworkedGame::CheckPlayerListAndSpawnPlayers()
 
 NetworkPlayer* NetworkedGame::AddNetworkPlayerToWorld(const Vector3& position, int playerNum)
 {
-	float meshSize = 2.0f;
+	float meshSize = 2.0f * 5;
 	Vector3 volumeSize = Vector3(1.0, 1.6, 1.0);
 	float inverseMass = 1.0f / 600000.0f;
 
@@ -557,12 +562,24 @@ NetworkPlayer* NetworkedGame::AddNetworkPlayerToWorld(const Vector3& position, i
 		.SetScale(Vector3(meshSize, meshSize, meshSize))
 		.SetPosition(position);
 
-	character->SetRenderObject(new RenderObject(&character->GetTransform(), charMesh, nullptr, basicShader));
+	character->SetRenderObject(new RenderObject(&character->GetTransform(), charMesh, nullptr, anmShader));
 	character->SetPhysicsObject(new PhysicsObject(&character->GetTransform(), character->GetBoundingVolume()));
 	character->SetNetworkObject(new NetworkObject(*character, playerNum));
 
 	character->GetPhysicsObject()->SetInverseMass(inverseMass);
 	character->GetPhysicsObject()->InitCubeInertia();
+
+	character->GetRenderObject()->SetAnimation(animationList[(uint8_t)AnimationType::MALEGUARD_STEPFORWARD]);
+
+	for (int i = 0; i < 4; ++i) {
+		character->GetRenderObject()->SetTextureAnm("Diffuse", i, maleGuardDiffuseTextureList[i]);
+		character->GetRenderObject()->SetTextureAnm("Bump", i, maleGuardBumpTextureList[i]);
+	}
+
+	for (uint8_t i = (uint8_t)TextureType::ALBEDO; i < (uint8_t)TextureType::MAX_TYPE; i++)
+	{
+		character->GetRenderObject()->SetTexture((TextureType)i, anmObjPbrTextureList[i]);
+	}
 
 
 	world->AddGameObject(character);
@@ -768,7 +785,7 @@ void NetworkedGame::StartLevel() {
 	physics->createStaticTree();//this needs to be at the end of all initiations
 	appState->SetIsGameOver(false);
 	appState->SetIsGamePaused(false);
-	poolPTR = new ThreadPool(2);
+	poolPTR = new ThreadPool(3);
 
 	backGroundMusic = audioEngine->CreateSound("../../Assets/Audio/abc.mp3", true);
 	audioEngine->PlaySound(backGroundMusic, true);
@@ -1114,6 +1131,20 @@ float NetworkedGame::GetInComingPacketSizePerSecond() const
 {
 	float result = TotalSizeIncomingPakcet * 60.0f / 1024.0f;
 	return result;
+}
+
+void NetworkedGame::UpdateAnimations(float dt)
+{
+	if (appState->GetIsGamePaused()) return;
+
+	world->gameObjectsMutex.lock();
+
+	for (auto i : ControledPlayersList) {
+		if (!i || !i->IsActive() || !i->GetRenderObject()) continue;
+		i->Update(dt);
+	}
+
+	world->gameObjectsMutex.unlock();
 }
 
 
