@@ -36,6 +36,9 @@ using namespace std::chrono;
 #define POWER_UP_SPAWN_TIME 30.0f
 #define MAX_POWER_UP_COUNT 3
 #define SAFE_DELETE_PBR_TEXTURE(a) for (uint8_t i = 0; i < (uint8_t)TextureType::MAX_TYPE; i++){ if (a[i] != NULL) delete a[i]; a[i] = NULL; }
+#define SAFE_DELETE_ANIMATION_TEXTURE(a) for (int i = 0; i < 4; ++i){ if (a[i]!=NULL) delete a[i]; a[i] = NULL;}
+#define SAFE_DELETE_ANIMATION(a) for (uint8_t i = 0; i < (uint8_t)AnimationType::MAX_ANM; ++i){ if (a[i] != NULL) delete a[i]; a[i] = NULL; }
+
 
 enum class level {
 	level1 = 1,
