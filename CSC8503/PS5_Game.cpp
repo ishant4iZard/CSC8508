@@ -162,7 +162,7 @@ void NCL::CSC8503::PS5_Game::InitializeProjectilePool()
 		newBullet->SetPhysicsObject(new PhysicsObject(&newBullet->GetTransform(), newBullet->GetBoundingVolume()));
 		newBullet->GetPhysicsObject()->SetInverseMass(Projectile::inverseMass);
 		newBullet->GetPhysicsObject()->InitSphereInertia();
-		newBullet->GetRenderObject()->SetColour(Debug::RED);
+		newBullet->GetRenderObject()->SetColour(Debug::BLUE);
 
 		int bulletID = Projectile::CurrentAvailableProjectileID++;
 
@@ -256,7 +256,7 @@ void NCL::CSC8503::PS5_Game::SpawnPlayer()
 	player->GetPhysicsObject()->InitCubeInertia();
 	player->GetRenderObject()->SetAnimation(playerWalkingAnimation);
 
-	player->GetRenderObject()->SetColour(Debug::RED);
+	player->GetRenderObject()->SetColour(Debug::BLUE);
 	
 	world->AddGameObject(player);
 }

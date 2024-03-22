@@ -35,7 +35,7 @@ AiStatemachineObject::AiStatemachineObject(GameWorld* world, NavigationGrid* nav
 
 	State* PatrolState = new State([&](float dt) -> void
 		{
-			this->GetRenderObject()->SetColour(Debug::BLUE);
+			this->GetRenderObject()->SetColour(Debug::GREEN);
 			currentState = PATROL;
 			MoveRandomly(dt);
 		}
