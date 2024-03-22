@@ -76,18 +76,14 @@ namespace NCL::CSC8503 {
 		}
 
 		virtual void OnCollisionBegin(GameObject* otherObject) {
-			//std::cout << "OnCollisionBegin event occured!\n";
 		}
 
 		virtual void OnCollisionEnd(GameObject* otherObject) {
-			//std::cout << "OnCollisionEnd event occured!\n";
 		}
 		virtual void OnTriggerBegin(GameObject* otherObject) {
-			//std::cout << "OnCollisionBegin event occured!\n";
 		}
 
 		virtual void OnTriggerEnd(GameObject* otherObject) {
-			//std::cout << "OnCollisionEnd event occured!\n";
 		}
 
 

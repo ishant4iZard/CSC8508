@@ -75,9 +75,6 @@ namespace NCL {
 							for (const auto& i : contents) {
 								for (int j = 0; j < 4; ++j) {
 									auto entry = i;
-									/*if (entry.object->GetName() == "wall") {
-										std::cout << "youhoo\n";
-									}*/
 									children[j].Insert(entry.object, entry.pos,
 										entry.size, depthLeft - 1, maxSize);
 
@@ -95,7 +92,6 @@ namespace NCL {
 			}
 
 			std::list< QuadTreeEntry<T>> CheckBroadwithstatic(T& object, const Vector3& objectPos, const Vector3& objectSize, int depthLeft, int maxSize) {
-				//QuadTreeEntry<T> temp(object, objectPos, objectSize);
 				std::list< QuadTreeEntry<T>> info;
 				std::list< QuadTreeEntry<T>> temp;
 				if (!CollisionDetection::AABBTest(objectPos,

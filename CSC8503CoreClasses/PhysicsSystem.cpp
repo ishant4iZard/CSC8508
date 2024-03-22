@@ -20,7 +20,6 @@ PhysicsSystem::PhysicsSystem(GameWorld& g) : gameWorld(g)	{
 	useBroadPhase	= true;	
 	dTOffset		= 0.0f;
 	globalDamping	= 0.995f;
-	//SetGravity(Vector3(0.0f, -9.8f, 0.0f));
 	linearDamping = 0.4f;
 	EventEmitter::RegisterForEvent(ACTIVATE_ICE_POWER_UP, this);
 	EventEmitter::RegisterForEvent(ACTIVATE_WIND_POWER_UP, this);
@@ -29,7 +28,6 @@ PhysicsSystem::PhysicsSystem(GameWorld& g) : gameWorld(g)	{
 
 PhysicsSystem::~PhysicsSystem()	{
 	EventEmitter::RemoveListner(this);
-	//staticTree = nullptr;
 }
 
 void PhysicsSystem::SetGravity(const Vector3& g) {
@@ -92,16 +90,11 @@ void PhysicsSystem::Update(float dt) {
 	int iteratorCount = 0;
 	while(dTOffset > realDT) {
 
-		//std::thread t1(&PhysicsSystem::UpdateObjectAABBs, this);
-		//std::thread t2(&PhysicsSystem::IntegrateAccel, this, realDT); //Update accelerations from external forces
-
-		//t1.join();
 		UpdateObjectAABBs();
 		IntegrateAccel(dt);
 
 		BroadPhase();
 		NarrowPhase();
-		//std::thread t3(&PhysicsSystem::NarrowPhase,this);
 
 		//This is our simple iterative solver - 
 		//we just run things multiple times, slowly moving things forward
@@ -111,8 +104,6 @@ void PhysicsSystem::Update(float dt) {
 			UpdateConstraints(constraintDt);	
 		}*/
 
-		/*t2.join();
-		t3.join();*/
 		IntegrateVelocity(realDT); //update positions from new velocity changes
 
 		dTOffset -= realDT;
@@ -240,7 +231,6 @@ void PhysicsSystem::BasicCollisionDetection() {
 	std::vector <GameObject*>::const_iterator first;
 	std::vector <GameObject*>::const_iterator last;
 	gameWorld.GetObjectIterators(first, last);
-	//int NumberCollision = 0;
 	for (auto i = first; i != last; ++i) {
 		if ((*i)->GetPhysicsObject() == nullptr) {
 			continue;
@@ -250,15 +240,12 @@ void PhysicsSystem::BasicCollisionDetection() {
 			if ((*j)->GetPhysicsObject() == nullptr) {
 				continue;
 			}
-			//NumberCollision++;
 			CollisionDetection::CollisionInfo info;
 			if ((*i)->GetBoundingVolume()->isKinematic && (*j)->GetBoundingVolume()->isKinematic)
 				continue;
 			if (CollisionDetection::ObjectIntersection(*i, *j, info)) {
 				if (!(*i)->GetBoundingVolume()->isTrigger && !(*j)->GetBoundingVolume()->isTrigger) {
 					ImpulseResolveCollision(*info.a, *info.b, info.point);
-					//std::cout << " Collision between " << (*i)->GetName()
-						//<< " and " << (*j)->GetName() << std::endl;
 					info.framesLeft = numCollisionFrames;
 					allCollisions.insert(info);
 
@@ -278,8 +265,6 @@ void PhysicsSystem::BasicCollisionDetection() {
 		}
 	}
 	gameWorld.gameObjectsMutex.unlock();
-
-	//std::cout << NumberCollision << "\n";
 }
 
 /*
@@ -371,22 +356,6 @@ bool broadPhaseHelper(GameObject* a, GameObject* b) {
 	return false;
 }
 
-//QuadTree<GameObject*> PhysicsSystem::createStaticTree() {
-//	std::vector <GameObject*>::const_iterator first;
-//	std::vector <GameObject*>::const_iterator last;
-//	gameWorld.GetObjectIterators(first, last);
-//	for (auto i = first; i != last; ++i) {
-//		if ((*i)->GetBoundingVolume()->isKinematic) {
-//			Vector3 halfSizes;
-//			if (!(*i)->GetBroadphaseAABB(halfSizes)) {
-//				continue;
-//			}
-//			Vector3 pos = (*i)->GetTransform().GetPosition();
-//			staticTree.Insert(*i, pos, halfSizes);
-//		}
-//	}
-//}
-
 void PhysicsSystem::createStaticTree() {
 	UpdateObjectAABBs();
 	int numberStatic = 0;
@@ -416,8 +385,6 @@ void PhysicsSystem::BroadPhase() {
 
 	broadphaseCollisions.clear();
 	QuadTree <GameObject*> tree(Vector2(200,200), 7, 4);
-	
-	//tree = staticTree;
 
 	gameWorld.gameObjectsMutex.lock();
 	std::vector <GameObject*>::const_iterator first;
@@ -433,12 +400,7 @@ void PhysicsSystem::BroadPhase() {
 					continue;
 				}
 				Vector3 pos;
-				/*if ((*i)->getSweptVolume()->type == VolumeType::Capsule) {
-					pos = (*i)->GetSweptTransform().GetPosition();
-				}*/
-				pos = (*i)->GetTransform().GetPosition();
-				/*else {
-				}*/			
+				pos = (*i)->GetTransform().GetPosition();	
 				tree.Insert(*i, pos, halfSizes);
 				std::list< QuadTreeEntry<GameObject*>> possiblelist = staticTree.CheckBroadwithstatic(*i, pos, halfSizes);
 				for (auto j : possiblelist) {
@@ -450,19 +412,6 @@ void PhysicsSystem::BroadPhase() {
 					}
 				}
 				possiblelist.clear();
-				//if ((*i)->gettag() == "Projectile") {
-				//	Vector3 Predictpos = (*i)->GetTransform().GetPosition() + (*i)->GetPhysicsObject()->GetLinearVelocity() * idealDT *1.3f;
-				//	//tree.Insert(*i, pos, halfSizes);
-				//	std::list< QuadTreeEntry<GameObject*>> possiblelist = staticTree.CheckBroadwithstatic(*i, Predictpos, halfSizes);
-				//	for (auto j : possiblelist) {
-				//		CollisionDetection::CollisionInfo info;
-				//		if (broadPhaseHelper(*i, (j).object)) {
-				//			info.a = std::min((*i), (j).object);
-				//			info.b = std::max((*i), (j).object);
-				//			broadphaseCollisions.insert(info);
-				//		}
-				//	}
-				//}
 			}
 		}
 	}
@@ -492,7 +441,6 @@ The broadphase will now only give us likely collisions, so we can now go through
 and work out if they are truly colliding, and if so, add them into the main collision list
 */
 void PhysicsSystem::NarrowPhase() {
-	//std::cout << broadphaseCollisions.size()<<"\n";
 	for (std::set < CollisionDetection::CollisionInfo >::iterator
 		i = broadphaseCollisions.begin();
 		i != broadphaseCollisions.end(); ++i) {
@@ -623,7 +571,6 @@ void PhysicsSystem::IntegrateVelocity(float dt) {
 		position += linearVel * dt;
 		transform.SetPosition(position);
 		// Linear Damping
-		//linearVel = linearVel * frameLinearDamping;
 		object->SetLinearVelocity(linearVel);
 
 		// Orientation Stuff
@@ -677,5 +624,4 @@ void PhysicsSystem::UpdateConstraints(float dt) {
 		(*i)->UpdateConstraint(dt);
 	}
 	gameWorld.gameObjectsMutex.unlock();
-
 }

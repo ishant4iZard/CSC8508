@@ -15,11 +15,8 @@ namespace NCL {
 			Transform& SetPosition(const Vector3& worldPos);
 			Transform& SetScale(const Vector3& worldScale);
 			Transform& SetOrientation(const Quaternion& newOr);
-			//Transform& SetRandomOrientation();
 			Transform& RandomPosition(const Vector3& worldPos,bool openorclose);
 			float randomFloat(float min, float max);
-
-			//Quaternion GenerateRandomRotation();
 
 			Vector3 GetPosition() const {
 				return position;
