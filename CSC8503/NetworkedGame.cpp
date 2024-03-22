@@ -129,7 +129,7 @@ bool NetworkedGame::StartAsServer() {
 		return true;
 	}
 
-	thisServer = new GameServer(NetworkBase::GetDefaultPort(), 3);
+	thisServer = new GameServer(NetworkBase::GetDefaultPort(), 4);
 	if (!thisServer->IsValid())
 	{
 		delete thisServer;
