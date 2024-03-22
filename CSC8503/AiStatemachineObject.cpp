@@ -79,7 +79,6 @@ AiStatemachineObject::AiStatemachineObject(GameWorld* world, NavigationGrid* nav
 
 AiStatemachineObject::~AiStatemachineObject() {
 	if (stateMachine) {
-		//delete stateMachine;
 		stateMachine = NULL;
 	}
 }
@@ -222,10 +221,9 @@ void AiStatemachineObject::FindPathFromAIToProjectile(float dt)
 			targetPos	= projectileToChase->GetTransform().GetPosition();
 
 
-	//targetPos = targetPos + projectileToChase->GetPhysicsObject()->GetLinearVelocity() * 5 * dt;
 	targetPos = PredictInterceptionPoint(targetPos, projectileToChase->GetPhysicsObject()->GetLinearVelocity(), AIPos, SPEED);
 
-	AIPos.y = targetPos.y = 0; // Only for testing, will remove later
+	AIPos.y = targetPos.y = 0;
 
 	NavigationPath outPath;
 	bool found = navGrid->FindPath(AIPos, targetPos, outPath);

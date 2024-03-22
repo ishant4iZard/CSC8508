@@ -122,10 +122,6 @@ namespace NCL {
 
 			std::map<int, NetworkObject*> networkObjects;
 
-			/*std::map<int, GameObject*> serverPlayers;
-			GameObject* localPlayer;*/
-
-			//PushdownMachine* TestMenu;
 			MenuSystem* Menu;
 
 			/** List for Networking Players*/
@@ -138,7 +134,6 @@ namespace NCL {
 
 			void SpawnAI();
 			AiStatemachineObject* AddAiStateObjectToWorld(const Vector3& position);
-			//vector <AiStatemachineObject*> AIStateObjectList;
 			AiStatemachineObject* AIStateObject;
 			int AIInitialID = 10;
 

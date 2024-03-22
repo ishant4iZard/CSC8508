@@ -18,8 +18,6 @@ Hole::Hole() {
 
 void Hole::OnCollisionBegin(GameObject* otherObject) {
 	if (otherObject->gettag() == "Projectile") {
-		//CollisionDetection::CollisionInfo info;
-		//CollisionDetection::ObjectIntersection(this, otherObject, info);
 		Projectile* Bullet = dynamic_cast<Projectile*>(otherObject);
 		Bullet->GetOwner()->AddScore(1);
 		Bullet->deactivate();

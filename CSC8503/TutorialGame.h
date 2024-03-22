@@ -62,7 +62,6 @@ namespace NCL {
 			void ReceiveEvent(EventType) override;
 
 			virtual void UpdateGame(float dt);
-			/*void UpdatePowerUpSpawnTimer(float dt);*/
 
 			vector<GravityWell*> gravitywell;
 

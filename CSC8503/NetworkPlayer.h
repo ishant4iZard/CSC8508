@@ -31,7 +31,6 @@ namespace NCL {
 
 			void AddScore(int score) {
 				Score += score;
-				//std::cout << "Score: = " << Score;
 			}
 
 			int GetScore() {

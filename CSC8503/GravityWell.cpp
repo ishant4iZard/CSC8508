@@ -24,7 +24,6 @@ bool GravityWell::IsWithinRange(Projectile* projectile)
 {
 	Maths::Vector3 relativePos = projectile->GetTransform().GetPosition() - this->GetTransform().GetPosition();
 	if (relativePos.Length() <= GravityRange) {
-		//std::cout << "inRange";
 		return true;
 	}
 	return false;
@@ -55,7 +54,6 @@ void GravityWell::AddGravityForce(Projectile* projectile)
 void GravityWell::OnCollisionBegin(GameObject* otherObject) {
 	if (otherObject->gettag() == "Projectile") {
 		Projectile* Bullet = dynamic_cast<Projectile*>(otherObject);
-		//Bullet->GetOwner()->AddScore(1);
 		Bullet->deactivate();
 
 #ifdef _WIN32

@@ -16,6 +16,7 @@ class AudioEngine {
 public :
 	AudioEngine() {
 #ifndef _WIN32
+		// Does not work :-(
 		SceKernelModule fmodModuleId = sceKernelLoadStartModule("./libfmodL.prx", 0, 0, 0, NULL, NULL);
 		assert(fmodModuleId < 0 && "Failed to load module");
 		

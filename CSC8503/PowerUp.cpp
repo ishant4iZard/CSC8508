@@ -8,7 +8,6 @@ PowerUp::PowerUp()
 {
 	tag = "PowerUp";
 	PowerUpType = powerUpType::none;
-	//setActivePowerup(powerUpType::none);
 }
 
 void PowerUp::OnTriggerBegin(GameObject* otherObject)

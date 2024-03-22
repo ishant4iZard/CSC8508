@@ -7,8 +7,6 @@
 #include "OnlineSubsystemBase.h"
 #include "steam.h"
 
-// TODO sit with T and change everything to tutorial game and non network related
-
 using namespace NCL;
 using namespace CSC8503;
 
@@ -159,7 +157,7 @@ PushdownState::PushdownResult MainMenu::OnUpdate(float dt, PushdownState** newSt
 		);
 #endif
 
-		/** for devlop only */
+		// for devlopers only 
 		/*if (appState->GetIsServer())
 		{
 			appState->SetIsGameOver(false);
@@ -274,15 +272,7 @@ PushdownState::PushdownResult MultiPlayerLobby::OnUpdate(float dt, PushdownState
 		{
 			ui->DrawStringText("You are the joiner!", Vector2(5, 23), UIBase::WHITE);
 			ui->DrawStringText("Wait for holder start!", Vector2(5, 75), UIBase::WHITE);
-			//ui->DrawButton(
-			//	"Start Game",
-			//	Vector2(5, 75),
-			//	[]() {
-			//		EventEmitter::EmitEvent(START_AS_CLIENT);
-			//	},
-			//	UIBase::WHITE,
-			//	KeyCodes::S // Only for PS
-			//);
+
 			if (appState->GetIsClient())
 			{
 				appState->SetIsGameOver(false);
@@ -574,7 +564,6 @@ PushdownState::PushdownResult PlayingHUD::OnUpdate(float dt, PushdownState** new
 		if (!appState->GetIsGameOver())
 		{
 			ShowTimeLeft(Game);
-			//ui->DrawStringText("Player    " + Game->GetPlayerNameByIndex(Game->GetLocalPlayerIndex()), Vector2(83, 30), UIBase::WHITE);
 			ui->DrawStringText("Player: " + Subsystem->GetCurrentUserName(), Vector2(83, 18), UIBase::WHITE);
 			ui->DrawStringText("Your Score: " + std::to_string(Game->GetPlayerScoreByIndex(Game->GetLocalPlayerIndex())), Vector2(83, 21), UIBase::WHITE);
 			ui->DrawStringText("Bullet Num: " + std::to_string(Game->GetPlayerBulletNumByIndex(Game->GetLocalPlayerIndex())), Vector2(83, 24), UIBase::WHITE);
@@ -638,7 +627,6 @@ void PlayingHUD::ReceiveEvent(const EventType eventType)
 
 void PlayingHUD::ShowScoreTable(TutorialGame* Game)
 {
-	//TODO dynamic cast game
 	NetworkedGame* tempGame = dynamic_cast<NetworkedGame*> (Game);
 	for (int i = 0; i < 4; ++i)
 	{
@@ -653,7 +641,6 @@ void PlayingHUD::ShowScoreTable(TutorialGame* Game)
 
 void PlayingHUD::ShowTimeLeft(TutorialGame* Game)
 {
-	//TODO dynamic cast game
 	NetworkedGame* tempGame = dynamic_cast<NetworkedGame*> (Game);
 
 	float timeLeft = tempGame->GetRoundTimeLimit() - tempGame->GetRoundTimer();
@@ -664,7 +651,6 @@ void PlayingHUD::ShowTimeLeft(TutorialGame* Game)
 
 void PlayingHUD::CheckRoundTime(TutorialGame* Game)
 {
-	//TODO dynamic cast game
 	NetworkedGame* tempGame = dynamic_cast<NetworkedGame*> (Game);
 
 	if (tempGame->GetRoundTimer() > tempGame->GetRoundTimeLimit())
@@ -675,7 +661,6 @@ void PlayingHUD::CheckRoundTime(TutorialGame* Game)
 
 void PlayingHUD::ShowGameResult(TutorialGame* Game)
 {
-	//TODO dynamic cast game
 	NetworkedGame* tempGame = dynamic_cast<NetworkedGame*> (Game);
 
 	int LoaclPlayerScore = tempGame->GetPlayerScoreByIndex(tempGame->GetLocalPlayerIndex());
@@ -721,7 +706,6 @@ void PlayingHUD::ShowGameResult(TutorialGame* Game)
 
 std::string PlayingHUD::GetRoundPowerUpState(TutorialGame* Game)
 {
-	//TODO dynamic cast game
 	NetworkedGame* tempGame = dynamic_cast<NetworkedGame*> (Game);
 
 	std::string state;

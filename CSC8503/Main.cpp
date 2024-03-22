@@ -59,7 +59,6 @@ int main() {
 	g->GetMenuSystem()->SetIsNetsystemInitSuccess(bIsNetSystemInitSuccess);
 	g->GetMenuSystem()->SetLocalIPv4Address(IPAdd);
 #else
-	// Run Ps5 Game
 	PS5_Game* g = new PS5_Game();
 #endif
 
@@ -90,11 +89,11 @@ int main() {
 #endif
 		g->UpdateGame(dt);
 	}
-	
+
 #ifdef _WIN32
 	if (bIsNetSystemInitSuccess) SteamAPI_Shutdown();
 	UIWindows::Destroy();
-#else //_ORBIS
+#else // PROSPERO
 	UIPlaystation::Destroy();
 #endif
 

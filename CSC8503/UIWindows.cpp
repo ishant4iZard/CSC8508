@@ -34,7 +34,6 @@ UIWindows::UIWindows(){
     // Fonts
     smallfont = io.Fonts->AddFontFromFileTTF("../../Assets/Fonts/Roboto-Medium.ttf", 25);
     bigFont = io.Fonts->AddFontFromFileTTF("../../Assets/Fonts/Roboto-Medium.ttf", 45);
-    //font = io.Fonts->AddFontFromFileTTF("../../Assets/Fonts/PLANK___.ttf", 35);
     io.Fonts->Build();
 }
 

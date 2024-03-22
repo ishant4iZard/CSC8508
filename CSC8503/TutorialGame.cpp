@@ -183,31 +183,13 @@ void TutorialGame::UpdateGame(float dt) {
 		if (!frameStartTime.has_value() || !frameEndTime.has_value()) return;
 		renderTimeCost = duration_cast<microseconds>(frameEndTime.value() - frameStartTime.value());
 	}
-
-	
-	/*UpdatePowerUpSpawnTimer(dt);*/
 }
-
-//void NCL::CSC8503::TutorialGame::UpdatePowerUpSpawnTimer(float dt)
-//{
-//	if (appState->GetIsGameOver() || appState->GetIsGamePaused()) return;
-//
-//	powerUpSpawnTimer += dt;
-//	if (powerUpSpawnTimer >= POWER_UP_SPAWN_TIME
-//		&& activePowerUpCount <= MAX_POWER_UP_COUNT
-//		)
-//	{
-//		powerUpSpawnTimer = 0.0f;
-//		InitPowerup();
-//	}
-//}
 
 void TutorialGame::InitialiseAssets() {
 	cubeMesh	= renderer->LoadMesh("cube.msh");
 	wallMesh = renderer->LoadMesh("cube.msh");
 	bouncePlatformMesh = renderer->LoadMesh("cube.msh");
 	sphereMesh	= renderer->LoadMesh("sphere.msh");
-	//charMesh	= renderer->LoadMesh("goat.msh");
 	charMesh = renderer->LoadMesh("Male_Guard.msh");
 	charMesh2 = renderer->LoadMesh("Male_Guard.msh");
 	charMesh3 = renderer->LoadMesh("Male_Guard.msh");
@@ -563,7 +545,11 @@ void NCL::CSC8503::TutorialGame::SpawnBlackHole(const Vector3& inPosition, const
 
 void NCL::CSC8503::TutorialGame::SpawnInvisibleWall(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling)
 {
-	/*GameObject* tempWall = AddObbCubeToWorld(
+	// Invisible walls cause the game to drop frames => 
+	// If the AI can detect a proj it will try to find a path to it(there is no path though)
+	// The path finding algo gets very expensive to run 
+	/*
+	GameObject* tempWall = AddObbCubeToWorld(
 		inPosition,
 		inScale,
 		0, 0.5f);
@@ -571,7 +557,8 @@ void NCL::CSC8503::TutorialGame::SpawnInvisibleWall(const Vector3& inPosition, c
 	tempWall->SetRenderObject(nullptr);
 	tempWall->GetTransform().SetOrientation(Quaternion::EulerAnglesToQuaternion(inRotation.x, inRotation.y, inRotation.z));
 	tempWall->setName("InvisbleWall");
-	tempWall->settag("InvisibleWall");*/
+	tempWall->settag("InvisibleWall");
+	*/
 }
 
 void NCL::CSC8503::TutorialGame::AddPowerUpSpawnPoint(const Vector3& inPosition, const Vector3& inRotation, const Vector3& inScale, const Vector2& inTiling)

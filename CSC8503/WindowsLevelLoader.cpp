@@ -20,11 +20,6 @@ void WindowsLevelLoader::LoadLevelFiles()
 
         // Print the file names
         for (size_t i = 0; i < (int)GameLevelNumber::MAX_LEVEL; i++)  std::cout << levelFileNameList[i] << std::endl;
-    //try {
-    //}   
-    //catch (const std::filesystem::filesystem_error& e) {
-    //    std::cerr << "Error accessing directory: " << e.what() << std::endl;
-    //}
 }
 
 std::string WindowsLevelLoader::GetLevelFilePath(GameLevelNumber inLevelNum)

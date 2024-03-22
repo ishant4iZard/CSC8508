@@ -18,10 +18,7 @@ namespace NCL
             }
 
             const NCL::Maths::Vector3& GetDirection() { return direction; }
-            /// <summary>
-            /// Returns specular intensity of the light.
-            /// </summary>
-            /// <returns>Returns intesity</returns>
+
             float GetIntensity() { return intensity; }
             void SetDirection(const NCL::Maths::Vector3& inDir) { direction = inDir; }
             void SetIntensity(float inIntensity) { intensity = inIntensity; }

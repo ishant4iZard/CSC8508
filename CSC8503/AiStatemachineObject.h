@@ -41,7 +41,6 @@ namespace NCL {
             AIState currentState = PATROL;
             bool isCollidingWithProj;
 
-            //void DetectProjectiles(GameObject* gameObject,float dt);
             void MoveRandomly(float dt);
             void ChaseClosestProjectile(float dt);
             void FindPathFromAIToProjectile(float dt);

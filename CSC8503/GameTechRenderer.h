@@ -17,9 +17,6 @@
 #endif
 
 namespace NCL {
-	//class Maths::Vector3;
-	//class Maths::Vector4;
-
 	using namespace Maths;
 
 	namespace CSC8503 {

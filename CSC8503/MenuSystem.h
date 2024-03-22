@@ -10,8 +10,6 @@
 #endif
 #include "Event.h"
 
-//TODO needs to be refactored
-
 namespace NCL {
 	namespace  CSC8503 {
 		class PushdownMachine;
