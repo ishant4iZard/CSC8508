@@ -91,7 +91,7 @@ float3 DirectionalLightPbr(float3 inDirection, float3 inWorldPos, float3 inColor
     float3 halfVector = normalize(wi + wo);
     
     //TODO : Pass global intensity from c++, currently hard coded : 
-    float3 radiance = inColor * 0.1f;
+    float3 radiance = inColor * 0.02f;
 
     // Cook-Torrance BRDF
     float NDF = DistributionGGX(inNormal, halfVector, inRoughness);       

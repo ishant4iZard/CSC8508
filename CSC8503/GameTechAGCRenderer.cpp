@@ -599,7 +599,7 @@ void GameTechAGCRenderer::UpdateObjectList() {
 		[&](GameObject* o) {
 			if (o->IsActive()) {
 				RenderObject* g = o->GetRenderObject();
-				if (g) { //TODO : Remove hard code condition for PBR
+				if (g) {
 					activeObjects.push_back(g);
 
 					ObjectState state; //PSSL Header

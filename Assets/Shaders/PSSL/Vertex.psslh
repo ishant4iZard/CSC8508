@@ -23,7 +23,7 @@ void TransformVertexToWorld(ObjectState s, uint vertID, out float4 position, out
 	normal = normalize(mul(normalMatrix, normalize(vNormal))); // World normal;
 	tangent.xyz = normalize(mul(normalMatrix, normalize(vTangent.xyz))); // World tangent
 	tangent.w = vTangent.w;
-	bitangent = cross(tangent, normal) * vTangent.w;
+	bitangent = cross(normal, tangent);
 }
 
 float4 TransformWorldToClip(in float4 world) {
